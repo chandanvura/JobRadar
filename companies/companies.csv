@@ -1,0 +1,21 @@
+company_name,careers_url,ats_provider,ats_identifier,priority,enabled
+Postman,https://www.postman.com/company/careers/,greenhouse,postman,5,true
+Meesho,https://www.meesho.io/jobs,greenhouse,meesho,5,true
+BrowserStack,https://www.browserstack.com/careers,greenhouse,browserstack,5,true
+Zeta,https://www.zeta.tech/in/careers,greenhouse,zeta,5,true
+Razorpay,https://razorpay.com/jobs/,greenhouse,razorpaysoftwareprivatelimited,5,true
+Chargebee,https://www.chargebee.com/careers/,greenhouse,chargebee,4,true
+Rippling,https://www.rippling.com/careers,greenhouse,rippling,4,true
+Highspot,https://www.highspot.com/careers/,greenhouse,highspot,4,true
+Fivetran,https://www.fivetran.com/careers,greenhouse,fivetran,4,true
+Cockroach Labs,https://www.cockroachlabs.com/careers/,greenhouse,cockroachlabs,4,true
+Hasura,https://hasura.io/careers/,lever,hasura,4,true
+Netskope,https://www.netskope.com/company/careers,lever,netskope,4,true
+Fresh Prints,https://www.freshprints.com/careers,lever,freshprints,3,true
+Sprinto,https://sprinto.com/careers,lever,sprinto,4,true
+Plivo,https://www.plivo.com/careers/,lever,plivo,3,true
+Whatfix,https://whatfix.com/careers/,lever,whatfix,4,true
+Darwinbox,https://darwinbox.com/careers,lever,darwinbox,4,true
+Eightfold AI,https://eightfold.ai/about/careers/,lever,eightfold,4,true
+Deel,https://www.deel.com/careers/,ashby,deel,3,true
+Linear,https://linear.app/careers,ashby,linear,2,false
