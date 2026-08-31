@@ -1,21 +1,26 @@
 company_name,careers_url,ats_provider,ats_identifier,priority,enabled
 Postman,https://www.postman.com/company/careers/,greenhouse,postman,5,true
-Meesho,https://www.meesho.io/jobs,greenhouse,meesho,5,true
-BrowserStack,https://www.browserstack.com/careers,greenhouse,browserstack,5,true
-Zeta,https://www.zeta.tech/in/careers,greenhouse,zeta,5,true
 Razorpay,https://razorpay.com/jobs/,greenhouse,razorpaysoftwareprivatelimited,5,true
-Chargebee,https://www.chargebee.com/careers/,greenhouse,chargebee,4,true
-Rippling,https://www.rippling.com/careers,greenhouse,rippling,4,true
-Highspot,https://www.highspot.com/careers/,greenhouse,highspot,4,true
 Fivetran,https://www.fivetran.com/careers,greenhouse,fivetran,4,true
 Cockroach Labs,https://www.cockroachlabs.com/careers/,greenhouse,cockroachlabs,4,true
-Hasura,https://hasura.io/careers/,lever,hasura,4,true
-Netskope,https://www.netskope.com/company/careers,lever,netskope,4,true
-Fresh Prints,https://www.freshprints.com/careers,lever,freshprints,3,true
-Sprinto,https://sprinto.com/careers,lever,sprinto,4,true
+Unity,https://careers.unity.com/,greenhouse,unity3d,4,true
+Coupang,https://www.coupang.jobs/,greenhouse,coupang,4,true
+Cohere Health,https://www.coherehealth.com/careers,greenhouse,coherehealth,4,true
+EarnIn,https://www.earnin.com/careers,greenhouse,earnin,4,true
+Crunchyroll,https://www.crunchyroll.com/about/jobs,greenhouse,crunchyroll,3,true
+Celonis,https://www.celonis.com/careers/jobs,greenhouse,celonis,3,true
+Pure Storage,https://www.purestorage.com/company/careers.html,greenhouse,purestorage,4,true
 Plivo,https://www.plivo.com/careers/,lever,plivo,3,true
-Whatfix,https://whatfix.com/careers/,lever,whatfix,4,true
-Darwinbox,https://darwinbox.com/careers,lever,darwinbox,4,true
-Eightfold AI,https://eightfold.ai/about/careers/,lever,eightfold,4,true
+Hevo Data,https://hevodata.com/careers/,lever,hevodata,5,true
+Warner Music Group,https://www.wmg.com/careers,lever,wmg,4,true
+Zimperium,https://www.zimperium.com/careers,lever,zimperium,5,true
+JumpCloud,https://jumpcloud.com/careers,lever,jumpcloud,4,true
+Acceldata,https://www.acceldata.io/careers,lever,acceldata,5,true
+Kobie,https://kobie.com/careers/,lever,kobie,3,true
 Deel,https://www.deel.com/careers/,ashby,deel,3,true
-Linear,https://linear.app/careers,ashby,linear,2,false
+Sarvam AI,https://www.sarvam.ai/careers,ashby,sarvam,5,true
+Wisdom AI,https://www.wisdom.ai/careers,ashby,Wisdom-AI,4,true
+SPAN,https://www.span.io/careers,ashby,span,3,true
+Cardboard,https://www.cardboard.ai/careers,ashby,cardboard,3,true
+Ambient.ai,https://ambient.ai/careers,ashby,ambient.ai,3,true
+Ema,https://www.ema.co/careers,ashby,ema,4,true
