@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from scraper.models import Job
+from scraper.adapters import likely_target, workday_config
+from scraper.models import Company
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
 
 def recent(hours=1):
@@ -42,3 +44,12 @@ def test_junior_match_scores_well():
 def test_skill_boundaries_avoid_substring_false_positives():
     job=enrich(sample(description="1-2 years experience building digital laws platforms using Java"))
     assert "Git" not in job.skills and "AWS" not in job.skills and "Java" in job.skills
+
+def test_enterprise_ats_prefilter():
+    assert likely_target("Associate Software Engineer", "Bengaluru, India")
+    assert likely_target("Junior DevOps Engineer", "Hyderabad")
+    assert not likely_target("Senior Software Engineer", "London")
+
+def test_workday_board_configuration():
+    company=Company("Example","https://example.wd5.myworkdayjobs.com/External","workday","tenant|External")
+    assert workday_config(company)==("https://example.wd5.myworkdayjobs.com","tenant","External")
