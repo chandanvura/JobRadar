@@ -89,8 +89,8 @@ Cloudflare,https://www.cloudflare.com/careers/jobs/,greenhouse,cloudflare,5,true
 Stripe,https://stripe.com/jobs,greenhouse,stripe,5,true
 Twilio,https://www.twilio.com/company/jobs,greenhouse,twilio,4,true
 Grafana Labs,https://grafana.com/about/careers/open-positions/,greenhouse,grafanalabs,4,true
-HashiCorp,https://www.hashicorp.com/en/careers,custom,hashicorp,4,true
-Confluent,https://careers.confluent.io/jobs/india,custom,confluent,5,true
+Workday,https://workday.wd5.myworkdayjobs.com/Workday,workday,workday|Workday,4,true
+General Motors,https://generalmotors.wd5.myworkdayjobs.com/Careers_GM,workday,generalmotors|Careers_GM,4,true
 Elastic,https://www.elastic.co/about/careers,greenhouse,elastic,4,true
 Okta,https://www.okta.com/company/careers/,greenhouse,okta,5,true
 MongoDB,https://www.mongodb.com/company/careers,greenhouse,mongodb,5,true
