@@ -12,6 +12,9 @@ def client(): return httpx.AsyncClient(timeout=httpx.Timeout(30,connect=10),foll
 def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
+def likely_target(title, location):
+    return bool(re.search(r"\\b(engineer|developer|devops|sre|platform|cloud|release|build|site reliability|graduate|trainee|sde)\\b",str(title),re.I) and re.search(r"\\b(bangalore|bengaluru|hyderabad)\\b",str(location),re.I))
+
 def iso_date(value):
     if not value: return None
     try:
@@ -49,6 +52,9 @@ class SmartRecruitersAdapter(JobSource):
             response=await x.get(base,params={"limit":100,"offset":0}); response.raise_for_status(); data=response.json()
             jobs=[]
             for item in data.get("content",[]):
+                item_location=item.get("location") or {}
+                location_hint=", ".join(str(item_location.get(k,"")) for k in ("city","region","country") if item_location.get(k))
+                if not likely_target(item.get("name",""),location_hint): continue
                 detail_response=await x.get(f"{base}/{item['id']}")
                 if detail_response.status_code != 200: continue
                 detail=detail_response.json(); sections=detail.get("jobAd",{}).get("sections",{})
@@ -80,6 +86,7 @@ class WorkdayAdapter(JobSource):
                 offset+=20
             jobs=[]
             for item in postings:
+                if not likely_target(item.get("title",""),item.get("locationsText","")): continue
                 path=item.get("externalPath")
                 if not path: continue
                 detail_response=await x.get(f"{api}{path}")
