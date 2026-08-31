@@ -31,13 +31,17 @@ jobs:
           python - <<'PY'
           import csv
           from pathlib import Path
+          from scraper.normalization import MAX_EXPERIENCE_YEARS, MAX_JOB_AGE_HOURS
           path = Path("companies/companies.csv")
           with path.open(encoding="utf-8") as handle:
               companies = list(csv.DictReader(handle))
           enabled = [row for row in companies if row.get("enabled", "true").lower() == "true"]
           print(f"Company registry: {len(companies)} total, {len(enabled)} enabled")
+          print(f"Policy: posted within {MAX_JOB_AGE_HOURS} hours; 0-{MAX_EXPERIENCE_YEARS} YOE")
           if len(enabled) != 25:
               raise SystemExit(f"Expected 25 enabled companies, found {len(enabled)}")
+          if MAX_JOB_AGE_HOURS != 24 or MAX_EXPERIENCE_YEARS != 2:
+              raise SystemExit("Unexpected matching policy")
           PY
       - uses: actions/setup-python@v5
         with:
