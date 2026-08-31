@@ -23,5 +23,6 @@ jobs:
         env:
           JOBRADAR_API_URL: ${{ secrets.JOBRADAR_API_URL }}
           JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}
+          JOBRADAR_SITE_BYPASS_TOKEN: ${{ secrets.JOBRADAR_SITE_BYPASS_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
