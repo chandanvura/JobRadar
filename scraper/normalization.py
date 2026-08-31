@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from .models import Job
 
 ROLE_PATTERNS = {
-    "DevOps": r"\bdev\s*ops\b|\bbuild(?:/| and | & )?release\b|\brelease engineer\b", "Cloud": r"\bcloud (?:support )?engineer\b|\bcloud operations\b",
+    "DevOps": r"\bdev\s*ops\b|\bbuild(?:/| and | & )?release\b|\brelease engineer\b|\bdeployment engineer\b", "Cloud": r"\bcloud (?:support )?engineer\b|\bcloud operations\b",
     "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b", "Platform": r"\bplatform engineer\b",
     "Java / Backend": r"\bjava (?:developer|engineer)\b|\bbackend (?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*java\b",
     "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software engineer(?:ing)?(?:\s+(?:i|1))?\b|\bsde\s*(?:i|1)?\b|\bgraduate engineer trainee\b|\bget\b",
