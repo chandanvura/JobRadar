@@ -14,6 +14,22 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Verify source revision
+        run: |
+          echo "Commit: $(git rev-parse HEAD)"
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          path = Path("companies/companies.csv")
+          with path.open(encoding="utf-8") as handle:
+              companies = list(csv.DictReader(handle))
+          enabled = [row for row in companies if row.get("enabled", "true").lower() == "true"]
+          print(f"Company registry: {len(companies)} total, {len(enabled)} enabled")
+          if len(enabled) != 25:
+              raise SystemExit(f"Expected 25 enabled companies, found {len(enabled)}")
+          PY
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
