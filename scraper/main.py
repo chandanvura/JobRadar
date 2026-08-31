@@ -37,8 +37,11 @@ async def main():
     if not endpoint or not secret:
         print(f"Scanned {len(all_jobs)} jobs; {len(eligible)} eligible. Storage skipped: JOBRADAR_API_URL/INGEST_SECRET missing."); return
     run={"started_at":started,"finished_at":now(),"companies_checked":len(enabled),"companies_successful":len(enabled)-failures,"companies_failed":failures,"jobs_scanned":len(all_jobs),"matching_jobs":len(eligible),"notifications_sent":0}
+    headers={"Authorization":f"Bearer {secret}"}
+    bypass=os.getenv("JOBRADAR_SITE_BYPASS_TOKEN")
+    if bypass:headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
     async with httpx.AsyncClient(timeout=45) as x:
-        response=await x.post(endpoint.rstrip("/")+"/api/ingest",headers={"Authorization":f"Bearer {secret}"},json={"jobs":[j.as_dict() for j in eligible],"companies":statuses,"run":run}); response.raise_for_status(); result=response.json()
+        response=await x.post(endpoint.rstrip("/")+"/api/ingest",headers=headers,json={"jobs":[j.as_dict() for j in eligible],"companies":statuses,"run":run}); response.raise_for_status(); result=response.json()
     new_ids=set(result.get("new_external_ids",[])); sent=0
     for job in eligible:
         if job.external_job_id in new_ids and job.relevance_score>=65:
