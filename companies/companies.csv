@@ -3,7 +3,7 @@ Postman,https://www.postman.com/company/careers/,greenhouse,postman,5,true
 Razorpay,https://razorpay.com/jobs/,greenhouse,razorpaysoftwareprivatelimited,5,true
 Fivetran,https://www.fivetran.com/careers,greenhouse,fivetran,4,true
 Cockroach Labs,https://www.cockroachlabs.com/careers/,greenhouse,cockroachlabs,4,true
-Unity,https://careers.unity.com/,greenhouse,unity3d,4,true
+Unity,https://unitytech.wd1.myworkdayjobs.com/Unity,workday,unitytech|Unity,4,true
 Coupang,https://www.coupang.jobs/,greenhouse,coupang,4,true
 Cohere Health,https://www.coherehealth.com/careers,greenhouse,coherehealth,4,true
 EarnIn,https://www.earnin.com/careers,greenhouse,earnin,4,true
@@ -24,7 +24,7 @@ SPAN,https://www.span.io/careers,ashby,span,3,true
 Cardboard,https://www.cardboard.ai/careers,ashby,cardboard,3,true
 Ambient.ai,https://ambient.ai/careers,ashby,ambient.ai,3,true
 Ema,https://www.ema.co/careers,ashby,ema,4,true
-Airbus,https://ag.wd3.myworkdayjobs.com/Airbus,workday,airbus|Airbus,4,true
+Airbus,https://ag.wd3.myworkdayjobs.com/Airbus,workday,ag|Airbus,4,true
 Intel,https://intel.wd1.myworkdayjobs.com/External,workday,intel|External,5,true
 Lloyds Technology Centre,https://lbg.wd3.myworkdayjobs.com/Lloyds_Technology_Centre,workday,lbg|Lloyds_Technology_Centre,4,true
 Visa,https://visa.wd5.myworkdayjobs.com/Visa,workday,visa|Visa,5,true
@@ -54,14 +54,14 @@ AVEVA,https://aveva.wd3.myworkdayjobs.com/AVEVA_careers,workday,aveva|AVEVA_care
 Dell Technologies,https://dell.wd1.myworkdayjobs.com/External,workday,dell|External,5,true
 HP,https://hp.wd5.myworkdayjobs.com/ExternalCareerSite,workday,hp|ExternalCareerSite,4,true
 HPE,https://hpe.wd5.myworkdayjobs.com/Jobsathpe,workday,hpe|Jobsathpe,5,true
-Qualcomm,https://qualcomm.wd5.myworkdayjobs.com/External,workday,qualcomm|External,5,true
-AMD,https://amd.wd1.myworkdayjobs.com/careers,workday,amd|careers,5,true
+Qualcomm,https://qualcomm.wd12.myworkdayjobs.com/External,workday,qualcomm|External,5,true
+AMD,https://careers.amd.com/careers-home/jobs,custom,amd,5,true
 Micron,https://micron.wd1.myworkdayjobs.com/External,workday,micron|External,5,true
 Kyndryl,https://kyndryl.wd5.myworkdayjobs.com/KyndrylProfessionalCareers,workday,kyndryl|KyndrylProfessionalCareers,4,true
 Autodesk,https://autodesk.wd1.myworkdayjobs.com/Ext,workday,autodesk|Ext,5,true
-Synopsys,https://synopsys.wd3.myworkdayjobs.com/SynopsysCareers,workday,synopsys|SynopsysCareers,5,true
+Synopsys,https://careers.synopsys.com/search-jobs,custom,synopsys,5,true
 Cadence,https://cadence.wd1.myworkdayjobs.com/External_Careers,workday,cadence|External_Careers,5,true
-Wells Fargo,https://wellsfargo.wd1.myworkdayjobs.com/WellsFargoJobs,workday,wellsfargo|WellsFargoJobs,4,true
+Wells Fargo,https://wf.wd1.myworkdayjobs.com/WellsFargoJobs,workday,wf|WellsFargoJobs,4,true
 S&P Global,https://spgi.wd5.myworkdayjobs.com/SPGI_Careers,workday,spgi|SPGI_Careers,4,true
 Equifax,https://equifax.wd5.myworkdayjobs.com/External,workday,equifax|External,4,true
 Sandisk,https://jobs.smartrecruiters.com/Sandisk,smartrecruiters,Sandisk,4,true
@@ -89,8 +89,8 @@ Cloudflare,https://www.cloudflare.com/careers/jobs/,greenhouse,cloudflare,5,true
 Stripe,https://stripe.com/jobs,greenhouse,stripe,5,true
 Twilio,https://www.twilio.com/company/jobs,greenhouse,twilio,4,true
 Grafana Labs,https://grafana.com/about/careers/open-positions/,greenhouse,grafanalabs,4,true
-HashiCorp,https://www.hashicorp.com/en/career,greenhouse,hashicorp,4,true
-Confluent,https://www.confluent.io/careers/,greenhouse,confluent,5,true
+HashiCorp,https://www.hashicorp.com/en/careers,custom,hashicorp,4,true
+Confluent,https://careers.confluent.io/jobs/india,custom,confluent,5,true
 Elastic,https://www.elastic.co/about/careers,greenhouse,elastic,4,true
 Okta,https://www.okta.com/company/careers/,greenhouse,okta,5,true
 MongoDB,https://www.mongodb.com/company/careers,greenhouse,mongodb,5,true
@@ -98,13 +98,13 @@ Rubrik,https://www.rubrik.com/company/careers,greenhouse,rubrik,5,true
 New Relic,https://newrelic.com/about/careers,greenhouse,newrelic,4,true
 Sumo Logic,https://www.sumologic.com/company/careers/,greenhouse,sumologic,4,true
 Samsara,https://www.samsara.com/company/careers,greenhouse,samsara,4,true
-Snowflake,https://careers.snowflake.com/,greenhouse,snowflake,5,true
+Snowflake,https://careers.snowflake.com/us/en/search-results,custom,snowflake,5,true
 Databricks,https://www.databricks.com/company/careers,greenhouse,databricks,5,true
 Coinbase,https://www.coinbase.com/careers/positions,greenhouse,coinbase,3,true
-Docker,https://www.docker.com/careers/,greenhouse,docker,4,true
+Docker,https://jobs.ashbyhq.com/docker,ashby,docker,4,true
 GitLab,https://about.gitlab.com/jobs/,greenhouse,gitlab,4,true
 Vercel,https://vercel.com/careers,greenhouse,vercel,3,true
-Amazon,https://www.amazon.jobs/en/locations/india,custom,amazon,5,true
+Amazon,https://www.amazon.jobs/search,custom,amazon,5,true
 Google,https://www.google.com/about/careers/applications/jobs/results/,custom,google,5,true
 Microsoft,https://jobs.careers.microsoft.com/global/en/search,custom,microsoft,5,true
 Oracle,https://careers.oracle.com/jobs/,custom,oracle,5,true
@@ -114,7 +114,7 @@ IBM,https://www.ibm.com/careers/search,custom,ibm,5,true
 Accenture,https://www.accenture.com/in-en/careers/jobsearch,custom,accenture,4,true
 Deloitte,https://southasiacareers.deloitte.com/,custom,deloitte,4,true
 EY,https://careers.ey.com/,custom,ey,4,true
-PwC,https://jobsindia.pwc.com/,custom,pwc,4,true
+PwC,https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers,workday,pwc|Global_Experienced_Careers,4,true
 JPMorgan Chase,https://careers.jpmorgan.com/global/en/search-results,custom,jpmorgan,4,true
 Goldman Sachs,https://higher.gs.com/,custom,goldmansachs,4,true
 Target,https://jobs.target.com/,custom,target,4,true
@@ -123,4 +123,4 @@ Flipkart,https://www.flipkartcareers.com/#!/joblist,custom,flipkart,5,true
 PhonePe,https://www.phonepe.com/careers/job-openings/,custom,phonepe,5,true
 Swiggy,https://careers.swiggy.com/,custom,swiggy,5,true
 Zomato,https://www.zomato.com/careers,custom,zomato,4,true
-Freshworks,https://www.freshworks.com/company/careers/open-positions/,custom,freshworks,5,true
+Freshworks,https://careers.smartrecruiters.com/freshworks,smartrecruiters,freshworks,5,true
