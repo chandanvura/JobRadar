@@ -1,5 +1,14 @@
 name: JobRadar hourly scan
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/scrape.yml"
+      - "companies/**"
+      - "scraper/**"
+      - "requirements.txt"
+      - "tests/**"
   schedule:
     - cron: "17 * * * *"
   workflow_dispatch:
