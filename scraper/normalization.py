@@ -10,6 +10,8 @@ ROLE_PATTERNS = {
 }
 SENIOR = re.compile(r"\b(senior|sr\.?|lead|staff|principal|architect|manager|director|head|vp|vice president)\b",re.I)
 SKILLS=["AWS","Azure","GCP","Linux","Docker","Kubernetes","Terraform","Jenkins","CI/CD","GitHub Actions","Argo CD","Ansible","Git","Helm","Bash","Python","Java","Spring Boot","Spring","REST API","Microservices","Kafka","SQL","PostgreSQL","MySQL","Redis","Prometheus","Grafana","ELK","Elasticsearch","Splunk","Datadog"]
+MAX_JOB_AGE_HOURS = 24
+MAX_EXPERIENCE_YEARS = 2
 
 def normalize_location(value: str):
     low=value.lower(); hybrid=" · Hybrid" if "hybrid" in low else ""
@@ -29,11 +31,15 @@ def extract_experience(text: str):
     relevant=[c for c in clauses if re.search(r"\b(years?|yrs?|yoe|experience|fresher|graduate)\b",c,re.I) and not re.search(r"\b(company|organisation|organization|founded|serving|combined|team has)\b.{0,35}\b(years?|experience)\b",c,re.I)]
     candidate_text=" ".join(relevant)
     ranges=[(float(a),float(b)) for a,b in re.findall(r"\b(\d+(?:\.\d+)?)\s*(?:-|–|to)\s*(\d+(?:\.\d+)?)\s*(?:years?|yrs?|yoe)\b",candidate_text,re.I)]
+    lower_bounds=[float(x) for x in re.findall(r"\b(?:at least|minimum(?: of)?|more than|over)\s*(\d+(?:\.\d+)?)\s*(?:\+\s*)?(?:years?|yrs?|yoe)\b",candidate_text,re.I)]
     plus=[float(x) for x in re.findall(r"\b(\d+(?:\.\d+)?)\s*\+\s*(?:years?|yrs?|yoe)\b",candidate_text,re.I)]
+    exact=[float(x) for x in re.findall(r"\b(\d+(?:\.\d+)?)\s*(?:years?|yrs?|yoe)\s+(?:of\s+)?(?:relevant\s+|professional\s+|work\s+)?experience\b",candidate_text,re.I)]
     if ranges:
         lo,hi=min(ranges,key=lambda x:(x[0],x[1])); return lo,hi,f"{lo:g}–{hi:g}"
-    if plus:
-        lo=min(plus); return lo,None,f"{lo:g}+"
+    if lower_bounds or plus:
+        lo=min(lower_bounds+plus); return lo,None,f"{lo:g}+"
+    if exact:
+        value=min(exact); return value,value,f"{value:g}"
     if junior:return 0.0,1.0,"Fresher"
     return None,None,"Unknown"
 
@@ -41,19 +47,27 @@ def skill_present(skill: str, corpus: str):
     aliases={"CI/CD":r"\bci\s*/?\s*cd\b","REST API":r"\brest(?:ful)?\s+apis?\b","Spring":r"\bspring\b(?!\s+boot)","Git":r"\bgit\b(?!hub)","ELK":r"\belk\b"}
     return bool(re.search(aliases.get(skill,rf"(?<![a-z0-9]){re.escape(skill.lower())}(?![a-z0-9])"),corpus,re.I))
 
+def posted_age_hours(posted_at):
+    if not posted_at:
+        return None
+    try:
+        posted=datetime.fromisoformat(posted_at.replace("Z","+00:00"))
+        if posted.tzinfo is None:
+            posted=posted.replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc)-posted.astimezone(timezone.utc)).total_seconds()/3600
+    except (TypeError,ValueError):
+        return None
+
 def enrich(job: Job, company_priority: int=3):
     job.normalized_title,job.role_category=classify_title(job.title); job.normalized_location,job.city=normalize_location(job.location)
     job.experience_min,job.experience_max,job.experience_label=extract_experience(f"{job.title}\n{job.description}")
     corpus=f"{job.title} {job.description}".lower(); job.skills=[s for s in SKILLS if skill_present(s,corpus)]
-    explicitly_over=job.experience_min is not None and job.experience_min>=4
-    job.is_eligible=job.city in {"Bengaluru","Hyderabad"} and job.role_category!="Other" and not SENIOR.search(job.title) and not explicitly_over
-    job.freshness_score=35
-    if job.posted_at:
-        try:
-            age=max(0,(datetime.now(timezone.utc)-datetime.fromisoformat(job.posted_at.replace("Z","+00:00"))).total_seconds()/3600)
-            job.freshness_score=35 if age<1 else 30 if age<3 else 25 if age<6 else 18 if age<12 else 12 if age<24 else 5
-        except ValueError: job.posted_at=None
-    exp=25 if job.experience_min is not None and (job.experience_max or job.experience_min)<=3 else 17
+    age=posted_age_hours(job.posted_at)
+    recent=age is not None and -1 <= age <= MAX_JOB_AGE_HOURS
+    experience_ok=job.experience_min is not None and job.experience_max is not None and job.experience_min >= 0 and job.experience_max <= MAX_EXPERIENCE_YEARS
+    job.is_eligible=job.city in {"Bengaluru","Hyderabad"} and job.role_category!="Other" and not SENIOR.search(job.title) and experience_ok and recent
+    job.freshness_score=0 if age is None or age > MAX_JOB_AGE_HOURS else 35 if age<1 else 30 if age<3 else 25 if age<6 else 18 if age<12 else 12
+    exp=25 if experience_ok else 0
     title=20 if job.role_category!="Other" else 0; skill=min(10,len(job.skills)*2); priority=min(5,max(1,company_priority))
     signal=re.search(r"actively hiring|immediate join(?:er|ing)?|urgent hiring|multiple (?:openings|positions)|early applicant",corpus,re.I); hiring=5 if signal else 0
     job.hiring_signal=signal.group(0).title() if signal else None; job.relevance_score=min(100,job.freshness_score+exp+title+skill+priority+hiring); job.priority_score=priority
