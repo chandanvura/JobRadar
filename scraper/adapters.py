@@ -13,7 +13,7 @@ def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
 def likely_target(title, location):
-    return bool(re.search(r"\\b(engineer|developer|devops|sre|platform|cloud|release|build|site reliability|graduate|trainee|sde)\\b",str(title),re.I) and re.search(r"\\b(bangalore|bengaluru|hyderabad)\\b",str(location),re.I))
+    return bool(re.search(r"\b(engineer|developer|devops|sre|platform|cloud|release|build|site reliability|graduate|trainee|sde)\b",str(title),re.I) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
 
 def iso_date(value):
     if not value: return None
