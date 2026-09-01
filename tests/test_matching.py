@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from scraper.models import Job
-from scraper.adapters import likely_target, workday_config
+from scraper.adapters import likely_target, parse_posted_at, workday_config
 from scraper.models import Company
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
 
@@ -50,6 +50,19 @@ def test_only_last_24_hours_are_eligible():
     assert not enrich(sample(posted_at=recent(25))).is_eligible
     job=sample(); job.posted_at=None
     assert not enrich(job).is_eligible
+
+def test_relative_posting_labels_are_normalized():
+    now=datetime(2026,9,1,12,0,tzinfo=timezone.utc)
+    assert parse_posted_at("Posted Today",now)==now.isoformat()
+    assert parse_posted_at("Posted 30 minutes ago",now)==(now-timedelta(minutes=30)).isoformat()
+    assert parse_posted_at("2 hours ago",now)==(now-timedelta(hours=2)).isoformat()
+    assert parse_posted_at("Posted few hours ago",now)==(now-timedelta(hours=3)).isoformat()
+    assert parse_posted_at("Posted Yesterday",now) is None
+
+def test_skills_are_optional_for_eligibility():
+    job=enrich(sample(description="Candidate needs 1-2 years of relevant experience"))
+    assert job.skills==[]
+    assert job.is_eligible
 
 def test_junior_match_scores_well():
     job=enrich(sample())
