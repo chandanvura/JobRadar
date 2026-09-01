@@ -8,8 +8,8 @@ from .normalization import enrich
 
 ROOT=Path(__file__).resolve().parents[1]
 _TELEGRAM_CHAT_OVERRIDE=None
-# One-time recovery for alerts that were ingested before Telegram chat resolution.
-TELEGRAM_RETRY_IDS={"R0122222","R-544655","R-542087"}
+# Kept empty during normal operation; prevents replaying already-ingested alerts.
+TELEGRAM_RETRY_IDS=set()
 
 def now(): return datetime.now(timezone.utc).isoformat()
 def load_companies():
