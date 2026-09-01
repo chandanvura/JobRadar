@@ -65,7 +65,7 @@ async def main():
     headers={"Authorization":f"Bearer {secret}"}
     bypass=os.getenv("JOBRADAR_SITE_BYPASS_TOKEN")
     if bypass:headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
-    async with httpx.AsyncClient(timeout=45) as x:
+    async with httpx.AsyncClient(timeout=httpx.Timeout(120,connect=20)) as x:
         response=await x.post(endpoint.rstrip("/")+"/api/ingest",headers=headers,json={"jobs":[j.as_dict() for j in eligible],"companies":statuses,"run":run}); response.raise_for_status(); result=response.json()
     new_ids=set(result.get("new_external_ids",[])); sent=0
     for job in eligible:
