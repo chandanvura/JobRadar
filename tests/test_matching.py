@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 from scraper.models import Job
 from scraper.adapters import likely_target, parse_posted_at, workday_config
 from scraper.models import Company
+from scraper.main import private_start_chat_id
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
 
 def recent(hours=1):
@@ -50,6 +51,16 @@ def test_only_last_24_hours_are_eligible():
     assert not enrich(sample(posted_at=recent(25))).is_eligible
     job=sample(); job.posted_at=None
     assert not enrich(job).is_eligible
+
+def test_private_start_chat_resolution():
+    payload={"result":[
+        {"update_id":1,"message":{"text":"/start","chat":{"id":111,"type":"group"}}},
+        {"update_id":2,"message":{"text":"hello","chat":{"id":222,"type":"private"}}},
+        {"update_id":3,"message":{"text":"/start","chat":{"id":333,"type":"private"}}},
+        {"update_id":4,"message":{"text":"/start jobradar","chat":{"id":444,"type":"private"}}},
+    ]}
+    assert private_start_chat_id(payload)=="444"
+    assert private_start_chat_id({"result":[]}) is None
 
 def test_relative_posting_labels_are_normalized():
     now=datetime(2026,9,1,12,0,tzinfo=timezone.utc)
