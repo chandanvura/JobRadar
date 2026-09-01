@@ -11,7 +11,7 @@ ROLE_PATTERNS = {
 SENIOR = re.compile(r"\b(senior|sr\.?|lead|staff|principal|architect|manager|director|head|vp|vice president)\b",re.I)
 SKILLS=["AWS","Azure","GCP","Linux","Docker","Kubernetes","Terraform","Jenkins","CI/CD","GitHub Actions","Argo CD","Ansible","Git","Helm","Bash","Python","Java","Spring Boot","Spring","REST API","Microservices","Kafka","SQL","PostgreSQL","MySQL","Redis","Prometheus","Grafana","ELK","Elasticsearch","Splunk","Datadog"]
 MAX_JOB_AGE_HOURS = 24
-MAX_EXPERIENCE_YEARS = 2
+MAX_EXPERIENCE_YEARS = 3
 
 def normalize_location(value: str):
     low=value.lower(); hybrid=" · Hybrid" if "hybrid" in low else ""
@@ -64,8 +64,10 @@ def enrich(job: Job, company_priority: int=3):
     corpus=f"{job.title} {job.description}".lower(); job.skills=[s for s in SKILLS if skill_present(s,corpus)]
     age=posted_age_hours(job.posted_at)
     recent=age is not None and -1 <= age <= MAX_JOB_AGE_HOURS
-    experience_ok=job.experience_min is not None and job.experience_max is not None and job.experience_min >= 0 and job.experience_max <= MAX_EXPERIENCE_YEARS
-    job.is_eligible=job.city in {"Bengaluru","Hyderabad"} and job.role_category!="Other" and not SENIOR.search(job.title) and experience_ok and recent
+    bounded_experience=job.experience_min is not None and job.experience_max is not None and job.experience_min >= 0 and job.experience_max <= MAX_EXPERIENCE_YEARS
+    accepted_plus=job.experience_min is not None and job.experience_max is None and 0 <= job.experience_min <= 2
+    experience_ok=bounded_experience or accepted_plus
+    job.is_eligible=job.city in {"Bengaluru","Hyderabad"} and job.role_category!="Other" and experience_ok and recent
     job.freshness_score=0 if age is None or age > MAX_JOB_AGE_HOURS else 35 if age<1 else 30 if age<3 else 25 if age<6 else 18 if age<12 else 12
     exp=25 if experience_ok else 0
     title=20 if job.role_category!="Other" else 0; skill=min(10,len(job.skills)*2); priority=min(5,max(1,company_priority))
