@@ -24,12 +24,26 @@ def test_title_classification():
     assert classify_title("SDE I")[1] == "Software Engineering"
     assert classify_title("Java Backend Engineer")[1] == "Java / Backend"
 
-def test_only_zero_to_two_year_roles_are_eligible():
-    assert not enrich(sample(title="Senior DevOps Engineer")).is_eligible
-    assert not enrich(sample(description="Candidate must have 3 years of experience")).is_eligible
-    assert not enrich(sample(description="Candidate must have 2+ years experience")).is_eligible
-    assert not enrich(sample(description="Candidate needs 1-3 years experience")).is_eligible
-    assert enrich(sample(description="Candidate needs 0-2 years experience")).is_eligible
+def test_zero_to_three_year_roles_are_eligible():
+    accepted=[
+        ("Associate DevOps Engineer","Fresher or recent graduate"),
+        ("Software Engineer","Candidate needs 0-1 years experience"),
+        ("Backend Engineer","Candidate needs 0-2 years experience"),
+        ("Java Developer","Candidate needs 0-3 years experience"),
+        ("Platform Engineer","Candidate needs 1-2 years experience"),
+        ("Cloud Engineer","Candidate needs 1-3 years experience"),
+        ("SRE","Candidate needs 2-3 years experience"),
+        ("Software Engineer","Candidate needs 2 years of experience"),
+        ("Senior DevOps Engineer","Candidate needs 1-2 years experience"),
+        ("Lead Software Engineer","Candidate needs 2+ years experience"),
+    ]
+    for title,description in accepted:
+        assert enrich(sample(title=title,description=description)).is_eligible
+
+def test_experience_above_policy_is_excluded():
+    assert not enrich(sample(description="Candidate needs 3+ years experience")).is_eligible
+    assert not enrich(sample(description="Candidate needs 2-4 years experience")).is_eligible
+    assert not enrich(sample(description="Candidate needs 4 years of experience")).is_eligible
 
 def test_only_last_24_hours_are_eligible():
     assert enrich(sample(posted_at=recent(23))).is_eligible
