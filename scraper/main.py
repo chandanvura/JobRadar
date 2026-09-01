@@ -54,6 +54,15 @@ async def notify(job):
         response.raise_for_status()
     return True
 
+async def record_notification(endpoint,headers,job,status,error=None):
+    payload={"ats_provider":job.ats_provider,"external_job_id":job.external_job_id,"status":status,"error":error}
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(30,connect=10)) as x:
+            response=await x.post(endpoint.rstrip("/")+"/api/notifications",headers=headers,json=payload)
+            response.raise_for_status()
+    except Exception as exc:
+        print(f"WARN Notification audit {job.external_job_id}: {type(exc).__name__}",file=sys.stderr)
+
 async def main():
     started=now(); enabled=[c for c in load_companies() if c.enabled and c.ats_provider in ADAPTERS]; sem=asyncio.Semaphore(6)
     batches=await asyncio.gather(*(scrape(c,sem) for c in enabled)); all_jobs=[j for jobs,_,_ in batches for j in jobs]; eligible=[j for j in all_jobs if j.is_eligible]
@@ -70,7 +79,11 @@ async def main():
     new_ids=set(result.get("new_external_ids",[])); sent=0
     for job in eligible:
         if (job.external_job_id in new_ids or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65:
-            try: sent+=int(await notify(job))
-            except Exception as exc: print(f"WARN Telegram {job.external_job_id}: {exc}",file=sys.stderr)
+            try:
+                delivered=await notify(job); sent+=int(delivered)
+                await record_notification(endpoint,headers,job,"sent")
+            except Exception as exc:
+                print(f"WARN Telegram {job.external_job_id}: {type(exc).__name__}",file=sys.stderr)
+                await record_notification(endpoint,headers,job,"failed",f"{type(exc).__name__}: Telegram delivery failed")
     print(f"Scanned {len(all_jobs)} jobs; {len(eligible)} eligible; {len(new_ids)} new; {sent} alerts.")
 if __name__=="__main__":asyncio.run(main())
