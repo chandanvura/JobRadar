@@ -7,6 +7,10 @@ from .models import Company
 from .normalization import enrich
 
 ROOT=Path(__file__).resolve().parents[1]
+_TELEGRAM_CHAT_OVERRIDE=None
+# One-time recovery for alerts that were ingested before Telegram chat resolution.
+TELEGRAM_RETRY_IDS={"R0122222","R-544655","R-542087"}
+
 def now(): return datetime.now(timezone.utc).isoformat()
 def load_companies():
     with (ROOT/"companies"/"companies.csv").open(encoding="utf-8") as f:return [Company(r["company_name"],r["careers_url"],r["ats_provider"].lower(),r["ats_identifier"],int(r.get("priority",3)),r.get("enabled","true").lower()=="true") for r in csv.DictReader(f)]
@@ -21,12 +25,33 @@ async def scrape(company,sem):
             print(f"WARN {company.name}: {type(exc).__name__}: {exc}",file=sys.stderr)
             return [],{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":1},str(exc)
 
+def private_start_chat_id(payload):
+    """Return the most recent private chat that explicitly sent /start."""
+    candidates=[]
+    for update in payload.get("result",[]):
+        message=update.get("message") or update.get("edited_message") or {}
+        chat=message.get("chat") or {}
+        if chat.get("type")=="private" and str(message.get("text","")).strip().split()[0:1]==["/start"] and chat.get("id") is not None:
+            candidates.append((int(update.get("update_id",0)),str(chat["id"])))
+    return max(candidates)[1] if candidates else None
+
 async def notify(job):
-    token,chat=os.getenv("TELEGRAM_BOT_TOKEN"),os.getenv("TELEGRAM_CHAT_ID")
+    global _TELEGRAM_CHAT_OVERRIDE
+    token,configured=os.getenv("TELEGRAM_BOT_TOKEN"),os.getenv("TELEGRAM_CHAT_ID")
+    chat=_TELEGRAM_CHAT_OVERRIDE or configured
     if not token or not chat:return False
-    message=f"🚨 NEW JOB\n\n{job.title}\n{job.company}\n\n📍 {job.normalized_location}\n💼 {job.experience_label}\n⭐ Match: {job.relevance_score}/100\n\nSkills: {' • '.join(job.skills) or 'Not specified'}\n\nAPPLY NOW:\n{job.application_url}"
+    message=f"🚨 NEW JOB\n\n{job.title}\n{job.company}\n\n📍 {job.normalized_location}\n💼 {job.experience_label}\n⭐ Match: {job.relevance_score}/100\n\nSkills: {' • '.join(job.skills) or 'Optional / not specified'}\n\nAPPLY NOW:\n{job.application_url}"
     async with httpx.AsyncClient(timeout=20) as x:
-        response=await x.post(f"https://api.telegram.org/bot{token}/sendMessage",json={"chat_id":chat,"text":message,"disable_web_page_preview":True}); response.raise_for_status()
+        url=f"https://api.telegram.org/bot{token}"
+        response=await x.post(url+"/sendMessage",json={"chat_id":chat,"text":message,"disable_web_page_preview":True})
+        if response.status_code==403 and not _TELEGRAM_CHAT_OVERRIDE:
+            updates=await x.get(url+"/getUpdates",params={"limit":100,"timeout":0})
+            updates.raise_for_status()
+            recovered=private_start_chat_id(updates.json())
+            if recovered and recovered!=chat:
+                _TELEGRAM_CHAT_OVERRIDE=recovered
+                response=await x.post(url+"/sendMessage",json={"chat_id":recovered,"text":message,"disable_web_page_preview":True})
+        response.raise_for_status()
     return True
 
 async def main():
@@ -44,7 +69,7 @@ async def main():
         response=await x.post(endpoint.rstrip("/")+"/api/ingest",headers=headers,json={"jobs":[j.as_dict() for j in eligible],"companies":statuses,"run":run}); response.raise_for_status(); result=response.json()
     new_ids=set(result.get("new_external_ids",[])); sent=0
     for job in eligible:
-        if job.external_job_id in new_ids and job.relevance_score>=65:
+        if (job.external_job_id in new_ids or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65:
             try: sent+=int(await notify(job))
             except Exception as exc: print(f"WARN Telegram {job.external_job_id}: {exc}",file=sys.stderr)
     print(f"Scanned {len(all_jobs)} jobs; {len(eligible)} eligible; {len(new_ids)} new; {sent} alerts.")
