@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from urllib.parse import urljoin, urlparse
 import html, json, re
 import httpx
@@ -23,6 +23,26 @@ def iso_date(value):
         return parsed.astimezone(timezone.utc).isoformat()
     except (TypeError,ValueError): return None
 
+def parse_posted_at(value, now=None):
+    """Convert exact or relative career-site posting labels to a UTC timestamp."""
+    exact=iso_date(value)
+    if exact: return exact
+    if not value: return None
+    reference=now or datetime.now(timezone.utc)
+    label=clean(str(value)).lower()
+    if re.search(r"\b(posted\s+)?today\b",label):
+        return reference.isoformat()
+    match=re.search(r"\b(\d+)\s*(seconds?|secs?|minutes?|mins?|hours?|hrs?)\s+ago\b",label)
+    if match:
+        amount=int(match.group(1)); unit=match.group(2)
+        if unit.startswith(("second","sec")): delta=timedelta(seconds=amount)
+        elif unit.startswith(("minute","min")): delta=timedelta(minutes=amount)
+        else: delta=timedelta(hours=amount)
+        return (reference-delta).isoformat()
+    if re.search(r"\bfew\s+hours?\s+ago\b",label):
+        return (reference-timedelta(hours=3)).isoformat()
+    return None
+
 class JobSource(ABC):
     @abstractmethod
     async def fetch_jobs(self, company: Company) -> list[Job]: ...
@@ -43,7 +63,7 @@ class AshbyAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await x.get(f"https://api.ashbyhq.com/posting-api/job-board/{c.ats_identifier}"); response.raise_for_status(); data=response.json()
-        return [Job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,j.get("location",""),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,iso_date(j.get("publishedAt"))) for j in data.get("jobs",[]) if j.get("isListed",True)]
+        return [Job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,j.get("location",""),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,parse_posted_at(j.get("publishedAt"))) for j in data.get("jobs",[]) if j.get("isListed",True)]
 
 class SmartRecruitersAdapter(JobSource):
     async def fetch_jobs(self,c):
@@ -61,7 +81,7 @@ class SmartRecruitersAdapter(JobSource):
                 description=" ".join(clean((sections.get(k) or {}).get("text","")) for k in ("jobDescription","qualifications","additionalInformation"))
                 location=", ".join(x for x in ((detail.get("location") or {}).get("city"),(detail.get("location") or {}).get("region"),(detail.get("location") or {}).get("country")) if x)
                 public_url=f"https://jobs.smartrecruiters.com/{c.ats_identifier}/{item['id']}"
-                jobs.append(Job(str(item["id"]),item.get("name",""),c.name,location,description,"smartrecruiters","company_career",public_url,detail.get("applyUrl") or public_url,c.careers_url,iso_date(item.get("releasedDate") or detail.get("releasedDate"))))
+                jobs.append(Job(str(item["id"]),item.get("name",""),c.name,location,description,"smartrecruiters","company_career",public_url,detail.get("applyUrl") or public_url,c.careers_url,parse_posted_at(item.get("releasedDate") or detail.get("releasedDate"))))
         return jobs
 
 def workday_config(c):
@@ -93,7 +113,7 @@ class WorkdayAdapter(JobSource):
                 if detail_response.status_code != 200: continue
                 info=detail_response.json().get("jobPostingInfo",{})
                 public_url=urljoin(origin,f"/{site}{path}")
-                jobs.append(Job(str(info.get("jobReqId") or path),info.get("title") or item.get("title",""),c.name,info.get("location") or item.get("locationsText",""),clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,iso_date(info.get("startDate"))))
+                jobs.append(Job(str(info.get("jobReqId") or path),info.get("title") or item.get("title",""),c.name,info.get("location") or item.get("locationsText",""),clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,parse_posted_at(item.get("postedOn")) or parse_posted_at(info.get("startDate"))))
         return jobs
 
 def jsonld_objects(soup):
@@ -127,7 +147,7 @@ class CustomCareerAdapter(JobSource):
                     address=(location_data.get("address") or {}) if isinstance(location_data,dict) else {}
                     location=", ".join(str(address.get(k,"")) for k in ("addressLocality","addressRegion","addressCountry") if address.get(k))
                     apply_url=item.get("url") or url; external=str(item.get("identifier",{}).get("value") if isinstance(item.get("identifier"),dict) else item.get("identifier") or apply_url)
-                    jobs.append(Job(external,item.get("title",""),c.name,location,clean(item.get("description","")),"custom","company_career",apply_url,apply_url,c.careers_url,iso_date(item.get("datePosted"))))
+                    jobs.append(Job(external,item.get("title",""),c.name,location,clean(item.get("description","")),"custom","company_career",apply_url,apply_url,c.careers_url,parse_posted_at(item.get("datePosted"))))
         unique={}
         for job in jobs: unique[job.external_job_id]=job
         return list(unique.values())
