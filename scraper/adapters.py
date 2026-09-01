@@ -23,25 +23,43 @@ def iso_date(value):
         return parsed.astimezone(timezone.utc).isoformat()
     except (TypeError,ValueError): return None
 
-def parse_posted_at(value, now=None):
-    """Convert exact or relative career-site posting labels to a UTC timestamp."""
-    exact=iso_date(value)
-    if exact: return exact
-    if not value: return None
+def parse_posting(value, now=None):
+    """Return exact timestamps separately from employer-reported relative labels.
+
+    "Posted today" must never become "posted just now". Relative labels carry an
+    age estimate for policy evaluation while the UI preserves the original label.
+    """
+    if not value: return None,None,"unknown",None
+    raw=clean(str(value)); exact=iso_date(raw)
+    if exact:
+        precision="day" if re.fullmatch(r"\d{4}-\d{2}-\d{2}",raw) else "exact"
+        return exact,None,precision,None
     reference=now or datetime.now(timezone.utc)
-    label=clean(str(value)).lower()
+    label=raw.lower()
     if re.search(r"\b(posted\s+)?today\b",label):
-        return reference.isoformat()
+        return None,"Posted today","day",None
     match=re.search(r"\b(\d+)\s*(seconds?|secs?|minutes?|mins?|hours?|hrs?)\s+ago\b",label)
     if match:
         amount=int(match.group(1)); unit=match.group(2)
-        if unit.startswith(("second","sec")): delta=timedelta(seconds=amount)
-        elif unit.startswith(("minute","min")): delta=timedelta(minutes=amount)
-        else: delta=timedelta(hours=amount)
-        return (reference-delta).isoformat()
+        if unit.startswith(("second","sec")): hours=amount/3600
+        elif unit.startswith(("minute","min")): hours=amount/60
+        else: hours=float(amount)
+        return None,raw,"relative",hours
     if re.search(r"\bfew\s+hours?\s+ago\b",label):
-        return (reference-timedelta(hours=3)).isoformat()
-    return None
+        return None,"Posted a few hours ago","relative",3.0
+    return None,raw,"unknown",None
+
+def parse_posted_at(value, now=None):
+    """Compatibility helper returning only a genuine employer timestamp."""
+    return parse_posting(value,now)[0]
+
+def posting_fields(value, now=None):
+    return parse_posting(value,now)
+
+def make_job(*args, posting=None, **kwargs):
+    job=Job(*args,**kwargs)
+    job.posted_at,job.posted_label,job.posted_precision,job.reported_age_hours=posting_fields(posting)
+    return job
 
 class JobSource(ABC):
     @abstractmethod
@@ -51,19 +69,19 @@ class GreenhouseAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await x.get(f"https://boards-api.greenhouse.io/v1/boards/{c.ats_identifier}/jobs",params={"content":"true"}); response.raise_for_status(); data=response.json()
-        return [Job(str(j["id"]),j["title"],c.name,j.get("location",{}).get("name",""),clean(j.get("content","")),"greenhouse","company_career",j.get("absolute_url",c.careers_url),j.get("absolute_url",c.careers_url),c.careers_url,None) for j in data.get("jobs",[])]
+        return [make_job(str(j["id"]),j["title"],c.name,j.get("location",{}).get("name",""),clean(j.get("content","")),"greenhouse","company_career",j.get("absolute_url",c.careers_url),j.get("absolute_url",c.careers_url),c.careers_url,posting=None) for j in data.get("jobs",[])]
 
 class LeverAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await x.get(f"https://api.lever.co/v0/postings/{c.ats_identifier}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
-        return [Job(str(j["id"]),j["text"],c.name,j.get("categories",{}).get("location",""),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,epoch_ms(j.get("createdAt"))) for j in data]
+        return [make_job(str(j["id"]),j["text"],c.name,j.get("categories",{}).get("location",""),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
 
 class AshbyAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await x.get(f"https://api.ashbyhq.com/posting-api/job-board/{c.ats_identifier}"); response.raise_for_status(); data=response.json()
-        return [Job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,j.get("location",""),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,parse_posted_at(j.get("publishedAt"))) for j in data.get("jobs",[]) if j.get("isListed",True)]
+        return [make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,j.get("location",""),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in data.get("jobs",[]) if j.get("isListed",True)]
 
 class SmartRecruitersAdapter(JobSource):
     async def fetch_jobs(self,c):
@@ -81,7 +99,7 @@ class SmartRecruitersAdapter(JobSource):
                 description=" ".join(clean((sections.get(k) or {}).get("text","")) for k in ("jobDescription","qualifications","additionalInformation"))
                 location=", ".join(x for x in ((detail.get("location") or {}).get("city"),(detail.get("location") or {}).get("region"),(detail.get("location") or {}).get("country")) if x)
                 public_url=f"https://jobs.smartrecruiters.com/{c.ats_identifier}/{item['id']}"
-                jobs.append(Job(str(item["id"]),item.get("name",""),c.name,location,description,"smartrecruiters","company_career",public_url,detail.get("applyUrl") or public_url,c.careers_url,parse_posted_at(item.get("releasedDate") or detail.get("releasedDate"))))
+                jobs.append(make_job(str(item["id"]),item.get("name",""),c.name,location,description,"smartrecruiters","company_career",public_url,detail.get("applyUrl") or public_url,c.careers_url,posting=item.get("releasedDate") or detail.get("releasedDate")))
         return jobs
 
 def workday_config(c):
@@ -98,7 +116,7 @@ class WorkdayAdapter(JobSource):
         origin,tenant,site=workday_config(c); api=f"{origin}/wday/cxs/{tenant}/{site}"
         async with client() as x:
             postings=[]; offset=0
-            while offset < 100:
+            while offset < 1000:
                 response=await x.post(f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
                 postings.extend(batch)
@@ -113,7 +131,8 @@ class WorkdayAdapter(JobSource):
                 if detail_response.status_code != 200: continue
                 info=detail_response.json().get("jobPostingInfo",{})
                 public_url=urljoin(origin,f"/{site}{path}")
-                jobs.append(Job(str(info.get("jobReqId") or path),info.get("title") or item.get("title",""),c.name,info.get("location") or item.get("locationsText",""),clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,parse_posted_at(item.get("postedOn")) or parse_posted_at(info.get("startDate"))))
+                posting=info.get("startDate") or item.get("postedOn")
+                jobs.append(make_job(str(info.get("jobReqId") or path),info.get("title") or item.get("title",""),c.name,info.get("location") or item.get("locationsText",""),clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting))
         return jobs
 
 def jsonld_objects(soup):
@@ -147,7 +166,7 @@ class CustomCareerAdapter(JobSource):
                     address=(location_data.get("address") or {}) if isinstance(location_data,dict) else {}
                     location=", ".join(str(address.get(k,"")) for k in ("addressLocality","addressRegion","addressCountry") if address.get(k))
                     apply_url=item.get("url") or url; external=str(item.get("identifier",{}).get("value") if isinstance(item.get("identifier"),dict) else item.get("identifier") or apply_url)
-                    jobs.append(Job(external,item.get("title",""),c.name,location,clean(item.get("description","")),"custom","company_career",apply_url,apply_url,c.careers_url,parse_posted_at(item.get("datePosted"))))
+                    jobs.append(make_job(external,item.get("title",""),c.name,location,clean(item.get("description","")),"custom","company_career",apply_url,apply_url,c.careers_url,posting=item.get("datePosted")))
         unique={}
         for job in jobs: unique[job.external_job_id]=job
         return list(unique.values())

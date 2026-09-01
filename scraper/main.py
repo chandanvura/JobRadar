@@ -20,10 +20,14 @@ async def scrape(company,sem):
     async with sem:
         try:
             raw=await ADAPTERS[company.ats_provider].fetch_jobs(company)
-            return [enrich(j,company.priority) for j in raw],{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":now(),"error_count":0},None
+            jobs=[enrich(j,company.priority) for j in raw]
+            candidates=[j for j in jobs if j.city in {"Bengaluru","Hyderabad"} and j.role_category!="Other"]
+            eligible=[j for j in candidates if j.is_eligible]
+            warning="No jobs returned" if not jobs else "No target-city roles returned" if not candidates else None
+            return jobs,{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":now(),"error_count":0,"jobs_found":len(jobs),"candidate_jobs":len(candidates),"eligible_jobs":len(eligible),"warning":warning},None
         except Exception as exc:
             print(f"WARN {company.name}: {type(exc).__name__}: {exc}",file=sys.stderr)
-            return [],{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":1},str(exc)
+            return [],{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":f"{type(exc).__name__}: {str(exc)[:160]}"},str(exc)
 
 def private_start_chat_id(payload):
     """Return the most recent private chat that explicitly sent /start."""
@@ -39,8 +43,9 @@ async def notify(job):
     global _TELEGRAM_CHAT_OVERRIDE
     token,configured=os.getenv("TELEGRAM_BOT_TOKEN"),os.getenv("TELEGRAM_CHAT_ID")
     chat=_TELEGRAM_CHAT_OVERRIDE or configured
-    if not token or not chat:return False
-    message=f"🚨 NEW JOB\n\n{job.title}\n{job.company}\n\n📍 {job.normalized_location}\n💼 {job.experience_label}\n⭐ Match: {job.relevance_score}/100\n\nSkills: {' • '.join(job.skills) or 'Optional / not specified'}\n\nAPPLY NOW:\n{job.application_url}"
+    if not token or not chat:raise RuntimeError("Telegram credentials are not configured")
+    posted=job.posted_label or job.posted_at or "Posting time unavailable"
+    message=f"🚨 NEW JOB\n\n{job.title}\n{job.company}\n\n📍 {job.normalized_location}\n💼 {job.experience_label}\n🕒 {posted}\n⭐ Priority: {job.relevance_score}/100\n\nSkills: {' • '.join(job.skills) or 'Optional / not specified'}\n\nAPPLY NOW:\n{job.application_url}\n\nCAREER PAGE:\n{job.career_page_url}"
     async with httpx.AsyncClient(timeout=20) as x:
         url=f"https://api.telegram.org/bot{token}"
         response=await x.post(url+"/sendMessage",json={"chat_id":chat,"text":message,"disable_web_page_preview":True})
@@ -63,27 +68,44 @@ async def record_notification(endpoint,headers,job,status,error=None):
     except Exception as exc:
         print(f"WARN Notification audit {job.external_job_id}: {type(exc).__name__}",file=sys.stderr)
 
+async def post_with_retry(url,headers,payload,attempts=3):
+    last=None
+    for attempt in range(attempts):
+        try:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(150,connect=20)) as x:
+                response=await x.post(url,headers=headers,json=payload); response.raise_for_status(); return response
+        except (httpx.TimeoutException,httpx.NetworkError,httpx.HTTPStatusError) as exc:
+            last=exc
+            if attempt+1<attempts: await asyncio.sleep(2**attempt)
+    raise last or RuntimeError("Request failed")
+
 async def main():
     started=now(); enabled=[c for c in load_companies() if c.enabled and c.ats_provider in ADAPTERS]; sem=asyncio.Semaphore(6)
-    batches=await asyncio.gather(*(scrape(c,sem) for c in enabled)); all_jobs=[j for jobs,_,_ in batches for j in jobs]; eligible=[j for j in all_jobs if j.is_eligible]
+    batches=await asyncio.gather(*(scrape(c,sem) for c in enabled)); all_jobs=[j for jobs,_,_ in batches for j in jobs]
+    candidates=[j for j in all_jobs if j.city in {"Bengaluru","Hyderabad"} and j.role_category!="Other"]
+    eligible=[j for j in candidates if j.is_eligible]
     statuses=[status for _,status,_ in batches]; failures=sum(error is not None for _,_,error in batches)
     endpoint,secret=os.getenv("JOBRADAR_API_URL"),os.getenv("JOBRADAR_INGEST_SECRET")
     if not endpoint or not secret:
         print(f"Scanned {len(all_jobs)} jobs; {len(eligible)} eligible. Storage skipped: JOBRADAR_API_URL/INGEST_SECRET missing."); return
-    run={"started_at":started,"finished_at":now(),"companies_checked":len(enabled),"companies_successful":len(enabled)-failures,"companies_failed":failures,"jobs_scanned":len(all_jobs),"matching_jobs":len(eligible),"notifications_sent":0}
+    empty=sum(1 for status in statuses if not status.get("error_count") and status.get("jobs_found",0)==0)
+    run={"started_at":started,"finished_at":now(),"companies_checked":len(enabled),"companies_successful":len(enabled)-failures,"companies_failed":failures,"companies_empty":empty,"jobs_scanned":len(all_jobs),"candidate_jobs":len(candidates),"matching_jobs":len(eligible),"notifications_sent":0,"status":"success" if failures==0 and empty==0 else "degraded"}
     headers={"Authorization":f"Bearer {secret}"}
     bypass=os.getenv("JOBRADAR_SITE_BYPASS_TOKEN")
     if bypass:headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
-    async with httpx.AsyncClient(timeout=httpx.Timeout(120,connect=20)) as x:
-        response=await x.post(endpoint.rstrip("/")+"/api/ingest",headers=headers,json={"jobs":[j.as_dict() for j in eligible],"companies":statuses,"run":run}); response.raise_for_status(); result=response.json()
-    new_ids=set(result.get("new_external_ids",[])); sent=0
+    payload_jobs=[]
+    for job in candidates:
+        item=job.as_dict(); item["description"]=item.get("description","")[:4000]; payload_jobs.append(item)
+    response=await post_with_retry(endpoint.rstrip("/")+"/api/ingest",headers,{"jobs":payload_jobs,"companies":statuses,"run":run})
+    result=response.json(); alert_keys=set(result.get("notification_keys",[])); sent=0
     for job in eligible:
-        if (job.external_job_id in new_ids or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65:
+        notification_key=f"{job.ats_provider}:{job.external_job_id}"
+        if (notification_key in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65:
             try:
-                delivered=await notify(job); sent+=int(delivered)
+                await notify(job); sent+=1
                 await record_notification(endpoint,headers,job,"sent")
             except Exception as exc:
                 print(f"WARN Telegram {job.external_job_id}: {type(exc).__name__}",file=sys.stderr)
                 await record_notification(endpoint,headers,job,"failed",f"{type(exc).__name__}: Telegram delivery failed")
-    print(f"Scanned {len(all_jobs)} jobs; {len(eligible)} eligible; {len(new_ids)} new; {sent} alerts.")
+    print(f"Scanned {len(all_jobs)} jobs; {len(candidates)} target candidates; {len(eligible)} eligible; {len(result.get('new_external_ids',[]))} new; {sent} alerts.")
 if __name__=="__main__":asyncio.run(main())

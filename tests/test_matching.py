@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from scraper.models import Job
-from scraper.adapters import likely_target, parse_posted_at, workday_config
+from scraper.adapters import likely_target, parse_posted_at, parse_posting, workday_config
 from scraper.models import Company
 from scraper.main import private_start_chat_id
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
@@ -64,11 +64,22 @@ def test_private_start_chat_resolution():
 
 def test_relative_posting_labels_are_normalized():
     now=datetime(2026,9,1,12,0,tzinfo=timezone.utc)
-    assert parse_posted_at("Posted Today",now)==now.isoformat()
-    assert parse_posted_at("Posted 30 minutes ago",now)==(now-timedelta(minutes=30)).isoformat()
-    assert parse_posted_at("2 hours ago",now)==(now-timedelta(hours=2)).isoformat()
-    assert parse_posted_at("Posted few hours ago",now)==(now-timedelta(hours=3)).isoformat()
+    assert parse_posting("Posted Today",now)==(None,"Posted today","day",None)
+    assert parse_posting("Posted 30 minutes ago",now)==(None,"Posted 30 minutes ago","relative",0.5)
+    assert parse_posting("2 hours ago",now)==(None,"2 hours ago","relative",2.0)
+    assert parse_posting("Posted few hours ago",now)==(None,"Posted a few hours ago","relative",3.0)
     assert parse_posted_at("Posted Yesterday",now) is None
+
+def test_today_label_is_eligible_without_invented_timestamp():
+    job=sample(posted_at=recent())
+    job.posted_at=None; job.posted_label="Posted today"; job.posted_precision="day"
+    enriched=enrich(job)
+    assert enriched.is_eligible
+    assert enriched.posted_at is None and enriched.freshness_score == 12
+
+def test_strictest_experience_requirement_wins():
+    assert extract_experience("2+ years in Java. 5+ years overall")[:2] == (5.0,None)
+    assert not enrich(sample(description="2+ years in Java. 5+ years overall experience")).is_eligible
 
 def test_skills_are_optional_for_eligibility():
     job=enrich(sample(description="Candidate needs 1-2 years of relevant experience"))
