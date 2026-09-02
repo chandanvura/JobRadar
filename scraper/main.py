@@ -24,11 +24,23 @@ def run_health_status(failures):
     """
     return "success" if failures == 0 else "degraded"
 
+async def fetch_company_jobs(company,attempts=3):
+    """Retry a complete source scan when the failure is transient."""
+    last=None
+    for attempt in range(attempts):
+        try:
+            return await ADAPTERS[company.ats_provider].fetch_jobs(company)
+        except (httpx.TimeoutException,httpx.NetworkError) as exc:
+            last=exc
+            if attempt+1<attempts:
+                await asyncio.sleep(2**attempt)
+    raise last or RuntimeError("Source scan failed")
+
 async def scrape(company,sem):
     checked=now()
     async with sem:
         try:
-            raw,discovered=await ADAPTERS[company.ats_provider].fetch_jobs(company)
+            raw,discovered=await fetch_company_jobs(company)
             jobs=[enrich(j,company.priority) for j in raw]
             candidates=[j for j in jobs if j.city in {"Bengaluru","Hyderabad"} and j.role_category!="Other"]
             eligible=[j for j in candidates if j.is_eligible]
