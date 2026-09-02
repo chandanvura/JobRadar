@@ -15,6 +15,15 @@ def now(): return datetime.now(timezone.utc).isoformat()
 def load_companies():
     with (ROOT/"companies"/"companies.csv").open(encoding="utf-8") as f:return [Company(r["company_name"],r["careers_url"],r["ats_provider"].lower(),r["ats_identifier"],int(r.get("priority",3)),r.get("enabled","true").lower()=="true") for r in csv.DictReader(f)]
 
+def run_health_status(failures):
+    """Operational health depends on request failures, not hiring activity.
+
+    A successful source may legitimately have no open roles. Empty and limited
+    sources remain visible as coverage diagnostics but must not mark the scan
+    itself as degraded.
+    """
+    return "success" if failures == 0 else "degraded"
+
 async def scrape(company,sem):
     checked=now()
     async with sem:
@@ -89,7 +98,7 @@ async def main():
     if not endpoint or not secret:
         print(f"Scanned {len(all_jobs)} jobs; {len(eligible)} eligible. Storage skipped: JOBRADAR_API_URL/INGEST_SECRET missing."); return
     empty=sum(1 for status in statuses if not status.get("error_count") and status.get("jobs_found",0)==0 and not str(status.get("warning","")).startswith("Limited coverage"))
-    run={"started_at":started,"finished_at":now(),"companies_checked":len(enabled),"companies_successful":len(enabled)-failures,"companies_failed":failures,"companies_empty":empty,"jobs_scanned":scanned,"candidate_jobs":len(candidates),"matching_jobs":len(eligible),"notifications_sent":0,"status":"success" if failures==0 and empty==0 else "degraded"}
+    run={"started_at":started,"finished_at":now(),"companies_checked":len(enabled),"companies_successful":len(enabled)-failures,"companies_failed":failures,"companies_empty":empty,"jobs_scanned":scanned,"candidate_jobs":len(candidates),"matching_jobs":len(eligible),"notifications_sent":0,"status":run_health_status(failures)}
     headers={"Authorization":f"Bearer {secret}"}
     bypass=os.getenv("JOBRADAR_SITE_BYPASS_TOKEN")
     if bypass:headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
