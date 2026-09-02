@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from scraper.models import Job
 from scraper.adapters import job_like_url, likely_target, parse_posted_at, parse_posting, workday_config
 from scraper.models import Company
-from scraper.main import private_start_chat_id, run_health_status
+from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
 
 def recent(hours=1):
@@ -111,6 +111,24 @@ def test_custom_career_pages_follow_official_ats_links_only():
 def test_health_uses_request_failures_not_opening_counts():
     assert run_health_status(0) == "success"
     assert run_health_status(1) == "degraded"
+
+def test_transient_source_failures_are_retried(monkeypatch):
+    import asyncio
+    import httpx
+    from scraper.adapters import ADAPTERS
+    class FlakyAdapter:
+        calls=0
+        async def fetch_jobs(self,company):
+            self.calls+=1
+            if self.calls<3: raise httpx.ConnectTimeout("temporary")
+            return [],0
+    adapter=FlakyAdapter()
+    async def no_wait(_): pass
+    monkeypatch.setitem(ADAPTERS,"retry-test",adapter)
+    monkeypatch.setattr("scraper.main.asyncio.sleep",no_wait)
+    company=Company("Retry Test","https://example.com/jobs","retry-test","retry-test")
+    assert asyncio.run(fetch_company_jobs(company)) == ([],0)
+    assert adapter.calls == 3
 
 def test_company_registry_never_shrinks_or_duplicates_sources():
     import csv
