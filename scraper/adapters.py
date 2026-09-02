@@ -82,19 +82,23 @@ class GreenhouseAdapter(JobSource):
                     except httpx.HTTPError:
                         pass
                 return make_job(str(j["id"]),j["title"],c.name,j.get("location",{}).get("name",""),clean(j.get("content","")),"greenhouse","company_career",url,url,c.careers_url,posting=posting)
-            return list(await asyncio.gather(*(convert(j) for j in data.get("jobs",[]))))
+            jobs=list(await asyncio.gather(*(convert(j) for j in data.get("jobs",[]))))
+            return jobs,len(data.get("jobs",[]))
 
 class LeverAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await x.get(f"https://api.lever.co/v0/postings/{c.ats_identifier}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
-        return [make_job(str(j["id"]),j["text"],c.name,j.get("categories",{}).get("location",""),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
+        jobs=[make_job(str(j["id"]),j["text"],c.name,j.get("categories",{}).get("location",""),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
+        return jobs,len(data)
 
 class AshbyAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await x.get(f"https://api.ashbyhq.com/posting-api/job-board/{c.ats_identifier}"); response.raise_for_status(); data=response.json()
-        return [make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,j.get("location",""),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in data.get("jobs",[]) if j.get("isListed",True)]
+        listed=[j for j in data.get("jobs",[]) if j.get("isListed",True)]
+        jobs=[make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,j.get("location",""),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in listed]
+        return jobs,len(listed)
 
 class SmartRecruitersAdapter(JobSource):
     async def fetch_jobs(self,c):
@@ -118,7 +122,7 @@ class SmartRecruitersAdapter(JobSource):
                 location=", ".join(x for x in ((detail.get("location") or {}).get("city"),(detail.get("location") or {}).get("region"),(detail.get("location") or {}).get("country")) if x)
                 public_url=f"https://jobs.smartrecruiters.com/{c.ats_identifier}/{item['id']}"
                 jobs.append(make_job(str(item["id"]),item.get("name",""),c.name,location,description,"smartrecruiters","company_career",public_url,detail.get("applyUrl") or public_url,c.careers_url,posting=item.get("releasedDate") or detail.get("releasedDate")))
-        return jobs
+        return jobs,len(content)
 
 def workday_config(c):
     parsed=urlparse(c.careers_url)
@@ -151,7 +155,7 @@ class WorkdayAdapter(JobSource):
                 public_url=urljoin(origin,f"/{site}{path}")
                 posting=info.get("startDate") or item.get("postedOn")
                 jobs.append(make_job(str(info.get("jobReqId") or path),info.get("title") or item.get("title",""),c.name,info.get("location") or item.get("locationsText",""),clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting))
-        return jobs
+        return jobs,len(postings)
 
 def jsonld_objects(soup):
     for script in soup.find_all("script",type="application/ld+json"):
@@ -199,6 +203,7 @@ class CustomCareerAdapter(JobSource):
                     jobs.append(make_job(external,item.get("title",""),c.name,location,clean(item.get("description","")),"custom","company_career",apply_url,apply_url,c.careers_url,posting=item.get("datePosted")))
         unique={}
         for job in jobs: unique[job.external_job_id]=job
-        return list(unique.values())
+        jobs=list(unique.values())
+        return jobs,len(jobs)
 
 ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"custom":CustomCareerAdapter()}
