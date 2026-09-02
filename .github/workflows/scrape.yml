@@ -9,11 +9,13 @@ on:
       - "requirements.txt"
       - "tests/**"
   schedule:
-    - cron: "17,47 * * * *"
+    # Run once per hour at minute 17 UTC. GitHub schedules use UTC.
+    - cron: "17 * * * *"
   workflow_dispatch:
 concurrency:
+  # Queue overlapping push/manual/scheduled runs instead of cancelling an active scan.
   group: jobradar-hourly
-  cancel-in-progress: true
+  cancel-in-progress: false
 permissions:
   contents: read
 jobs:
@@ -24,6 +26,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+      - name: Report trigger timing
+        env:
+          TRIGGER_EVENT: ${{ github.event_name }}
+          CRON_SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          echo "Trigger event: ${TRIGGER_EVENT}"
+          echo "Configured cron: ${CRON_SCHEDULE:-not-a-scheduled-run}"
+          echo "Runner started UTC: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
       - name: Verify source revision
         run: |
           echo "Commit: $(git rev-parse HEAD)"
