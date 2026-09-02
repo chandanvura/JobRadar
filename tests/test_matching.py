@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from scraper.models import Job
-from scraper.adapters import job_like_url, likely_target, parse_posted_at, parse_posting, workday_config
+from scraper.adapters import job_like_url, likely_target, location_text, parse_posted_at, parse_posting, workday_config
 from scraper.models import Company
 from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
@@ -24,6 +24,9 @@ def test_experience_is_candidate_requirement():
 def test_title_classification():
     assert classify_title("SDE I")[1] == "Software Engineering"
     assert classify_title("Java Backend Engineer")[1] == "Java / Backend"
+    assert classify_title("DevSecOps Engineer")[1] == "DevOps"
+    assert classify_title("Infrastructure Automation Engineer")[1] == "Infrastructure / Operations"
+    assert classify_title("Software Engineer, Infrastructure")[1] == "Infrastructure / Operations"
 
 def test_zero_to_three_year_roles_are_eligible():
     accepted=[
@@ -36,7 +39,7 @@ def test_zero_to_three_year_roles_are_eligible():
         ("SRE","Candidate needs 2-3 years experience"),
         ("Software Engineer","Candidate needs 2 years of experience"),
         ("Senior DevOps Engineer","Candidate needs 1-2 years experience"),
-        ("Lead Software Engineer","Candidate needs 2+ years experience"),
+        ("Senior Software Engineer","Candidate needs 2+ years experience"),
     ]
     for title,description in accepted:
         assert enrich(sample(title=title,description=description)).is_eligible
@@ -45,6 +48,18 @@ def test_experience_above_policy_is_excluded():
     assert not enrich(sample(description="Candidate needs 3+ years experience")).is_eligible
     assert not enrich(sample(description="Candidate needs 2-4 years experience")).is_eligible
     assert not enrich(sample(description="Candidate needs 4 years of experience")).is_eligible
+
+def test_leadership_titles_are_excluded_even_with_low_year_phrase():
+    for title in ("Director, Software Engineering","Staff Platform Engineer","Principal DevOps Engineer","Cloud Engineering Manager","Lead Software Engineer"):
+        job=enrich(sample(title=title,description="Candidate needs 1-2 years experience"))
+        assert not job.is_eligible and job.eligibility_reason=="Leadership-level title"
+
+def test_real_world_experience_phrases():
+    assert extract_experience("Minimum experience of 2 years")[:2] == (2.0,None)
+    assert extract_experience("Experience: 1 year to 3 years")[:2] == (1.0,3.0)
+    assert extract_experience("6-18 months of experience")[:2] == (0.5,1.5)
+    assert extract_experience("Up to 3 years of work experience")[:2] == (0.0,3.0)
+    assert extract_experience("1-2 years in Java; minimum 5 years overall")[:2] == (5.0,None)
 
 def test_only_last_24_hours_are_eligible():
     assert enrich(sample(posted_at=recent(23))).is_eligible
@@ -99,6 +114,9 @@ def test_enterprise_ats_prefilter():
     assert likely_target("Junior DevOps Engineer", "Hyderabad")
     assert not likely_target("Senior Software Engineer", "London")
 
+def test_multi_location_fields_are_preserved():
+    assert location_text("Remote - India",["Bengaluru, Karnataka","Hyderabad, Telangana"]) == "Remote - India · Bengaluru, Karnataka · Hyderabad, Telangana"
+
 def test_workday_board_configuration():
     company=Company("Example","https://example.wd5.myworkdayjobs.com/External","workday","tenant|External")
     assert workday_config(company)==("https://example.wd5.myworkdayjobs.com","tenant","External")
@@ -136,5 +154,5 @@ def test_company_registry_never_shrinks_or_duplicates_sources():
     rows=list(csv.DictReader((Path(__file__).parents[1]/"companies"/"companies.csv").open(encoding="utf-8")))
     enabled=[row for row in rows if row.get("enabled","true").lower()=="true"]
     keys={(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled}
-    assert len(enabled)>=268
+    assert len(enabled)>=276
     assert len(keys)==len(enabled)

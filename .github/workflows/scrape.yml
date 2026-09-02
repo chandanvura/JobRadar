@@ -45,7 +45,7 @@ jobs:
           enabled=[row for row in companies if row.get("enabled","true").lower()=="true"]
           print(f"Company registry: {len(companies)} total, {len(enabled)} enabled")
           print(f"Policy: posted within {MAX_JOB_AGE_HOURS} hours; explicit 0-{MAX_EXPERIENCE_YEARS} YOE")
-          if len(enabled)<268: raise SystemExit(f"Registry unexpectedly shrank: {len(enabled)} enabled companies")
+          if len(enabled)<276: raise SystemExit(f"Registry unexpectedly shrank: {len(enabled)} enabled companies")
           keys=[(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled]
           if len(keys)!=len(set(keys)): raise SystemExit("Duplicate ATS identifiers found in company registry")
           PY

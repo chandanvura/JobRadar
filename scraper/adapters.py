@@ -13,7 +13,20 @@ def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
 def likely_target(title, location):
-    return bool(re.search(r"\b(engineer|developer|devops|sre|platform|cloud|release|build|site reliability|graduate|trainee|sde)\b",str(title),re.I) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
+    return bool(re.search(r"\b(engineer|developer|devops|devsecops|sre|platform|cloud|infrastructure|operations|release|build|site reliability|graduate|trainee|sde)\b",str(title),re.I) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
+
+def location_text(*values):
+    """Flatten ATS primary and secondary locations without guessing a city."""
+    found=[]
+    def add(value):
+        if isinstance(value,str) and value.strip(): found.append(value.strip())
+        elif isinstance(value,list):
+            for item in value: add(item)
+        elif isinstance(value,dict):
+            for key in ("name","location","city","region","country","addressLocality"):
+                if key in value: add(value.get(key))
+    for value in values: add(value)
+    return " · ".join(dict.fromkeys(found))
 
 def iso_date(value):
     if not value: return None
@@ -71,9 +84,10 @@ class GreenhouseAdapter(JobSource):
             response=await x.get(f"https://boards-api.greenhouse.io/v1/boards/{c.ats_identifier}/jobs",params={"content":"true"}); response.raise_for_status(); data=response.json()
             async def convert(j):
                 url=j.get("absolute_url",c.careers_url); posting=None
+                location=location_text(j.get("location"),j.get("offices"))
                 # Greenhouse's board API omits the posting timestamp. Its public
                 # job page normally exposes the employer date in JobPosting JSON-LD.
-                if likely_target(j.get("title",""),(j.get("location") or {}).get("name","")):
+                if likely_target(j.get("title",""),location):
                     try:
                         detail=await x.get(url)
                         if detail.status_code==200:
@@ -81,7 +95,7 @@ class GreenhouseAdapter(JobSource):
                             if item: posting=item.get("datePosted")
                     except httpx.HTTPError:
                         pass
-                return make_job(str(j["id"]),j["title"],c.name,j.get("location",{}).get("name",""),clean(j.get("content","")),"greenhouse","company_career",url,url,c.careers_url,posting=posting)
+                return make_job(str(j["id"]),j["title"],c.name,location,clean(j.get("content","")),"greenhouse","company_career",url,url,c.careers_url,posting=posting)
             jobs=list(await asyncio.gather(*(convert(j) for j in data.get("jobs",[]))))
             return jobs,len(data.get("jobs",[]))
 
@@ -89,7 +103,7 @@ class LeverAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await x.get(f"https://api.lever.co/v0/postings/{c.ats_identifier}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
-        jobs=[make_job(str(j["id"]),j["text"],c.name,j.get("categories",{}).get("location",""),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
+        jobs=[make_job(str(j["id"]),j["text"],c.name,location_text(j.get("categories",{}).get("location",""),j.get("categories",{}).get("allLocations",[])),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
         return jobs,len(data)
 
 class AshbyAdapter(JobSource):
@@ -97,7 +111,7 @@ class AshbyAdapter(JobSource):
         async with client() as x:
             response=await x.get(f"https://api.ashbyhq.com/posting-api/job-board/{c.ats_identifier}"); response.raise_for_status(); data=response.json()
         listed=[j for j in data.get("jobs",[]) if j.get("isListed",True)]
-        jobs=[make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,j.get("location",""),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in listed]
+        jobs=[make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,location_text(j.get("location",""),j.get("secondaryLocations",[])),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in listed]
         return jobs,len(listed)
 
 class SmartRecruitersAdapter(JobSource):
@@ -153,8 +167,9 @@ class WorkdayAdapter(JobSource):
                 if detail_response.status_code != 200: continue
                 info=detail_response.json().get("jobPostingInfo",{})
                 public_url=urljoin(origin,f"/{site}{path}")
-                posting=info.get("startDate") or item.get("postedOn")
-                jobs.append(make_job(str(info.get("jobReqId") or path),info.get("title") or item.get("title",""),c.name,info.get("location") or item.get("locationsText",""),clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting))
+                posting=item.get("postedOn") or info.get("startDate")
+                location=location_text(info.get("location"),info.get("additionalLocations"),item.get("locationsText"))
+                jobs.append(make_job(str(info.get("jobReqId") or info.get("jobPostingId") or path),info.get("title") or item.get("title",""),c.name,location,clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting))
         return jobs,len(postings)
 
 def jsonld_objects(soup):

@@ -185,7 +185,7 @@ Juspay,https://juspay.io/careers,custom,juspay,5,true
 Cashfree Payments,https://www.cashfree.com/careers/,custom,cashfree,5,true
 Pine Labs,https://www.pinelabs.com/careers,custom,pinelabs,4,true
 PayU,https://corporate.payu.com/careers/,custom,payu,4,true
-Paytm,https://paytm.com/careers/,custom,paytm,4,true
+Paytm,https://jobs.lever.co/paytm,lever,paytm,4,true
 Open Financial Technologies,https://open.money/careers,custom,openmoney,5,true
 KreditBee,https://www.kreditbee.in/careers,custom,kreditbee,4,true
 Rupeek,https://rupeek.com/careers,custom,rupeek,4,true
@@ -207,8 +207,8 @@ Juniper Networks,https://careers.juniper.net/,custom,juniper,5,true
 F5,https://www.f5.com/company/careers,custom,f5,5,true
 Fortinet,https://www.fortinet.com/corporate/careers,custom,fortinet,4,true
 Zscaler,https://www.zscaler.com/careers,custom,zscaler,5,true
-CrowdStrike,https://www.crowdstrike.com/en-us/careers/,custom,crowdstrike,5,true
-SentinelOne,https://www.sentinelone.com/jobs/,custom,sentinelone,5,true
+CrowdStrike,https://crowdstrike.wd5.myworkdayjobs.com/crowdstrikecareers,workday,crowdstrike|crowdstrikecareers,5,true
+SentinelOne,https://job-boards.greenhouse.io/sentinellabs,greenhouse,sentinellabs,5,true
 Citrix,https://www.cloud.com/careers,custom,citrix,4,true
 Red Hat,https://www.redhat.com/en/jobs,custom,redhat,5,true
 SUSE,https://jobs.suse.com/,custom,suse,4,true
@@ -267,3 +267,11 @@ Morgan Stanley,https://www.morganstanley.com/careers/career-opportunities-search
 State Street,https://careers.statestreet.com/,custom,statestreet,4,true
 Northern Trust,https://www.northerntrust.com/united-states/about-us/careers,custom,northerntrust,4,true
 HSBC,https://www.hsbc.com/careers,custom,hsbc,5,true
+Harness,https://job-boards.greenhouse.io/harnessinc,greenhouse,harnessinc,5,true
+DigiCert,https://job-boards.greenhouse.io/digicert,greenhouse,digicert,4,true
+6sense,https://job-boards.greenhouse.io/6sense,greenhouse,6sense,5,true
+Storable India,https://job-boards.greenhouse.io/storableindia,greenhouse,storableindia,4,true
+Doxel,https://jobs.lever.co/doxel,lever,doxel,4,true
+MoonPay,https://jobs.lever.co/moonpay,lever,moonpay,3,true
+BlackLine,https://blackline.wd108.myworkdayjobs.com/BlackLineCareers,workday,blackline|BlackLineCareers,4,true
+Global Payments,https://tsys.wd1.myworkdayjobs.com/TSYS,workday,tsys|TSYS,4,true
