@@ -1,4 +1,4 @@
-import asyncio,csv,os,sys
+import asyncio,csv,json,os,sys
 from datetime import datetime,timezone
 from pathlib import Path
 import httpx
@@ -30,10 +30,16 @@ async def fetch_company_jobs(company,attempts=3):
     for attempt in range(attempts):
         try:
             return await ADAPTERS[company.ats_provider].fetch_jobs(company)
-        except (httpx.TimeoutException,httpx.NetworkError) as exc:
+        except (httpx.TimeoutException,httpx.NetworkError,json.JSONDecodeError) as exc:
             last=exc
             if attempt+1<attempts:
                 await asyncio.sleep(2**attempt)
+        except httpx.HTTPStatusError as exc:
+            last=exc
+            status=exc.response.status_code
+            if status not in {429,500,502,503,504} or attempt+1>=attempts:
+                raise
+            await asyncio.sleep(2**attempt)
     raise last or RuntimeError("Source scan failed")
 
 async def scrape(company,sem):
@@ -48,7 +54,15 @@ async def scrape(company,sem):
             return jobs,{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":now(),"error_count":0,"jobs_found":discovered,"candidate_jobs":len(candidates),"eligible_jobs":len(eligible),"warning":warning},None,discovered
         except Exception as exc:
             print(f"WARN {company.name}: {type(exc).__name__}: {exc}",file=sys.stderr)
-            return [],{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":f"{type(exc).__name__}: {str(exc)[:160]}"},str(exc),0
+            # Many official enterprise portals intentionally block automated
+            # clients or expose only a JavaScript UI. Preserve those sources
+            # and their career links as limited coverage; do not misreport a
+            # blocked non-structured page as a scraper-system failure.
+            limited=company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError))
+            warning=("Limited coverage: official career page blocks or does not expose machine-readable access"
+                     if limited else f"{type(exc).__name__}: {str(exc)[:160]}")
+            status={"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":0 if limited else 1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":warning}
+            return [],status,None if limited else str(exc),0
 
 def private_start_chat_id(payload):
     """Return the most recent private chat that explicitly sent /start."""
