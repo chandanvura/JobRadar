@@ -58,7 +58,7 @@ async def scrape(company,sem):
             # clients or expose only a JavaScript UI. Preserve those sources
             # and their career links as limited coverage; do not misreport a
             # blocked non-structured page as a scraper-system failure.
-            limited=company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError))
+            limited=(company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError))) or isinstance(exc,json.JSONDecodeError)
             warning=("Limited coverage: official career page blocks or does not expose machine-readable access"
                      if limited else f"{type(exc).__name__}: {str(exc)[:160]}")
             status={"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":0 if limited else 1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":warning}
