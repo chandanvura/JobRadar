@@ -107,5 +107,10 @@ async def main():
             except Exception as exc:
                 print(f"WARN Telegram {job.external_job_id}: {type(exc).__name__}",file=sys.stderr)
                 await record_notification(endpoint,headers,job,"failed",f"{type(exc).__name__}: Telegram delivery failed")
+    empty_names=[s["name"] for s in statuses if not s.get("error_count") and not s.get("jobs_found")]
+    failed_names=[s["name"] for s in statuses if s.get("error_count")]
     print(f"Scanned {len(all_jobs)} jobs; {len(candidates)} target candidates; {len(eligible)} eligible; {len(result.get('new_external_ids',[]))} new; {sent} alerts.")
+    print(f"Source diagnostics: {len(empty_names)} empty; {len(failed_names)} failed.")
+    if empty_names: print("Empty sources: "+", ".join(empty_names))
+    if failed_names: print("Failed sources: "+", ".join(failed_names))
 if __name__=="__main__":asyncio.run(main())

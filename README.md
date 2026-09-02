@@ -1,11 +1,11 @@
 # JobRadar
 
-JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks 150 official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
+JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks 168 official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
 
 ## Included
 
 - React/TypeScript dashboard, Cloudflare Worker API, and D1 schema
-- Python adapters for Greenhouse, Lever, Ashby, Workday, SmartRecruiters, and conservative JSON-LD career pages
+- Python adapters for Greenhouse (including employer JSON-LD posting dates), Lever, Ashby, paginated Workday/SmartRecruiters, and conservative JSON-LD career pages that follow only official ATS links
 - Title, location, strictest-experience, skill, and freshness analysis
 - Immutable first-seen tracking and employer-relative date labels without invented timestamps
 - ATS/external-ID deduplication and notification history schema

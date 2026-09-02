@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urljoin, urlparse
-import html, json, re
+import asyncio, html, json, re
 import httpx
 from bs4 import BeautifulSoup
 from .models import Company, Job
@@ -69,7 +69,20 @@ class GreenhouseAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await x.get(f"https://boards-api.greenhouse.io/v1/boards/{c.ats_identifier}/jobs",params={"content":"true"}); response.raise_for_status(); data=response.json()
-        return [make_job(str(j["id"]),j["title"],c.name,j.get("location",{}).get("name",""),clean(j.get("content","")),"greenhouse","company_career",j.get("absolute_url",c.careers_url),j.get("absolute_url",c.careers_url),c.careers_url,posting=None) for j in data.get("jobs",[])]
+            async def convert(j):
+                url=j.get("absolute_url",c.careers_url); posting=None
+                # Greenhouse's board API omits the posting timestamp. Its public
+                # job page normally exposes the employer date in JobPosting JSON-LD.
+                if likely_target(j.get("title",""),(j.get("location") or {}).get("name","")):
+                    try:
+                        detail=await x.get(url)
+                        if detail.status_code==200:
+                            item=next(jsonld_objects(BeautifulSoup(detail.text,"html.parser")),None)
+                            if item: posting=item.get("datePosted")
+                    except httpx.HTTPError:
+                        pass
+                return make_job(str(j["id"]),j["title"],c.name,j.get("location",{}).get("name",""),clean(j.get("content","")),"greenhouse","company_career",url,url,c.careers_url,posting=posting)
+            return list(await asyncio.gather(*(convert(j) for j in data.get("jobs",[]))))
 
 class LeverAdapter(JobSource):
     async def fetch_jobs(self,c):
@@ -87,9 +100,14 @@ class SmartRecruitersAdapter(JobSource):
     async def fetch_jobs(self,c):
         base=f"https://api.smartrecruiters.com/v1/companies/{c.ats_identifier}/postings"
         async with client() as x:
-            response=await x.get(base,params={"limit":100,"offset":0}); response.raise_for_status(); data=response.json()
+            content=[]; offset=0
+            while offset<1000:
+                response=await x.get(base,params={"limit":100,"offset":offset}); response.raise_for_status(); data=response.json()
+                batch=data.get("content",[]); content.extend(batch)
+                if len(batch)<100: break
+                offset+=100
             jobs=[]
-            for item in data.get("content",[]):
+            for item in content:
                 item_location=item.get("location") or {}
                 location_hint=", ".join(str(item_location.get(k,"")) for k in ("city","region","country") if item_location.get(k))
                 if not likely_target(item.get("name",""),location_hint): continue
@@ -145,21 +163,33 @@ def jsonld_objects(soup):
             if isinstance(item,dict) and isinstance(item.get("@graph"),list):
                 yield from (node for node in item["@graph"] if isinstance(node,dict) and node.get("@type")=="JobPosting")
 
+ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com")
+def job_like_url(url,base_host):
+    parsed=urlparse(url); host=(parsed.hostname or "").lower(); path=parsed.path.lower()
+    same=host==base_host or host.endswith("."+base_host)
+    known=any(host==domain or host.endswith("."+domain) for domain in ATS_HOSTS)
+    return (known and path not in {"","/"}) or (same and bool(re.search(r"/(job|jobs|career|careers|position|positions|opening|openings)(/|\?|$)",path,re.I)))
+
 class CustomCareerAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             listing=await x.get(c.careers_url); listing.raise_for_status()
             soup=BeautifulSoup(listing.text,"html.parser")
-            urls=[]; seen=set()
+            urls=[]; seen={str(listing.url)}; base_host=(urlparse(str(listing.url)).hostname or "").lower()
             for link in soup.find_all("a",href=True):
                 url=urljoin(str(listing.url),link["href"]); parsed=urlparse(url)
-                if parsed.netloc==urlparse(str(listing.url)).netloc and re.search(r"/(job|jobs|career|careers|position|positions|opening|openings)(/|\?|$)",parsed.path,re.I) and url not in seen:
+                if job_like_url(url,base_host) and url not in seen:
                     seen.add(url); urls.append(url)
-                if len(urls)>=30: break
+                if len(urls)>=80: break
             jobs=[]
-            for url in [str(listing.url),*urls]:
-                response=listing if url==str(listing.url) else await x.get(url)
-                if response.status_code!=200: continue
+            semaphore=asyncio.Semaphore(8)
+            async def fetch(url):
+                async with semaphore:
+                    try:return await x.get(url)
+                    except httpx.HTTPError:return None
+            responses=[listing,*await asyncio.gather(*(fetch(url) for url in urls))]
+            for url,response in zip([str(listing.url),*urls],responses):
+                if response is None or response.status_code!=200: continue
                 for item in jsonld_objects(BeautifulSoup(response.text,"html.parser")):
                     location_data=item.get("jobLocation") or {}
                     if isinstance(location_data,list): location_data=location_data[0] if location_data else {}

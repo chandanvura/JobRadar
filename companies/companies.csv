@@ -109,9 +109,9 @@ Google,https://www.google.com/about/careers/applications/jobs/results/,custom,go
 Microsoft,https://jobs.careers.microsoft.com/global/en/search,custom,microsoft,5,true
 Oracle,https://careers.oracle.com/jobs/,custom,oracle,5,true
 SAP,https://jobs.sap.com/,custom,sap,5,true
-Cisco,https://jobs.cisco.com/,custom,cisco,5,true
+Cisco,https://cisco.wd5.myworkdayjobs.com/Cisco_Careers,workday,cisco|Cisco_Careers,5,true
 IBM,https://www.ibm.com/careers/search,custom,ibm,5,true
-Accenture,https://www.accenture.com/in-en/careers/jobsearch,custom,accenture,4,true
+Accenture,https://accenture.wd103.myworkdayjobs.com/AccentureCareers,workday,accenture|AccentureCareers,5,true
 Deloitte,https://southasiacareers.deloitte.com/,custom,deloitte,4,true
 EY,https://careers.ey.com/,custom,ey,4,true
 PwC,https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers,workday,pwc|Global_Experienced_Careers,4,true
@@ -149,3 +149,21 @@ Plane,https://jobs.ashbyhq.com/plane,ashby,plane,4,true
 Fourier,https://jobs.ashbyhq.com/fourier,ashby,fourier,4,true
 Cohort AI,https://jobs.ashbyhq.com/cohort,ashby,cohort,4,true
 FiniteHR Consulting,https://jobs.smartrecruiters.com/FiniteHRConsulting,smartrecruiters,FiniteHRConsulting,3,true
+Adobe,https://adobe.wd5.myworkdayjobs.com/external_experienced,workday,adobe|external_experienced,5,true
+PayPal,https://paypal.wd1.myworkdayjobs.com/jobs,workday,paypal|jobs,5,true
+Broadcom,https://broadcom.wd1.myworkdayjobs.com/External_Career,workday,broadcom|External_Career,5,true
+UiPath,https://jobs.ashbyhq.com/uipath,ashby,uipath,5,true
+Nationwide India,https://nationwide.wd1.myworkdayjobs.com/Nationwide_Career_India,workday,nationwide|Nationwide_Career_India,4,true
+Amadeus,https://amadeus.wd502.myworkdayjobs.com/jobs,workday,amadeus|jobs,5,true
+Extreme Networks,https://jobs.lever.co/extremenetworks,lever,extremenetworks,5,true
+Juniper Square,https://jobs.ashbyhq.com/junipersquare,ashby,junipersquare,4,true
+NCR Atleos,https://ncratleos.wd1.myworkdayjobs.com/ext_apacatleos,workday,ncratleos|ext_apacatleos,4,true
+Hinge Health,https://jobs.ashbyhq.com/hinge-health,ashby,hinge-health,4,true
+Shell,https://shell.wd3.myworkdayjobs.com/ShellCareers,workday,shell|ShellCareers,4,true
+Smarsh,https://jobs.lever.co/smarsh,lever,smarsh,5,true
+Alif Semiconductor,https://jobs.lever.co/alifsemi,lever,alifsemi,4,true
+CME Group,https://cmegroup.wd1.myworkdayjobs.com/cme_careers,workday,cmegroup|cme_careers,4,true
+Warner Bros. Discovery,https://warnerbros.wd5.myworkdayjobs.com/global,workday,warnerbros|global,4,true
+RapidAI,https://jobs.lever.co/rapidai,lever,rapidai,4,true
+Aeva,https://jobs.lever.co/aeva,lever,aeva,4,true
+d-Matrix,https://jobs.ashbyhq.com/d-Matrix,ashby,d-Matrix,4,true

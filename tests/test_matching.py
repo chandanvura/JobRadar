@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from scraper.models import Job
-from scraper.adapters import likely_target, parse_posted_at, parse_posting, workday_config
+from scraper.adapters import job_like_url, likely_target, parse_posted_at, parse_posting, workday_config
 from scraper.models import Company
 from scraper.main import private_start_chat_id
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
@@ -102,3 +102,17 @@ def test_enterprise_ats_prefilter():
 def test_workday_board_configuration():
     company=Company("Example","https://example.wd5.myworkdayjobs.com/External","workday","tenant|External")
     assert workday_config(company)==("https://example.wd5.myworkdayjobs.com","tenant","External")
+
+def test_custom_career_pages_follow_official_ats_links_only():
+    assert job_like_url("https://jobs.lever.co/example/123","company.example")
+    assert job_like_url("https://company.example/careers/job/123","company.example")
+    assert not job_like_url("https://unrelated.example/jobs/123","company.example")
+
+def test_company_registry_never_shrinks_or_duplicates_sources():
+    import csv
+    from pathlib import Path
+    rows=list(csv.DictReader((Path(__file__).parents[1]/"companies"/"companies.csv").open(encoding="utf-8")))
+    enabled=[row for row in rows if row.get("enabled","true").lower()=="true"]
+    keys={(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled}
+    assert len(enabled)>=168
+    assert len(keys)==len(enabled)
