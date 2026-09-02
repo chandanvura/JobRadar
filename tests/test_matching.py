@@ -136,5 +136,5 @@ def test_company_registry_never_shrinks_or_duplicates_sources():
     rows=list(csv.DictReader((Path(__file__).parents[1]/"companies"/"companies.csv").open(encoding="utf-8")))
     enabled=[row for row in rows if row.get("enabled","true").lower()=="true"]
     keys={(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled}
-    assert len(enabled)>=168
+    assert len(enabled)>=268
     assert len(keys)==len(enabled)
