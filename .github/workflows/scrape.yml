@@ -9,8 +9,8 @@ on:
       - "requirements.txt"
       - "tests/**"
   schedule:
-    # Run once per hour at minute 17 UTC. GitHub schedules use UTC.
-    - cron: "17 * * * *"
+    # Run once per hour at minute 1 UTC. GitHub schedules use UTC.
+    - cron: "0 * * * *"
   workflow_dispatch:
 concurrency:
   # Queue overlapping push/manual/scheduled runs instead of cancelling an active scan.
