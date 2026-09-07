@@ -1,8 +1,10 @@
+import asyncio
 from datetime import datetime, timedelta, timezone
+import httpx
 from scraper.models import Job
 from scraper.adapters import job_like_url, likely_target, location_text, parse_posted_at, parse_posting, workday_config
 from scraper.models import Company
-from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status
+from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status, telegram_error
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
 
 def recent(hours=1):
@@ -77,6 +79,13 @@ def test_private_start_chat_resolution():
     assert private_start_chat_id(payload)=="444"
     assert private_start_chat_id({"result":[]}) is None
 
+def test_telegram_error_is_actionable_and_does_not_expose_request_url():
+    request=httpx.Request("GET","https://api.telegram.org/botSECRET/getMe")
+    response=httpx.Response(401,json={"ok":False,"description":"Unauthorized"},request=request)
+    error=str(telegram_error(response,"bot authentication"))
+    assert error == "Telegram bot authentication failed (HTTP 401): Unauthorized"
+    assert "SECRET" not in error
+
 def test_relative_posting_labels_are_normalized():
     now=datetime(2026,9,1,12,0,tzinfo=timezone.utc)
     assert parse_posting("Posted Today",now)==(None,"Posted today","day",None)
@@ -131,7 +140,6 @@ def test_health_uses_request_failures_not_opening_counts():
     assert run_health_status(1) == "degraded"
 
 def test_transient_source_failures_are_retried(monkeypatch):
-    import asyncio
     import httpx
     from scraper.adapters import ADAPTERS
     class FlakyAdapter:

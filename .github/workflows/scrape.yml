@@ -9,8 +9,9 @@ on:
       - "requirements.txt"
       - "tests/**"
   schedule:
-    # Run once per hour at minute 1 UTC. GitHub schedules use UTC.
-    - cron: "0 * * * *"
+    # Two opportunities per hour reduce the impact of delayed or dropped GitHub
+    # schedule events. Concurrency queues overlap because a scan takes ~8 minutes.
+    - cron: "17,47 * * * *"
   workflow_dispatch:
 concurrency:
   # Queue overlapping push/manual/scheduled runs instead of cancelling an active scan.
@@ -58,7 +59,8 @@ jobs:
         run: python -m pytest -q
         env:
           PYTHONPATH: .
-      - run: python -m scraper.main
+      - name: Run production scan and delivery health checks
+        run: python -m scraper.main
         env:
           JOBRADAR_API_URL: ${{ secrets.JOBRADAR_API_URL }}
           JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}

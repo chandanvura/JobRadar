@@ -11,6 +11,23 @@ _TELEGRAM_CHAT_OVERRIDE=None
 # Kept empty during normal operation; prevents replaying already-ingested alerts.
 TELEGRAM_RETRY_IDS=set()
 
+class TelegramDeliveryError(RuntimeError):
+    """A Telegram failure that is safe to print and persist."""
+
+def telegram_error(response,action):
+    description="request failed"
+    try:
+        payload=response.json()
+        if isinstance(payload,dict) and payload.get("description"):
+            description=str(payload["description"])
+    except (ValueError,json.JSONDecodeError):
+        pass
+    return TelegramDeliveryError(f"Telegram {action} failed (HTTP {response.status_code}): {description[:240]}")
+
+def telegram_raise_for_status(response,action):
+    if response.is_error:
+        raise telegram_error(response,action)
+
 def now(): return datetime.now(timezone.utc).isoformat()
 def load_companies():
     with (ROOT/"companies"/"companies.csv").open(encoding="utf-8") as f:return [Company(r["company_name"],r["careers_url"],r["ats_provider"].lower(),r["ats_identifier"],int(r.get("priority",3)),r.get("enabled","true").lower()=="true") for r in csv.DictReader(f)]
@@ -74,24 +91,39 @@ def private_start_chat_id(payload):
             candidates.append((int(update.get("update_id",0)),str(chat["id"])))
     return max(candidates)[1] if candidates else None
 
-async def notify(job):
+async def ensure_telegram_ready():
     global _TELEGRAM_CHAT_OVERRIDE
     token,configured=os.getenv("TELEGRAM_BOT_TOKEN"),os.getenv("TELEGRAM_CHAT_ID")
     chat=_TELEGRAM_CHAT_OVERRIDE or configured
-    if not token or not chat:raise RuntimeError("Telegram credentials are not configured")
+    if not token or not chat:
+        raise TelegramDeliveryError("Telegram credentials are not configured")
+    url=f"https://api.telegram.org/bot{token}"
+    async with httpx.AsyncClient(timeout=20) as x:
+        identity=await x.get(url+"/getMe")
+        telegram_raise_for_status(identity,"bot authentication")
+        target=await x.get(url+"/getChat",params={"chat_id":chat})
+        if target.status_code in {400,403} and not _TELEGRAM_CHAT_OVERRIDE:
+            updates=await x.get(url+"/getUpdates",params={"limit":100,"timeout":0})
+            telegram_raise_for_status(updates,"chat recovery")
+            recovered=private_start_chat_id(updates.json())
+            if recovered and recovered!=chat:
+                _TELEGRAM_CHAT_OVERRIDE=recovered
+                chat=recovered
+                target=await x.get(url+"/getChat",params={"chat_id":chat})
+        telegram_raise_for_status(target,"chat validation")
+    return chat
+
+async def notify(job,chat=None):
+    token=os.getenv("TELEGRAM_BOT_TOKEN")
+    if not token:
+        raise TelegramDeliveryError("Telegram credentials are not configured")
+    chat=chat or await ensure_telegram_ready()
     posted=job.posted_label or job.posted_at or "Posting time unavailable"
     message=f"🚨 NEW JOB\n\n{job.title}\n{job.company}\n\n📍 {job.normalized_location}\n💼 {job.experience_label}\n🕒 {posted}\n⭐ Priority: {job.relevance_score}/100\n\nSkills: {' • '.join(job.skills) or 'Optional / not specified'}\n\nAPPLY NOW:\n{job.application_url}\n\nCAREER PAGE:\n{job.career_page_url}"
     async with httpx.AsyncClient(timeout=20) as x:
         url=f"https://api.telegram.org/bot{token}"
         response=await x.post(url+"/sendMessage",json={"chat_id":chat,"text":message,"disable_web_page_preview":True})
-        if response.status_code==403 and not _TELEGRAM_CHAT_OVERRIDE:
-            updates=await x.get(url+"/getUpdates",params={"limit":100,"timeout":0})
-            updates.raise_for_status()
-            recovered=private_start_chat_id(updates.json())
-            if recovered and recovered!=chat:
-                _TELEGRAM_CHAT_OVERRIDE=recovered
-                response=await x.post(url+"/sendMessage",json={"chat_id":recovered,"text":message,"disable_web_page_preview":True})
-        response.raise_for_status()
+        telegram_raise_for_status(response,"message delivery")
     return True
 
 async def record_notification(endpoint,headers,job,status,error=None):
@@ -132,16 +164,28 @@ async def main():
     for job in candidates:
         item=job.as_dict(); item["description"]=item.get("description","")[:4000]; payload_jobs.append(item)
     response=await post_with_retry(endpoint.rstrip("/")+"/api/ingest",headers,{"jobs":payload_jobs,"companies":statuses,"run":run})
-    result=response.json(); alert_keys=set(result.get("notification_keys",[])); sent=0
-    for job in eligible:
+    result=response.json(); alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
+    alert_jobs=[job for job in eligible if (f"{job.ats_provider}:{job.external_job_id}" in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
+    telegram_chat=None
+    try:
+        # Validate the bot and destination on every scan, including scans with
+        # no new matching jobs. This prevents a broken notifier from appearing green.
+        telegram_chat=await ensure_telegram_ready()
+        print("Telegram health check: bot authentication and chat validation passed.")
+    except TelegramDeliveryError as exc:
+        telegram_failures+=1
+        print(f"ERROR {exc}",file=sys.stderr)
+        for job in alert_jobs:
+            await record_notification(endpoint,headers,job,"failed",str(exc))
+    for job in alert_jobs if telegram_chat else []:
         notification_key=f"{job.ats_provider}:{job.external_job_id}"
-        if (notification_key in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65:
-            try:
-                await notify(job); sent+=1
-                await record_notification(endpoint,headers,job,"sent")
-            except Exception as exc:
-                print(f"WARN Telegram {job.external_job_id}: {type(exc).__name__}",file=sys.stderr)
-                await record_notification(endpoint,headers,job,"failed",f"{type(exc).__name__}: Telegram delivery failed")
+        try:
+            await notify(job,telegram_chat); sent+=1
+            await record_notification(endpoint,headers,job,"sent")
+        except TelegramDeliveryError as exc:
+            telegram_failures+=1
+            print(f"ERROR Telegram {job.external_job_id}: {exc}",file=sys.stderr)
+            await record_notification(endpoint,headers,job,"failed",str(exc))
     empty_names=[s["name"] for s in statuses if not s.get("error_count") and not s.get("jobs_found") and not str(s.get("warning","")).startswith("Limited coverage")]
     limited_names=[s["name"] for s in statuses if str(s.get("warning","")).startswith("Limited coverage")]
     failed_names=[s["name"] for s in statuses if s.get("error_count")]
@@ -150,4 +194,6 @@ async def main():
     if empty_names: print("Empty sources: "+", ".join(empty_names))
     if limited_names: print("Limited sources: "+", ".join(limited_names))
     if failed_names: print("Failed sources: "+", ".join(failed_names))
+    if telegram_failures:
+        raise SystemExit("Telegram health check or delivery failed")
 if __name__=="__main__":asyncio.run(main())
