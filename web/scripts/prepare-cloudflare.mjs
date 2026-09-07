@@ -6,7 +6,12 @@ if(!databaseId)throw new Error("CLOUDFLARE_D1_DATABASE_ID is required");
 const migrationConfig={
   name:"jobradar",
   compatibility_date:"2026-05-15",
-  d1_databases:[{binding:"DB",database_name:"jobradar-db",database_id:databaseId}],
+  d1_databases:[{
+    binding:"DB",
+    database_name:"jobradar-db",
+    database_id:databaseId,
+    migrations_dir:"drizzle",
+  }],
 };
 await writeFile("wrangler.migrations.json",JSON.stringify(migrationConfig,null,2));
 

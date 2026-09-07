@@ -2,6 +2,11 @@ name: Deploy independent JobRadar
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - ".github/workflows/deploy-cloudflare.yml"
 
 concurrency:
   group: jobradar-cloudflare-production
@@ -49,8 +54,16 @@ jobs:
         run: |
           npm run build
           node scripts/prepare-cloudflare.mjs --patch-build
-          npx wrangler deploy --config dist/server/wrangler.json
+          deploy_output="$(npx wrangler deploy --config dist/server/wrangler.json)"
+          printf '%s\n' "$deploy_output"
+          worker_url="$(printf '%s\n' "$deploy_output" | grep -Eo 'https://[^[:space:]]+\.workers\.dev' | tail -n 1 || true)"
+          test -n "$worker_url"
+          echo "JOBRADAR_WORKER_URL=$worker_url" >> "$GITHUB_ENV"
       - name: Configure protected ingestion
         run: printf '%s' "$JOBRADAR_INGEST_SECRET" | npx wrangler secret put JOBRADAR_INGEST_SECRET --config dist/server/wrangler.json
       - name: Verify deployed Worker
-        run: npx wrangler deployments status --config dist/server/wrangler.json
+        run: |
+          npx wrangler deployments status --config dist/server/wrangler.json
+          curl --fail --silent --show-error --retry 10 --retry-delay 3 "$JOBRADAR_WORKER_URL/" > /dev/null
+          curl --fail --silent --show-error --retry 10 --retry-delay 3 "$JOBRADAR_WORKER_URL/api/dashboard" | jq -e '.configured == true and (.jobs | type == "array") and (.companies | type == "array")' > /dev/null
+          echo "Independent JobRadar verified at $JOBRADAR_WORKER_URL"
