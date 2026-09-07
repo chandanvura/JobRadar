@@ -2,6 +2,8 @@
 
 JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks 297 official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
 
+**Production dashboard:** https://jobradar.chandanvura.workers.dev
+
 ## Included
 
 - React/TypeScript dashboard, Cloudflare Worker API, and D1 schema
@@ -22,6 +24,7 @@ Architecture: `GitHub Actions → Python adapters → normalization/ranking → 
 Requires Node.js 22+.
 
 ```bash
+cd web
 npm ci
 npm run dev
 ```
@@ -50,16 +53,17 @@ Without `JOBRADAR_API_URL`, this performs a safe discovery run without storage o
 
 Never commit these values.
 
-## Required secrets
+## Required GitHub secrets
 
 | Secret | Purpose |
 |---|---|
-| `JOBRADAR_API_URL` | Deployed JobRadar base URL |
 | `JOBRADAR_INGEST_SECRET` | Long random value shared with the Worker |
 | `TELEGRAM_BOT_TOKEN` | Telegram bot credential |
 | `TELEGRAM_CHAT_ID` | Destination chat |
+| `CLOUDFLARE_API_TOKEN` | Scoped Workers Scripts and D1 deployment credential |
+| `CLOUDFLARE_ACCOUNT_ID` | Optional; the deployment resolves it when the token can access exactly one account |
 
-Set the same ingest secret on the deployed Site. Generate one with `openssl rand -hex 32`.
+The deployment workflow installs the ingest secret on the Worker. Generate one with `openssl rand -hex 32`.
 
 ## Adding companies
 
@@ -76,23 +80,14 @@ The identifier is the company/board segment from the official Greenhouse, Lever,
 
 ```bash
 python -m pytest -q
-npm test
+cd web && npm test
 ```
-
-## Deployment
-
-1. Deploy the Site so D1 and migrations are provisioned.
-2. Add `JOBRADAR_INGEST_SECRET` to the Site environment.
-3. Add the four GitHub secrets above.
-4. Manually run **JobRadar hourly scan** once.
-5. Confirm `/api/health`, the run log, and Telegram delivery.
-6. Leave the hourly schedule enabled.
 
 ## Independent Cloudflare deployment
 
 The standalone application lives under `web/` and does not require ChatGPT Sites at runtime. The **Deploy independent JobRadar** workflow creates an Asia-Pacific D1 database when needed, applies versioned migrations, builds the vinext application, deploys the Worker, configures protected ingestion, and verifies the deployment.
 
-Add `CLOUDFLARE_ACCOUNT_ID` and a narrowly scoped `CLOUDFLARE_API_TOKEN` as repository secrets, then manually run the deployment workflow. Keep `JOBRADAR_API_URL` pointed at the existing production URL until the new `workers.dev` health endpoint returns `200`; update it only after verification. This provides a rollback window and avoids a cutover outage.
+Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scraper posts directly to the production Worker URL and runs twice per hour at minutes 17 and 47 UTC. Verify the **Deploy independent JobRadar** and **JobRadar hourly scan** workflows in GitHub Actions after changing infrastructure or matching logic.
 
 ## Matching guarantees
 
