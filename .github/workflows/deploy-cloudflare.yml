@@ -1,0 +1,56 @@
+name: Deploy independent JobRadar
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: jobradar-cloudflare-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: web
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Validate deployment secrets
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$JOBRADAR_INGEST_SECRET"
+      - run: npm install --no-audit --no-fund
+      - name: Create or resolve production database
+        run: |
+          database_id="$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "jobradar-db") | .uuid' | head -n 1)"
+          if [ -z "$database_id" ]; then
+            npx wrangler d1 create jobradar-db --location apac
+            database_id="$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "jobradar-db") | .uuid' | head -n 1)"
+          fi
+          test -n "$database_id"
+          echo "CLOUDFLARE_D1_DATABASE_ID=$database_id" >> "$GITHUB_ENV"
+      - name: Apply versioned database migrations
+        run: |
+          node scripts/prepare-cloudflare.mjs
+          npx wrangler d1 migrations apply jobradar-db --remote --config wrangler.migrations.json
+      - name: Build and deploy production Worker
+        run: |
+          npm run build
+          node scripts/prepare-cloudflare.mjs --patch-build
+          npx wrangler deploy --config dist/server/wrangler.json
+      - name: Configure protected ingestion
+        run: printf '%s' "$JOBRADAR_INGEST_SECRET" | npx wrangler secret put JOBRADAR_INGEST_SECRET --config dist/server/wrangler.json
+      - name: Verify deployed Worker
+        run: npx wrangler deployments status --config dist/server/wrangler.json

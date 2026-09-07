@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.vinext/
+.sites-runtime/
+.wrangler/
+wrangler.migrations.json
+.env*
+!.env.example

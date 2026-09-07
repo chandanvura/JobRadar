@@ -1,6 +1,6 @@
 # JobRadar
 
-JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks 276 official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
+JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks 297 official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
 
 ## Included
 
@@ -87,6 +87,12 @@ npm test
 4. Manually run **JobRadar hourly scan** once.
 5. Confirm `/api/health`, the run log, and Telegram delivery.
 6. Leave the hourly schedule enabled.
+
+## Independent Cloudflare deployment
+
+The standalone application lives under `web/` and does not require ChatGPT Sites at runtime. The **Deploy independent JobRadar** workflow creates an Asia-Pacific D1 database when needed, applies versioned migrations, builds the vinext application, deploys the Worker, configures protected ingestion, and verifies the deployment.
+
+Add `CLOUDFLARE_ACCOUNT_ID` and a narrowly scoped `CLOUDFLARE_API_TOKEN` as repository secrets, then manually run the deployment workflow. Keep `JOBRADAR_API_URL` pointed at the existing production URL until the new `workers.dev` health endpoint returns `200`; update it only after verification. This provides a rollback window and avoids a cutover outage.
 
 ## Matching guarantees
 
