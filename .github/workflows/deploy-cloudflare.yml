@@ -93,6 +93,6 @@ jobs:
       - name: Verify deployed Worker
         run: |
           npx wrangler deployments status --config dist/server/wrangler.json
-          curl --fail --silent --show-error --retry 10 --retry-delay 3 "$JOBRADAR_WORKER_URL/" > /dev/null
-          curl --fail --silent --show-error --retry 10 --retry-delay 3 "$JOBRADAR_WORKER_URL/api/dashboard" | jq -e '.configured == true and (.jobs | type == "array") and (.companies | type == "array")' > /dev/null
+          curl --fail --silent --show-error --retry 20 --retry-delay 3 --retry-all-errors --max-time 20 "$JOBRADAR_WORKER_URL/" > /dev/null
+          curl --fail --silent --show-error --retry 20 --retry-delay 3 --retry-all-errors --max-time 20 "$JOBRADAR_WORKER_URL/api/dashboard" | jq -e '.configured == true and (.jobs | type == "array") and (.companies | type == "array")' > /dev/null
           echo "Independent JobRadar verified at $JOBRADAR_WORKER_URL"
