@@ -101,8 +101,10 @@ async def ensure_telegram_ready():
     async with httpx.AsyncClient(timeout=20) as x:
         identity=await x.get(url+"/getMe")
         telegram_raise_for_status(identity,"bot authentication")
+        bot_id=str((identity.json().get("result") or {}).get("id", ""))
         target=await x.get(url+"/getChat",params={"chat_id":chat})
-        if target.status_code in {400,403} and not _TELEGRAM_CHAT_OVERRIDE:
+        needs_recovery=target.status_code in {400,403} or (bot_id and str(chat)==bot_id)
+        if needs_recovery and not _TELEGRAM_CHAT_OVERRIDE:
             updates=await x.get(url+"/getUpdates",params={"limit":100,"timeout":0})
             telegram_raise_for_status(updates,"chat recovery")
             recovered=private_start_chat_id(updates.json())
@@ -110,6 +112,8 @@ async def ensure_telegram_ready():
                 _TELEGRAM_CHAT_OVERRIDE=recovered
                 chat=recovered
                 target=await x.get(url+"/getChat",params={"chat_id":chat})
+            elif bot_id and str(chat)==bot_id:
+                raise TelegramDeliveryError("Telegram chat ID belongs to the bot; send /start to the bot and rerun the workflow")
         telegram_raise_for_status(target,"chat validation")
     return chat
 
