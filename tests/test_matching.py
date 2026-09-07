@@ -29,6 +29,9 @@ def test_title_classification():
     assert classify_title("DevSecOps Engineer")[1] == "DevOps"
     assert classify_title("Infrastructure Automation Engineer")[1] == "Infrastructure / Operations"
     assert classify_title("Software Engineer, Infrastructure")[1] == "Infrastructure / Operations"
+    assert classify_title("Backend Software Engineer")[1] == "Java / Backend"
+    assert classify_title("Java Software Engineer")[1] == "Java / Backend"
+    assert classify_title("Software Development Engineer I")[1] == "Software Engineering"
 
 def test_zero_to_three_year_roles_are_eligible():
     accepted=[
@@ -62,6 +65,8 @@ def test_real_world_experience_phrases():
     assert extract_experience("6-18 months of experience")[:2] == (0.5,1.5)
     assert extract_experience("Up to 3 years of work experience")[:2] == (0.0,3.0)
     assert extract_experience("1-2 years in Java; minimum 5 years overall")[:2] == (5.0,None)
+    assert extract_experience("Minimum 2 years and maximum 3 years of experience")[:2] == (2.0,3.0)
+    assert extract_experience("No prior experience required")[:2] == (0.0,1.0)
 
 def test_only_last_24_hours_are_eligible():
     assert enrich(sample(posted_at=recent(23))).is_eligible

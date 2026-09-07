@@ -6,8 +6,8 @@ ROLE_PATTERNS = {
     "DevOps": r"\bdev\s*sec\s*ops\b|\bdev\s*ops\b|\bbuild(?:/| and | & )?release\b|\brelease engineer\b|\bdeployment engineer\b", "Cloud": r"\bcloud (?:support |operations |infrastructure |migration |platform )?engineer\b|\bcloud operations\b|\bcloudops\b",
     "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b", "Platform": r"\bplatform engineer\b",
     "Infrastructure / Operations": r"\binfrastructure (?:automation |operations |support )?engineer\b|\bsoftware engineer\s*[-–—:,]?\s*infrastructure\b|\blinux (?:systems? |infrastructure |cloud )?engineer\b|\bsystems? engineer\s*(?:i|1)\b",
-    "Java / Backend": r"\bjava (?:developer|engineer)\b|\bbackend (?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*java\b",
-    "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software engineer(?:ing)?(?:\s+(?:i|1))?\b|\bsde\s*(?:i|1)?\b|\bgraduate engineer trainee\b|\bget\b",
+    "Java / Backend": r"\bjava (?:software )?(?:developer|engineer)\b|\bback[ -]?end (?:software )?(?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*(?:java|back[ -]?end)\b",
+    "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software (?:development )?engineer(?:ing)?(?:\s+(?:i|1))?\b|\bsde\s*(?:i|1)?\b|\bgraduate engineer trainee\b|\bget\b",
 }
 SKILLS=["AWS","Azure","GCP","Linux","Docker","Kubernetes","Terraform","Jenkins","CI/CD","GitHub Actions","Argo CD","Ansible","Git","Helm","Bash","Python","Java","Spring Boot","Spring","REST API","Microservices","Kafka","SQL","PostgreSQL","MySQL","Redis","Prometheus","Grafana","ELK","Elasticsearch","Splunk","Datadog"]
 MAX_JOB_AGE_HOURS = 24
@@ -28,7 +28,7 @@ def classify_title(title: str):
     return clean,"Other"
 
 def extract_experience(text: str):
-    junior=re.search(r"\b(fresher|fresh graduate|new graduate|entry.?level|recent graduate)\b",text,re.I)
+    junior=re.search(r"\b(fresher|fresh graduate|new graduate|entry.?level|recent graduate|no (?:prior |professional |work )?experience required)\b",text,re.I)
     clauses=re.split(r"[\n.;•]+",text)
     relevant=[c for c in clauses if re.search(r"\b(years?|yrs?|yoe|experience|fresher|graduate)\b",c,re.I) and not re.search(r"\b(company|organisation|organization|founded|serving|combined|team has)\b.{0,35}\b(years?|experience)\b",c,re.I)]
     candidate_text=" ".join(relevant)
@@ -49,7 +49,11 @@ def extract_experience(text: str):
     exact=[value for value in exact if value not in range_endpoints]
     constraints=[(lo,hi,"range") for lo,hi in ranges+month_ranges+mixed_ranges]
     constraints += [(0.0,hi,"upper") for hi in upper_bounds]
-    constraints += [(lo,None,"lower") for lo in lower_bounds+plus]
+    lower_values=lower_bounds+plus
+    if lower_values and upper_bounds:
+        constraints += [(max(lower_values),min(upper_bounds),"range")]
+    else:
+        constraints += [(lo,None,"lower") for lo in lower_values]
     constraints += [(value,value,"exact") for value in exact]
     if constraints:
         lo,hi,kind=max(constraints,key=lambda x:(x[0],float("inf") if x[1] is None else x[1]))
