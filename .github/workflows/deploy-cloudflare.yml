@@ -44,6 +44,28 @@ jobs:
             echo "CLOUDFLARE_ACCOUNT_ID=$account_id" >> "$GITHUB_ENV"
           fi
       - run: npm install --no-audit --no-fund
+      - name: Ensure a workers.dev hostname exists
+        run: |
+          current_subdomain="$(curl --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain" \
+            | jq -r '.result.subdomain // empty')"
+          if [ -z "$current_subdomain" ]; then
+            for candidate in chandanvura chandanvura-jobradar jobradar-chandanvura; do
+              response="$(curl --silent --show-error \
+                -X PUT \
+                -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+                -H "Content-Type: application/json" \
+                --data "{\"subdomain\":\"$candidate\"}" \
+                "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain")"
+              if [ "$(printf '%s' "$response" | jq -r '.success')" = "true" ]; then
+                current_subdomain="$candidate"
+                break
+              fi
+            done
+          fi
+          test -n "$current_subdomain"
+          echo "Workers hostname: jobradar.$current_subdomain.workers.dev"
       - name: Create or resolve production database
         run: |
           database_id="$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "jobradar-db") | .uuid' | head -n 1)"
