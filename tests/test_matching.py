@@ -4,7 +4,7 @@ import httpx
 from scraper.models import Job
 from scraper.adapters import job_like_url, likely_target, location_text, parse_posted_at, parse_posting, workday_config
 from scraper.models import Company
-from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status, telegram_error
+from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
 from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
 
 def recent(hours=1):
@@ -83,6 +83,10 @@ def test_private_start_chat_resolution():
     ]}
     assert private_start_chat_id(payload)=="444"
     assert private_start_chat_id({"result":[]}) is None
+
+def test_telegram_get_chat_resolves_username_to_numeric_id():
+    assert telegram_chat_id({"ok":True,"result":{"id":573491,"type":"private","username":"GptJobRadarBot"}})=="573491"
+    assert telegram_chat_id({"ok":False}) is None
 
 def test_telegram_error_is_actionable_and_does_not_expose_request_url():
     request=httpx.Request("GET","https://api.telegram.org/botSECRET/getMe")

@@ -91,6 +91,12 @@ def private_start_chat_id(payload):
             candidates.append((int(update.get("update_id",0)),str(chat["id"])))
     return max(candidates)[1] if candidates else None
 
+def telegram_chat_id(payload):
+    """Return Telegram's resolved numeric chat ID from a getChat response."""
+    result=payload.get("result") if isinstance(payload,dict) else None
+    chat_id=result.get("id") if isinstance(result,dict) else None
+    return str(chat_id) if chat_id is not None else None
+
 async def ensure_telegram_ready():
     global _TELEGRAM_CHAT_OVERRIDE
     token,configured=os.getenv("TELEGRAM_BOT_TOKEN"),os.getenv("TELEGRAM_CHAT_ID")
@@ -103,7 +109,12 @@ async def ensure_telegram_ready():
         telegram_raise_for_status(identity,"bot authentication")
         bot_id=str((identity.json().get("result") or {}).get("id", ""))
         target=await x.get(url+"/getChat",params={"chat_id":chat})
-        needs_recovery=target.status_code in {400,403} or (bot_id and str(chat)==bot_id)
+        resolved=telegram_chat_id(target.json()) if target.status_code==200 else None
+        # A configured @username can resolve to the bot itself even though the
+        # literal value differs from bot_id. getChat succeeds in that case, but
+        # sendMessage later fails with "the bot can't send messages to the bot".
+        target_is_bot=bool(bot_id and resolved==bot_id)
+        needs_recovery=target.status_code in {400,403} or target_is_bot
         if needs_recovery and not _TELEGRAM_CHAT_OVERRIDE:
             updates=await x.get(url+"/getUpdates",params={"limit":100,"timeout":0})
             telegram_raise_for_status(updates,"chat recovery")
@@ -112,10 +123,11 @@ async def ensure_telegram_ready():
                 _TELEGRAM_CHAT_OVERRIDE=recovered
                 chat=recovered
                 target=await x.get(url+"/getChat",params={"chat_id":chat})
-            elif bot_id and str(chat)==bot_id:
+            elif target_is_bot or (bot_id and str(chat)==bot_id):
                 raise TelegramDeliveryError("Telegram chat ID belongs to the bot; send /start to the bot and rerun the workflow")
         telegram_raise_for_status(target,"chat validation")
-    return chat
+        resolved=telegram_chat_id(target.json())
+    return resolved or chat
 
 async def notify(job,chat=None):
     token=os.getenv("TELEGRAM_BOT_TOKEN")
@@ -199,5 +211,8 @@ async def main():
     if limited_names: print("Limited sources: "+", ".join(limited_names))
     if failed_names: print("Failed sources: "+", ".join(failed_names))
     if telegram_failures:
-        raise SystemExit("Telegram health check or delivery failed")
+        # Ingestion and source monitoring are durable even when Telegram has a
+        # temporary credential, permission, or delivery problem. Failed alerts
+        # are recorded by the API and returned for retry on the next scan.
+        print("WARNING Telegram health check or delivery failed; failed alerts remain queued for retry.",file=sys.stderr)
 if __name__=="__main__":asyncio.run(main())
