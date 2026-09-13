@@ -17,8 +17,8 @@ const authorized=(request:Request,env:Env)=>Boolean(env.JOBRADAR_INGEST_SECRET&&
 
 async function dashboard(env:Env){
   const [jobResult,companyResult,runResult,notificationResult]=await Promise.all([
-    env.DB.prepare("SELECT id,external_job_id,title,company,location,normalized_location,experience_min,experience_max,experience_label,skills,ats_provider,application_url,career_page_url,posted_at,posted_label,posted_precision,reported_age_hours,first_seen_at,last_seen_at,relevance_score,role_category,hiring_signal,application_status,is_active,is_eligible,eligibility_reason FROM jobs WHERE is_active=1 ORDER BY is_eligible DESC,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 1000").all(),
-    env.DB.prepare("SELECT name,careers_url,ats_provider,last_checked_at,last_success_at,error_count,jobs_found,candidate_jobs,eligible_jobs,warning FROM companies WHERE enabled=1 ORDER BY priority DESC,name LIMIT 500").all(),
+    env.DB.prepare("SELECT id,external_job_id,description,title,company,location,normalized_location,experience_min,experience_max,experience_label,skills,ats_provider,application_url,career_page_url,posted_at,posted_label,posted_precision,reported_age_hours,first_seen_at,last_seen_at,relevance_score,role_category,hiring_signal,application_status,is_active,is_eligible,eligibility_reason FROM jobs WHERE is_active=1 ORDER BY is_eligible DESC,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 1000").all(),
+    env.DB.prepare("SELECT name,careers_url,ats_provider,last_checked_at,last_success_at,error_count,jobs_found,candidate_jobs,eligible_jobs,warning FROM companies WHERE enabled=1 ORDER BY priority DESC,name").all(),
     env.DB.prepare("SELECT * FROM scraper_runs ORDER BY id DESC LIMIT 24").all(),
     env.DB.prepare("SELECT n.id,n.channel,n.status,n.sent_at,n.error,j.title,j.company FROM notifications n JOIN jobs j ON j.id=n.job_id ORDER BY n.id DESC LIMIT 50").all(),
   ]);
@@ -69,10 +69,10 @@ const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<
   try{
     if(url.pathname==="/api/health"&&request.method==="GET")return health(env);
     if(url.pathname==="/api/dashboard"&&request.method==="GET")return dashboard(env);
-    if(url.pathname==="/api/jobs"&&request.method==="GET"){const result=await env.DB.prepare("SELECT * FROM jobs WHERE is_active=1 ORDER BY COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 500").all();return json({jobs:result.results})}
+    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);const result=await env.DB.prepare("SELECT * FROM jobs WHERE is_active=1 AND id>? ORDER BY id LIMIT 501").bind(after).all();const jobs=result.results.slice(0,500);return json({jobs,next_cursor:result.results.length>500?jobs[jobs.length-1].id:null})}
     if(url.pathname==="/api/ingest"&&request.method==="POST")return ingest(request,env);
     if(url.pathname==="/api/notifications"&&request.method==="POST")return recordNotification(request,env);
-    const statusMatch=url.pathname.match(/^\/api\/jobs\/(\d+)\/status$/);if(statusMatch&&request.method==="PATCH")return updateStatus(request,env,statusMatch[1]);
+    const statusMatch=url.pathname.match(/^\/api\/jobs\/(\d+)\/status$/);if(statusMatch&&request.method==="PATCH")return updateStatus();
   }catch(error){console.error("JobRadar API error",error);return json({error:"JobRadar API request failed"},500)}
   if(url.pathname.startsWith("/api/"))return json({error:"Not found"},404);
   if(url.pathname==="/_vinext/image"){const allowedWidths=[...DEFAULT_DEVICE_SIZES,...DEFAULT_IMAGE_SIZES];return handleImageOptimization(request,{fetchAsset:(path)=>env.ASSETS.fetch(new Request(new URL(path,request.url))),transformImage:async(body,{width,format,quality})=>(await env.IMAGES.input(body).transform(width>0?{width}:{}).output({format,quality})).response()},allowedWidths)}

@@ -44,6 +44,10 @@ jobs:
             echo "CLOUDFLARE_ACCOUNT_ID=$account_id" >> "$GITHUB_ENV"
           fi
       - run: npm install --no-audit --no-fund
+      - name: Validate private profiles and frontend types
+        run: |
+          npm run test:product
+          npm run typecheck:ui
       - name: Ensure a workers.dev hostname exists
         run: |
           current_subdomain="$(curl --silent --show-error \

@@ -99,3 +99,15 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+/* Subtle feedback without motion for people who prefer reduced animation. */
+:where(button, a, input, select, textarea):focus-visible { outline: 3px solid #21946b; outline-offset: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  button, a { transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease; }
+  button:active, a:active { transform: translateY(1px); }
+  main article { animation: radar-enter 180ms ease-out both; }
+  @keyframes radar-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
