@@ -62,3 +62,7 @@ Profile/import/freshness/export tests and UI type checking run before production
 - LetMeApply product: https://letmeapply.com/
 - YC company-directory discovery dataset (secondary, not verification): https://github.com/yc-oss/api
 - Primary city evidence and career links are recorded per candidate in the company review report.
+
+## Source review completed 2026-09-13
+
+Reviewed 97 active target-city candidates from the YC directory and two additional official employer sources. Enabled 19 new sources after reviewing career links and company identity, for 521 unique enabled sources. Several reachable career pages offer only limited structured coverage. This is not 1,000 verified companies or exhaustive city coverage. Rehook.ai redirects to existing CleverTap and is not added as a duplicate. The review report preserves unconfirmed candidates for future investigation.

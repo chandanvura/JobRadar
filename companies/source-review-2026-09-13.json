@@ -1,0 +1,884 @@
+[
+  {
+    "name": "Clear",
+    "city_evidence": "https://www.ycombinator.com/companies/cleartax",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://clear.in/",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.clear.in/s/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "clear",
+    "structured_links": []
+  },
+  {
+    "name": "GoLorry",
+    "city_evidence": "https://www.ycombinator.com/companies/golorry",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "http://www.golorry.com",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Wifi Dabba, Inc.",
+    "city_evidence": "https://www.ycombinator.com/companies/wifi-dabba-inc",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://dabba.com",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "OneFin",
+    "city_evidence": "https://www.ycombinator.com/companies/onefin",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.onefin.in",
+    "status": "career_redirect_needs_review",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.onefin.in",
+    "ats_provider": "custom",
+    "ats_identifier": ""
+  },
+  {
+    "name": "Khatabook",
+    "city_evidence": "https://www.ycombinator.com/companies/khatabook",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://khatabook.com/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "OkCredit",
+    "city_evidence": "https://www.ycombinator.com/companies/okcredit",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.okcredit.in",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Mudrex",
+    "city_evidence": "https://www.ycombinator.com/companies/mudrex",
+    "directory_location": "Bengaluru, KA, India; Remote",
+    "website": "https://mudrex.com",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://mudrex.careers-page.com/",
+    "ats_provider": "custom",
+    "ats_identifier": "mudrex",
+    "structured_links": []
+  },
+  {
+    "name": "Edyst",
+    "city_evidence": "https://www.ycombinator.com/companies/edyst",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "https://edyst.com",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Dockup",
+    "city_evidence": "https://www.ycombinator.com/companies/dockup",
+    "directory_location": "Bengaluru, KA, India; Mountain View, CA, USA",
+    "website": "https://getdockup.com/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Inito",
+    "city_evidence": "https://www.ycombinator.com/companies/inito",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.inito.com/",
+    "status": "career_redirect_needs_review",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.inito.com/",
+    "ats_provider": "custom",
+    "ats_identifier": ""
+  },
+  {
+    "name": "Binks",
+    "city_evidence": "https://www.ycombinator.com/companies/binks",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://getbinks.com/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Lokal",
+    "city_evidence": "https://www.ycombinator.com/companies/lokal",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.getlokalapp.com",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.lokalapps.com/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "lokal",
+    "structured_links": []
+  },
+  {
+    "name": "DocVita",
+    "city_evidence": "https://www.ycombinator.com/companies/docvita",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://docvita.com",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Vahan",
+    "city_evidence": "https://www.ycombinator.com/companies/vahan",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://vahan.ai",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Digi-Prex",
+    "city_evidence": "https://www.ycombinator.com/companies/digi-prex",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "http://www.digi-prex.com/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "FamPay",
+    "city_evidence": "https://www.ycombinator.com/companies/fampay",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://fampay.in",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.famapp.in:443/careers/",
+    "ats_provider": "custom",
+    "ats_identifier": "fampay",
+    "structured_links": []
+  },
+  {
+    "name": "StayQrious",
+    "city_evidence": "https://www.ycombinator.com/companies/stayqrious",
+    "directory_location": "Bengaluru, KA, India; Remote",
+    "website": "https://StayQrious.com",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "UrbanKisaan",
+    "city_evidence": "https://www.ycombinator.com/companies/urbankisaan",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "https://www.urbankisaan.com",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "farmtheory",
+    "city_evidence": "https://www.ycombinator.com/companies/farmtheory",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "http://farmtheory.in/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Morphle Labs",
+    "city_evidence": "https://www.ycombinator.com/companies/morphle-labs",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://morphlelabs.com",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Spenny",
+    "city_evidence": "https://www.ycombinator.com/companies/spenny",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "http://spennyapp.com",
+    "status": "HTTPError",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Volopay",
+    "city_evidence": "https://www.ycombinator.com/companies/volopay",
+    "directory_location": "Bengaluru, KA, India; Singapore, Singapore; Remote",
+    "website": "https://www.volopay.com/",
+    "status": "unverified",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Explorex",
+    "city_evidence": "https://www.ycombinator.com/companies/explorex",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://explorex.co",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Cradle",
+    "city_evidence": "https://www.ycombinator.com/companies/cradle",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.cradlefinance.com",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Statiq.",
+    "city_evidence": "https://www.ycombinator.com/companies/statiq",
+    "directory_location": "Gurugram, HR, India; Bengaluru, KA, India",
+    "website": "https://statiq.in/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "WareIQ",
+    "city_evidence": "https://www.ycombinator.com/companies/wareiq",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.wareiq.com/",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://wareiq.com/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "wareiq",
+    "structured_links": []
+  },
+  {
+    "name": "Decentro",
+    "city_evidence": "https://www.ycombinator.com/companies/decentro",
+    "directory_location": "Bengaluru, KA, India; Delhi, DL, India; Singapore, Singapore",
+    "website": "https://decentro.tech",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://decentro.tech/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "decentro",
+    "structured_links": []
+  },
+  {
+    "name": "Orange Health Labs",
+    "city_evidence": "https://www.ycombinator.com/companies/orange-health-labs",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "http://www.orangehealth.in",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.orangehealth.in/jobs",
+    "ats_provider": "custom",
+    "ats_identifier": "orange-health-labs",
+    "structured_links": []
+  },
+  {
+    "name": "MedPiper Technologies, Inc",
+    "city_evidence": "https://www.ycombinator.com/companies/medpiper-technologies-inc",
+    "directory_location": "Bengaluru, KA, India; Remote",
+    "website": "https://www.medpiper.com",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "RocketSDR",
+    "city_evidence": "https://www.ycombinator.com/companies/rocketsdr",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://rocketsdr.ai",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Flux Auto",
+    "city_evidence": "https://www.ycombinator.com/companies/flux-auto",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://fluxauto.ai",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://fluxauto.ai/careers.html",
+    "ats_provider": "custom",
+    "ats_identifier": "flux-auto",
+    "structured_links": []
+  },
+  {
+    "name": "CashBook",
+    "city_evidence": "https://www.ycombinator.com/companies/cashbook",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://cashbook.in",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Bimaplan",
+    "city_evidence": "https://www.ycombinator.com/companies/bimaplan",
+    "directory_location": "Bengaluru, KA, India; MH, India",
+    "website": "https://www.bimaplan.co",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "FifthTry",
+    "city_evidence": "https://www.ycombinator.com/companies/fifthtry",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.FifthTry.com",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Codingal",
+    "city_evidence": "https://www.ycombinator.com/companies/codingal",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.codingal.com/?utm_source=yc",
+    "status": "unverified",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Tilt",
+    "city_evidence": "https://www.ycombinator.com/companies/tilt-2",
+    "directory_location": "Bengaluru, KA, India; Remote",
+    "website": "https://tilt.bike/",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.tilt.bike/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "tilt",
+    "structured_links": []
+  },
+  {
+    "name": "Unschool",
+    "city_evidence": "https://www.ycombinator.com/companies/unschool",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "https://www.unschool.in/",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "ZOKO",
+    "city_evidence": "https://www.ycombinator.com/companies/zoko",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.zoko.io/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Reclaim Protocol",
+    "city_evidence": "https://www.ycombinator.com/companies/reclaim-protocol",
+    "directory_location": "Hyderabad, Telangana, India; Remote",
+    "website": "https://reclaimprotocol.org",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Betterhalf",
+    "city_evidence": "https://www.ycombinator.com/companies/betterhalf",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://betterhalf.ai",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Zealth",
+    "city_evidence": "https://www.ycombinator.com/companies/zealth",
+    "directory_location": "Bengaluru, KA, India; Remote",
+    "website": "https://zealth-ai.com/",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "BusinessOnBot",
+    "city_evidence": "https://www.ycombinator.com/companies/businessonbot",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.businessonbot.com/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Voosh",
+    "city_evidence": "https://www.ycombinator.com/companies/voosh",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://voosh.ai/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "marketfeed",
+    "city_evidence": "https://www.ycombinator.com/companies/marketfeed",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://marketfeed.com",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.marketfeed.com/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "marketfeed",
+    "structured_links": []
+  },
+  {
+    "name": "Karbon Card",
+    "city_evidence": "https://www.ycombinator.com/companies/karbon-card",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.karboncard.com/",
+    "status": "career_redirect_needs_review",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.karboncard.com/about",
+    "ats_provider": "custom",
+    "ats_identifier": ""
+  },
+  {
+    "name": "FrontPage",
+    "city_evidence": "https://www.ycombinator.com/companies/frontpage",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://front.page",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Koshex",
+    "city_evidence": "https://www.ycombinator.com/companies/koshex",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.koshex.com",
+    "status": "career_access_not_confirmed",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.ycombinator.com/companies/koshex/jobs"
+  },
+  {
+    "name": "Coulomb AI",
+    "city_evidence": "https://www.ycombinator.com/companies/coulomb-ai",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://coulomb.ai/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "SalaryBook",
+    "city_evidence": "https://www.ycombinator.com/companies/salarybook",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://salarybook.co.in/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Rivia.AI",
+    "city_evidence": "https://www.ycombinator.com/companies/rivia-ai",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://rivia.ai",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Advantage Club",
+    "city_evidence": "https://www.ycombinator.com/companies/advantage-club",
+    "directory_location": "Gurugram, HR, India; San Francisco, CA, USA; Bengaluru, KA, India; Chicago, IL, USA; Mumbai, MH, India; Manila, NCR, Philippines; Dubai, Dubai, United Arab Emirates; Singapore, Singapore",
+    "website": "https://www.advantageclub.co",
+    "status": "location_unconfirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Swipe",
+    "city_evidence": "https://www.ycombinator.com/companies/swipe-2",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "https://getswipe.in",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "AlgoUniversity",
+    "city_evidence": "https://www.ycombinator.com/companies/algouniversity",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "http://algouniversity.com/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Ivy Homes",
+    "city_evidence": "https://www.ycombinator.com/companies/ivy-homes",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://ivy.homes",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://ivy.homes/career",
+    "ats_provider": "custom",
+    "ats_identifier": "ivy-homes",
+    "structured_links": []
+  },
+  {
+    "name": "Spark Studio",
+    "city_evidence": "https://www.ycombinator.com/companies/spark-studio",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://sparkstudio.co",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Infer",
+    "city_evidence": "https://www.ycombinator.com/companies/infer",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.infer.so/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Stownest",
+    "city_evidence": "https://www.ycombinator.com/companies/stownest",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://stownest.com",
+    "status": "URLError",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Apollo",
+    "city_evidence": "https://www.ycombinator.com/companies/apollo-3",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.apollofirst.xyz/",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.apollofirst.xyz/careers2",
+    "ats_provider": "custom",
+    "ats_identifier": "apollo",
+    "structured_links": []
+  },
+  {
+    "name": "MySivi",
+    "city_evidence": "https://www.ycombinator.com/companies/mysivi",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.mysivi.ai/",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Rehook.ai",
+    "city_evidence": "https://www.ycombinator.com/companies/rehook-ai",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://rehook.ai/",
+    "status": "redirects_to_existing_company_CleverTap",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://clevertap.com/careers/",
+    "ats_provider": "custom",
+    "ats_identifier": ""
+  },
+  {
+    "name": "Streak",
+    "city_evidence": "https://www.ycombinator.com/companies/streak-2",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.streakcard.com/",
+    "status": "HTTPError",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "RecordBook",
+    "city_evidence": "https://www.ycombinator.com/companies/recordbook",
+    "directory_location": "Bengaluru, KA, India; Remote",
+    "website": "https://play.google.com/store/apps/details?id=com.foodmonk.rekordapp",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "SALT",
+    "city_evidence": "https://www.ycombinator.com/companies/salt",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://salt.pe",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.salt.pe/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "salt",
+    "structured_links": []
+  },
+  {
+    "name": "SpadeWorks",
+    "city_evidence": "https://www.ycombinator.com/companies/spadeworks",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "https://www.spadeworks.co",
+    "status": "URLError",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "PayCrunch",
+    "city_evidence": "https://www.ycombinator.com/companies/paycrunch",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://paycrunch.in",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Material Depot",
+    "city_evidence": "https://www.ycombinator.com/companies/material-depot",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://materialdepot.in/",
+    "status": "HTTPError",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Better Opinions",
+    "city_evidence": "https://www.ycombinator.com/companies/better-opinions",
+    "directory_location": "Bengaluru, KA, India; Gurugram, HR, India; Remote",
+    "website": "https://betteropinions.in/",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "GoSats",
+    "city_evidence": "https://www.ycombinator.com/companies/gosats",
+    "directory_location": "Dubai, Dubai, United Arab Emirates; Bengaluru, KA, India",
+    "website": "https://gosats.io",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Coupl",
+    "city_evidence": "https://www.ycombinator.com/companies/coupl",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://coupl.money/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "EthosX",
+    "city_evidence": "https://www.ycombinator.com/companies/ethosx",
+    "directory_location": "Claymont, DE, USA; Bengaluru, KA, India; Mumbai, MH, India; Remote",
+    "website": "https://www.ethosx.finance/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Raven",
+    "city_evidence": "https://www.ycombinator.com/companies/raven",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://startraven.com",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Gullak Money",
+    "city_evidence": "https://www.ycombinator.com/companies/gullak-money",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://gullak.money",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Slidely AI",
+    "city_evidence": "https://www.ycombinator.com/companies/slidely-ai",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://slidely.ai/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "100x",
+    "city_evidence": "https://www.ycombinator.com/companies/100x",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://100x.bot?utm_source=inbound&utm_medium=bookface&utm_campaign=yc&utm_id=122",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Peoplebox.ai",
+    "city_evidence": "https://www.ycombinator.com/companies/peoplebox",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.peoplebox.ai",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.peoplebox.ai/careers/",
+    "ats_provider": "custom",
+    "ats_identifier": "peoplebox-ai",
+    "structured_links": []
+  },
+  {
+    "name": "Maya Labs",
+    "city_evidence": "https://www.ycombinator.com/companies/maya-labs",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://mayalabs.io",
+    "status": "URLError",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "CompUp",
+    "city_evidence": "https://www.ycombinator.com/companies/compup",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.compup.io",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "FlatX",
+    "city_evidence": "https://www.ycombinator.com/companies/flatx",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.flatx.co/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Landeed",
+    "city_evidence": "https://www.ycombinator.com/companies/landeed",
+    "directory_location": "Hyderabad, Telangana, India",
+    "website": "https://www.landeed.com/",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Cone",
+    "city_evidence": "https://www.ycombinator.com/companies/cone",
+    "directory_location": "Hyderabad, Telangana, India; Remote",
+    "website": "https://www.getcone.io",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "DrDroid",
+    "city_evidence": "https://www.ycombinator.com/companies/drdroid",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://drdroid.io/",
+    "status": "investor_job_board_needs_adapter_review",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.ycombinator.com/companies/drdroid/jobs",
+    "ats_provider": "custom",
+    "ats_identifier": ""
+  },
+  {
+    "name": "Floworks",
+    "city_evidence": "https://www.ycombinator.com/companies/floworks",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://floworks.ai/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "SuperKalam",
+    "city_evidence": "https://www.ycombinator.com/companies/superkalam",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://superkalam.com",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Clueso",
+    "city_evidence": "https://www.ycombinator.com/companies/clueso",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://clueso.io",
+    "status": "URLError",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Retape",
+    "city_evidence": "https://www.ycombinator.com/companies/retape",
+    "directory_location": "Bengaluru, KA, India; Remote",
+    "website": "https://www.retape.ai/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "SuperAPI",
+    "city_evidence": "https://www.ycombinator.com/companies/superapi",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://trysuperapi.com",
+    "status": "access_not_confirmed",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "CORE",
+    "city_evidence": "https://www.ycombinator.com/companies/heysol",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://getcore.me",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Yenmo",
+    "city_evidence": "https://www.ycombinator.com/companies/yenmo",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://yenmo.in/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Infinity",
+    "city_evidence": "https://www.ycombinator.com/companies/infinity",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.infinityapp.in/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "xPay",
+    "city_evidence": "https://www.ycombinator.com/companies/xpay",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.xpaycheckout.com/",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.xpaycheckout.com/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "xpay",
+    "structured_links": []
+  },
+  {
+    "name": "Rowboat Labs",
+    "city_evidence": "https://www.ycombinator.com/companies/rowboat-labs",
+    "directory_location": "Bengaluru, KA, India; Remote",
+    "website": "https://www.rowboatlabs.com",
+    "status": "URLError",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Truffle AI",
+    "city_evidence": "https://www.ycombinator.com/companies/truffle-ai",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.trytruffle.ai/",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Bolna AI",
+    "city_evidence": "https://www.ycombinator.com/companies/bolna-ai",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://bolna.ai",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://jobs.ashbyhq.com/bolna",
+    "ats_provider": "ashby",
+    "ats_identifier": "bolna",
+    "structured_links": []
+  },
+  {
+    "name": "Perseus",
+    "city_evidence": "https://www.ycombinator.com/companies/perseus",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://perseus.computer",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Ressl AI",
+    "city_evidence": "https://www.ycombinator.com/companies/ressl-ai",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://ressl.ai",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Ritivel",
+    "city_evidence": "https://www.ycombinator.com/companies/ritivel",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.ritivel.com",
+    "status": "no_official_career_link",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "Antropi Robotics",
+    "city_evidence": "https://www.ycombinator.com/companies/antropi-robotics",
+    "directory_location": "Bengaluru, KA, India",
+    "website": "https://www.antropi.world/",
+    "status": "verified_career_page",
+    "reviewed_at": "2026-09-13",
+    "careers_url": "https://www.antropi.world/careers",
+    "ats_provider": "custom",
+    "ats_identifier": "antropi-robotics",
+    "structured_links": []
+  },
+  {
+    "name": "Sarla Aviation",
+    "website": "https://www.sarla-aviation.com/",
+    "careers_url": "https://www.sarla-aviation.com/open-roles/",
+    "city_evidence": "https://www.sarla-aviation.com/",
+    "directory_location": "Bengaluru",
+    "status": "verified_career_page",
+    "ats_provider": "custom",
+    "ats_identifier": "sarla-aviation",
+    "reviewed_at": "2026-09-13"
+  },
+  {
+    "name": "smallcase",
+    "website": "https://www.smallcase.com/about",
+    "careers_url": "https://app.pyjamahr.com/careers?company=smallcase&company_uuid=2615584222",
+    "city_evidence": "https://www.smallcase.com/about",
+    "directory_location": "Bengaluru",
+    "status": "verified_career_page",
+    "ats_provider": "custom",
+    "ats_identifier": "smallcase",
+    "reviewed_at": "2026-09-13"
+  }
+]
