@@ -15,9 +15,11 @@ All people use the same public collected engineering job catalog in Bengaluru an
 
 ## Resume Studio
 
-Use **Tailor resume** on a job or open **Resume Studio**. The employer description is loaded when available (ingestion currently retains up to 4,000 characters); check the original posting and paste the full JD when needed. Enter real experience, projects, education and skills.
+Save your master resume once in **Resume Studio**. Clicking **Tailor resume** on a job then automatically loads its employer description and prepares a separate editable draft. The master is preserved. **Edit master resume** changes the source for future jobs; **Regenerate from master** discards draft edits and prepares a fresh version. The latest draft is retained locally and reused only for the same job, JD and master.
 
-Keyword review compares a fixed technical vocabulary. It is not an ATS score and cannot predict acceptance. **Prioritize existing bullets** reorders bullet lines inside each blank-line-separated paragraph using exact recognized keywords; it never generates achievements, skills or employment history. Review grouping and facts before applying.
+If the description is unavailable, paste the employer JD and choose **Regenerate from master**. Ingestion currently retains up to 4,000 characters; check the original posting and paste the full JD when needed.
+
+Keyword review compares recognized technical terms and your supplied skills. It is not an ATS score and cannot predict acceptance. Automatic tailoring prioritizes existing skills and consecutive achievement bullets within their original sections. Indented continuation lines stay with their bullet; employer headings and dates stay in place. No achievements, skills or employment history are invented. Review facts and grouping before applying.
 
 - Print / Save PDF: browser-generated, single-column Jake-inspired layout. Disable print headers and footers and review pagination.
 - Download Jake LaTeX: uses Jake Gutierrez's MIT-licensed template preamble. Compile locally or in a compatible LaTeX editor. The license is included in the export and in `web/public/templates/jake-LICENSE.txt`.
