@@ -13,6 +13,15 @@ Profiles are browser storage namespaces, not authenticated accounts. Another per
 
 All people use the same public collected engineering job catalog in Bengaluru and Hyderabad. Search choices do not launch new scraper runs, change the owner's filters, or configure another Telegram recipient. Arbitrary roles/cities beyond the collected catalog are not supported. There is no cloud synchronization or per-user Telegram subscription in this release.
 
+### Matching levels
+
+- **Recommended** ranks every active target-role job by preferred-title similarity, optional skill overlap, experience compatibility, verified freshness and official-source priority. Missing experience or posting dates remain visible with a clear review label.
+- **Exact** requires a preferred title and skill match when those fields are filled. Use it only when you intentionally want a narrow list.
+- **Latest Jobs** and **Ultra Fresh** require employer-provided freshness evidence. Telegram alerts also require explicit 0–3 YOE evidence, so reviewable jobs never create misleading alerts.
+- **Job Boards** creates last-24-hours LinkedIn and Naukri search links from the user's titles. Results stay on those services and must be verified against the employer page.
+
+LinkedIn and Naukri results can be much larger because they aggregate employers, agencies, reposts and listings whose dates or experience are not independently verified. JobRadar does not scrape them. LinkedIn's User Agreement prohibits scripts, robots, crawlers and browser extensions used to scrape its services, while Naukri blocks automated crawler access. Authorized APIs or user-provided exports can be added later without changing the verified-alert rules.
+
 ## Resume Studio
 
 Save your master resume once in **Resume Studio**. Clicking **Tailor resume** on a job then automatically loads its employer description and prepares a separate editable draft. The master is preserved. **Edit master resume** changes the source for future jobs; **Regenerate from master** discards draft edits and prepares a fresh version. The latest draft is retained locally and reused only for the same job, JD and master.

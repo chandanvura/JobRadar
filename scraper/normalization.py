@@ -3,11 +3,11 @@ from datetime import datetime, timedelta, timezone
 from .models import Job
 
 ROLE_PATTERNS = {
-    "DevOps": r"\bdev\s*sec\s*ops\b|\bdev\s*ops\b|\bbuild(?:/| and | & )?release\b|\brelease engineer\b|\bdeployment engineer\b", "Cloud": r"\bcloud (?:support |operations |infrastructure |migration |platform )?engineer\b|\bcloud operations\b|\bcloudops\b",
-    "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b", "Platform": r"\bplatform engineer\b",
+    "DevOps": r"\bdev\s*sec\s*ops\b|\bdev\s*ops\b|\bbuild(?:/| and | & )?release\b|\brelease engineer\b|\bdeployment engineer\b", "Cloud": r"\bcloud (?:support |operations |infrastructure |migration |platform )?(?:engineer|associate)\b|\bcloud operations\b|\bcloudops\b",
+    "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b", "Platform": r"\bplatform (?:software )?engineer\b",
     "Infrastructure / Operations": r"\binfrastructure (?:automation |operations |support )?engineer\b|\bsoftware engineer\s*[-–—:,]?\s*infrastructure\b|\blinux (?:systems? |infrastructure |cloud )?engineer\b|\bsystems? engineer\s*(?:i|1)\b",
-    "Java / Backend": r"\bjava (?:software )?(?:developer|engineer)\b|\bback[ -]?end (?:software )?(?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*(?:java|back[ -]?end)\b",
-    "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software (?:development )?engineer(?:ing)?(?:\s+(?:i|1))?\b|\bsde\s*(?:i|1)?\b|\bgraduate engineer trainee\b|\bget\b",
+    "Java / Backend": r"\bjava (?:full[ -]?stack |software )?(?:developer|engineer)\b|\bback[ -]?end (?:software |application )?(?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*(?:java|back[ -]?end)\b",
+    "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software (?:development )?engineer(?:ing)?(?:\s+(?:i|1))?\b|\bsde\s*(?:i|1)?\b|\b(?:graduate )?engineer trainee\b|\bmember of technical staff(?:\s+(?:i|1))?\b|\bget\b",
 }
 SKILLS=["AWS","Azure","GCP","Linux","Docker","Kubernetes","Terraform","Jenkins","CI/CD","GitHub Actions","Argo CD","Ansible","Git","Helm","Bash","Python","Java","Spring Boot","Spring","REST API","Microservices","Kafka","SQL","PostgreSQL","MySQL","Redis","Prometheus","Grafana","ELK","Elasticsearch","Splunk","Datadog"]
 MAX_JOB_AGE_HOURS = 24
@@ -28,14 +28,15 @@ def classify_title(title: str):
     return clean,"Other"
 
 def extract_experience(text: str):
-    junior=re.search(r"\b(fresher|fresh graduate|new graduate|entry.?level|recent graduate|no (?:prior |professional |work )?experience required)\b",text,re.I)
+    text=re.sub(r"\b(zero|one|two|three|four|five)\s+(?=years?|yrs?|yoe)",lambda m:str({"zero":0,"one":1,"two":2,"three":3,"four":4,"five":5}[m.group(1).lower()])+" ",text,flags=re.I)
+    junior=re.search(r"\b(fresher|fresh graduate|new graduate|entry.?level|early career|campus hire|university graduate|recent graduate|no (?:prior |professional |work )?experience required)\b",text,re.I)
     clauses=re.split(r"[\n.;•]+",text)
     relevant=[c for c in clauses if re.search(r"\b(years?|yrs?|yoe|experience|fresher|graduate)\b",c,re.I) and not re.search(r"\b(company|organisation|organization|founded|serving|combined|team has)\b.{0,35}\b(years?|experience)\b",c,re.I)]
     candidate_text=" ".join(relevant)
     ranges=[(float(a),float(b)) for a,b in re.findall(r"\b(\d+(?:\.\d+)?)\s*(?:years?\s*)?(?:-|–|—|to)\s*(\d+(?:\.\d+)?)\s*(?:years?|yrs?|yoe)\b",candidate_text,re.I)]
     month_ranges=[(float(a)/12,float(b)/12) for a,b in re.findall(r"\b(\d+)\s*(?:-|–|—|to)\s*(\d+)\s*months?\b",candidate_text,re.I)]
     mixed_ranges=[(float(a)/12,float(b)) for a,b in re.findall(r"\b(\d+)\s*months?\s*(?:-|–|—|to)\s*(\d+(?:\.\d+)?)\s*years?\b",candidate_text,re.I)]
-    upper_bounds=[float(x) for x in re.findall(r"\b(?:up\s*to|maximum(?: of)?|max\.?)\s*(\d+(?:\.\d+)?)\s*(?:years?|yrs?|yoe)\b",candidate_text,re.I)]
+    upper_bounds=[float(x) for x in re.findall(r"\b(?:up\s*to|less than|maximum(?: of)?|max\.?)\s*(\d+(?:\.\d+)?)\s*(?:years?|yrs?|yoe)\b",candidate_text,re.I)]
     lower_bounds=[float(x) for x in re.findall(r"\b(?:at least|minimum(?: of)?|more than|over)\s*(\d+(?:\.\d+)?)\s*(?:\+\s*)?(?:years?|yrs?|yoe)\b",candidate_text,re.I)]
     lower_bounds += [float(x) for x in re.findall(r"\bminimum\s+(?:relevant\s+|professional\s+|work\s+)?experience(?:\s+of)?\s*[:=-]?\s*(\d+(?:\.\d+)?)\s*(?:years?|yrs?|yoe)\b",candidate_text,re.I)]
     lower_bounds += [float(x) for x in re.findall(r"\b(\d+(?:\.\d+)?)\s*(?:years?|yrs?|yoe)\s*(?:minimum|or more|and above)\b",candidate_text,re.I)]
@@ -96,8 +97,9 @@ def enrich(job: Job, company_priority: int=3):
     if job.city not in {"Bengaluru","Hyderabad"}: reason="Outside Bengaluru/Hyderabad"
     elif leadership: reason="Leadership-level title"
     elif job.role_category=="Other": reason="Role outside target list"
-    elif not experience_ok: reason="Experience is unknown or exceeds policy"
-    elif not recent: reason="Posting time is unknown or older than 24 hours"
+    elif job.experience_min is None and job.experience_max is None: reason="Experience not stated — verify"
+    elif not experience_ok: reason="Experience exceeds 0–3 YOE policy"
+    elif not recent: reason="Posting date not verified within 24 hours"
     else: reason="Eligible"
     job.is_eligible=reason=="Eligible"; job.eligibility_reason=reason
     effective_age=age if age is not None else reported

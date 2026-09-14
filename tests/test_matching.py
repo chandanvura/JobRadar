@@ -32,6 +32,9 @@ def test_title_classification():
     assert classify_title("Backend Software Engineer")[1] == "Java / Backend"
     assert classify_title("Java Software Engineer")[1] == "Java / Backend"
     assert classify_title("Software Development Engineer I")[1] == "Software Engineering"
+    assert classify_title("Java Full Stack Developer")[1] == "Java / Backend"
+    assert classify_title("Cloud Support Associate")[1] == "Cloud"
+    assert classify_title("Member of Technical Staff I")[1] == "Software Engineering"
 
 def test_zero_to_three_year_roles_are_eligible():
     accepted=[
@@ -67,6 +70,9 @@ def test_real_world_experience_phrases():
     assert extract_experience("1-2 years in Java; minimum 5 years overall")[:2] == (5.0,None)
     assert extract_experience("Minimum 2 years and maximum 3 years of experience")[:2] == (2.0,3.0)
     assert extract_experience("No prior experience required")[:2] == (0.0,1.0)
+    assert extract_experience("One year of professional experience")[:2] == (1.0,1.0)
+    assert extract_experience("Less than three years experience")[:2] == (0.0,3.0)
+    assert extract_experience("Early career software engineer")[2] == "Fresher"
 
 def test_only_last_24_hours_are_eligible():
     assert enrich(sample(posted_at=recent(23))).is_eligible
