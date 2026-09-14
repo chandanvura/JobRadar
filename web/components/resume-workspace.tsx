@@ -9,9 +9,10 @@ function stored(key:string){try{return JSON.parse(readPrivate(key)||'null')}catc
 function setup(){
  const base=cleanResume(stored('jobradar-resume-v1')),raw=stored('jobradar-tailor-request-v1');
  const request={key:typeof raw?.key==='string'?raw.key:'manual',title:typeof raw?.title==='string'?raw.title:'Your selected opportunity',company:typeof raw?.company==='string'?raw.company:'',jd:typeof raw?.jd==='string'?raw.jd.slice(0,20000):base.jd};
- const saved=stored('jobradar-resume-draft-v1'),ready=hasResume(base)&&Boolean(request.jd.trim());
+ const saved=stored('jobradar-resume-draft-v1');
  const draft=saved?.key===request.key&&saved?.source===JSON.stringify(base)&&saved?.jd===request.jd?cleanResume(saved.resume):null;
- return {base,request,resume:ready?(draft||tailorResume(base,request.jd).resume):{...base,jd:request.jd},editingMaster:!hasResume(base),status:!hasResume(base)?'One-time setup: add your name and real experience, projects or education, then save your master resume.':!request.jd.trim()?'The employer description is missing. Paste the full JD below to tailor this job.':'Automatically prepared from your master resume. Relevant skills and existing bullets are prioritized; your original remains unchanged.'};
+ const jd=draft?.jd||request.jd,ready=hasResume(base)&&Boolean(jd.trim());
+ return {base,request,resume:ready?(draft||tailorResume(base,jd).resume):{...base,jd},editingMaster:!hasResume(base),status:!hasResume(base)?'One-time setup: add your name and real experience, projects or education, then save your master resume.':!jd.trim()?'The employer description is missing. Paste the full JD below to tailor this job.':'Automatically prepared from your master resume. Relevant skills and existing bullets are prioritized; your original remains unchanged.'};
 }
 const sections=(r:Resume)=>[['Summary',r.summary],['Experience',r.experience],['Projects',r.projects],['Education',r.education],['Technical Skills',r.skills]].filter(([,v])=>v.trim());
 const escapeHTML=(s:string)=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
