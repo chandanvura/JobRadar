@@ -10,7 +10,7 @@ on:
       - "tests/**"
   schedule:
     # Two opportunities per hour reduce the impact of delayed or dropped GitHub
-    # schedule events. Concurrency queues overlap because a scan takes ~8 minutes.
+    # schedule events. Source and per-domain concurrency keep scans bounded.
     - cron: "17,47 * * * *"
   workflow_dispatch:
 concurrency:
@@ -55,6 +55,16 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+      - name: Set daily cache key
+        id: cache-date
+        run: echo "value=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Restore daily immutable job-detail cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/jobradar-http
+          key: jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}
+          restore-keys: |
+            jobradar-details-${{ runner.os }}-
       - name: Run matching and notifier tests
         run: python -m pytest -q
         env:
@@ -66,3 +76,7 @@ jobs:
           JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          JOBRADAR_SOURCE_CONCURRENCY: 24
+          JOBRADAR_CUSTOM_CONCURRENCY: 16
+          JOBRADAR_DOMAIN_CONCURRENCY: 6
+          JOBRADAR_CUSTOM_TIMEOUT: 12
