@@ -13,6 +13,7 @@ JobRadar is a production-oriented job discovery system for explicit 0–3 YOE ro
 - ATS/external-ID deduplication and notification history schema
 - Telegram alerts with official application links
 - Redundant GitHub Actions scheduling, bounded retries, overlap protection, and manual dispatch
+- Automatic official-page ATS discovery, domain-aware concurrency, and cached immutable job details
 - Live run history, stale-run detection, per-source raw/candidate/eligible counts, notification history, and policy views
 - Browser-private Saved and application-stage tracking with JSON export
 - Initial company registry and tests for critical matching rules
@@ -102,6 +103,8 @@ Changes under `web/` deploy automatically from `main`; the workflow can also be 
 ## Expansion
 
 Add ATS adapters only after source-level job counts and fixtures prove they work. Workday uses full pagination and tenant-specific configuration. Browser-rendered and custom pages remain last-resort adapters. LinkedIn, Naukri, and Instahyre may be used only through permitted APIs or user-authorized exports; never bypass authentication, CAPTCHAs, access controls, or anti-bot protections.
+
+The scanner always refreshes listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-domain limits protect ATS hosts, while a daily Actions cache reuses job details whose listing is still live. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries.
 
 ## Troubleshooting
 
