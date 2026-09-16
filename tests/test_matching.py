@@ -2,7 +2,8 @@ import asyncio
 from datetime import datetime, timedelta, timezone
 import httpx
 from scraper.models import Job
-from scraper.adapters import job_like_url, likely_target, location_text, parse_posted_at, parse_posting, workday_config
+from bs4 import BeautifulSoup
+from scraper.adapters import cached_get, discover_ats, job_like_url, likely_target, location_text, parse_posted_at, parse_posting, workday_config
 from scraper.models import Company
 from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
 from scraper.normalization import classify_employment_type, classify_title, enrich, extract_experience, normalize_location
@@ -159,6 +160,33 @@ def test_custom_career_pages_follow_official_ats_links_only():
     assert job_like_url("https://company.example/careers/job/123","company.example")
     assert not job_like_url("https://unrelated.example/jobs/123","company.example")
 
+def test_custom_pages_index_linked_and_embedded_ats_boards():
+    cases={
+        '<a href="https://job-boards.greenhouse.io/acme/jobs/1">Open roles</a>':("greenhouse","acme"),
+        '<iframe src="https://jobs.lever.co/example"></iframe>':("lever","example"),
+        '<script>window.board="https://jobs.ashbyhq.com/org"</script>':("ashby","org"),
+        '<a href="https://jobs.smartrecruiters.com/ExampleCo">Jobs</a>':("smartrecruiters","ExampleCo"),
+        '<a href="https://acme.wd5.myworkdayjobs.com/en-US/External/jobs">Careers</a>':("workday","acme|External"),
+    }
+    for markup,expected in cases.items():
+        assert discover_ats(BeautifulSoup(markup,"html.parser"),"https://company.example/careers")[:2]==expected
+
+def test_job_details_are_reused_without_skipping_live_listings(monkeypatch,tmp_path):
+    import scraper.adapters as adapters
+    class FakeClient:
+        calls=0
+        async def request(self,method,url,**kwargs):
+            self.calls+=1
+            return httpx.Response(200,text="fresh detail",request=httpx.Request(method,url))
+    monkeypatch.setattr(adapters,"CACHE_ROOT",tmp_path)
+    client=FakeClient(); url="https://jobs.example/job/123"
+    async def exercise():
+        first=await cached_get(client,url)
+        second=await cached_get(client,url)
+        return first.text,second.text
+    assert asyncio.run(exercise()) == ("fresh detail","fresh detail")
+    assert client.calls == 1
+
 def test_health_uses_request_failures_not_opening_counts():
     assert run_health_status(0) == "success"
     assert run_health_status(1) == "degraded"
@@ -179,6 +207,20 @@ def test_transient_source_failures_are_retried(monkeypatch):
     company=Company("Retry Test","https://example.com/jobs","retry-test","retry-test")
     assert asyncio.run(fetch_company_jobs(company)) == ([],0)
     assert adapter.calls == 3
+
+def test_custom_sources_have_one_bounded_retry(monkeypatch):
+    from scraper.adapters import ADAPTERS
+    class BlockedAdapter:
+        calls=0
+        async def fetch_jobs(self,company):
+            self.calls+=1
+            raise httpx.ConnectTimeout("blocked")
+    adapter=BlockedAdapter()
+    monkeypatch.setitem(ADAPTERS,"custom",adapter)
+    company=Company("Blocked","https://example.com/jobs","custom","blocked")
+    try: asyncio.run(fetch_company_jobs(company))
+    except httpx.ConnectTimeout: pass
+    assert adapter.calls == 2
 
 def test_company_registry_never_shrinks_or_duplicates_sources():
     import csv
