@@ -32,7 +32,7 @@ def normalize_location(value: str):
 
 def classify_title(title: str):
     clean=re.sub(r"[^a-z0-9+]+"," ",title.lower()).strip()
-    if re.search(r"\b(?:intern|internship|co[ -]?op)\b",clean,re.I):
+    if re.search(r"\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b",clean,re.I):
         for category,pattern in INTERNSHIP_ROLE_PATTERNS.items():
             if re.search(pattern,clean,re.I): return clean,category
     for category,pattern in ROLE_PATTERNS.items():
@@ -42,8 +42,8 @@ def classify_title(title: str):
 def classify_employment_type(title: str, description: str=""):
     """Keep internships out of full-time views without guessing from generic graduate wording."""
     corpus=f"{title}\n{description}"
-    if re.search(r"\b(?:intern|internship|co[ -]?op)\b",title,re.I): return "Internship"
-    if re.search(r"\b(?:this is an?|join us as an?|seeking an?|hiring an?)\s+(?:[a-z]+\s+){0,3}(?:intern|internship)\b",corpus,re.I): return "Internship"
+    if re.search(r"\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b",title,re.I): return "Internship"
+    if re.search(r"\b(?:this is an?|join us as an?|seeking an?|hiring an?)\s+(?:[a-z]+\s+){0,3}(?:intern|internship|apprentice)\b",corpus,re.I): return "Internship"
     return "Full-time"
 
 def extract_experience(text: str):

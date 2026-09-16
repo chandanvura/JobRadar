@@ -34,6 +34,15 @@ test('internship product area is isolated and uses explicit board filters',async
  assert.match(source,/f_JT=F&f_E=2&sortBy=DD/);
  assert.match(source,/active === "Internships" \? internshipBengaluru : bengaluru/);
  assert.match(source,/active === "Internships" \? internshipHyderabad : hyderabad/);
+ assert.match(source,/Official ATS internships — Bengaluru/);
+ assert.match(source,/apprentice\|apprenticeship/);
+});
+
+test('company coverage has safe career and contact fallback discovery',async()=>{
+ const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
+ assert.match(source,/Fallback discovery/);
+ assert.match(source,/recruiter OR talent acquisition OR engineering manager/);
+ assert.match(source,/>Contacts<\/a>/);
 });
 test('employer timestamps keep the 24-hour boundary',()=>{
  const now=Date.parse('2026-09-13T12:00:00Z');const job={reported_age_hours:null,posted_at:'2026-09-12T12:00:00Z',last_seen_at:'',posted_precision:'exact'};assert.equal(currentPosting(job,now),true);assert.equal(currentPosting(job,now+1),false);

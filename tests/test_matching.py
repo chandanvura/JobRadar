@@ -172,13 +172,17 @@ def test_custom_pages_index_linked_and_embedded_ats_boards():
         assert discover_ats(BeautifulSoup(markup,"html.parser"),"https://company.example/careers")[:2]==expected
 
 def test_tenant_hosts_share_ats_rate_limit_buckets():
-    assert request_bucket("https://hp.wd5.myworkdayjobs.com/jobs")=="myworkdayjobs.com"
-    assert request_bucket("https://nvidia.wd1.myworkdayjobs.com/jobs")=="myworkdayjobs.com"
+    assert request_bucket("https://hp.wd5.myworkdayjobs.com/jobs")=="workday-listings"
+    assert request_bucket("https://nvidia.wd1.myworkdayjobs.com/en-US/jobs/job/India/Engineer_R123")=="workday-details"
     assert request_bucket("https://boards-api.greenhouse.io/jobs")=="greenhouse.io"
     assert request_bucket("https://company.example/careers")=="company.example"
 
 def test_malformed_embedded_urls_do_not_break_custom_source_indexing():
     soup=BeautifulSoup('<script>const x="http://[broken"</script>',"html.parser")
+    assert discover_ats(soup,"https://company.example/careers") is None
+
+def test_malformed_relative_urls_do_not_break_custom_source_indexing():
+    soup=BeautifulSoup('<a href="//[broken">Broken</a>',"html.parser")
     assert discover_ats(soup,"https://company.example/careers") is None
 
 def test_job_details_are_reused_without_skipping_live_listings(monkeypatch,tmp_path):
@@ -238,7 +242,7 @@ def test_company_registry_never_shrinks_or_duplicates_sources():
     rows=list(csv.DictReader((Path(__file__).parents[1]/"companies"/"companies.csv").open(encoding="utf-8")))
     enabled=[row for row in rows if row.get("enabled","true").lower()=="true"]
     keys={(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled}
-    assert len(enabled)>=590
+    assert len(enabled)>=635
     assert len(keys)==len(enabled)
 
 def test_expansion_covers_product_mnc_gcc_and_underrated_employers():
@@ -251,6 +255,9 @@ def test_expansion_covers_product_mnc_gcc_and_underrated_employers():
         "mnc":{"DocuSign","Teradata","Western Digital","CyberArk","Guidewire"},
         "gcc":{"Capital One","BNY","Fiserv","PepsiCo","Inspire Brands"},
         "underrated":{"Amagi","Uniphore","Perfios","Exotel","Jumbotail"},
+        "expanded-product":{"HubSpot","JFrog","Redis","Neo4j","Yugabyte"},
+        "expanded-gcc":{"Airwallex","Payoneer","Dynatrace","Splunk","Avalara"},
+        "expanded-underrated":{"Cyware","CloudSEK","ColorTokens","Seclore","Observe.AI"},
     }
     for cohort in cohorts.values():
         assert cohort <= names

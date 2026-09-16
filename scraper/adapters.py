@@ -17,7 +17,9 @@ def client(timeout=20):
 
 def request_bucket(url):
     """Group tenant hosts by ATS family so one provider cannot be flooded."""
-    host=(urlparse(url).hostname or "").lower()
+    parsed=urlparse(url); host=(parsed.hostname or "").lower()
+    if host=="myworkdayjobs.com" or host.endswith(".myworkdayjobs.com"):
+        return "workday-listings" if parsed.path.rstrip("/").endswith("/jobs") else "workday-details"
     for family in ("myworkdayjobs.com","greenhouse.io","lever.co","ashbyhq.com","smartrecruiters.com"):
         if host==family or host.endswith("."+family): return family
     return host
@@ -27,8 +29,9 @@ def domain_limiter(url):
     loop=asyncio.get_running_loop(); bucket=request_bucket(url)
     key=(id(loop),bucket)
     if key not in _DOMAIN_LIMITERS:
-        setting="JOBRADAR_WORKDAY_CONCURRENCY" if bucket=="myworkdayjobs.com" else "JOBRADAR_DOMAIN_CONCURRENCY"
-        default="3" if bucket=="myworkdayjobs.com" else "6"
+        if bucket=="workday-listings": setting,default="JOBRADAR_WORKDAY_LISTING_CONCURRENCY","5"
+        elif bucket=="workday-details": setting,default="JOBRADAR_WORKDAY_DETAIL_CONCURRENCY","10"
+        else: setting,default="JOBRADAR_DOMAIN_CONCURRENCY","6"
         _DOMAIN_LIMITERS[key]=asyncio.Semaphore(int(os.getenv(setting,default)))
     return _DOMAIN_LIMITERS[key]
 
@@ -249,7 +252,9 @@ def discover_ats(soup,base_url):
     for value in values:
         raw=str(value or "")
         candidates=re.findall(r"https?://[^\s\"'<>]+",raw,re.I)
-        if not candidates and len(raw)<2048: candidates=[urljoin(base_url,raw)]
+        if not candidates and len(raw)<2048:
+            try: candidates=[urljoin(base_url,raw)]
+            except ValueError: continue
         for absolute in candidates:
             try: parsed=urlparse(absolute); hostname=(parsed.hostname or "").lower()
             except ValueError: continue

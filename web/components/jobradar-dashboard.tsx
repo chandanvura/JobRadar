@@ -250,7 +250,7 @@ const trackingKey = (job: ApiJob) =>
   `${job.ats_provider}:${job.external_job_id}`;
 const isInternship = (job: ApiJob) =>
   job.employment_type === "Internship" ||
-  /\b(?:intern|internship|co[ -]?op)\b/i.test(job.title);
+  /\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b/i.test(job.title);
 const initialView = () =>
   typeof window === "undefined"
     ? "Dashboard"
@@ -950,7 +950,7 @@ function DashboardContent() {
           ) : active === "Job Boards" ? (
             <JobBoardsView preferences={preferences} />
           ) : active === "Companies" ? (
-            <CompaniesView data={data} query={companySearch} />
+            <CompaniesView data={data} query={companySearch} preferences={preferences} />
           ) : active === "Scraper Health" ? (
             <HealthView data={data} />
           ) : active === "Notifications" ? (
@@ -1702,12 +1702,14 @@ function InternshipDiscovery({ preferences }: { preferences: SearchPreferences }
     { name: "LinkedIn internships — Hyderabad", url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=Hyderabad%2C%20Telangana%2C%20India&f_TPR=r86400&f_JT=I&f_E=1%2C2&sortBy=DD` },
     { name: "Naukri internships — Bengaluru", url: `https://www.naukri.com/internship-jobs-in-bangalore?jobAge=1&k=${query}` },
     { name: "Naukri internships — Hyderabad", url: `https://www.naukri.com/internship-jobs-in-hyderabad?jobAge=1&k=${query}` },
+    { name: "Official ATS internships — Bengaluru", url: `https://www.google.com/search?q=${encodeURIComponent(`(${preferred.join(" OR ")}) Bengaluru (site:boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com)`)}` },
+    { name: "Official ATS internships — Hyderabad", url: `https://www.google.com/search?q=${encodeURIComponent(`(${preferred.join(" OR ")}) Hyderabad (site:boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com)`)}` },
   ];
   return (
     <section className="mb-5 rounded-3xl border border-violet-200 bg-violet-50 p-5">
-      <div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-700 text-white"><GraduationCap size={20} /></div><div><h3 className="font-black text-violet-950">Internship discovery — separate from full-time jobs</h3><p className="mt-1 text-sm leading-6 text-violet-900/75">Results below come from official employer sources. These extra searches open LinkedIn or Naukri with internship, entry-level, city, newest-first, and last-24-hour filters; JobRadar does not scrape or copy their listings.</p></div></div>
+      <div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-700 text-white"><GraduationCap size={20} /></div><div><h3 className="font-black text-violet-950">Internship & apprenticeship discovery</h3><p className="mt-1 text-sm leading-6 text-violet-900/75">Kept separate from full-time jobs. JobRadar indexes official employer sources and offers user-initiated LinkedIn, Naukri and official ATS searches; it never scrapes those job boards.</p></div></div>
       <div className="mt-4 grid gap-2 md:grid-cols-2">{links.map((link) => <a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-violet-200 bg-white p-3 text-sm font-bold text-violet-900 hover:border-violet-500">{link.name} <ExternalLink size={15} /></a>)}</div>
-      <p className="mt-3 text-xs text-violet-900/70">Contact search opens a public web search only. Verify the person works for the company before sending a short, personalized referral request; no personal data is collected by JobRadar.</p>
+      <p className="mt-3 text-xs text-violet-900/70">Use the Companies area to open a company-specific public recruiter search. Verify employment before sending a short, personalized referral request; JobRadar collects no personal data.</p>
     </section>
   );
 }
@@ -1767,9 +1769,11 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
 function CompaniesView({
   data,
   query,
+  preferences,
 }: {
   data: Payload | null;
   query: string;
+  preferences: SearchPreferences;
 }) {
   const companies = (data?.companies || []).filter((c) =>
     `${c.name} ${c.ats_provider}`.toLowerCase().includes(query.toLowerCase()),
@@ -1793,6 +1797,7 @@ function CompaniesView({
               <th>Last checked</th>
               <th>Truthful health</th>
               <th>Career page</th>
+              <th>Fallback discovery</th>
             </tr>
           </thead>
           <tbody>
@@ -1840,6 +1845,13 @@ function CompaniesView({
                     >
                       Open <ExternalLink size={14} />
                     </a>
+                  </td>
+                  <td>
+                    <div className="flex gap-2">
+                      <a href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(`${c.name} ${(preferences.titles.length ? preferences.titles : ["Software Engineer", "DevOps Engineer"]).join(" OR ")}`)}&location=India&f_TPR=r86400&sortBy=DD`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">LinkedIn</a>
+                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`${c.name} careers Bengaluru Hyderabad ${(preferences.titles.length ? preferences.titles : ["Software Engineer", "DevOps Engineer"]).join(" OR ")}`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Web</a>
+                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Contacts</a>
+                    </div>
                   </td>
                 </tr>
               );
