@@ -19,6 +19,8 @@ All people use the same public collected engineering job catalog in Bengaluru an
 - **Exact** requires a preferred title and skill match when those fields are filled. Use it only when you intentionally want a narrow list.
 - **Latest Jobs** and **Ultra Fresh** require employer-provided freshness evidence. Telegram alerts also require explicit 0–3 YOE evidence, so reviewable jobs never create misleading alerts.
 - **Job Boards** creates last-24-hours LinkedIn and Naukri search links from the user's titles. Results stay on those services and must be verified against the employer page.
+- **Internships** is an isolated opportunity area. Internship records are classified during ingestion and excluded from Dashboard, Recommended, Latest, All Jobs, and role-specific full-time views. It includes official-source results plus user-initiated LinkedIn/Naukri searches with internship, entry-level, city, newest-first, and last-24-hour filters.
+- Internship cards can open a public web search for company recruiters, talent-acquisition staff, or campus-hiring staff. JobRadar does not scrape profiles, guess email addresses, or store personal contact data; users must verify identity and employment before contacting anyone.
 
 LinkedIn and Naukri results can be much larger because they aggregate employers, agencies, reposts and listings whose dates or experience are not independently verified. JobRadar does not scrape them. LinkedIn's User Agreement prohibits scripts, robots, crawlers and browser extensions used to scrape its services, while Naukri blocks automated crawler access. Authorized APIs or user-provided exports can be added later without changing the verified-alert rules.
 

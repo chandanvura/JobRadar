@@ -5,7 +5,7 @@ from scraper.models import Job
 from scraper.adapters import job_like_url, likely_target, location_text, parse_posted_at, parse_posting, workday_config
 from scraper.models import Company
 from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
-from scraper.normalization import classify_title, enrich, extract_experience, normalize_location
+from scraper.normalization import classify_employment_type, classify_title, enrich, extract_experience, normalize_location
 
 def recent(hours=1):
     return (datetime.now(timezone.utc)-timedelta(hours=hours)).isoformat()
@@ -35,6 +35,15 @@ def test_title_classification():
     assert classify_title("Java Full Stack Developer")[1] == "Java / Backend"
     assert classify_title("Cloud Support Associate")[1] == "Cloud"
     assert classify_title("Member of Technical Staff I")[1] == "Software Engineering"
+    assert classify_title("Cloud Engineering Intern")[1] == "Cloud"
+    assert classify_title("Java Intern")[1] == "Java / Backend"
+
+def test_internships_are_classified_and_eligible_without_full_time_experience():
+    assert classify_employment_type("Software Engineer Intern") == "Internship"
+    assert classify_employment_type("Graduate Software Engineer") == "Full-time"
+    job=enrich(sample(title="DevOps Intern",description="Work with AWS and Kubernetes"))
+    assert job.employment_type == "Internship"
+    assert job.is_eligible
 
 def test_zero_to_three_year_roles_are_eligible():
     accepted=[

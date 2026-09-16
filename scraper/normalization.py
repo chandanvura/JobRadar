@@ -9,6 +9,15 @@ ROLE_PATTERNS = {
     "Java / Backend": r"\bjava (?:full[ -]?stack |software )?(?:developer|engineer)\b|\bback[ -]?end (?:software |application )?(?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*(?:java|back[ -]?end)\b",
     "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software (?:development )?engineer(?:ing)?(?:\s+(?:i|1))?\b|\bsde\s*(?:i|1)?\b|\b(?:graduate )?engineer trainee\b|\bmember of technical staff(?:\s+(?:i|1))?\b|\bget\b",
 }
+INTERNSHIP_ROLE_PATTERNS = {
+    "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b",
+    "Cloud": r"\bcloud\b",
+    "SRE": r"\bsite reliability\b|\bsre\b",
+    "Platform": r"\bplatform\b",
+    "Infrastructure / Operations": r"\binfrastructure\b|\boperations\b|\blinux\b",
+    "Java / Backend": r"\bjava\b|\bback[ -]?end\b|\bspring\b",
+    "Software Engineering": r"\bsoftware\b|\bdeveloper\b|\bengineering\b|\bsde\b|\btechnology\b|\btechnical\b",
+}
 SKILLS=["AWS","Azure","GCP","Linux","Docker","Kubernetes","Terraform","Jenkins","CI/CD","GitHub Actions","Argo CD","Ansible","Git","Helm","Bash","Python","Java","Spring Boot","Spring","REST API","Microservices","Kafka","SQL","PostgreSQL","MySQL","Redis","Prometheus","Grafana","ELK","Elasticsearch","Splunk","Datadog"]
 MAX_JOB_AGE_HOURS = 24
 MAX_EXPERIENCE_YEARS = 3
@@ -23,9 +32,19 @@ def normalize_location(value: str):
 
 def classify_title(title: str):
     clean=re.sub(r"[^a-z0-9+]+"," ",title.lower()).strip()
+    if re.search(r"\b(?:intern|internship|co[ -]?op)\b",clean,re.I):
+        for category,pattern in INTERNSHIP_ROLE_PATTERNS.items():
+            if re.search(pattern,clean,re.I): return clean,category
     for category,pattern in ROLE_PATTERNS.items():
         if re.search(pattern,clean,re.I): return clean,category
     return clean,"Other"
+
+def classify_employment_type(title: str, description: str=""):
+    """Keep internships out of full-time views without guessing from generic graduate wording."""
+    corpus=f"{title}\n{description}"
+    if re.search(r"\b(?:intern|internship|co[ -]?op)\b",title,re.I): return "Internship"
+    if re.search(r"\b(?:this is an?|join us as an?|seeking an?|hiring an?)\s+(?:[a-z]+\s+){0,3}(?:intern|internship)\b",corpus,re.I): return "Internship"
+    return "Full-time"
 
 def extract_experience(text: str):
     text=re.sub(r"\b(zero|one|two|three|four|five)\s+(?=years?|yrs?|yoe)",lambda m:str({"zero":0,"one":1,"two":2,"three":3,"four":4,"five":5}[m.group(1).lower()])+" ",text,flags=re.I)
@@ -80,6 +99,7 @@ def posted_age_hours(posted_at):
 
 def enrich(job: Job, company_priority: int=3):
     job.normalized_title,job.role_category=classify_title(job.title); job.normalized_location,job.city=normalize_location(job.location)
+    job.employment_type=classify_employment_type(job.title,job.description)
     job.experience_min,job.experience_max,job.experience_label=extract_experience(f"{job.title}\n{job.description}")
     corpus=f"{job.title} {job.description}".lower(); job.skills=[s for s in SKILLS if skill_present(s,corpus)]
     age=posted_age_hours(job.posted_at)
@@ -97,6 +117,8 @@ def enrich(job: Job, company_priority: int=3):
     if job.city not in {"Bengaluru","Hyderabad"}: reason="Outside Bengaluru/Hyderabad"
     elif leadership: reason="Leadership-level title"
     elif job.role_category=="Other": reason="Role outside target list"
+    elif job.employment_type=="Internship" and not recent: reason="Posting date not verified within 24 hours"
+    elif job.employment_type=="Internship": reason="Eligible"
     elif job.experience_min is None and job.experience_max is None: reason="Experience not stated — verify"
     elif not experience_ok: reason="Experience exceeds 0–3 YOE policy"
     elif not recent: reason="Posting date not verified within 24 hours"

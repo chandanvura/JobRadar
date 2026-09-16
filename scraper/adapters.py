@@ -13,7 +13,7 @@ def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
 def likely_target(title, location):
-    return bool(re.search(r"\b(engineer|developer|devops|devsecops|sre|platform|cloud|infrastructure|operations|release|build|site reliability|graduate|trainee|sde)\b",str(title),re.I) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
+    return bool(re.search(r"\b(engineer|developer|devops|devsecops|sre|platform|cloud|infrastructure|operations|release|build|site reliability|graduate|trainee|sde|intern|internship|co[ -]?op)\b",str(title),re.I) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
 
 def location_text(*values):
     """Flatten ATS primary and secondary locations without guessing a city."""

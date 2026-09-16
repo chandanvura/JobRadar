@@ -135,7 +135,8 @@ async def notify(job,chat=None):
         raise TelegramDeliveryError("Telegram credentials are not configured")
     chat=chat or await ensure_telegram_ready()
     posted=job.posted_label or job.posted_at or "Posting time unavailable"
-    message=f"🚨 NEW JOB\n\n{job.title}\n{job.company}\n\n📍 {job.normalized_location}\n💼 {job.experience_label}\n🕒 {posted}\n⭐ Priority: {job.relevance_score}/100\n\nSkills: {' • '.join(job.skills) or 'Optional / not specified'}\n\nAPPLY NOW:\n{job.application_url}\n\nCAREER PAGE:\n{job.career_page_url}"
+    kind="INTERNSHIP" if job.employment_type=="Internship" else "JOB"
+    message=f"🚨 NEW {kind}\n\n{job.title}\n{job.company}\n\n📍 {job.normalized_location}\n💼 {job.experience_label}\n🕒 {posted}\n⭐ Priority: {job.relevance_score}/100\n\nSkills: {' • '.join(job.skills) or 'Optional / not specified'}\n\nAPPLY NOW:\n{job.application_url}\n\nCAREER PAGE:\n{job.career_page_url}"
     async with httpx.AsyncClient(timeout=20) as x:
         url=f"https://api.telegram.org/bot{token}"
         response=await x.post(url+"/sendMessage",json={"chat_id":chat,"text":message,"disable_web_page_preview":True})

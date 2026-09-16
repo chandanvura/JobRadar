@@ -26,6 +26,13 @@ test('relative employer ages advance after observation',()=>{
 test('unknown, future, invalid dates never become fresh',()=>{
  for(const date of [null,'bad','2026-09-14T00:00:00Z'])assert.equal(currentPosting({reported_age_hours:null,posted_at:date,last_seen_at:'',posted_precision:'unknown'},Date.parse('2026-09-13T12:00:00Z')),false);
 });
+test('internship product area is isolated and uses explicit board filters',async()=>{
+ const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
+ assert.match(source,/active === "Internships" && !isInternship\(j\)/);
+ assert.match(source,/active !== "Internships"[\s\S]*!\["Saved", "Applications"\]\.includes\(active\)[\s\S]*isInternship\(j\)/);
+ assert.match(source,/f_JT=I&f_E=1%2C2&sortBy=DD/);
+ assert.match(source,/f_JT=F&f_E=2&sortBy=DD/);
+});
 test('employer timestamps keep the 24-hour boundary',()=>{
  const now=Date.parse('2026-09-13T12:00:00Z');const job={reported_age_hours:null,posted_at:'2026-09-12T12:00:00Z',last_seen_at:'',posted_precision:'exact'};assert.equal(currentPosting(job,now),true);assert.equal(currentPosting(job,now+1),false);
 });

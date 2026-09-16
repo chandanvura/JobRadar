@@ -12,6 +12,7 @@ class Job:
     source: str; job_url: str; application_url: str; career_page_url: str; posted_at: Optional[str] = None
     posted_label: Optional[str] = None; posted_precision: str = "unknown"; reported_age_hours: Optional[float] = None
     normalized_title: str = ""; normalized_location: str = ""; city: Optional[str] = None; role_category: str = "Other"
+    employment_type: str = "Full-time"
     experience_min: Optional[float] = None; experience_max: Optional[float] = None; experience_label: str = "Unknown"
     skills: list[str] = field(default_factory=list); relevance_score: int = 0; freshness_score: int = 0; priority_score: int = 0
     hiring_signal: Optional[str] = None; is_eligible: bool = False; eligibility_reason: str = "Not evaluated"

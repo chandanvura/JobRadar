@@ -15,6 +15,7 @@ import {
   Filter,
   Flame,
   History,
+  GraduationCap,
   LoaderCircle,
   MapPin,
   Menu,
@@ -51,6 +52,7 @@ type ApiJob = {
   company: string;
   location: string;
   normalized_location: string;
+  employment_type: string | null;
   experience_min: number | null;
   experience_max: number | null;
   experience_label: string;
@@ -154,6 +156,7 @@ const nav = [
   ["DevOps & Cloud", Cloud],
   ["Software Engineering", Code2],
   ["Java / Backend", Code2],
+  ["Internships", GraduationCap],
   ["Job Boards", ExternalLink],
   ["Saved", Bookmark],
   ["Applications", BriefcaseBusiness],
@@ -172,6 +175,7 @@ const jobViews = new Set([
   "DevOps & Cloud",
   "Software Engineering",
   "Java / Backend",
+  "Internships",
   "Saved",
   "Applications",
 ]);
@@ -244,6 +248,9 @@ const parseSkills = (value: string) => {
 };
 const trackingKey = (job: ApiJob) =>
   `${job.ats_provider}:${job.external_job_id}`;
+const isInternship = (job: ApiJob) =>
+  job.employment_type === "Internship" ||
+  /\b(?:intern|internship|co[ -]?op)\b/i.test(job.title);
 const initialView = () =>
   typeof window === "undefined"
     ? "Dashboard"
@@ -474,7 +481,7 @@ function DashboardContent() {
     [currentJobs],
   );
   const filtered = useMemo(() => {
-    const reviewView = ["Dashboard", "Recommended", "All Jobs"].includes(
+    const reviewView = ["Dashboard", "Recommended", "All Jobs", "Internships"].includes(
       active,
     );
     const result = mergedJobs.filter((j) => {
@@ -483,6 +490,13 @@ function DashboardContent() {
           `${j.title} ${j.company} ${j.skills} ${j.role_category} ${j.ats_provider}`.toLowerCase(),
         match = personalMatch(j, preferences);
       if (query && !q.includes(query.toLowerCase())) return false;
+      if (active === "Internships" && !isInternship(j)) return false;
+      if (
+        active !== "Internships" &&
+        !["Saved", "Applications"].includes(active) &&
+        isInternship(j)
+      )
+        return false;
       if (!["Saved", "Applications"].includes(active)) {
         if (location !== "Both" && !j.normalized_location.includes(location))
           return false;
@@ -613,7 +627,10 @@ function DashboardContent() {
     });
   };
   const eligible = currentJobs.filter(
-      (j) => j.is_eligible && j.is_active && postingStillCurrent(j),
+      (j) => j.is_eligible && j.is_active && postingStillCurrent(j) && !isInternship(j),
+    ),
+    internships = currentJobs.filter(
+      (j) => j.is_active && isInternship(j),
     ),
     ultra = eligible.filter((j) => {
       const age = freshnessAge(j);
@@ -714,6 +731,11 @@ function DashboardContent() {
                   {ultra.length}
                 </span>
               )}
+              {label === "Internships" && internships.length > 0 && (
+                <span className="ml-auto rounded-full bg-[#7651c9] px-2 py-0.5 text-[10px] text-white">
+                  {internships.length}
+                </span>
+              )}
             </button>
           ))}
         </nav>
@@ -794,7 +816,7 @@ function DashboardContent() {
                     <h2 className="text-3xl font-black md:text-4xl">
                       {loading
                         ? "Checking live jobs…"
-                        : `${filtered.length} jobs in this view`}
+                        : `${filtered.length} ${active === "Internships" ? "internships" : "jobs"} in this view`}
                     </h2>
                     <p className="mt-2 text-sm text-[#c4d8ce]">
                       {preferences.locations.join(" + ")} ·{" "}
@@ -897,6 +919,9 @@ function DashboardContent() {
                   stage={applicationStage}
                   setStage={setApplicationStage}
                 />
+              )}
+              {active === "Internships" && (
+                <InternshipDiscovery preferences={preferences} />
               )}
             </>
           )}
@@ -1444,6 +1469,9 @@ function JobCard({
               {job.is_eligible ? fresh : "REVIEW"}
             </Badge>
             <Badge variant="outline">{job.role_category}</Badge>
+            {isInternship(job) && (
+              <Badge className="bg-violet-50 text-violet-800">INTERNSHIP</Badge>
+            )}
             {!job.is_eligible && (
               <span className="text-xs text-amber-800">
                 {job.eligibility_reason}
@@ -1544,6 +1572,16 @@ function JobCard({
               VERIFY <ExternalLink size={14} />
             </a>
           </div>
+          {isInternship(job) && (
+            <a
+              href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in (recruiter OR \"talent acquisition\" OR \"campus hiring\") \"${job.company}\"`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 flex h-10 items-center justify-center gap-2 rounded-xl border bg-white text-xs font-bold text-[#155d3a]"
+            >
+              Find public hiring contacts <ExternalLink size={14} />
+            </a>
+          )}
           <div className="mt-3 grid grid-cols-[auto_1fr] gap-2">
             <button
               aria-label={tracking.saved ? "Remove saved job" : "Save job"}
@@ -1644,6 +1682,26 @@ function Empty() {
   );
 }
 
+function InternshipDiscovery({ preferences }: { preferences: SearchPreferences }) {
+  const preferred = preferences.titles.length
+    ? preferences.titles.map((title) => `${title} Intern`)
+    : ["Software Engineer Intern", "DevOps Intern", "Java Intern", "Cloud Intern"];
+  const query = encodeURIComponent(preferred.join(" OR "));
+  const links = [
+    { name: "LinkedIn internships — Bengaluru", url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=Bengaluru%2C%20Karnataka%2C%20India&f_TPR=r86400&f_JT=I&f_E=1%2C2&sortBy=DD` },
+    { name: "LinkedIn internships — Hyderabad", url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=Hyderabad%2C%20Telangana%2C%20India&f_TPR=r86400&f_JT=I&f_E=1%2C2&sortBy=DD` },
+    { name: "Naukri internships — Bengaluru", url: `https://www.naukri.com/internship-jobs-in-bangalore?jobAge=1&k=${query}` },
+    { name: "Naukri internships — Hyderabad", url: `https://www.naukri.com/internship-jobs-in-hyderabad?jobAge=1&k=${query}` },
+  ];
+  return (
+    <section className="mb-5 rounded-3xl border border-violet-200 bg-violet-50 p-5">
+      <div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-700 text-white"><GraduationCap size={20} /></div><div><h3 className="font-black text-violet-950">Internship discovery — separate from full-time jobs</h3><p className="mt-1 text-sm leading-6 text-violet-900/75">Results below come from official employer sources. These extra searches open LinkedIn or Naukri with internship, entry-level, city, newest-first, and last-24-hour filters; JobRadar does not scrape or copy their listings.</p></div></div>
+      <div className="mt-4 grid gap-2 md:grid-cols-2">{links.map((link) => <a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-violet-200 bg-white p-3 text-sm font-bold text-violet-900 hover:border-violet-500">{link.name} <ExternalLink size={15} /></a>)}</div>
+      <p className="mt-3 text-xs text-violet-900/70">Contact search opens a public web search only. Verify the person works for the company before sending a short, personalized referral request; no personal data is collected by JobRadar.</p>
+    </section>
+  );
+}
+
 function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
   const terms = preferences.titles.length
     ? preferences.titles
@@ -1652,11 +1710,11 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
   const links = [
     {
       name: "LinkedIn — Bengaluru",
-      url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=Bengaluru%2C%20Karnataka%2C%20India&f_TPR=r86400`,
+      url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=Bengaluru%2C%20Karnataka%2C%20India&f_TPR=r86400&f_JT=F&f_E=2&sortBy=DD`,
     },
     {
       name: "LinkedIn — Hyderabad",
-      url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=Hyderabad%2C%20Telangana%2C%20India&f_TPR=r86400`,
+      url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=Hyderabad%2C%20Telangana%2C%20India&f_TPR=r86400&f_JT=F&f_E=2&sortBy=DD`,
     },
     {
       name: "Naukri — Bengaluru",
