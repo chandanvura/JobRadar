@@ -15,12 +15,21 @@ def clean(value): return re.sub(r"\s+"," ",html.unescape(re.sub(r"<[^>]+>"," ",v
 def client(timeout=20):
     return httpx.AsyncClient(timeout=httpx.Timeout(timeout,connect=min(timeout,8)),follow_redirects=True,headers=HEADERS,limits=httpx.Limits(max_connections=24,max_keepalive_connections=12),transport=httpx.AsyncHTTPTransport(retries=1))
 
+def request_bucket(url):
+    """Group tenant hosts by ATS family so one provider cannot be flooded."""
+    host=(urlparse(url).hostname or "").lower()
+    for family in ("myworkdayjobs.com","greenhouse.io","lever.co","ashbyhq.com","smartrecruiters.com"):
+        if host==family or host.endswith("."+family): return family
+    return host
+
 def domain_limiter(url):
-    """Bound requests per ATS host while allowing unrelated employers to overlap."""
-    loop=asyncio.get_running_loop(); host=(urlparse(url).hostname or "").lower()
-    key=(id(loop),host)
+    """Bound requests per ATS family while allowing unrelated employers to overlap."""
+    loop=asyncio.get_running_loop(); bucket=request_bucket(url)
+    key=(id(loop),bucket)
     if key not in _DOMAIN_LIMITERS:
-        _DOMAIN_LIMITERS[key]=asyncio.Semaphore(int(os.getenv("JOBRADAR_DOMAIN_CONCURRENCY","6")))
+        setting="JOBRADAR_WORKDAY_CONCURRENCY" if bucket=="myworkdayjobs.com" else "JOBRADAR_DOMAIN_CONCURRENCY"
+        default="3" if bucket=="myworkdayjobs.com" else "6"
+        _DOMAIN_LIMITERS[key]=asyncio.Semaphore(int(os.getenv(setting,default)))
     return _DOMAIN_LIMITERS[key]
 
 async def request(x,method,url,**kwargs):
@@ -242,8 +251,9 @@ def discover_ats(soup,base_url):
         candidates=re.findall(r"https?://[^\s\"'<>]+",raw,re.I)
         if not candidates and len(raw)<2048: candidates=[urljoin(base_url,raw)]
         for absolute in candidates:
-            parsed=urlparse(absolute)
-            if (parsed.hostname or "").lower().endswith(".myworkdayjobs.com"):
+            try: parsed=urlparse(absolute); hostname=(parsed.hostname or "").lower()
+            except ValueError: continue
+            if hostname.endswith(".myworkdayjobs.com"):
                 parts=[part for part in parsed.path.split("/") if part and not re.fullmatch(r"[a-z]{2}(?:-[A-Z]{2})?",part)]
                 if parts:
                     tenant=parsed.hostname.split(".")[0]
@@ -266,7 +276,8 @@ class CustomCareerAdapter(JobSource):
             detected=discover_ats(soup,str(listing.url))
             if detected:
                 provider,identifier,board_url=detected
-                indexed=Company(c.name,c.careers_url,provider,identifier,c.priority,c.enabled)
+                source_url=board_url if provider=="workday" else c.careers_url
+                indexed=Company(c.name,source_url,provider,identifier,c.priority,c.enabled)
                 return await ADAPTERS[provider].fetch_jobs(indexed)
             urls=[]; seen={str(listing.url)}; base_host=(urlparse(str(listing.url)).hostname or "").lower()
             for link in soup.find_all("a",href=True):
