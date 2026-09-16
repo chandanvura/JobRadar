@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import httpx
 from scraper.models import Job
 from bs4 import BeautifulSoup
-from scraper.adapters import cached_get, discover_ats, job_like_url, likely_target, location_text, parse_posted_at, parse_posting, workday_config
+from scraper.adapters import cached_get, discover_ats, job_like_url, likely_target, location_text, parse_posted_at, parse_posting, request_bucket, workday_config
 from scraper.models import Company
 from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
 from scraper.normalization import classify_employment_type, classify_title, enrich, extract_experience, normalize_location
@@ -170,6 +170,16 @@ def test_custom_pages_index_linked_and_embedded_ats_boards():
     }
     for markup,expected in cases.items():
         assert discover_ats(BeautifulSoup(markup,"html.parser"),"https://company.example/careers")[:2]==expected
+
+def test_tenant_hosts_share_ats_rate_limit_buckets():
+    assert request_bucket("https://hp.wd5.myworkdayjobs.com/jobs")=="myworkdayjobs.com"
+    assert request_bucket("https://nvidia.wd1.myworkdayjobs.com/jobs")=="myworkdayjobs.com"
+    assert request_bucket("https://boards-api.greenhouse.io/jobs")=="greenhouse.io"
+    assert request_bucket("https://company.example/careers")=="company.example"
+
+def test_malformed_embedded_urls_do_not_break_custom_source_indexing():
+    soup=BeautifulSoup('<script>const x="http://[broken"</script>',"html.parser")
+    assert discover_ats(soup,"https://company.example/careers") is None
 
 def test_job_details_are_reused_without_skipping_live_listings(monkeypatch,tmp_path):
     import scraper.adapters as adapters
