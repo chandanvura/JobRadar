@@ -641,6 +641,16 @@ function DashboardContent() {
     ).length,
     hyderabad = eligible.filter((j) =>
       j.normalized_location.includes("Hyderabad"),
+    ).length,
+    internshipUltra = internships.filter((j) => {
+      const age = freshnessAge(j);
+      return age !== null && age < 3 && j.posted_precision !== "day";
+    }),
+    internshipBengaluru = internships.filter((j) =>
+      j.normalized_location.includes("Bengaluru"),
+    ).length,
+    internshipHyderabad = internships.filter((j) =>
+      j.normalized_location.includes("Hyderabad"),
     ).length;
   const exportTracking = () => {
     const blob = new Blob([JSON.stringify(tracking, null, 2)], {
@@ -829,9 +839,9 @@ function DashboardContent() {
                     </p>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <Metric value={ultra.length} label="< 3 hours" />
-                    <Metric value={bengaluru} label="Bengaluru" />
-                    <Metric value={hyderabad} label="Hyderabad" />
+                    <Metric value={active === "Internships" ? internshipUltra.length : ultra.length} label="< 3 hours" />
+                    <Metric value={active === "Internships" ? internshipBengaluru : bengaluru} label="Bengaluru" />
+                    <Metric value={active === "Internships" ? internshipHyderabad : hyderabad} label="Hyderabad" />
                   </div>
                 </div>
               </section>

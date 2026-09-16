@@ -32,6 +32,8 @@ test('internship product area is isolated and uses explicit board filters',async
  assert.match(source,/active !== "Internships"[\s\S]*!\["Saved", "Applications"\]\.includes\(active\)[\s\S]*isInternship\(j\)/);
  assert.match(source,/f_JT=I&f_E=1%2C2&sortBy=DD/);
  assert.match(source,/f_JT=F&f_E=2&sortBy=DD/);
+ assert.match(source,/active === "Internships" \? internshipBengaluru : bengaluru/);
+ assert.match(source,/active === "Internships" \? internshipHyderabad : hyderabad/);
 });
 test('employer timestamps keep the 24-hour boundary',()=>{
  const now=Date.parse('2026-09-13T12:00:00Z');const job={reported_age_hours:null,posted_at:'2026-09-12T12:00:00Z',last_seen_at:'',posted_precision:'exact'};assert.equal(currentPosting(job,now),true);assert.equal(currentPosting(job,now+1),false);
