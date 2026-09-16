@@ -104,7 +104,7 @@ Changes under `web/` deploy automatically from `main`; the workflow can also be 
 
 Add ATS adapters only after source-level job counts and fixtures prove they work. Workday uses full pagination and tenant-specific configuration. Browser-rendered and custom pages remain last-resort adapters. LinkedIn, Naukri, and Instahyre may be used only through permitted APIs or user-authorized exports; never bypass authentication, CAPTCHAs, access controls, or anti-bot protections.
 
-The scanner always refreshes listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-domain limits protect ATS hosts, while a daily Actions cache reuses job details whose listing is still live. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries.
+The scanner always refreshes listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-provider limits group all Workday tenant hosts into one conservative request bucket, while a daily Actions cache reuses job details whose listing is still live. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries.
 
 ## Troubleshooting
 
