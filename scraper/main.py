@@ -43,6 +43,7 @@ def run_health_status(failures):
 
 async def fetch_company_jobs(company,attempts=3):
     """Retry a complete source scan when the failure is transient."""
+    if company.ats_provider=="custom": attempts=min(attempts,2)
     last=None
     for attempt in range(attempts):
         try:
@@ -59,27 +60,29 @@ async def fetch_company_jobs(company,attempts=3):
             await asyncio.sleep(2**attempt)
     raise last or RuntimeError("Source scan failed")
 
-async def scrape(company,sem):
+async def scrape(company,sem,custom_sem):
     checked=now()
     async with sem:
-        try:
-            raw,discovered=await fetch_company_jobs(company)
-            jobs=[enrich(j,company.priority) for j in raw]
-            candidates=[j for j in jobs if j.city in {"Bengaluru","Hyderabad"} and j.role_category!="Other"]
-            eligible=[j for j in candidates if j.is_eligible]
-            warning="Limited coverage: no structured public job feed" if discovered==0 and company.ats_provider=="custom" else "No current openings returned" if discovered==0 else "No target-city roles currently" if not candidates else None
-            return jobs,{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":now(),"error_count":0,"jobs_found":discovered,"candidate_jobs":len(candidates),"eligible_jobs":len(eligible),"warning":warning},None,discovered
-        except Exception as exc:
-            print(f"WARN {company.name}: {type(exc).__name__}: {exc}",file=sys.stderr)
-            # Many official enterprise portals intentionally block automated
-            # clients or expose only a JavaScript UI. Preserve those sources
-            # and their career links as limited coverage; do not misreport a
-            # blocked non-structured page as a scraper-system failure.
-            limited=(company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError))) or isinstance(exc,json.JSONDecodeError)
-            warning=("Limited coverage: official career page blocks or does not expose machine-readable access"
-                     if limited else f"{type(exc).__name__}: {str(exc)[:160]}")
-            status={"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":0 if limited else 1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":warning}
-            return [],status,None if limited else str(exc),0
+        context=custom_sem if company.ats_provider=="custom" else _NoopAsyncContext()
+        async with context:
+            try:
+                raw,discovered=await fetch_company_jobs(company)
+                jobs=[enrich(j,company.priority) for j in raw]
+                candidates=[j for j in jobs if j.city in {"Bengaluru","Hyderabad"} and j.role_category!="Other"]
+                eligible=[j for j in candidates if j.is_eligible]
+                warning="Limited coverage: no structured public job feed" if discovered==0 and company.ats_provider=="custom" else "No current openings returned" if discovered==0 else "No target-city roles currently" if not candidates else None
+                return jobs,{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":now(),"error_count":0,"jobs_found":discovered,"candidate_jobs":len(candidates),"eligible_jobs":len(eligible),"warning":warning},None,discovered
+            except Exception as exc:
+                print(f"WARN {company.name}: {type(exc).__name__}: {exc}",file=sys.stderr)
+                # Many official enterprise portals intentionally block automated
+                # clients or expose only a JavaScript UI. Preserve those sources
+                # and their career links as limited coverage; do not misreport a
+                # blocked non-structured page as a scraper-system failure.
+                limited=(company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError))) or isinstance(exc,json.JSONDecodeError)
+                warning=("Limited coverage: official career page blocks or does not expose machine-readable access"
+                         if limited else f"{type(exc).__name__}: {str(exc)[:160]}")
+                status={"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":0 if limited else 1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":warning}
+                return [],status,None if limited else str(exc),0
 
 def private_start_chat_id(payload):
     """Return the most recent private chat that explicitly sent /start."""
@@ -163,9 +166,15 @@ async def post_with_retry(url,headers,payload,attempts=3):
             if attempt+1<attempts: await asyncio.sleep(2**attempt)
     raise last or RuntimeError("Request failed")
 
+class _NoopAsyncContext:
+    async def __aenter__(self): return self
+    async def __aexit__(self,*_): return False
+
 async def main():
-    started=now(); enabled=[c for c in load_companies() if c.enabled and c.ats_provider in ADAPTERS]; sem=asyncio.Semaphore(6)
-    batches=await asyncio.gather(*(scrape(c,sem) for c in enabled)); all_jobs=[j for jobs,_,_,_ in batches for j in jobs]
+    started=now(); enabled=[c for c in load_companies() if c.enabled and c.ats_provider in ADAPTERS]
+    sem=asyncio.Semaphore(int(os.getenv("JOBRADAR_SOURCE_CONCURRENCY","24")))
+    custom_sem=asyncio.Semaphore(int(os.getenv("JOBRADAR_CUSTOM_CONCURRENCY","16")))
+    batches=await asyncio.gather(*(scrape(c,sem,custom_sem) for c in enabled)); all_jobs=[j for jobs,_,_,_ in batches for j in jobs]
     candidates=[j for j in all_jobs if j.city in {"Bengaluru","Hyderabad"} and j.role_category!="Other"]
     eligible=[j for j in candidates if j.is_eligible]
     statuses=[status for _,status,_,_ in batches]; failures=sum(error is not None for _,_,error,_ in batches); scanned=sum(count for *_,count in batches)
@@ -208,6 +217,8 @@ async def main():
     failed_names=[s["name"] for s in statuses if s.get("error_count")]
     print(f"Scanned {len(all_jobs)} jobs; {len(candidates)} target candidates; {len(eligible)} eligible; {len(result.get('new_external_ids',[]))} new; {sent} alerts.")
     print(f"Source diagnostics: {len(empty_names)} empty; {len(limited_names)} limited; {len(failed_names)} failed.")
+    elapsed=(datetime.now(timezone.utc)-datetime.fromisoformat(started)).total_seconds()
+    print(f"Scan duration: {elapsed:.1f}s across {len(enabled)} enabled sources.")
     if empty_names: print("Empty sources: "+", ".join(empty_names))
     if limited_names: print("Limited sources: "+", ".join(limited_names))
     if failed_names: print("Failed sources: "+", ".join(failed_names))
