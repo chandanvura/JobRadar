@@ -1,14 +1,51 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urljoin, urlparse
-import asyncio, html, json, re
+from pathlib import Path
+from hashlib import sha256
+import asyncio, html, json, os, re, time
 import httpx
 from bs4 import BeautifulSoup
 from .models import Company, Job
 
-HEADERS={"User-Agent":"JobRadar/1.1 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
+HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
+CACHE_ROOT=Path(os.getenv("JOBRADAR_HTTP_CACHE",".cache/jobradar-http"))
+_DOMAIN_LIMITERS={}
 def clean(value): return re.sub(r"\s+"," ",html.unescape(re.sub(r"<[^>]+>"," ",value or ""))).strip()
-def client(): return httpx.AsyncClient(timeout=httpx.Timeout(30,connect=10),follow_redirects=True,headers=HEADERS,transport=httpx.AsyncHTTPTransport(retries=3))
+def client(timeout=20):
+    return httpx.AsyncClient(timeout=httpx.Timeout(timeout,connect=min(timeout,8)),follow_redirects=True,headers=HEADERS,limits=httpx.Limits(max_connections=24,max_keepalive_connections=12),transport=httpx.AsyncHTTPTransport(retries=1))
+
+def domain_limiter(url):
+    """Bound requests per ATS host while allowing unrelated employers to overlap."""
+    loop=asyncio.get_running_loop(); host=(urlparse(url).hostname or "").lower()
+    key=(id(loop),host)
+    if key not in _DOMAIN_LIMITERS:
+        _DOMAIN_LIMITERS[key]=asyncio.Semaphore(int(os.getenv("JOBRADAR_DOMAIN_CONCURRENCY","6")))
+    return _DOMAIN_LIMITERS[key]
+
+async def request(x,method,url,**kwargs):
+    async with domain_limiter(url):
+        return await x.request(method,url,**kwargs)
+
+def _cache_path(url): return CACHE_ROOT/(sha256(url.encode()).hexdigest()+".json")
+
+async def cached_get(x,url,ttl_hours=30):
+    """Cache immutable job-detail pages; listing feeds are always fetched live."""
+    path=_cache_path(url)
+    try:
+        saved=json.loads(path.read_text(encoding="utf-8"))
+        if time.time()-float(saved["saved_at"]) < ttl_hours*3600:
+            return httpx.Response(200,text=saved["text"],headers=saved.get("headers",{}),request=httpx.Request("GET",url))
+    except (OSError,ValueError,KeyError,TypeError,json.JSONDecodeError):
+        pass
+    response=await request(x,"GET",url)
+    if response.status_code==200:
+        try:
+            path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_text(json.dumps({"saved_at":time.time(),"text":response.text,"headers":{"content-type":response.headers.get("content-type","")}}),encoding="utf-8")
+        except OSError:
+            pass
+    return response
 def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
@@ -81,7 +118,7 @@ class JobSource(ABC):
 class GreenhouseAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
-            response=await x.get(f"https://boards-api.greenhouse.io/v1/boards/{c.ats_identifier}/jobs",params={"content":"true"}); response.raise_for_status(); data=response.json()
+            response=await request(x,"GET",f"https://boards-api.greenhouse.io/v1/boards/{c.ats_identifier}/jobs",params={"content":"true"}); response.raise_for_status(); data=response.json()
             async def convert(j):
                 url=j.get("absolute_url",c.careers_url); posting=None
                 location=location_text(j.get("location"),j.get("offices"))
@@ -89,7 +126,7 @@ class GreenhouseAdapter(JobSource):
                 # job page normally exposes the employer date in JobPosting JSON-LD.
                 if likely_target(j.get("title",""),location):
                     try:
-                        detail=await x.get(url)
+                        detail=await cached_get(x,url)
                         if detail.status_code==200:
                             item=next(jsonld_objects(BeautifulSoup(detail.text,"html.parser")),None)
                             if item: posting=item.get("datePosted")
@@ -102,14 +139,14 @@ class GreenhouseAdapter(JobSource):
 class LeverAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
-            response=await x.get(f"https://api.lever.co/v0/postings/{c.ats_identifier}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
+            response=await request(x,"GET",f"https://api.lever.co/v0/postings/{c.ats_identifier}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
         jobs=[make_job(str(j["id"]),j["text"],c.name,location_text(j.get("categories",{}).get("location",""),j.get("categories",{}).get("allLocations",[])),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
         return jobs,len(data)
 
 class AshbyAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
-            response=await x.get(f"https://api.ashbyhq.com/posting-api/job-board/{c.ats_identifier}"); response.raise_for_status(); data=response.json()
+            response=await request(x,"GET",f"https://api.ashbyhq.com/posting-api/job-board/{c.ats_identifier}"); response.raise_for_status(); data=response.json()
         listed=[j for j in data.get("jobs",[]) if j.get("isListed",True)]
         jobs=[make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,location_text(j.get("location",""),j.get("secondaryLocations",[])),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in listed]
         return jobs,len(listed)
@@ -120,22 +157,24 @@ class SmartRecruitersAdapter(JobSource):
         async with client() as x:
             content=[]; offset=0
             while offset<1000:
-                response=await x.get(base,params={"limit":100,"offset":offset}); response.raise_for_status(); data=response.json()
+                response=await request(x,"GET",base,params={"limit":100,"offset":offset}); response.raise_for_status(); data=response.json()
                 batch=data.get("content",[]); content.extend(batch)
                 if len(batch)<100: break
                 offset+=100
-            jobs=[]
-            for item in content:
+            semaphore=asyncio.Semaphore(8)
+            async def convert(item):
                 item_location=item.get("location") or {}
                 location_hint=", ".join(str(item_location.get(k,"")) for k in ("city","region","country") if item_location.get(k))
-                if not likely_target(item.get("name",""),location_hint): continue
-                detail_response=await x.get(f"{base}/{item['id']}")
-                if detail_response.status_code != 200: continue
+                if not likely_target(item.get("name",""),location_hint): return None
+                async with semaphore: detail_response=await cached_get(x,f"{base}/{item['id']}")
+                if detail_response.status_code != 200: return None
                 detail=detail_response.json(); sections=detail.get("jobAd",{}).get("sections",{})
                 description=" ".join(clean((sections.get(k) or {}).get("text","")) for k in ("jobDescription","qualifications","additionalInformation"))
                 location=", ".join(x for x in ((detail.get("location") or {}).get("city"),(detail.get("location") or {}).get("region"),(detail.get("location") or {}).get("country")) if x)
                 public_url=f"https://jobs.smartrecruiters.com/{c.ats_identifier}/{item['id']}"
-                jobs.append(make_job(str(item["id"]),item.get("name",""),c.name,location,description,"smartrecruiters","company_career",public_url,detail.get("applyUrl") or public_url,c.careers_url,posting=item.get("releasedDate") or detail.get("releasedDate")))
+                return make_job(str(item["id"]),item.get("name",""),c.name,location,description,"smartrecruiters","company_career",public_url,detail.get("applyUrl") or public_url,c.careers_url,posting=item.get("releasedDate") or detail.get("releasedDate"))
+            converted=await asyncio.gather(*(convert(item) for item in content))
+            jobs=[job for job in converted if job]
         return jobs,len(content)
 
 def workday_config(c):
@@ -153,23 +192,25 @@ class WorkdayAdapter(JobSource):
         async with client() as x:
             postings=[]; offset=0
             while offset < 1000:
-                response=await x.post(f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
+                response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
                 postings.extend(batch)
                 if len(batch)<20: break
                 offset+=20
-            jobs=[]
-            for item in postings:
-                if not likely_target(item.get("title",""),item.get("locationsText","")): continue
+            semaphore=asyncio.Semaphore(8)
+            async def convert(item):
+                if not likely_target(item.get("title",""),item.get("locationsText","")): return None
                 path=item.get("externalPath")
-                if not path: continue
-                detail_response=await x.get(f"{api}{path}")
-                if detail_response.status_code != 200: continue
+                if not path: return None
+                async with semaphore: detail_response=await cached_get(x,f"{api}{path}")
+                if detail_response.status_code != 200: return None
                 info=detail_response.json().get("jobPostingInfo",{})
                 public_url=urljoin(origin,f"/{site}{path}")
                 posting=item.get("postedOn") or info.get("startDate")
                 location=location_text(info.get("location"),info.get("additionalLocations"),item.get("locationsText"))
-                jobs.append(make_job(str(info.get("jobReqId") or info.get("jobPostingId") or path),info.get("title") or item.get("title",""),c.name,location,clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting))
+                return make_job(str(info.get("jobReqId") or info.get("jobPostingId") or path),info.get("title") or item.get("title",""),c.name,location,clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting)
+            converted=await asyncio.gather(*(convert(item) for item in postings))
+            jobs=[job for job in converted if job]
         return jobs,len(postings)
 
 def jsonld_objects(soup):
@@ -183,6 +224,34 @@ def jsonld_objects(soup):
                 yield from (node for node in item["@graph"] if isinstance(node,dict) and node.get("@type")=="JobPosting")
 
 ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com")
+ATS_PATTERNS=(
+    ("greenhouse",re.compile(r"(?:boards|job-boards)\.greenhouse\.io/([\w.-]+)",re.I)),
+    ("lever",re.compile(r"jobs\.lever\.co/([\w.-]+)",re.I)),
+    ("ashby",re.compile(r"jobs\.ashbyhq\.com/([\w.-]+)",re.I)),
+    ("smartrecruiters",re.compile(r"jobs\.smartrecruiters\.com/([\w.-]+)",re.I)),
+)
+def discover_ats(soup,base_url):
+    """Find a public ATS linked or embedded by an employer's official page."""
+    values=[]
+    for tag in soup.find_all(["a","iframe"],href=True): values.append(tag.get("href"))
+    for tag in soup.find_all("form",action=True): values.append(tag.get("action"))
+    for tag in soup.find_all(["iframe","script"],src=True): values.append(tag.get("src"))
+    values.extend(script.string or "" for script in soup.find_all("script"))
+    for value in values:
+        raw=str(value or "")
+        candidates=re.findall(r"https?://[^\s\"'<>]+",raw,re.I)
+        if not candidates and len(raw)<2048: candidates=[urljoin(base_url,raw)]
+        for absolute in candidates:
+            parsed=urlparse(absolute)
+            if (parsed.hostname or "").lower().endswith(".myworkdayjobs.com"):
+                parts=[part for part in parsed.path.split("/") if part and not re.fullmatch(r"[a-z]{2}(?:-[A-Z]{2})?",part)]
+                if parts:
+                    tenant=parsed.hostname.split(".")[0]
+                    return "workday",f"{tenant}|{parts[0]}",absolute
+            for provider,pattern in ATS_PATTERNS:
+                match=pattern.search(absolute)
+                if match: return provider,match.group(1),absolute
+    return None
 def job_like_url(url,base_host):
     parsed=urlparse(url); host=(parsed.hostname or "").lower(); path=parsed.path.lower()
     same=host==base_host or host.endswith("."+base_host)
@@ -191,9 +260,14 @@ def job_like_url(url,base_host):
 
 class CustomCareerAdapter(JobSource):
     async def fetch_jobs(self,c):
-        async with client() as x:
-            listing=await x.get(c.careers_url); listing.raise_for_status()
+        async with client(timeout=float(os.getenv("JOBRADAR_CUSTOM_TIMEOUT","12"))) as x:
+            listing=await request(x,"GET",c.careers_url); listing.raise_for_status()
             soup=BeautifulSoup(listing.text,"html.parser")
+            detected=discover_ats(soup,str(listing.url))
+            if detected:
+                provider,identifier,board_url=detected
+                indexed=Company(c.name,c.careers_url,provider,identifier,c.priority,c.enabled)
+                return await ADAPTERS[provider].fetch_jobs(indexed)
             urls=[]; seen={str(listing.url)}; base_host=(urlparse(str(listing.url)).hostname or "").lower()
             for link in soup.find_all("a",href=True):
                 url=urljoin(str(listing.url),link["href"]); parsed=urlparse(url)
@@ -204,7 +278,7 @@ class CustomCareerAdapter(JobSource):
             semaphore=asyncio.Semaphore(8)
             async def fetch(url):
                 async with semaphore:
-                    try:return await x.get(url)
+                    try:return await cached_get(x,url)
                     except httpx.HTTPError:return None
             responses=[listing,*await asyncio.gather(*(fetch(url) for url in urls))]
             for url,response in zip([str(listing.url),*urls],responses):
