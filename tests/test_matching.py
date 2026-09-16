@@ -186,5 +186,19 @@ def test_company_registry_never_shrinks_or_duplicates_sources():
     rows=list(csv.DictReader((Path(__file__).parents[1]/"companies"/"companies.csv").open(encoding="utf-8")))
     enabled=[row for row in rows if row.get("enabled","true").lower()=="true"]
     keys={(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled}
-    assert len(enabled)>=500
+    assert len(enabled)>=590
     assert len(keys)==len(enabled)
+
+def test_expansion_covers_product_mnc_gcc_and_underrated_employers():
+    import csv
+    from pathlib import Path
+    rows=list(csv.DictReader((Path(__file__).parents[1]/"companies"/"companies.csv").open(encoding="utf-8")))
+    names={row["company_name"] for row in rows if row.get("enabled","true").lower()=="true"}
+    cohorts={
+        "product":{"Glean","Rippling","Atlan","Eightfold AI","ThoughtSpot"},
+        "mnc":{"DocuSign","Teradata","Western Digital","CyberArk","Guidewire"},
+        "gcc":{"Capital One","BNY","Fiserv","PepsiCo","Inspire Brands"},
+        "underrated":{"Amagi","Uniphore","Perfios","Exotel","Jumbotail"},
+    }
+    for cohort in cohorts.values():
+        assert cohort <= names
