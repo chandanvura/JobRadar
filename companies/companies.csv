@@ -1,5 +1,5 @@
 company_name,careers_url,ats_provider,ats_identifier,priority,enabled
-Postman,https://www.postman.com/company/careers/,greenhouse,postman,5,true
+Postman,https://www.postman.com/company/careers/,custom,postman,5,true
 Razorpay,https://razorpay.com/jobs/,greenhouse,razorpaysoftwareprivatelimited,5,true
 Fivetran,https://www.fivetran.com/careers,greenhouse,fivetran,4,true
 Cockroach Labs,https://www.cockroachlabs.com/careers/,greenhouse,cockroachlabs,4,true
