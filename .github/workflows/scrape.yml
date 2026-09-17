@@ -9,9 +9,9 @@ on:
       - "requirements.txt"
       - "tests/**"
   schedule:
-    # Two opportunities per hour reduce the impact of delayed or dropped GitHub
-    # schedule events. Source and per-domain concurrency keep scans bounded.
-    - cron: "17,47 * * * *"
+    # Frequent opportunities compensate for GitHub's best-effort cron delivery.
+    # The freshness gate below prevents unnecessary full scans.
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 concurrency:
   # Queue overlapping push/manual/scheduled runs instead of cancelling an active scan.
@@ -20,7 +20,43 @@ concurrency:
 permissions:
   contents: read
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      should_run: ${{ steps.freshness.outputs.should_run }}
+    steps:
+      - name: Run pushes/manual requests; gate scheduled scans by freshness
+        id: freshness
+        env:
+          TRIGGER_EVENT: ${{ github.event_name }}
+        run: |
+          python - <<'PY'
+          import datetime,json,os,urllib.error,urllib.request
+          should_run=True
+          if os.environ.get("TRIGGER_EVENT")=="schedule":
+              try:
+                  try:
+                      response=urllib.request.urlopen("https://jobradar.chandanvura.workers.dev/api/health",timeout=15)
+                  except urllib.error.HTTPError as error:
+                      response=error
+                  with response:
+                      latest=json.load(response).get("latest_run") or {}
+                  finished=latest.get("finished_at")
+                  if finished:
+                      value=datetime.datetime.fromisoformat(finished.replace("Z","+00:00"))
+                      age=(datetime.datetime.now(datetime.timezone.utc)-value).total_seconds()/60
+                      should_run=age>=20
+                      print(f"Latest completed scan is {age:.1f} minutes old")
+              except Exception as exc:
+                  print(f"Freshness check failed open: {type(exc).__name__}: {exc}")
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as output:
+              output.write(f"should_run={'true' if should_run else 'false'}\n")
+          print(f"Full distributed scan required: {should_run}")
+          PY
   validate:
+    needs: gate
+    if: needs.gate.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -66,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -88,13 +124,13 @@ jobs:
             jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
             jobradar-details-${{ runner.os }}-
       - name: Discover shard ${{ matrix.shard }}
-        run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 8 --output "artifacts/shard-${{ matrix.shard }}.json"
+        run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 16 --output "artifacts/shard-${{ matrix.shard }}.json"
         env:
-          JOBRADAR_SOURCE_CONCURRENCY: 8
-          JOBRADAR_CUSTOM_CONCURRENCY: 4
+          JOBRADAR_SOURCE_CONCURRENCY: 5
+          JOBRADAR_CUSTOM_CONCURRENCY: 2
           JOBRADAR_DOMAIN_CONCURRENCY: 1
           JOBRADAR_WORKDAY_LISTING_CONCURRENCY: 1
-          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: 2
+          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: 1
           JOBRADAR_CUSTOM_TIMEOUT: 12
       - name: Upload immutable shard result
         uses: actions/upload-artifact@v4
