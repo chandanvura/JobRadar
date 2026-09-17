@@ -66,7 +66,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -88,13 +88,13 @@ jobs:
             jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
             jobradar-details-${{ runner.os }}-
       - name: Discover shard ${{ matrix.shard }}
-        run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 4 --output "artifacts/shard-${{ matrix.shard }}.json"
+        run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 8 --output "artifacts/shard-${{ matrix.shard }}.json"
         env:
-          JOBRADAR_SOURCE_CONCURRENCY: 12
-          JOBRADAR_CUSTOM_CONCURRENCY: 8
-          JOBRADAR_DOMAIN_CONCURRENCY: 2
+          JOBRADAR_SOURCE_CONCURRENCY: 8
+          JOBRADAR_CUSTOM_CONCURRENCY: 4
+          JOBRADAR_DOMAIN_CONCURRENCY: 1
           JOBRADAR_WORKDAY_LISTING_CONCURRENCY: 1
-          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: 3
+          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: 2
           JOBRADAR_CUSTOM_TIMEOUT: 12
       - name: Upload immutable shard result
         uses: actions/upload-artifact@v4

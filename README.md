@@ -18,7 +18,7 @@ JobRadar is a production-oriented job discovery system for explicit 0–3 YOE ro
 - Browser-private Saved and application-stage tracking with JSON export
 - Initial company registry and tests for critical matching rules
 
-Architecture: `GitHub scheduler → 4 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
+Architecture: `GitHub scheduler → 8 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
 
 ## Local dashboard
 

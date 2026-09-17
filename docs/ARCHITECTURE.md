@@ -2,7 +2,7 @@
 
 ## Decision
 
-JobRadar uses independently executable stateless services rather than always-on containers. Four discovery workers divide the official-source registry with a stable SHA-256 ownership function. Each worker produces an immutable scan artifact. A single coordinator validates completeness, deduplicates candidates, sends bounded idempotent ingestion batches, records one run, and delivers Telegram notifications. The Cloudflare Worker remains the API gateway/read service, D1 remains the system of record, and the frontend deploys independently.
+JobRadar uses independently executable stateless services rather than always-on containers. Eight discovery workers divide the official-source registry with a stable SHA-256 ownership function. Each worker produces an immutable scan artifact. A single coordinator validates completeness, deduplicates candidates, sends bounded idempotent ingestion batches, records one run, and delivers Telegram notifications. The Cloudflare Worker remains the API gateway/read service, D1 remains the system of record, and the frontend deploys independently.
 
 This is a microservice execution model without paid orchestration: each discovery worker can fail, retry, and scale independently, while the coordinator protects cross-source consistency. The dashboard and API deliberately remain one edge service because they share a read model and have not shown an independent scaling bottleneck; splitting them now would increase operational cost without improving scan throughput.
 
@@ -10,7 +10,7 @@ This is a microservice execution model without paid orchestration: each discover
 
 ```mermaid
 flowchart TD
-  S[GitHub scheduler] --> W[4 discovery workers]
+  S[GitHub scheduler] --> W[8 discovery workers]
   W --> A[Immutable shard artifacts]
   A --> C[Ingestion coordinator]
   C --> API[Cloudflare Worker API]
