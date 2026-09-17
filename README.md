@@ -18,7 +18,7 @@ JobRadar is a production-oriented job discovery system for explicit 0–3 YOE ro
 - Browser-private Saved and application-stage tracking with JSON export
 - Initial company registry and tests for critical matching rules
 
-Architecture: `GitHub Actions → Python adapters → normalization/ranking → Worker API → D1 → dashboard`. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. GitHub schedules are best-effort; the dashboard distinguishes a completed request from a productive source and marks stale scans after 90 minutes.
+Architecture: `GitHub scheduler → 4 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
 
 ## Local dashboard
 
@@ -104,7 +104,7 @@ Changes under `web/` deploy automatically from `main`; the workflow can also be 
 
 Add ATS adapters only after source-level job counts and fixtures prove they work. Workday uses full pagination and tenant-specific configuration. Browser-rendered and custom pages remain last-resort adapters. LinkedIn, Naukri, and Instahyre may be used only through permitted APIs or user-authorized exports; never bypass authentication, CAPTCHAs, access controls, or anti-bot protections.
 
-The scanner always refreshes listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-provider limits place Workday listing requests and detail requests in separate conservative buckets, while a daily Actions cache reuses job details whose listing is still live. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries. Tune the free Actions runner with `JOBRADAR_WORKDAY_LISTING_CONCURRENCY` and `JOBRADAR_WORKDAY_DETAIL_CONCURRENCY`; the workflow defaults to 5 and 10.
+Each distributed worker refreshes its deterministic share of listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-worker provider limits and separate Workday listing/detail buckets prevent the four workers from flooding a shared ATS, while immutable daily detail caches reduce repeated work. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries. The coordinator refuses incomplete or duplicate shard ownership and finalizes a run only after every ingestion batch succeeds.
 
 ## Troubleshooting
 

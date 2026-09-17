@@ -20,9 +20,9 @@ concurrency:
 permissions:
   contents: read
 jobs:
-  scrape:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,30 +55,77 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Set daily cache key
-        id: cache-date
-        run: echo "value=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
-      - name: Restore daily immutable job-detail cache
-        uses: actions/cache@v4
-        with:
-          path: .cache/jobradar-http
-          key: jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}
-          restore-keys: |
-            jobradar-details-${{ runner.os }}-
-      - name: Run matching and notifier tests
+      - name: Run matching, distribution, and notifier tests
         run: python -m pytest -q
         env:
           PYTHONPATH: .
-      - name: Run production scan and delivery health checks
-        run: python -m scraper.main
+  discover:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Set daily cache key
+        id: cache-date
+        run: echo "value=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Restore shard-local immutable job-detail cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/jobradar-http
+          key: jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
+          restore-keys: |
+            jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
+            jobradar-details-${{ runner.os }}-
+      - name: Discover shard ${{ matrix.shard }}
+        run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 4 --output "artifacts/shard-${{ matrix.shard }}.json"
+        env:
+          JOBRADAR_SOURCE_CONCURRENCY: 12
+          JOBRADAR_CUSTOM_CONCURRENCY: 8
+          JOBRADAR_DOMAIN_CONCURRENCY: 2
+          JOBRADAR_WORKDAY_LISTING_CONCURRENCY: 1
+          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: 3
+          JOBRADAR_CUSTOM_TIMEOUT: 12
+      - name: Upload immutable shard result
+        uses: actions/upload-artifact@v4
+        with:
+          name: jobradar-shard-${{ matrix.shard }}
+          path: artifacts/shard-${{ matrix.shard }}.json
+          if-no-files-found: error
+          retention-days: 1
+  finalize:
+    needs: discover
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Download all shard results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: jobradar-shard-*
+          path: artifacts
+          merge-multiple: true
+      - name: Validate, deduplicate, ingest, and notify
+        run: python -m scraper.distributed finalize artifacts/shard-*.json
         env:
           JOBRADAR_API_URL: https://jobradar.chandanvura.workers.dev
           JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          JOBRADAR_SOURCE_CONCURRENCY: 24
-          JOBRADAR_CUSTOM_CONCURRENCY: 16
-          JOBRADAR_DOMAIN_CONCURRENCY: 6
-          JOBRADAR_WORKDAY_LISTING_CONCURRENCY: 5
-          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: 10
-          JOBRADAR_CUSTOM_TIMEOUT: 12

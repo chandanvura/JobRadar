@@ -1,11 +1,13 @@
-import asyncio
+import asyncio,json
 from datetime import datetime, timedelta, timezone
 import httpx
+import pytest
 from scraper.models import Job
 from bs4 import BeautifulSoup
 from scraper.adapters import cached_get, discover_ats, job_like_url, likely_target, location_text, parse_posted_at, parse_posting, request_bucket, workday_config
 from scraper.models import Company
 from scraper.main import fetch_company_jobs, ingest_chunks, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
+from scraper.distributed import load_artifacts, merge_artifacts, source_shard
 from scraper.normalization import classify_employment_type, classify_title, enrich, extract_experience, normalize_location
 
 def recent(hours=1):
@@ -250,6 +252,20 @@ def test_ingest_chunks_preserve_every_job_below_request_batch_limit():
     batches=ingest_chunks(jobs,125)
     assert [len(batch) for batch in batches]==[125,125,51]
     assert [job for batch in batches for job in batch]==jobs
+
+def test_source_sharding_is_stable_and_has_one_owner():
+    company=Company("Example","https://example.com/jobs","greenhouse","example")
+    assert source_shard(company,4)==source_shard(company,4)
+    assert source_shard(company,4) in range(4)
+
+def test_distributed_merge_requires_complete_unique_shards(tmp_path):
+    artifacts=[]
+    for index in range(2):
+        artifact={"version":1,"shard_index":index,"shard_count":2,"started_at":"2026-09-17T00:00:00+00:00","finished_at":"2026-09-17T00:01:00+00:00","sources":1,"jobs_scanned":1,"raw_jobs":1,"failures":0,"companies":[{"name":f"C{index}","ats_provider":"custom","ats_identifier":f"c{index}"}],"jobs":[{"ats_provider":"custom","external_job_id":"same","title":f"T{index}"}]}
+        path=tmp_path/f"shard-{index}.json"; path.write_text(json.dumps(artifact)); artifacts.append(path)
+    merged=merge_artifacts(load_artifacts(artifacts),2)
+    assert len(merged["companies"])==2 and len(merged["jobs"])==1
+    with pytest.raises(ValueError): load_artifacts(artifacts[:1])
 
 def test_expansion_covers_product_mnc_gcc_and_underrated_employers():
     import csv
