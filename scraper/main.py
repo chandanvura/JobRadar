@@ -166,6 +166,24 @@ async def post_with_retry(url,headers,payload,attempts=3):
             if attempt+1<attempts: await asyncio.sleep(2**attempt)
     raise last or RuntimeError("Request failed")
 
+def ingest_chunks(items,size=125):
+    """Keep requests well below edge limits without dropping any candidate jobs."""
+    return [items[index:index+size] for index in range(0,len(items),size)]
+
+async def ingest_scan(endpoint,headers,jobs,companies,run):
+    """Upload one logical scan in bounded requests and finalize it exactly once."""
+    url=endpoint.rstrip("/")+"/api/ingest"
+    await post_with_retry(url,headers,{"jobs":[],"companies":companies})
+    new_external_ids=[]; notification_keys=[]; rejected=0
+    for batch in ingest_chunks(jobs):
+        result=(await post_with_retry(url,headers,{"jobs":batch,"companies":[]})).json()
+        new_external_ids.extend(result.get("new_external_ids",[]))
+        notification_keys.extend(result.get("notification_keys",[]))
+        rejected+=int(result.get("rejected",0))
+    final_run={**run,"new_jobs":len(set(new_external_ids))}
+    await post_with_retry(url,headers,{"jobs":[],"companies":[],"run":final_run})
+    return {"new_external_ids":list(dict.fromkeys(new_external_ids)),"notification_keys":list(dict.fromkeys(notification_keys)),"rejected":rejected}
+
 class _NoopAsyncContext:
     async def __aenter__(self): return self
     async def __aexit__(self,*_): return False
@@ -189,8 +207,8 @@ async def main():
     payload_jobs=[]
     for job in candidates:
         item=job.as_dict(); item["description"]=item.get("description","")[:4000]; payload_jobs.append(item)
-    response=await post_with_retry(endpoint.rstrip("/")+"/api/ingest",headers,{"jobs":payload_jobs,"companies":statuses,"run":run})
-    result=response.json(); alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
+    result=await ingest_scan(endpoint,headers,payload_jobs,statuses,run)
+    alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
     alert_jobs=[job for job in eligible if (f"{job.ats_provider}:{job.external_job_id}" in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
     telegram_chat=None
     try:

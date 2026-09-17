@@ -5,7 +5,7 @@ from scraper.models import Job
 from bs4 import BeautifulSoup
 from scraper.adapters import cached_get, discover_ats, job_like_url, likely_target, location_text, parse_posted_at, parse_posting, request_bucket, workday_config
 from scraper.models import Company
-from scraper.main import fetch_company_jobs, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
+from scraper.main import fetch_company_jobs, ingest_chunks, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
 from scraper.normalization import classify_employment_type, classify_title, enrich, extract_experience, normalize_location
 
 def recent(hours=1):
@@ -244,6 +244,12 @@ def test_company_registry_never_shrinks_or_duplicates_sources():
     keys={(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled}
     assert len(enabled)>=635
     assert len(keys)==len(enabled)
+
+def test_ingest_chunks_preserve_every_job_below_request_batch_limit():
+    jobs=[{"external_job_id":str(index)} for index in range(301)]
+    batches=ingest_chunks(jobs,125)
+    assert [len(batch) for batch in batches]==[125,125,51]
+    assert [job for batch in batches for job in batch]==jobs
 
 def test_expansion_covers_product_mnc_gcc_and_underrated_employers():
     import csv
