@@ -21,7 +21,7 @@ permissions:
   contents: read
 jobs:
   gate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
     outputs:
       should_run: ${{ steps.freshness.outputs.should_run }}
@@ -57,7 +57,7 @@ jobs:
   validate:
     needs: gate
     if: needs.gate.outputs.should_run == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
@@ -97,7 +97,7 @@ jobs:
           PYTHONPATH: .
   discover:
     needs: validate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -141,7 +141,7 @@ jobs:
           retention-days: 1
   finalize:
     needs: discover
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
