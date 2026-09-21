@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: main
       - name: Report trigger timing
@@ -86,7 +86,7 @@ jobs:
           keys=[(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled]
           if len(keys)!=len(set(keys)): raise SystemExit("Duplicate ATS identifiers found in company registry")
           PY
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -104,10 +104,10 @@ jobs:
       matrix:
         shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: main
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -116,7 +116,7 @@ jobs:
         id: cache-date
         run: echo "value=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
       - name: Restore shard-local immutable job-detail cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .cache/jobradar-http
           key: jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
@@ -133,7 +133,7 @@ jobs:
           JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: 1
           JOBRADAR_CUSTOM_TIMEOUT: 12
       - name: Upload immutable shard result
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jobradar-shard-${{ matrix.shard }}
           path: artifacts/shard-${{ matrix.shard }}.json
@@ -144,16 +144,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: main
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
       - name: Download all shard results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: jobradar-shard-*
           path: artifacts
