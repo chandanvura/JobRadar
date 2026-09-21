@@ -18,6 +18,9 @@ await writeFile("wrangler.migrations.json",JSON.stringify(migrationConfig,null,2
 if(process.argv.includes("--patch-build")){
   const path="dist/server/wrangler.json";
   const output=JSON.parse(await readFile(path,"utf8"));
+  // Wrangler 4.135+ removed service environments; the previous default now
+  // matches the only supported behavior, so generated legacy_env must go.
+  delete output.legacy_env;
   output.name="jobradar";
   output.d1_databases=migrationConfig.d1_databases;
   output.observability={enabled:true};
