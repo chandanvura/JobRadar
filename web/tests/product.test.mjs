@@ -44,6 +44,16 @@ test('company coverage has safe career and contact fallback discovery',async()=>
  assert.match(source,/recruiter OR talent acquisition OR engineering manager/);
  assert.match(source,/>Contacts<\/a>/);
 });
+test('buyer-facing experience leads with the trust promise and hides operations',async()=>{
+ const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
+ assert.match(source,/EARLY-CAREER OPPORTUNITY RADAR/);
+ assert.match(source,/Skip stale reposts\. Find verified roles where you can actually apply\./);
+ assert.match(source,/official employer career pages/);
+ assert.match(source,/Evidence before recommendation/);
+ assert.match(source,/Private by default/);
+ assert.match(source,/aria-expanded=\{showOperations\}/);
+ assert.match(source,/System & privacy/);
+});
 test('employer timestamps keep the 24-hour boundary',()=>{
  const now=Date.parse('2026-09-13T12:00:00Z');const job={reported_age_hours:null,posted_at:'2026-09-12T12:00:00Z',last_seen_at:'',posted_precision:'exact'};assert.equal(currentPosting(job,now),true);assert.equal(currentPosting(job,now+1),false);
 });

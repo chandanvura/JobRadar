@@ -7,6 +7,8 @@ import {
   BriefcaseBusiness,
   Building2,
   Check,
+  ChevronDown,
+  ChevronUp,
   CircleGauge,
   Cloud,
   Code2,
@@ -166,6 +168,23 @@ const nav = [
   ["Resume Studio", Code2],
   ["Settings", Settings],
 ] as const;
+const primaryNav = new Set([
+  "Dashboard",
+  "Recommended",
+  "Latest Jobs",
+  "Internships",
+  "Saved",
+  "Applications",
+]);
+const exploreNav = new Set([
+  "Ultra Fresh",
+  "All Jobs",
+  "DevOps & Cloud",
+  "Software Engineering",
+  "Java / Backend",
+]);
+const toolsNav = new Set(["Companies", "Job Boards", "Resume Studio"]);
+const operationsNav = new Set(["Scraper Health", "Notifications", "Settings"]);
 const jobViews = new Set([
   "Dashboard",
   "Recommended",
@@ -321,7 +340,8 @@ function DashboardContent() {
     [preferences, setPreferences] =
       useState<SearchPreferences>(initialPreferences),
     [editingSearch, setEditingSearch] = useState(false),
-    [showWelcome, setShowWelcome] = useState(false);
+    [showWelcome, setShowWelcome] = useState(false),
+    [showOperations, setShowOperations] = useState(false);
   const load = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     try {
@@ -700,6 +720,30 @@ function DashboardContent() {
   };
   const showJobs = jobViews.has(active),
     companySearch = active === "Companies" ? query : "";
+  const navGroup = (title: string, items: Set<string>) => (
+    <div className="mb-4">
+      <p className="mb-1 px-4 text-[10px] font-black uppercase tracking-[.18em] text-[#8b9991]">
+        {title}
+      </p>
+      {nav.filter(([label]) => items.has(label)).map(([label, Icon]) => (
+        <button
+          key={label}
+          aria-current={active === label ? "page" : undefined}
+          onClick={() => navigate(label)}
+          className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold ${active === label ? "bg-[#dff3e8] text-[#0e5c39]" : "text-[#607067] hover:bg-[#eef3f0]"}`}
+        >
+          <Icon size={18} />
+          {label}
+          {label === "Ultra Fresh" && ultra.length > 0 && (
+            <span className="ml-auto rounded-full bg-[#ff5c45] px-2 py-0.5 text-[10px] text-white">{ultra.length}</span>
+          )}
+          {label === "Internships" && internships.length > 0 && (
+            <span className="ml-auto rounded-full bg-[#7651c9] px-2 py-0.5 text-[10px] text-white">{internships.length}</span>
+          )}
+        </button>
+      ))}
+    </div>
+  );
   return (
     <div className="min-h-screen bg-[#f5f7f8] text-[#17211c]">
       <aside
@@ -727,27 +771,19 @@ function DashboardContent() {
           aria-label="JobRadar views"
           className="flex-1 space-y-1 overflow-y-auto p-4"
         >
-          {nav.map(([label, Icon]) => (
-            <button
-              key={label}
-              aria-current={active === label ? "page" : undefined}
-              onClick={() => navigate(label)}
-              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold ${active === label ? "bg-[#dff3e8] text-[#0e5c39]" : "text-[#607067] hover:bg-[#eef3f0]"}`}
-            >
-              <Icon size={18} />
-              {label}
-              {label === "Ultra Fresh" && ultra.length > 0 && (
-                <span className="ml-auto rounded-full bg-[#ff5c45] px-2 py-0.5 text-[10px] text-white">
-                  {ultra.length}
-                </span>
-              )}
-              {label === "Internships" && internships.length > 0 && (
-                <span className="ml-auto rounded-full bg-[#7651c9] px-2 py-0.5 text-[10px] text-white">
-                  {internships.length}
-                </span>
-              )}
-            </button>
-          ))}
+          {navGroup("Find work", primaryNav)}
+          {navGroup("Explore", exploreNav)}
+          {navGroup("Career tools", toolsNav)}
+          <button
+            type="button"
+            aria-expanded={showOperations}
+            onClick={() => setShowOperations((value) => !value)}
+            className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-[#607067] hover:bg-[#eef3f0]"
+          >
+            <ShieldCheck size={18} /> System & privacy
+            {showOperations ? <ChevronUp className="ml-auto" size={16} /> : <ChevronDown className="ml-auto" size={16} />}
+          </button>
+          {(showOperations || operationsNav.has(active)) && navGroup("Operations", operationsNav)}
         </nav>
         <SystemCard data={data} loading={loading} />
       </aside>
@@ -816,6 +852,14 @@ function DashboardContent() {
           )}
           {showJobs && (
             <>
+              {active === "Dashboard" && (
+                <ProductPromise
+                  sources={data?.companies.length || 0}
+                  lastScan={data?.latest_run?.finished_at}
+                  setup={() => setEditingSearch(true)}
+                  internships={() => navigate("Internships")}
+                />
+              )}
               <section className="mb-6 rounded-3xl bg-[#123f2c] p-6 text-white md:p-8">
                 <div className="flex flex-col justify-between gap-6 xl:flex-row xl:items-center">
                   <div>
@@ -1013,6 +1057,75 @@ function WelcomeCard({
     </section>
   );
 }
+
+function ProductPromise({
+  sources,
+  lastScan,
+  setup,
+  internships,
+}: {
+  sources: number;
+  lastScan?: string;
+  setup: () => void;
+  internships: () => void;
+}) {
+  return (
+    <section className="mb-6 overflow-hidden rounded-3xl border border-[#c8dbd0] bg-white shadow-sm">
+      <div className="grid gap-6 p-6 lg:grid-cols-[1.4fr_1fr] lg:p-8">
+        <div>
+          <Badge className="bg-[#e4f4ea] text-[#176440]">
+            EARLY-CAREER OPPORTUNITY RADAR
+          </Badge>
+          <h2 className="mt-4 max-w-3xl text-2xl font-black leading-tight md:text-3xl">
+            Skip stale reposts. Find verified roles where you can actually apply.
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[#5f7167]">
+            JobRadar checks official employer career pages, verifies posting age and
+            experience evidence, explains every match, and takes you to the original
+            application—not a copied listing.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Button onClick={setup} className="h-11 rounded-xl bg-[#155d3a] px-5">
+              <Radar size={16} /> Personalize my radar
+            </Button>
+            <Button onClick={internships} variant="outline" className="h-11 rounded-xl">
+              <GraduationCap size={16} /> Explore internships
+            </Button>
+          </div>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+          <PromiseLine
+            title={`${sources || "600+"} official sources`}
+            text="Employer pages and supported ATS feeds—not copied job-board results."
+          />
+          <PromiseLine
+            title="Evidence before recommendation"
+            text="Freshness, location and 0–3 YOE eligibility stay visible and explainable."
+          />
+          <PromiseLine
+            title="Private by default"
+            text={`Saved jobs and application stages stay in your browser · scan ${lastScan ? relative(lastScan) : "pending"}.`}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PromiseLine({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="flex gap-3 rounded-2xl bg-[#f2f7f4] p-4">
+      <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-[#d9efe2] text-[#176440]">
+        <Check size={15} />
+      </span>
+      <div>
+        <p className="text-sm font-black">{title}</p>
+        <p className="mt-1 text-xs leading-5 text-[#66776e]">{text}</p>
+      </div>
+    </div>
+  );
+}
+
 function OnboardingStep({ number, text }: { number: string; text: string }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-[#f1f7f3] p-3">
