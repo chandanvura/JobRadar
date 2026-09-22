@@ -48,7 +48,7 @@ import {
   removePrivate,
 } from "@/lib/private-profile";
 import { Progress } from "@/components/ui/progress";
-import { personalMatch } from "@/lib/job-match";
+import { feedbackBoost, personalMatch } from "@/lib/job-match";
 
 type ApiJob = {
   description?: string;
@@ -159,6 +159,7 @@ const nav = [
   ["Ultra Fresh", Flame],
   ["Latest Jobs", Sparkles],
   ["All Jobs", History],
+  ["Needs Review", AlertTriangle],
   ["DevOps & Cloud", Cloud],
   ["Software Engineering", Code2],
   ["Java / Backend", Code2],
@@ -184,6 +185,7 @@ const primaryNav = new Set([
 const exploreNav = new Set([
   "Ultra Fresh",
   "All Jobs",
+  "Needs Review",
   "DevOps & Cloud",
   "Software Engineering",
   "Java / Backend",
@@ -196,6 +198,7 @@ const jobViews = new Set([
   "Ultra Fresh",
   "Latest Jobs",
   "All Jobs",
+  "Needs Review",
   "DevOps & Cloud",
   "Software Engineering",
   "Java / Backend",
@@ -521,7 +524,7 @@ function DashboardContent() {
     [currentJobs],
   );
   const filtered = useMemo(() => {
-    const reviewView = ["All Jobs", "Internships"].includes(active);
+    const reviewView = ["Needs Review", "Internships"].includes(active);
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j),
         q =
@@ -529,6 +532,7 @@ function DashboardContent() {
         match = personalMatch(j, preferences);
       if (query && !q.includes(query.toLowerCase())) return false;
       if (active === "Internships" && !isInternship(j)) return false;
+      if (active === "Needs Review" && (isInternship(j) || match.experienceMatch !== null)) return false;
       if (
         active !== "Internships" &&
         !["Saved", "Applications"].includes(active) &&
@@ -635,8 +639,8 @@ function DashboardContent() {
             new Date(a.first_seen_at).getTime()
           : sort === "Company A–Z"
             ? a.company.localeCompare(b.company)
-            : personalMatch(b, preferences).score -
-                personalMatch(a, preferences).score ||
+        : personalMatch(b, preferences).score + feedbackBoost(b, Object.values(tracking)) -
+                personalMatch(a, preferences).score - feedbackBoost(a, Object.values(tracking)) ||
               b.relevance_score - a.relevance_score,
     );
     return active === "Dashboard" ? result.slice(0, 20) : result;
@@ -653,6 +657,7 @@ function DashboardContent() {
     sort,
     applicationStage,
     matchMode,
+    tracking,
   ]);
   const applyPreferences = (next: SearchPreferences) => {
     setPreferences(next);
@@ -1034,6 +1039,14 @@ function DashboardContent() {
               )}
               {active === "Internships" && (
                 <InternshipDiscovery preferences={preferences} />
+              )}
+              {active === "Needs Review" && (
+                <section className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                  <h3 className="font-black text-amber-950">Experience not stated — your decision</h3>
+                  <p className="mt-1 text-sm leading-6 text-amber-900/80">
+                    These relevant, active postings do not publish a reliable experience range. They stay separate from confirmed matches and never trigger automatic alerts. Open the official description and apply when the responsibilities fit your skills.
+                  </p>
+                </section>
               )}
             </>
           )}
