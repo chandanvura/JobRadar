@@ -18,7 +18,9 @@ import {
   Flame,
   History,
   GraduationCap,
+  Copy,
   LoaderCircle,
+  Mail,
   MapPin,
   Menu,
   Radar,
@@ -28,6 +30,7 @@ import {
   ShieldCheck,
   Sparkles,
   Trash2,
+  Users,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -162,6 +165,7 @@ const nav = [
   ["Job Boards", ExternalLink],
   ["Saved", Bookmark],
   ["Applications", BriefcaseBusiness],
+  ["Outreach", Users],
   ["Companies", Building2],
   ["Scraper Health", ShieldCheck],
   ["Notifications", Bell],
@@ -183,7 +187,7 @@ const exploreNav = new Set([
   "Software Engineering",
   "Java / Backend",
 ]);
-const toolsNav = new Set(["Companies", "Job Boards", "Resume Studio"]);
+const toolsNav = new Set(["Outreach", "Companies", "Job Boards", "Resume Studio"]);
 const operationsNav = new Set(["Scraper Health", "Notifications", "Settings"]);
 const jobViews = new Set([
   "Dashboard",
@@ -1017,6 +1021,8 @@ function DashboardContent() {
             />
           ) : active === "Job Boards" ? (
             <JobBoardsView preferences={preferences} />
+          ) : active === "Outreach" ? (
+            <OutreachView data={data} jobs={currentJobs} preferences={preferences} />
           ) : active === "Companies" ? (
             <CompaniesView data={data} query={companySearch} preferences={preferences} />
           ) : active === "Scraper Health" ? (
@@ -1930,6 +1936,154 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
         ))}
       </div>
     </div>
+  );
+}
+
+function OutreachView({
+  data,
+  jobs,
+  preferences,
+}: {
+  data: Payload | null;
+  jobs: ApiJob[];
+  preferences: SearchPreferences;
+}) {
+  const companies = useMemo(() => {
+    const seen = new Set<string>();
+    return (data?.companies || []).filter((company) => {
+      const key = company.name.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [data?.companies]);
+  const [companyName, setCompanyName] = useState("");
+  const [jobKey, setJobKey] = useState("");
+  const [copied, setCopied] = useState("");
+  const company =
+    companies.find((item) => item.name === companyName) || companies[0];
+  const companyJobs = jobs
+    .filter((job) => job.is_active && job.company === company?.name)
+    .sort((a, b) => personalMatch(b, preferences).score - personalMatch(a, preferences).score);
+  const selectedJob =
+    companyJobs.find((job) => trackingKey(job) === jobKey) || companyJobs[0];
+  const role = selectedJob?.title || preferences.titles[0] || "an early-career engineering role";
+  const locationText = preferences.locations.join(" or ") || "India";
+  let domain = "";
+  try {
+    domain = company ? new URL(company.careers_url).hostname.replace(/^www\./, "") : "";
+  } catch {}
+  const recruiterQuery = `site:linkedin.com/in (recruiter OR \"talent acquisition\" OR \"campus hiring\") \"${company?.name || ""}\"`;
+  const referralQuery = `site:linkedin.com/in \"${company?.name || ""}\" (${role}) (${locationText})`;
+  const emailQuery = `${domain ? `site:${domain} ` : ""}(\"careers@\" OR \"jobs@\" OR \"talent@\" OR \"recruiting@\") \"${company?.name || ""}\"`;
+  const subject = `Interest in ${role} at ${company?.name || "your company"}`;
+  const recruiterMessage = `Hi [Name], I’m interested in the ${role} opportunity at ${company?.name || "your company"}${selectedJob ? ` (${selectedJob.application_url})` : ""}. My background includes [2 relevant skills] and [one measurable result]. I have applied through the official careers page. If you handle this role, could you please share any guidance on the process? Thank you.`;
+  const referralMessage = `Hi [Name], I’m exploring the ${role} role at ${company?.name || "your company"}${selectedJob ? ` (${selectedJob.application_url})` : ""}. I noticed your experience at the company and would value a quick perspective on the team. If my background in [relevant skills] appears suitable, would you be comfortable considering a referral? No worries if not—thank you for your time.`;
+  const copy = async (label: string, value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(label);
+      window.setTimeout(() => setCopied(""), 1800);
+    } catch {
+      setCopied("Copy failed");
+    }
+  };
+  if (!company) return <Empty />;
+  const searches = [
+    {
+      label: "Recruiters on LinkedIn",
+      detail: "Public talent-acquisition and campus-hiring profiles",
+      url: `https://www.google.com/search?q=${encodeURIComponent(recruiterQuery)}`,
+      icon: Users,
+    },
+    {
+      label: "Potential referrers",
+      detail: "Public employee profiles aligned to this role",
+      url: `https://www.google.com/search?q=${encodeURIComponent(referralQuery)}`,
+      icon: Users,
+    },
+    {
+      label: "Public hiring emails",
+      detail: "Published role inboxes on the company’s official domain",
+      url: `https://www.google.com/search?q=${encodeURIComponent(emailQuery)}`,
+      icon: Mail,
+    },
+    {
+      label: "Naukri company roles",
+      detail: "Current listings to verify recruiter and role context",
+      url: `https://www.naukri.com/jobs-in-india?k=${encodeURIComponent(`${company.name} ${role}`)}&jobAge=1`,
+      icon: ExternalLink,
+    },
+  ];
+  return (
+    <div className="space-y-5">
+      <SectionTitle
+        icon={Users}
+        title="Recruiter outreach & referrals"
+        text="Find verified public contact paths, then send a short personalized message"
+      />
+      <section className="rounded-3xl border border-[#c8dbd0] bg-white p-5 shadow-sm md:p-6">
+        <div className="grid gap-4 lg:grid-cols-2">
+          <label className="text-sm font-bold">
+            Company
+            <select
+              value={company.name}
+              onChange={(event) => { setCompanyName(event.target.value); setJobKey(""); }}
+              className="mt-2 h-11 w-full rounded-xl border bg-white px-3 text-sm font-normal"
+            >
+              {companies.map((item) => <option key={item.name}>{item.name}</option>)}
+            </select>
+          </label>
+          <label className="text-sm font-bold">
+            Role context
+            <select
+              value={selectedJob ? trackingKey(selectedJob) : ""}
+              onChange={(event) => setJobKey(event.target.value)}
+              className="mt-2 h-11 w-full rounded-xl border bg-white px-3 text-sm font-normal"
+            >
+              {companyJobs.length ? companyJobs.map((job) => (
+                <option key={trackingKey(job)} value={trackingKey(job)}>{job.title} · {job.normalized_location}</option>
+              )) : <option value="">Use preferred role</option>}
+            </select>
+          </label>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl bg-[#f2f7f4] p-4 text-sm">
+          <span className="font-black">{company.name}</span>
+          <span className="text-[#687970]">{domain || "Official career source"}</span>
+          <a href={company.careers_url} target="_blank" rel="noreferrer" className="ml-auto inline-flex items-center gap-1 font-bold text-[#155d3a]">Official careers <ExternalLink size={14} /></a>
+        </div>
+      </section>
+      <div className="grid gap-3 md:grid-cols-2">
+        {searches.map(({ label, detail, url, icon: Icon }) => (
+          <a key={label} href={url} target="_blank" rel="noreferrer" className="group flex items-center gap-4 rounded-2xl border bg-white p-5 shadow-sm hover:border-[#6aa184]">
+            <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#e4f4ea] text-[#155d3a]"><Icon size={20} /></span>
+            <span><span className="block font-black">{label}</span><span className="mt-1 block text-xs leading-5 text-[#687970]">{detail}</span></span>
+            <ExternalLink className="ml-auto text-[#6f8278] group-hover:text-[#155d3a]" size={17} />
+          </a>
+        ))}
+      </div>
+      <div className="grid gap-4 xl:grid-cols-2">
+        <OutreachTemplate title="Message a recruiter" text={recruiterMessage} copied={copied === "recruiter"} copy={() => copy("recruiter", recruiterMessage)} />
+        <OutreachTemplate title="Ask for a referral" text={referralMessage} copied={copied === "referral"} copy={() => copy("referral", referralMessage)} />
+      </div>
+      <section className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+        <p className="font-black">Safe outreach checklist</p>
+        <p className="mt-1 leading-6">Use only emails published on the official company domain, verify the person still works there, apply first when possible, personalize one proof point, and send one respectful follow-up at most. JobRadar never guesses email patterns, scrapes private profiles, or stores contacts.</p>
+        <a href={`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(recruiterMessage)}`} className="mt-3 inline-flex items-center gap-2 rounded-xl bg-amber-900 px-4 py-2 font-bold text-white"><Mail size={15} /> Open email draft</a>
+      </section>
+    </div>
+  );
+}
+
+function OutreachTemplate({ title, text, copied, copy }: { title: string; text: string; copied: boolean; copy: () => void }) {
+  return (
+    <section className="rounded-2xl border bg-white p-5 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="font-black">{title}</h3>
+        <button type="button" onClick={copy} className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-bold text-[#155d3a]"><Copy size={14} /> {copied ? "Copied" : "Copy"}</button>
+      </div>
+      <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-[#586b61]">{text}</p>
+    </section>
   );
 }
 

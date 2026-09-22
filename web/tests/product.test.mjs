@@ -44,6 +44,17 @@ test('company coverage has safe career and contact fallback discovery',async()=>
  assert.match(source,/recruiter OR talent acquisition OR engineering manager/);
  assert.match(source,/>Contacts<\/a>/);
 });
+test('outreach workspace finds only public contacts and provides referral templates',async()=>{
+ const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
+ assert.match(source,/\["Outreach", Users\]/);
+ assert.match(source,/Recruiter outreach & referrals/);
+ assert.match(source,/Public hiring emails/);
+ assert.match(source,/site:\$\{domain\}/);
+ assert.match(source,/Potential referrers/);
+ assert.match(source,/Ask for a referral/);
+ assert.match(source,/never guesses email patterns/);
+ assert.match(source,/Naukri company roles/);
+});
 test('buyer-facing experience leads with the trust promise and hides operations',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
  assert.match(source,/EARLY-CAREER OPPORTUNITY RADAR/);
