@@ -56,7 +56,7 @@ test('buyer-facing experience leads with the trust promise and hides operations'
 });
 test('simple discovery keeps advanced controls progressive and default jobs actionable',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
- assert.match(source,/const reviewView = active === "All Jobs"/);
+ assert.match(source,/const reviewView = \["All Jobs", "Internships"\]\.includes\(active\)/);
  assert.match(source,/\["Dashboard", "Recommended"\]\.includes\(active\) && !j\.is_eligible/);
  assert.match(source,/aria-expanded=\{showExplore\}/);
  assert.match(source,/Browse by role/);

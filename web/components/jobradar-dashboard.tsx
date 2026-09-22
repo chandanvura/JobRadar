@@ -503,7 +503,7 @@ function DashboardContent() {
     [currentJobs],
   );
   const filtered = useMemo(() => {
-    const reviewView = active === "All Jobs";
+    const reviewView = ["All Jobs", "Internships"].includes(active);
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j),
         q =
