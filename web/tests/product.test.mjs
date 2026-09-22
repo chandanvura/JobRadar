@@ -14,6 +14,14 @@ test('untrusted search links normalize bounds and terms',()=>{
  assert.deepEqual(p.titles,['Java']);assert.equal(p.experienceMin,0);assert.equal(p.experienceMax,3);assert.deepEqual(p.locations,['Bengaluru','Hyderabad']);
  assert.deepEqual(cleanSearch(null),cleanSearch({}));
 });
+test('search invites create a private workspace without sharing a profile id',async()=>{
+ const source=await (await import('node:fs/promises')).readFile(new URL('../components/profile-panel.tsx',import.meta.url),'utf8');
+ assert.match(source,/set\('newWorkspace','1'\)/);
+ assert.doesNotMatch(source,/share=.*searchParams\.set\('profile'/);
+ assert.match(source,/Every person who opens it receives a new private workspace/);
+ assert.ok(source.includes('jobradar-resume-draft-v1'));
+ assert.ok(source.includes('jobradar-tailor-request-v1'));
+});
 test('backup import rejects executable application links and malformed records',()=>{
  const job={title:'Engineer',company:'Test',normalized_location:'Bengaluru',skills:'[]',role_category:'Software Engineering',ats_provider:'test',external_job_id:'1',first_seen_at:'2026-09-13',application_url:'javascript:alert(1)',career_page_url:'https://example.com'};
  assert.deepEqual(safeTracking({'test:1':{job}}),{});job.application_url='https://example.com/job';assert.ok(safeTracking({'test:1':{job}})['test:1']);
@@ -54,6 +62,12 @@ test('outreach workspace finds only public contacts and provides referral templa
  assert.match(source,/Ask for a referral/);
  assert.match(source,/never guesses email patterns/);
  assert.match(source,/Naukri company roles/);
+});
+test('final ingestion deactivates stale jobs only after every upload succeeds',async()=>{
+ const source=await (await import('node:fs/promises')).readFile(new URL('../worker/index.ts',import.meta.url),'utf8');
+ assert.doesNotMatch(source,/UPDATE companies SET enabled=0/);
+ assert.doesNotMatch(source,/for\(const name of successfulNames\)/);
+ assert.match(source,/if\(payload\.run\).*UPDATE jobs SET is_active=0/);
 });
 test('buyer-facing experience leads with the trust promise and hides operations',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');

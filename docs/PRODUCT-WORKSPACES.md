@@ -5,13 +5,13 @@
 1. Open JobRadar and choose **Set up my search** or **Edit search**.
 2. Choose titles, optional skills, experience and Bengaluru/Hyderabad.
 3. Verify an opening on the official employer page, save it, then track applications.
-4. Open **Settings → Create separate profile** for a separate workspace URL.
-5. **Share search choices** shares only the chosen search settings. Each generated link starts a new profile; no application records or resume contents are shared.
+4. Open **Settings → Create my workspace** for a separate local workspace URL.
+5. **Create search invite** shares only sanitized search settings. Every recipient gets a newly generated workspace; no profile ID, application record, note or resume content is shared.
 6. Download a private backup before clearing browser data. Restore it on another device using Settings. Restoring replaces that profile's preferences and tracking.
 
-Profiles are browser storage namespaces, not authenticated accounts. Another person on a different device cannot read your browser storage through a profile URL. People sharing the same browser account can access its local profiles. Use separate browser accounts for privacy. The default profile retains existing owner storage keys.
+Profiles are browser storage namespaces, not authenticated accounts. Another person on a different device cannot read your browser storage through a profile URL. People sharing the same browser account can access its local profiles. Use separate browser accounts for privacy. The original workspace retains existing browser data for backward compatibility.
 
-All people use the same public collected engineering job catalog in Bengaluru and Hyderabad. Search choices do not launch new scraper runs, change the owner's filters, or configure another Telegram recipient. Arbitrary roles/cities beyond the collected catalog are not supported. There is no cloud synchronization or per-user Telegram subscription in this release.
+All people use the same public collected engineering job catalog in Bengaluru and Hyderabad. Search choices do not launch new scraper runs, change another workspace's filters, or configure another Telegram recipient. Arbitrary roles/cities beyond the collected catalog are not supported. There is no cloud synchronization or per-user Telegram subscription in this release.
 
 ### Matching levels
 
@@ -42,7 +42,7 @@ Resume inputs remain in browser storage, including the JD. No paid AI API is use
 
 - Employer relative ages advance from their observation time, never from first detection.
 - Employer “today” labels expire at the next India calendar day.
-- Unknown experience remains reviewable in All Jobs and does not qualify for owner alerts.
+- Unknown experience remains reviewable in All Jobs and does not qualify for automated alerts.
 - Personal discovery preferences do not hide saved/application records.
 - The company endpoint no longer silently truncates the directory at 500.
 - Jobs beyond the initial 1,000 are fetched using a stable increasing-ID cursor.

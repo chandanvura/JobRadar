@@ -1,6 +1,12 @@
+let invitedWorkspace: string | null = null;
 export const profileId = () => {
   if (typeof window === 'undefined') return 'default';
-  const id = new URLSearchParams(window.location.search).get('profile') || 'default';
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('newWorkspace') === '1') {
+    invitedWorkspace ||= crypto.randomUUID();
+    return invitedWorkspace;
+  }
+  const id = params.get('profile') || 'default';
   return /^[a-z0-9-]{1,64}$/.test(id) ? id : 'default';
 };
 export const privateKey = (key: string) => profileId() === 'default' ? key : `${key}:${profileId()}`;

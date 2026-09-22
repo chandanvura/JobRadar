@@ -56,18 +56,8 @@ jobs:
             "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain" \
             | jq -r '.result.subdomain // empty')"
           if [ -z "$current_subdomain" ]; then
-            for candidate in chandanvura chandanvura-jobradar jobradar-chandanvura; do
-              response="$(curl --silent --show-error \
-                -X PUT \
-                -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-                -H "Content-Type: application/json" \
-                --data "{\"subdomain\":\"$candidate\"}" \
-                "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain")"
-              if [ "$(printf '%s' "$response" | jq -r '.success')" = "true" ]; then
-                current_subdomain="$candidate"
-                break
-              fi
-            done
+            echo "Configure a neutral workers.dev account subdomain in Cloudflare before deploying." >&2
+            exit 1
           fi
           test -n "$current_subdomain"
           echo "Workers hostname: jobradar.$current_subdomain.workers.dev"

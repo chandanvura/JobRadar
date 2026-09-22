@@ -41,6 +41,7 @@ import { ProfilePanel } from "./profile-panel";
 import { ResumeWorkspace } from "./resume-workspace";
 import {
   cleanSearch,
+  profileId,
   safeTracking,
   readPrivate,
   writePrivate,
@@ -411,7 +412,9 @@ function DashboardContent() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const shared = params.get("search");
-    if (shared) {
+    const isInvite = params.get("newWorkspace") === "1";
+    const explicitWorkspace = params.get("profile");
+    if (shared && (isInvite || (explicitWorkspace && explicitWorkspace !== "default"))) {
       try {
         const next = cleanSearch(JSON.parse(shared));
         setPreferences(next);
@@ -423,8 +426,19 @@ function DashboardContent() {
           text: "Default search preferences are available.",
         });
       }
+      if (isInvite) params.set("profile", profileId());
       params.delete("search");
+      params.delete("newWorkspace");
       history.replaceState(null, "", locationPath(params));
+    } else if (shared) {
+      params.delete("search");
+      params.delete("newWorkspace");
+      history.replaceState(null, "", locationPath(params));
+      setNotice({
+        tone: "warning",
+        title: "Original workspace protected",
+        text: "Shared search choices were not imported into this browser’s original workspace. Open a fresh invite or create a separate workspace first.",
+      });
     }
     const storageError = () =>
       setNotice({
@@ -1045,9 +1059,9 @@ function DashboardContent() {
       >
         {([
           ["Dashboard", Radar],
+          ["All Jobs", Search],
           ["Saved", Bookmark],
           ["Applications", BriefcaseBusiness],
-          ["Resume Studio", Code2],
         ] as const).map(([label, Icon]) => (
           <button
             key={label}
@@ -2020,7 +2034,7 @@ function OutreachView({
       <SectionTitle
         icon={Users}
         title="Recruiter outreach & referrals"
-        text="Find verified public contact paths, then send a short personalized message"
+        text="Find public contact paths, verify them, then send a short personalized message"
       />
       <section className="rounded-3xl border border-[#c8dbd0] bg-white p-5 shadow-sm md:p-6">
         <div className="grid gap-4 lg:grid-cols-2">
@@ -2106,7 +2120,19 @@ function CompaniesView({
         title="Official career sources"
         text={`${companies.length} of ${data?.companies.length || 0} sources shown`}
       />
-      <div className="overflow-x-auto rounded-2xl border bg-white">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Info label="Structured ATS" value={String(companies.filter((c) => c.ats_provider !== "custom").length)} />
+        <Info label="Productive now" value={String(companies.filter((c) => c.candidate_jobs > 0).length)} />
+        <Info label="Healthy sources" value={String(companies.filter((c) => !c.error_count).length)} />
+      </div>
+      <div className="grid gap-3 md:hidden">
+        {companies.map((c) => {
+          const limited = c.warning?.startsWith("Limited coverage"),
+            state = c.error_count ? "Failed" : limited ? "Limited coverage" : c.jobs_found === 0 ? "No current openings" : c.candidate_jobs === 0 ? "No target roles" : "Productive";
+          return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-white p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-slate-500">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-red-50 text-red-700" : limited || c.jobs_found === 0 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-slate-500">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-[#155d3a]"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a><a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
+        })}
+      </div>
+      <div className="hidden overflow-x-auto rounded-2xl border bg-white md:block">
         <table className="w-full min-w-[900px] text-left text-sm">
           <thead className="bg-[#f7faf8] text-xs uppercase">
             <tr>

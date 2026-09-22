@@ -9,9 +9,9 @@ on:
       - "requirements.txt"
       - "tests/**"
   schedule:
-    # Frequent opportunities compensate for GitHub's best-effort cron delivery.
-    # The freshness gate below prevents unnecessary full scans.
-    - cron: "*/10 * * * *"
+    # Two recovery opportunities per hour; the freshness gate normally permits
+    # one complete scan and avoids burning free Actions minutes.
+    - cron: "17,47 * * * *"
   workflow_dispatch:
 concurrency:
   # Queue overlapping push/manual/scheduled runs instead of cancelling an active scan.
@@ -46,7 +46,7 @@ jobs:
                   if finished:
                       value=datetime.datetime.fromisoformat(finished.replace("Z","+00:00"))
                       age=(datetime.datetime.now(datetime.timezone.utc)-value).total_seconds()/60
-                      should_run=age>=20
+                      should_run=age>=35
                       print(f"Latest completed scan is {age:.1f} minutes old")
               except Exception as exc:
                   print(f"Freshness check failed open: {type(exc).__name__}: {exc}")
@@ -102,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -120,11 +120,9 @@ jobs:
         with:
           path: .cache/jobradar-http
           key: jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
-          restore-keys: |
             jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
-            jobradar-details-${{ runner.os }}-
       - name: Discover shard ${{ matrix.shard }}
-        run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 16 --output "artifacts/shard-${{ matrix.shard }}.json"
+        run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 8 --output "artifacts/shard-${{ matrix.shard }}.json"
         env:
           JOBRADAR_SOURCE_CONCURRENCY: 5
           JOBRADAR_CUSTOM_CONCURRENCY: 2

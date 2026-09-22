@@ -2,7 +2,8 @@
 
 JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks a broad, continuously reviewed registry of official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
 
-**Production dashboard:** https://jobradar.chandanvura.workers.dev
+The production address is emitted and verified by the deployment workflow. A
+neutral custom domain can be attached without changing the application.
 
 ## Included
 
@@ -18,7 +19,7 @@ JobRadar is a production-oriented job discovery system for explicit 0–3 YOE ro
 - Browser-private Saved and application-stage tracking with JSON export
 - Initial company registry and tests for critical matching rules
 
-Architecture: `freshness-gated GitHub scheduler → 16 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. Frequent best-effort cron opportunities recover from delayed GitHub scheduling, while the freshness gate prevents duplicate full scans. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
+Architecture: `freshness-gated GitHub scheduler → 8 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. Two best-effort cron opportunities each hour recover from delayed scheduling, while the freshness gate normally permits one full scan per hour. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
 
 ## Local dashboard
 
@@ -88,7 +89,7 @@ cd web && npm test
 
 The standalone application lives under `web/` and does not require ChatGPT Sites at runtime. The **Deploy independent JobRadar** workflow creates an Asia-Pacific D1 database when needed, applies versioned migrations, builds the vinext application, deploys the Worker, configures protected ingestion, and verifies the deployment.
 
-Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scraper posts directly to the production Worker URL and runs twice per hour at minutes 17 and 47 UTC. Verify the **Deploy independent JobRadar** and **JobRadar hourly scan** workflows in GitHub Actions after changing infrastructure or matching logic.
+Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scheduler receives opportunities at minutes 17 and 47 UTC; a freshness gate normally allows one full scan per hour and uses the second opportunity to recover from delayed GitHub scheduling. Verify the **Deploy independent JobRadar** and **JobRadar hourly scan** workflows in GitHub Actions after changing infrastructure or matching logic.
 
 ## Matching guarantees
 
@@ -104,7 +105,7 @@ Changes under `web/` deploy automatically from `main`; the workflow can also be 
 
 Add ATS adapters only after source-level job counts and fixtures prove they work. Workday uses full pagination and tenant-specific configuration. Browser-rendered and custom pages remain last-resort adapters. LinkedIn, Naukri, and Instahyre may be used only through permitted APIs or user-authorized exports; never bypass authentication, CAPTCHAs, access controls, or anti-bot protections.
 
-Each distributed worker refreshes its deterministic share of listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-worker provider limits and separate Workday listing/detail buckets prevent the four workers from flooding a shared ATS, while immutable daily detail caches reduce repeated work. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries. The coordinator refuses incomplete or duplicate shard ownership and finalizes a run only after every ingestion batch succeeds.
+Each distributed worker refreshes its deterministic share of listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-worker provider limits and separate Workday listing/detail buckets bound each process, while immutable daily detail caches reduce repeated work. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries. The coordinator refuses incomplete or duplicate shard ownership and finalizes a run only after every ingestion batch succeeds.
 
 ## Troubleshooting
 
