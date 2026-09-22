@@ -68,7 +68,7 @@ async def scrape(company,sem,custom_sem):
             try:
                 raw,discovered=await fetch_company_jobs(company)
                 jobs=[enrich(j,company.priority) for j in raw]
-                candidates=[j for j in jobs if j.city in {"Bengaluru","Hyderabad"} and j.role_category!="Other"]
+                candidates=[j for j in jobs if j.city in {"Bengaluru","Hyderabad","Chennai","Pune"} and j.role_category!="Other"]
                 eligible=[j for j in candidates if j.is_eligible]
                 warning="Limited coverage: no structured public job feed" if discovered==0 and company.ats_provider=="custom" else "No current openings returned" if discovered==0 else "No target-city roles currently" if not candidates else None
                 return jobs,{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":now(),"error_count":0,"jobs_found":discovered,"candidate_jobs":len(candidates),"eligible_jobs":len(eligible),"warning":warning},None,discovered
@@ -193,7 +193,7 @@ async def main():
     sem=asyncio.Semaphore(int(os.getenv("JOBRADAR_SOURCE_CONCURRENCY","24")))
     custom_sem=asyncio.Semaphore(int(os.getenv("JOBRADAR_CUSTOM_CONCURRENCY","16")))
     batches=await asyncio.gather(*(scrape(c,sem,custom_sem) for c in enabled)); all_jobs=[j for jobs,_,_,_ in batches for j in jobs]
-    candidates=[j for j in all_jobs if j.city in {"Bengaluru","Hyderabad"} and j.role_category!="Other"]
+    candidates=[j for j in all_jobs if j.city in {"Bengaluru","Hyderabad","Chennai","Pune"} and j.role_category!="Other"]
     eligible=[j for j in candidates if j.is_eligible]
     statuses=[status for _,status,_,_ in batches]; failures=sum(error is not None for _,_,error,_ in batches); scanned=sum(count for *_,count in batches)
     endpoint,secret=os.getenv("JOBRADAR_API_URL"),os.getenv("JOBRADAR_INGEST_SECRET")

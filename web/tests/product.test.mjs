@@ -11,7 +11,7 @@ test('profile storage preserves owner keys and isolates other users',()=>{
 });
 test('untrusted search links normalize bounds and terms',()=>{
  const p=cleanSearch({titles:['Java','Java',null],locations:['Mars'],experienceMin:-5,experienceMax:'NaN'});
- assert.deepEqual(p.titles,['Java']);assert.equal(p.experienceMin,0);assert.equal(p.experienceMax,3);assert.deepEqual(p.locations,['Bengaluru','Hyderabad']);
+ assert.deepEqual(p.titles,['Java']);assert.equal(p.experienceMin,0);assert.equal(p.experienceMax,3);assert.deepEqual(p.locations,['Bengaluru','Hyderabad','Chennai','Pune']);
  assert.deepEqual(cleanSearch(null),cleanSearch({}));
 });
 test('search invites create a private workspace without sharing a profile id',async()=>{
@@ -42,7 +42,9 @@ test('internship product area is isolated and uses explicit board filters',async
  assert.match(source,/f_JT=F&f_E=2&sortBy=DD/);
  assert.match(source,/active === "Internships" \? internshipBengaluru : bengaluru/);
  assert.match(source,/active === "Internships" \? internshipHyderabad : hyderabad/);
- assert.match(source,/Official ATS internships — Bengaluru/);
+ assert.match(source,/active === "Internships" \? internshipChennai : chennai/);
+ assert.match(source,/active === "Internships" \? internshipPune : pune/);
+ assert.match(source,/Official ATS internships — \$\{city.name\}/);
  assert.match(source,/apprentice\|apprenticeship/);
 });
 

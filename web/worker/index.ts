@@ -23,7 +23,7 @@ async function dashboard(env:Env){
     env.DB.prepare("SELECT n.id,n.channel,n.status,n.sent_at,n.error,j.title,j.company FROM notifications n JOIN jobs j ON j.id=n.job_id ORDER BY n.id DESC LIMIT 50").all(),
   ]);
   const runs=runResult.results;const latest=runs[0]||null;
-  return json({jobs:jobResult.results,companies:companyResult.results,latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],max_age_hours:24,max_experience_years:3,skills_required:false}});
+  return json({jobs:jobResult.results,companies:companyResult.results,latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad","Chennai","Pune"],max_age_hours:24,max_experience_years:3,skills_required:false}});
 }
 
 async function ingest(request:Request,env:Env){

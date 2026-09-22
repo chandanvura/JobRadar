@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "JobRadar",
-  description: "Discover fresh Bengaluru and Hyderabad jobs, rank the best matches, and apply early.",
+  description: "Discover fresh Bengaluru, Hyderabad, Chennai and Pune jobs, rank the best matches, and apply early.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

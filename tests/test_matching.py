@@ -19,6 +19,8 @@ def sample(title="Associate DevOps Engineer", location="Bangalore", description=
 def test_location_aliases():
     assert normalize_location("Hybrid - Bangalore")[1] == "Bengaluru"
     assert normalize_location("Hyderabad, Telangana")[1] == "Hyderabad"
+    assert normalize_location("Chennai (Madras), Tamil Nadu")[1] == "Chennai"
+    assert normalize_location("Pune / Poona, Maharashtra")[1] == "Pune"
 
 def test_experience_is_candidate_requirement():
     assert extract_experience("Company has 10+ years. Candidate needs 1-2 years")[:2] == (1.0,2.0)
@@ -40,6 +42,18 @@ def test_title_classification():
     assert classify_title("Member of Technical Staff I")[1] == "Software Engineering"
     assert classify_title("Cloud Engineering Intern")[1] == "Cloud"
     assert classify_title("Java Intern")[1] == "Java / Backend"
+    assert classify_title("SWE I")[1] == "Software Engineering"
+    assert classify_title("SW Engineer I")[1] == "Software Engineering"
+    assert classify_title("Frontend Developer")[1] == "Software Engineering"
+    assert classify_title("QA Associate")[1] == "Quality Engineering"
+    assert classify_title("SDET I")[1] == "Quality Engineering"
+    assert classify_title("Application Support Associate")[1] == "Technical Support"
+
+def test_explicit_entry_title_can_fill_missing_experience_without_opening_generic_roles():
+    entry=enrich(sample(title="Associate Software Engineer",location="Pune",description="Build reliable services"))
+    assert entry.is_eligible and entry.experience_label == "Entry-level title"
+    generic=enrich(sample(title="Software Engineer",location="Chennai",description="Build reliable services"))
+    assert not generic.is_eligible and generic.eligibility_reason == "Experience not stated — verify"
 
 def test_internships_are_classified_and_eligible_without_full_time_experience():
     assert classify_employment_type("Software Engineer Intern") == "Internship"

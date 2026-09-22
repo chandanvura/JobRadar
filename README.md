@@ -1,6 +1,6 @@
 # JobRadar
 
-JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks a broad, continuously reviewed registry of official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
+JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru, Hyderabad, Chennai and Pune. It checks a broad, continuously reviewed registry of official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
 
 The production address is emitted and verified by the deployment workflow. A
 neutral custom domain can be attached without changing the application.
@@ -93,7 +93,7 @@ Changes under `web/` deploy automatically from `main`; the workflow can also be 
 
 ## Matching guarantees
 
-- Bengaluru/Hyderabad and a supported role are required.
+- Bengaluru, Hyderabad, Chennai or Pune and a supported role are required.
 - Only verifiable 0–3 YOE requirements are accepted; skills are optional. Unknown experience remains visible in All Jobs but is not alerted.
 - Senior engineer titles may qualify when the requirement is explicitly within policy. Leadership titles such as manager, director, architect, principal, and staff are rejected. Unknown experience and ranges exceeding 3 YOE are rejected; 1+ and 2+ are accepted.
 - An employer-supplied timestamp within 24 hours or an explicit employer “posted today” label is mandatory for alerts.

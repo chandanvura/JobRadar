@@ -3,7 +3,7 @@
 ## Use the website
 
 1. Open JobRadar and choose **Set up my search** or **Edit search**.
-2. Choose titles, optional skills, experience and Bengaluru/Hyderabad.
+2. Choose titles, optional skills, experience and Bengaluru/Hyderabad/Chennai/Pune.
 3. Verify an opening on the official employer page, save it, then track applications.
 4. Open **Settings → Create my workspace** for a separate local workspace URL.
 5. **Create search invite** shares only sanitized search settings. Every recipient gets a newly generated workspace; no profile ID, application record, note or resume content is shared.
@@ -11,7 +11,7 @@
 
 Profiles are browser storage namespaces, not authenticated accounts. Another person on a different device cannot read your browser storage through a profile URL. People sharing the same browser account can access its local profiles. Use separate browser accounts for privacy. The original workspace retains existing browser data for backward compatibility.
 
-All people use the same public collected engineering job catalog in Bengaluru and Hyderabad. Search choices do not launch new scraper runs, change another workspace's filters, or configure another Telegram recipient. Arbitrary roles/cities beyond the collected catalog are not supported. There is no cloud synchronization or per-user Telegram subscription in this release.
+All people use the same public collected engineering job catalog in Bengaluru, Hyderabad, Chennai and Pune. Search choices do not launch new scraper runs, change another workspace's filters, or configure another Telegram recipient. Arbitrary roles/cities beyond the collected catalog are not supported. There is no cloud synchronization or per-user Telegram subscription in this release.
 
 ### Matching levels
 

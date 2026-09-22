@@ -7,7 +7,9 @@ ROLE_PATTERNS = {
     "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b", "Platform": r"\bplatform (?:software )?engineer\b",
     "Infrastructure / Operations": r"\binfrastructure (?:automation |operations |support )?engineer\b|\bsoftware engineer\s*[-–—:,]?\s*infrastructure\b|\blinux (?:systems? |infrastructure |cloud )?engineer\b|\bsystems? engineer\s*(?:i|1)\b",
     "Java / Backend": r"\bjava (?:full[ -]?stack |software )?(?:developer|engineer)\b|\bback[ -]?end (?:software |application )?(?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*(?:java|back[ -]?end)\b",
-    "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software (?:development )?engineer(?:ing)?(?:\s+(?:i|1))?\b|\bsde\s*(?:i|1)?\b|\b(?:graduate )?engineer trainee\b|\bmember of technical staff(?:\s+(?:i|1))?\b|\bget\b",
+    "Quality Engineering": r"\b(?:associate |junior )?(?:qa|quality assurance|quality) (?:engineer|associate|analyst)(?:\s+(?:i|1))?\b|\b(?:software test|test automation|automation test) engineer(?:\s+(?:i|1))?\b|\bsdet(?:\s+(?:i|1))?\b",
+    "Technical Support": r"\b(?:application|production|technical|product|software|cloud) support (?:engineer|associate|analyst)(?:\s+(?:i|1))?\b|\bsupport engineer(?:\s+(?:i|1))?\b",
+    "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software (?:development )?(?:engineer(?:ing)?|developer)(?:\s+(?:i|1))?\b|\b(?:sde|swe|sw engineer)\s*(?:i|1)?\b|\b(?:application|front[ -]?end|full[ -]?stack|mobile) (?:developer|engineer)(?:\s+(?:i|1))?\b|\b(?:graduate )?engineer trainee\b|\bmember of technical staff(?:\s+(?:i|1))?\b|\bget\b",
 }
 INTERNSHIP_ROLE_PATTERNS = {
     "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b",
@@ -21,6 +23,7 @@ INTERNSHIP_ROLE_PATTERNS = {
 SKILLS=["AWS","Azure","GCP","Linux","Docker","Kubernetes","Terraform","Jenkins","CI/CD","GitHub Actions","Argo CD","Ansible","Git","Helm","Bash","Python","Java","Spring Boot","Spring","REST API","Microservices","Kafka","SQL","PostgreSQL","MySQL","Redis","Prometheus","Grafana","ELK","Elasticsearch","Splunk","Datadog"]
 MAX_JOB_AGE_HOURS = 24
 MAX_EXPERIENCE_YEARS = 3
+TARGET_CITIES = {"Bengaluru", "Hyderabad", "Chennai", "Pune"}
 INDIA_TZ = timezone(timedelta(hours=5, minutes=30))
 LEADERSHIP_TITLE = re.compile(r"\b(?:architect|director|head|lead|manager|principal|staff|vice president|vp)\b", re.I)
 
@@ -28,6 +31,8 @@ def normalize_location(value: str):
     low=value.lower(); hybrid=" · Hybrid" if "hybrid" in low else ""
     if re.search(r"\bbangalore\b|\bbengaluru\b",low): return "Bengaluru"+hybrid,"Bengaluru"
     if re.search(r"\bhyderabad\b",low): return "Hyderabad"+hybrid,"Hyderabad"
+    if re.search(r"\bchennai\b|\bmadras\b",low): return "Chennai"+hybrid,"Chennai"
+    if re.search(r"\bpune\b|\bpoona\b",low): return "Pune"+hybrid,"Pune"
     return value.strip() or "Not specified",None
 
 def classify_title(title: str):
@@ -114,7 +119,11 @@ def enrich(job: Job, company_priority: int=3):
     accepted_plus=job.experience_min is not None and job.experience_max is None and 0 <= job.experience_min <= 2
     experience_ok=bounded_experience or accepted_plus
     leadership=bool(LEADERSHIP_TITLE.search(job.title))
-    if job.city not in {"Bengaluru","Hyderabad"}: reason="Outside Bengaluru/Hyderabad"
+    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|qa engineer|sdet|support engineer)\s*(?:i|1)\b",job.title,re.I))
+    if job.experience_min is None and explicit_entry_title:
+        job.experience_min,job.experience_max,job.experience_label=0.0,3.0,"Entry-level title"
+        experience_ok=True
+    if job.city not in TARGET_CITIES: reason="Outside target cities"
     elif leadership: reason="Leadership-level title"
     elif job.role_category=="Other": reason="Role outside target list"
     elif job.employment_type=="Internship" and not recent: reason="Posting date not verified within 24 hours"
