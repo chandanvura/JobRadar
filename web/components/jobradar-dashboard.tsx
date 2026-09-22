@@ -341,6 +341,8 @@ function DashboardContent() {
       useState<SearchPreferences>(initialPreferences),
     [editingSearch, setEditingSearch] = useState(false),
     [showWelcome, setShowWelcome] = useState(false),
+    [showExplore, setShowExplore] = useState(false),
+    [showMoreFilters, setShowMoreFilters] = useState(false),
     [showOperations, setShowOperations] = useState(false);
   const load = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -501,9 +503,7 @@ function DashboardContent() {
     [currentJobs],
   );
   const filtered = useMemo(() => {
-    const reviewView = ["Dashboard", "Recommended", "All Jobs", "Internships"].includes(
-      active,
-    );
+    const reviewView = active === "All Jobs";
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j),
         q =
@@ -561,6 +561,8 @@ function DashboardContent() {
       )
         return false;
       if (active !== "Saved" && active !== "Applications" && !j.is_active)
+        return false;
+      if (["Dashboard", "Recommended"].includes(active) && !j.is_eligible)
         return false;
       if (active === "Ultra Fresh") {
         const age = freshnessAge(j);
@@ -772,7 +774,16 @@ function DashboardContent() {
           className="flex-1 space-y-1 overflow-y-auto p-4"
         >
           {navGroup("Find work", primaryNav)}
-          {navGroup("Explore", exploreNav)}
+          <button
+            type="button"
+            aria-expanded={showExplore}
+            onClick={() => setShowExplore((value) => !value)}
+            className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-[#607067] hover:bg-[#eef3f0]"
+          >
+            <Filter size={18} /> Browse by role
+            {showExplore ? <ChevronUp className="ml-auto" size={16} /> : <ChevronDown className="ml-auto" size={16} />}
+          </button>
+          {(showExplore || exploreNav.has(active)) && navGroup("Role views", exploreNav)}
           {navGroup("Career tools", toolsNav)}
           <button
             type="button"
@@ -787,7 +798,7 @@ function DashboardContent() {
         </nav>
         <SystemCard data={data} loading={loading} />
       </aside>
-      <main className="lg:pl-72">
+      <main className="pb-20 lg:pb-0 lg:pl-72">
         <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-[#dfe6e2] bg-white/90 px-4 backdrop-blur-xl md:px-8">
           <button
             aria-label="Open navigation"
@@ -852,7 +863,7 @@ function DashboardContent() {
           )}
           {showJobs && (
             <>
-              {active === "Dashboard" && (
+              {active === "Dashboard" && !showWelcome && (
                 <ProductPromise
                   sources={data?.companies.length || 0}
                   lastScan={data?.latest_run?.finished_at}
@@ -904,46 +915,15 @@ function DashboardContent() {
                   value={freshness}
                   setValue={setFreshness}
                 />
-                <Pills
-                  items={["Recommended", "Exact"]}
-                  value={matchMode}
-                  setValue={setMatchMode}
-                />
-                <select
-                  aria-label="Role filter"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
+                <Button
+                  variant="outline"
+                  aria-expanded={showMoreFilters}
+                  onClick={() => setShowMoreFilters((value) => !value)}
+                  className="rounded-xl"
                 >
-                  <option>All roles</option>
-                  <option>DevOps</option>
-                  <option>Cloud</option>
-                  <option>SRE</option>
-                  <option>Platform</option>
-                  <option>Infrastructure / Operations</option>
-                  <option>Software Engineering</option>
-                  <option>Java / Backend</option>
-                </select>
-                <select
-                  aria-label="ATS filter"
-                  value={ats}
-                  onChange={(e) => setAts(e.target.value)}
-                  className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
-                >
-                  {atsOptions.map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
-                <select
-                  aria-label="Sort jobs"
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
-                  className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
-                >
-                  {sortOptions.map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </select>
+                  <Filter size={15} /> More filters
+                  {showMoreFilters ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                </Button>
                 <Button
                   onClick={() => setEditingSearch((x) => !x)}
                   className="rounded-xl bg-[#155d3a]"
@@ -959,6 +939,50 @@ function DashboardContent() {
                 <span className="ml-auto text-xs font-bold text-[#687970]">
                   {filtered.length} results
                 </span>
+                {showMoreFilters && (
+                  <div className="flex w-full flex-wrap items-center gap-3 border-t border-[#e7ece9] px-2 pt-3">
+                    <Pills
+                      items={["Recommended", "Exact"]}
+                      value={matchMode}
+                      setValue={setMatchMode}
+                    />
+                    <select
+                      aria-label="Role filter"
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
+                    >
+                      <option>All roles</option>
+                      <option>DevOps</option>
+                      <option>Cloud</option>
+                      <option>SRE</option>
+                      <option>Platform</option>
+                      <option>Infrastructure / Operations</option>
+                      <option>Software Engineering</option>
+                      <option>Java / Backend</option>
+                    </select>
+                    <select
+                      aria-label="ATS filter"
+                      value={ats}
+                      onChange={(e) => setAts(e.target.value)}
+                      className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
+                    >
+                      {atsOptions.map((x) => (
+                        <option key={x}>{x}</option>
+                      ))}
+                    </select>
+                    <select
+                      aria-label="Sort jobs"
+                      value={sort}
+                      onChange={(e) => setSort(e.target.value)}
+                      className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
+                    >
+                      {sortOptions.map((x) => (
+                        <option key={x}>{x}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </section>
               {editingSearch && (
                 <SearchPreferencesPanel
@@ -1009,6 +1033,27 @@ function DashboardContent() {
           )}
         </div>
       </main>
+      <nav
+        aria-label="Quick navigation"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-[#dfe6e2] bg-white/95 px-2 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-8px_24px_rgba(18,63,44,.08)] backdrop-blur lg:hidden"
+      >
+        {([
+          ["Dashboard", Radar],
+          ["Saved", Bookmark],
+          ["Applications", BriefcaseBusiness],
+          ["Resume Studio", Code2],
+        ] as const).map(([label, Icon]) => (
+          <button
+            key={label}
+            onClick={() => navigate(label)}
+            aria-current={active === label ? "page" : undefined}
+            className={`flex flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold ${active === label ? "text-[#155d3a]" : "text-[#718077]"}`}
+          >
+            <Icon size={18} />
+            {label}
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }
@@ -1638,7 +1683,7 @@ function JobCard({
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
             {skills.length ? (
-              skills.map((s: string) => (
+              skills.slice(0, 6).map((s: string) => (
                 <span
                   key={s}
                   className="rounded-lg bg-[#f0f4f1] px-2.5 py-1.5 text-[11px] font-bold"
@@ -1650,6 +1695,15 @@ function JobCard({
               <span className="text-xs text-[#75837b]">
                 Skills optional / not specified
               </span>
+            )}
+            {skills.length > 6 && (
+              <button
+                type="button"
+                onClick={() => setDetails(true)}
+                className="rounded-lg border px-2.5 py-1.5 text-[11px] font-bold text-[#52665b]"
+              >
+                +{skills.length - 6} more
+              </button>
             )}
           </div>
         </div>
@@ -1684,7 +1738,7 @@ function JobCard({
               }
               className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#155d3a] text-sm font-black text-white"
             >
-              APPLY <ExternalLink size={15} />
+              Apply now <ExternalLink size={15} />
             </a>
             <a
               href={job.career_page_url}
@@ -1692,7 +1746,7 @@ function JobCard({
               rel="noreferrer"
               className="flex h-11 items-center justify-center gap-2 rounded-xl border text-xs font-black"
             >
-              VERIFY <ExternalLink size={14} />
+              Official listing <ExternalLink size={14} />
             </a>
           </div>
           {isInternship(job) && (
@@ -1735,7 +1789,7 @@ function JobCard({
             }
             className="mt-3 rounded-xl border py-2 text-xs font-bold"
           >
-            Tailor resume
+            Tailor resume for this job
           </button>
           <button
             aria-expanded={details}

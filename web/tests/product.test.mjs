@@ -54,6 +54,19 @@ test('buyer-facing experience leads with the trust promise and hides operations'
  assert.match(source,/aria-expanded=\{showOperations\}/);
  assert.match(source,/System & privacy/);
 });
+test('simple discovery keeps advanced controls progressive and default jobs actionable',async()=>{
+ const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
+ assert.match(source,/const reviewView = active === "All Jobs"/);
+ assert.match(source,/\["Dashboard", "Recommended"\]\.includes\(active\) && !j\.is_eligible/);
+ assert.match(source,/aria-expanded=\{showExplore\}/);
+ assert.match(source,/Browse by role/);
+ assert.match(source,/aria-expanded=\{showMoreFilters\}/);
+ assert.match(source,/More filters/);
+ assert.match(source,/aria-label="Quick navigation"/);
+ assert.match(source,/skills\.slice\(0, 6\)/);
+ assert.match(source,/Apply now/);
+ assert.match(source,/Official listing/);
+});
 test('employer timestamps keep the 24-hour boundary',()=>{
  const now=Date.parse('2026-09-13T12:00:00Z');const job={reported_age_hours:null,posted_at:'2026-09-12T12:00:00Z',last_seen_at:'',posted_precision:'exact'};assert.equal(currentPosting(job,now),true);assert.equal(currentPosting(job,now+1),false);
 });
