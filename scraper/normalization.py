@@ -16,7 +16,7 @@ INTERNSHIP_ROLE_PATTERNS = {
     "Cloud": r"\bcloud\b",
     "SRE": r"\bsite reliability\b|\bsre\b",
     "Platform": r"\bplatform\b",
-    "Infrastructure / Operations": r"\binfrastructure\b|\boperations\b|\blinux\b",
+    "Infrastructure / Operations": r"\binfrastructure\b|\blinux\b|\b(?:it|cloud|platform|systems?|network|production) operations\b|\boperations (?:engineering|engineer|infrastructure)\b",
     "Java / Backend": r"\bjava\b|\bback[ -]?end\b|\bspring\b",
     "Software Engineering": r"\bsoftware\b|\bdeveloper\b|\bengineering\b|\bsde\b|\btechnology\b|\btechnical\b",
 }
