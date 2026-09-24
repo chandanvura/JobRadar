@@ -9,9 +9,9 @@ on:
       - "requirements.txt"
       - "tests/**"
   schedule:
-    # Two recovery opportunities per hour; the freshness gate normally permits
-    # one complete scan and avoids burning free Actions minutes.
-    - cron: "17,47 * * * *"
+    # Scheduled Actions may be delayed or skipped under load. Frequent cheap
+    # gates give the hourly scan more chances without repeating a fresh scan.
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 concurrency:
   # Queue overlapping push/manual/scheduled runs instead of cancelling an active scan.
@@ -120,7 +120,6 @@ jobs:
         with:
           path: .cache/jobradar-http
           key: jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
-            jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
       - name: Discover shard ${{ matrix.shard }}
         run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 8 --output "artifacts/shard-${{ matrix.shard }}.json"
         env:
