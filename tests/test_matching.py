@@ -106,6 +106,10 @@ def test_only_last_24_hours_are_eligible():
     job=sample(); job.posted_at=None
     assert not enrich(job).is_eligible
 
+def test_nontechnical_operations_internship_is_excluded():
+    assert classify_title("CA Intern – Tax Operations")[1] == "Other"
+    assert classify_title("Cloud Operations Intern")[1] == "Cloud"
+
 def test_private_start_chat_resolution():
     payload={"result":[
         {"update_id":1,"message":{"text":"/start","chat":{"id":111,"type":"group"}}},
