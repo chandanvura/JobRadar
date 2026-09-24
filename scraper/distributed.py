@@ -112,7 +112,9 @@ async def finalize(paths):
     print(f"Distributed scan: {merged['raw_jobs']} raw; {len(payload_jobs)} candidates; {len(eligible)} eligible; {len(result.get('new_external_ids',[]))} new; {sent} alerts.")
     print(f"Source diagnostics: {empty} empty; {len(limited)} limited; {len(failed)} failed. End-to-end duration: {elapsed:.1f}s.")
     if failed: print("Failed sources: "+", ".join(failed))
-    if telegram_failures: print("WARNING Telegram failures remain queued for retry.",file=sys.stderr)
+    if telegram_failures:
+        print("ERROR Telegram failures remain queued for retry.",file=sys.stderr)
+        raise TelegramDeliveryError(f"Telegram delivery failed for {telegram_failures} operation(s); check the finalize logs and bot chat configuration")
 
 def cli():
     parser=argparse.ArgumentParser(description="JobRadar distributed scan services")
