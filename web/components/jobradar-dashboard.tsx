@@ -361,6 +361,9 @@ function DashboardContent() {
       });
       if (!r.ok) throw new Error(`Dashboard API returned ${r.status}`);
       const payload: Payload = await r.json();
+      // Render the first page while the remaining job pages load.
+      setData(payload);
+      if (!silent) setLoading(false);
       if (payload.jobs.length >= 1000) {
         const collected = new Map(payload.jobs.map((j) => [j.id, j]));
         let cursor = 0;
@@ -674,6 +677,11 @@ function DashboardContent() {
   const eligible = currentJobs.filter(
       (j) => j.is_eligible && j.is_active && postingStillCurrent(j) && !isInternship(j),
     ),
+    reviewPreview = currentJobs.filter(
+      (j) => j.is_active && !isInternship(j) &&
+        ["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason) &&
+        preferences.locations.some((city) => j.normalized_location.includes(city)),
+    ).slice(0, 20),
     internships = currentJobs.filter(
       (j) => j.is_active && isInternship(j),
     ),
@@ -916,7 +924,9 @@ function DashboardContent() {
                     <h2 className="text-3xl font-black md:text-4xl">
                       {loading
                         ? "Checking live jobs…"
-                        : `${filtered.length} ${active === "Internships" ? "internships" : "jobs"} in this view`}
+                        : active === "Dashboard" && !filtered.length && reviewPreview.length
+                          ? `${reviewPreview.length} roles to review`
+                          : `${filtered.length} ${active === "Internships" ? "internships" : "jobs"} in this view`}
                     </h2>
                     <p className="mt-2 text-sm text-[#c4d8ce]">
                       {preferences.locations.join(" + ")} ·{" "}
@@ -974,7 +984,7 @@ function DashboardContent() {
                   Clear
                 </button>
                 <span className="ml-auto text-xs font-bold text-[#687970]">
-                  {filtered.length} results
+                  {active === "Dashboard" && !filtered.length ? reviewPreview.length : filtered.length} results
                 </span>
                 {showMoreFilters && (
                   <div className="flex w-full flex-wrap items-center gap-3 border-t border-[#e7ece9] px-2 pt-3">
@@ -1056,12 +1066,22 @@ function DashboardContent() {
           ) : loading ? (
             <Loading />
           ) : showJobs ? (
-            <JobList
-              jobs={filtered}
-              preferences={preferences}
-              getTracking={jobTracking}
-              saveTracking={saveTracking}
-            />
+            <>
+              {active === "Dashboard" && !filtered.length && reviewPreview.length > 0 && (
+                <section className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                  <h3 className="font-black text-amber-950">No verified 24-hour matches right now</h3>
+                  <p className="mt-1 text-sm leading-6 text-amber-900/80">
+                    These roles were seen in the latest employer feeds, but their posting date or experience range needs checking. They are not counted as fresh matches and will not trigger alerts. Open the official listing before applying.
+                  </p>
+                </section>
+              )}
+              <JobList
+                jobs={active === "Dashboard" && !filtered.length ? reviewPreview : filtered}
+                preferences={preferences}
+                getTracking={jobTracking}
+                saveTracking={saveTracking}
+              />
+            </>
           ) : active === "Job Boards" ? (
             <JobBoardsView preferences={preferences} />
           ) : active === "Outreach" ? (
