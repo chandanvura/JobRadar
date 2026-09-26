@@ -26,6 +26,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}
+      JOBRADAR_DISPATCH_TOKEN: ${{ secrets.JOBRADAR_DISPATCH_TOKEN }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -91,3 +92,12 @@ jobs:
           curl --fail --silent --show-error --retry 20 --retry-delay 3 --retry-all-errors --max-time 20 "$JOBRADAR_WORKER_URL/" > /dev/null
           curl --fail --silent --show-error --retry 20 --retry-delay 3 --retry-all-errors --max-time 20 "$JOBRADAR_WORKER_URL/api/dashboard" | jq -e '.configured == true and (.jobs | type == "array") and (.companies | type == "array")' > /dev/null
           echo "Independent JobRadar verified at $JOBRADAR_WORKER_URL"
+      - name: Deploy independent free Cron recovery worker
+        run: |
+          npx wrangler deploy --config ops-scheduler/wrangler.jsonc
+          if [ -n "$JOBRADAR_DISPATCH_TOKEN" ]; then
+            printf '%s' "$JOBRADAR_DISPATCH_TOKEN" | npx wrangler secret put GITHUB_DISPATCH_TOKEN --config ops-scheduler/wrangler.jsonc
+            echo "Cloudflare recovery dispatcher configured"
+          else
+            echo "Cloudflare recovery dispatcher deployed but dormant: add JOBRADAR_DISPATCH_TOKEN to GitHub Actions secrets and rerun deployment"
+          fi

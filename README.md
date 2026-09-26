@@ -119,6 +119,14 @@ Each distributed worker refreshes its deterministic share of listing feeds, then
 - A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and production is at least 75 minutes stale. GitHub may delay both schedules; no schedule on GitHub Actions can guarantee hourly execution.
 - An untouched public repository may have scheduled workflows disabled after 60 days of inactivity. Monthly maintenance records a real scan status and commits it to `ops/last-monthly-check.json` as a best-effort activity signal. Check Actions if GitHub disables scheduling or changes its inactivity policy.
 
+### Independent Cloudflare recovery schedule
+
+The deployment also creates a small Cloudflare Cron Worker (`jobradar-ops-scheduler`) on the existing free account. It checks every 15 minutes, avoids duplicate running scans, and dispatches a GitHub scan if the last completed scan is at least 75 minutes old. If GitHub disables the scan workflow for inactivity, it re-enables it; an intentionally disabled workflow remains disabled. If the production health endpoint blocks the check, it uses completed GitHub finalizer jobs. Its scheduler is independent of GitHub's scheduled-event delivery.
+
+To activate it, create a fine-grained GitHub personal access token restricted to **this repository** with **Actions: Read and write** permission. Save it as the repository Actions secret `JOBRADAR_DISPATCH_TOKEN`, then rerun **Deploy independent JobRadar** once. The deployment copies it into the Cloudflare Worker's secret store. Set the token expiration beyond the intended unattended period and rotate it before expiry. Do not put the token in a URL, commit, issue, or chat. Without this credential, the Cloudflare Worker is deployed but dormant; the existing GitHub scheduler and watchdog continue working.
+
+The reliability path uses deterministic checks and retries. Free hosted AI services have rate limits and can produce incorrect fixes, so they are not allowed to edit code, change job eligibility, or deploy automatically. This keeps confirmed matching and alerts predictable without a ChatGPT dependency.
+
 ## Cost protection
 
 The system avoids paid APIs, proxies, browsers, and continuously running servers. Monitor Actions duration and Cloudflare requests/database usage while expanding through 50, 100, 250, then 500 companies.
