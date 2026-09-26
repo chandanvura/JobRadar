@@ -45,12 +45,31 @@ def should_dispatch(health, runs, now=None):
     return (age is None or age>=75) and not active
 
 
+def last_successful_finalization(runs, repository, token, fetch=request_json):
+    """Use completed finalizers, not gate-only workflow successes, as evidence."""
+    for run in runs:
+        if run.get("conclusion")!="success":
+            continue
+        jobs=fetch(f"https://api.github.com/repos/{repository}/actions/runs/{run['id']}/jobs?per_page=30",token)
+        for job in jobs.get("jobs",[]):
+            if job.get("name")=="finalize" and job.get("conclusion")=="success":
+                return {"latest_run":{"finished_at":job.get("completed_at")}}
+    return {"latest_run":None}
+
+
 def main():
     token=os.environ["GITHUB_TOKEN"]
     repository=os.environ["GITHUB_REPOSITORY"]
     api=f"https://api.github.com/repos/{repository}/actions/workflows/scrape.yml"
-    health=request_json(HEALTH_URL)
     runs=request_json(api+"/runs?per_page=30",token).get("workflow_runs",[])
+    if any(run.get("status") in ACTIVE_STATUSES for run in runs):
+        print("Scan already queued/running")
+        return
+    try:
+        health=request_json(HEALTH_URL)
+    except (RuntimeError,urllib.error.URLError,TimeoutError,ValueError) as exc:
+        print(f"Production health unavailable ({type(exc).__name__}); checking completed GitHub finalizers")
+        health=last_successful_finalization(runs,repository,token)
     age=minutes_since_scan(health)
     print(f"Latest scan age: {age:.1f} minutes" if age is not None else "No valid completed scan timestamp")
     if should_dispatch(health,runs):
