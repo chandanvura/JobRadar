@@ -48,10 +48,13 @@ Without `JOBRADAR_API_URL`, this performs a safe discovery run without storage o
 
 ## Telegram setup
 
-1. Message `@BotFather` in Telegram and run `/newbot`.
-2. Copy the bot token and send any message to your new bot.
-3. Open `https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates` and copy the numeric chat ID.
-4. Save both as GitHub repository secrets: `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
+1. Create a bot with `@BotFather` and save its token as the GitHub Actions repository secret `TELEGRAM_BOT_TOKEN`.
+2. Send `/start` to your bot from the Telegram account that should receive alerts.
+3. In GitHub Actions, run **Telegram destination setup**. The bot will privately message you your numeric chat ID; it does not appear in Actions logs.
+4. Save that number as the GitHub Actions repository secret `TELEGRAM_CHAT_ID` (never the bot's ID or username).
+5. Run **JobRadar hourly scan** once and verify the finalizer says `Telegram health check: bot authentication and chat validation passed.`
+
+The configured chat ID must be saved permanently. Telegram retains incoming `/start` updates for at most 24 hours, so automatic recovery from an incorrect ID cannot keep alerts working indefinitely.
 
 Never commit these values.
 
