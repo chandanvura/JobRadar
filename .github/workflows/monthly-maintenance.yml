@@ -1,0 +1,50 @@
+name: JobRadar monthly maintenance record
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/monthly-maintenance.yml"
+  schedule:
+    - cron: "11 3 1 * *"
+  workflow_dispatch:
+
+concurrency:
+  group: jobradar-monthly-maintenance
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  record-health:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - name: Save a monthly scan record and keep the repository active
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p ops
+          curl --fail --silent --show-error --retry 2 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GH_REPO/actions/workflows/scrape.yml/runs?per_page=30" \
+            | jq '{recorded_at: (now | todateiso8601), latest_successful_workflow: (.workflow_runs | map(select(.conclusion == "success")) | first | {id, html_url, updated_at, head_sha})}' \
+            > ops/last-monthly-check.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ops/last-monthly-check.json
+          git commit -m "Record monthly JobRadar scan health"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            if [ "$attempt" -eq 3 ]; then exit 1; fi
+            sleep 5
+          done

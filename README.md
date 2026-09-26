@@ -117,6 +117,7 @@ Each distributed worker refreshes its deterministic share of listing feeds, then
 - One company fails: verify the ATS identifier; other companies continue.
 - No matching jobs: inspect location, title, seniority, and experience rules.
 - A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and production is at least 75 minutes stale. GitHub may delay both schedules; no schedule on GitHub Actions can guarantee hourly execution.
+- An untouched public repository may have scheduled workflows disabled after 60 days of inactivity. Monthly maintenance records a real scan status and commits it to `ops/last-monthly-check.json` as a best-effort activity signal. Check Actions if GitHub disables scheduling or changes its inactivity policy.
 
 ## Cost protection
 
