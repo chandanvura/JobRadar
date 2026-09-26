@@ -178,14 +178,14 @@ const primaryNav = new Set([
   "Dashboard",
   "Recommended",
   "Latest Jobs",
+  "All Jobs",
+  "Needs Review",
   "Internships",
   "Saved",
   "Applications",
 ]);
 const exploreNav = new Set([
   "Ultra Fresh",
-  "All Jobs",
-  "Needs Review",
   "DevOps & Cloud",
   "Software Engineering",
   "Java / Backend",
@@ -332,7 +332,9 @@ export function JobRadarDashboard() {
 function DashboardContent() {
   const [active, setActive] = useState<string>(initialView),
     [location, setLocation] = useState("All cities"),
-    [freshness, setFreshness] = useState("24 hours"),
+    [freshness, setFreshness] = useState(() =>
+      ["Dashboard", "Recommended", "Ultra Fresh"].includes(initialView()) ? "24 hours" : "Any date"
+    ),
     [role, setRole] = useState("All roles"),
     [ats, setAts] = useState("All ATS"),
     [query, setQuery] = useState(""),
@@ -364,7 +366,7 @@ function DashboardContent() {
       // Render the first page while the remaining job pages load.
       setData(payload);
       if (!silent) setLoading(false);
-      if (payload.jobs.length >= 1000) {
+      if (payload.jobs.length >= 100) {
         const collected = new Map(payload.jobs.map((j) => [j.id, j]));
         let cursor = 0;
         while (true) {
@@ -402,7 +404,10 @@ function DashboardContent() {
     setShowWelcome(firstRun());
     const syncHash = () => {
       const found = labelBySlug.get(window.location.hash.slice(1));
-      if (found) setActive(found);
+      if (found) {
+        setActive(found);
+        setFreshness(["Dashboard", "Recommended", "Ultra Fresh"].includes(found) ? "24 hours" : "Any date");
+      }
     };
     window.addEventListener("hashchange", syncHash);
     const kickoff = window.setTimeout(() => void load(), 0),
@@ -475,6 +480,7 @@ function DashboardContent() {
   }, []);
   const navigate = (label: string) => {
     setActive(label);
+    setFreshness(["Dashboard", "Recommended", "Ultra Fresh"].includes(label) ? "24 hours" : "Any date");
     setMobile(false);
     history.pushState(null, "", `#${slug(label)}`);
     window.dispatchEvent(new HashChangeEvent("hashchange"));
@@ -535,7 +541,7 @@ function DashboardContent() {
         match = personalMatch(j, preferences);
       if (query && !q.includes(query.toLowerCase())) return false;
       if (active === "Internships" && !isInternship(j)) return false;
-      if (active === "Needs Review" && (isInternship(j) || match.experienceMatch !== null)) return false;
+      if (active === "Needs Review" && (isInternship(j) || /\b(?:senior|staff|principal|lead|manager|experienced)\b/i.test(j.title) || !["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason))) return false;
       if (
         active !== "Internships" &&
         !["Saved", "Applications"].includes(active) &&
@@ -563,8 +569,8 @@ function DashboardContent() {
           !match.skillMatch
         )
           return false;
-        if (match.experienceMatch === false) return false;
-        if (match.experienceMatch === null && !reviewView) return false;
+        if (active !== "All Jobs" && match.experienceMatch === false) return false;
+        if (match.experienceMatch === null && !reviewView && !["All Jobs", "Latest Jobs", "DevOps & Cloud", "Software Engineering", "Java / Backend"].includes(active)) return false;
       }
       if (
         !["Saved", "Applications"].includes(active) &&
@@ -582,6 +588,7 @@ function DashboardContent() {
         !reviewView &&
         active !== "Saved" &&
         active !== "Applications" &&
+        ["Dashboard", "Recommended", "Ultra Fresh"].includes(active) &&
         !postingStillCurrent(j)
       )
         return false;
@@ -622,6 +629,11 @@ function DashboardContent() {
       if (!reviewView && !["Saved", "Applications"].includes(active)) {
         const age = freshnessAge(j);
         if (
+          freshness === "24 hours" &&
+          !["Dashboard", "Recommended", "Ultra Fresh"].includes(active) &&
+          !postingStillCurrent(j)
+        ) return false;
+        if (
           freshness === "3 hours" &&
           (age === null || age > 3 || j.posted_precision === "day")
         )
@@ -637,7 +649,7 @@ function DashboardContent() {
     result.sort((a, b) =>
       sort === "Newest posting"
         ? (freshnessAge(a) ?? 999) - (freshnessAge(b) ?? 999)
-        : sort === "Recently discovered"
+        : sort === "Recently discovered" || (active === "Latest Jobs" && sort === "Best match")
           ? new Date(b.first_seen_at).getTime() -
             new Date(a.first_seen_at).getTime()
           : sort === "Company A–Z"
@@ -679,8 +691,16 @@ function DashboardContent() {
     ),
     reviewPreview = currentJobs.filter(
       (j) => j.is_active && !isInternship(j) &&
+        !/\b(?:senior|staff|principal|lead|manager|experienced)\b/i.test(j.title) &&
         ["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason) &&
-        preferences.locations.some((city) => j.normalized_location.includes(city)),
+        personalMatch(j, preferences).experienceMatch !== false &&
+        preferences.locations.some((city) => j.normalized_location.includes(city)) &&
+        (location === "All cities" || j.normalized_location.includes(location)) &&
+        (role === "All roles" || j.role_category === role) &&
+        (ats === "All ATS" || j.ats_provider === ats) &&
+        (!query || `${j.title} ${j.company} ${j.skills} ${j.role_category} ${j.ats_provider}`.toLowerCase().includes(query.toLowerCase())) &&
+        (matchMode !== "Exact" || ((!preferences.titles.length || personalMatch(j, preferences).titleMatch) &&
+          (!preferences.skills.length || personalMatch(j, preferences).skillMatch))),
     ).slice(0, 20),
     internships = currentJobs.filter(
       (j) => j.is_active && isInternship(j),
@@ -689,34 +709,10 @@ function DashboardContent() {
       const age = freshnessAge(j);
       return age !== null && age < 3 && j.posted_precision !== "day";
     }),
-    bengaluru = eligible.filter((j) =>
-      j.normalized_location.includes("Bengaluru"),
-    ).length,
-    hyderabad = eligible.filter((j) =>
-      j.normalized_location.includes("Hyderabad"),
-    ).length,
-    chennai = eligible.filter((j) =>
-      j.normalized_location.includes("Chennai"),
-    ).length,
-    pune = eligible.filter((j) =>
-      j.normalized_location.includes("Pune"),
-    ).length,
     internshipUltra = internships.filter((j) => {
       const age = freshnessAge(j);
       return age !== null && age < 3 && j.posted_precision !== "day";
-    }),
-    internshipBengaluru = internships.filter((j) =>
-      j.normalized_location.includes("Bengaluru"),
-    ).length,
-    internshipHyderabad = internships.filter((j) =>
-      j.normalized_location.includes("Hyderabad"),
-    ).length,
-    internshipChennai = internships.filter((j) =>
-      j.normalized_location.includes("Chennai"),
-    ).length,
-    internshipPune = internships.filter((j) =>
-      j.normalized_location.includes("Pune"),
-    ).length;
+    });
   const exportTracking = () => {
     const blob = new Blob([JSON.stringify(tracking, null, 2)], {
         type: "application/json",
@@ -756,7 +752,7 @@ function DashboardContent() {
     setLocation(
       preferences.locations.length === 1 ? preferences.locations[0] : "All cities",
     );
-    setFreshness("24 hours");
+    setFreshness(["Dashboard", "Recommended", "Ultra Fresh"].includes(active) ? "24 hours" : "Any date");
     setRole("All roles");
     setAts("All ATS");
     setSort("Best match");
@@ -765,6 +761,7 @@ function DashboardContent() {
   };
   const showJobs = jobViews.has(active),
     companySearch = active === "Companies" ? query : "";
+  const visibleJobs = ["Dashboard", "Recommended"].includes(active) && !filtered.length ? reviewPreview : filtered;
   const navGroup = (title: string, items: Set<string>) => (
     <div className="mb-4">
       <p className="mb-1 px-4 text-[10px] font-black uppercase tracking-[.18em] text-[#8b9991]">
@@ -924,7 +921,7 @@ function DashboardContent() {
                     <h2 className="text-3xl font-black md:text-4xl">
                       {loading
                         ? "Checking live jobs…"
-                        : active === "Dashboard" && !filtered.length && reviewPreview.length
+                        : ["Dashboard", "Recommended"].includes(active) && !filtered.length && reviewPreview.length
                           ? `${reviewPreview.length} roles to review`
                           : `${filtered.length} ${active === "Internships" ? "internships" : "jobs"} in this view`}
                     </h2>
@@ -939,11 +936,11 @@ function DashboardContent() {
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-                    <Metric value={active === "Internships" ? internshipUltra.length : ultra.length} label="< 3 hours" />
-                    <Metric value={active === "Internships" ? internshipBengaluru : bengaluru} label="Bengaluru" />
-                    <Metric value={active === "Internships" ? internshipHyderabad : hyderabad} label="Hyderabad" />
-                    <Metric value={active === "Internships" ? internshipChennai : chennai} label="Chennai" />
-                    <Metric value={active === "Internships" ? internshipPune : pune} label="Pune" />
+                    <Metric value={active === "Internships" ? internshipUltra.length : ["Dashboard", "Recommended"].includes(active) && !filtered.length ? reviewPreview.length : ultra.length} label={["Dashboard", "Recommended"].includes(active) && !filtered.length ? "Review leads" : "Verified < 3h"} />
+                    <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Bengaluru")).length} label="Bengaluru" />
+                    <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Hyderabad")).length} label="Hyderabad" />
+                    <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Chennai")).length} label="Chennai" />
+                    <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Pune")).length} label="Pune" />
                   </div>
                 </div>
               </section>
@@ -958,7 +955,7 @@ function DashboardContent() {
                   setValue={setLocation}
                 />
                 <Pills
-                  items={["3 hours", "6 hours", "24 hours"]}
+                  items={["Any date", "3 hours", "6 hours", "24 hours"]}
                   value={freshness}
                   setValue={setFreshness}
                 />
@@ -984,7 +981,7 @@ function DashboardContent() {
                   Clear
                 </button>
                 <span className="ml-auto text-xs font-bold text-[#687970]">
-                  {active === "Dashboard" && !filtered.length ? reviewPreview.length : filtered.length} results
+                  {visibleJobs.length} results
                 </span>
                 {showMoreFilters && (
                   <div className="flex w-full flex-wrap items-center gap-3 border-t border-[#e7ece9] px-2 pt-3">
@@ -1050,11 +1047,21 @@ function DashboardContent() {
               {active === "Internships" && (
                 <InternshipDiscovery preferences={preferences} />
               )}
+              {active === "Latest Jobs" && (
+                <section className="mb-5 rounded-2xl border border-sky-200 bg-sky-50 p-5 text-sm text-sky-950">
+                  Sorted by when JobRadar first discovered each active listing. Employer posting dates may be older or unavailable; check the date shown on each card.
+                </section>
+              )}
+              {active === "All Jobs" && (
+                <section className="mb-5 rounded-2xl border border-sky-200 bg-sky-50 p-5 text-sm text-sky-950">
+                  All active target-city listings, including roles outside your experience range. Review each card’s eligibility reason before applying.
+                </section>
+              )}
               {active === "Needs Review" && (
                 <section className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-                  <h3 className="font-black text-amber-950">Experience not stated — your decision</h3>
+                  <h3 className="font-black text-amber-950">Date or experience needs verification</h3>
                   <p className="mt-1 text-sm leading-6 text-amber-900/80">
-                    These relevant, active postings do not publish a reliable experience range. They stay separate from confirmed matches and never trigger automatic alerts. Open the official description and apply when the responsibilities fit your skills.
+                    These active postings lack a verified 24-hour date or an experience range. They stay separate from confirmed matches and never trigger automatic alerts. Check the official description before applying.
                   </p>
                 </section>
               )}
@@ -1067,7 +1074,7 @@ function DashboardContent() {
             <Loading />
           ) : showJobs ? (
             <>
-              {active === "Dashboard" && !filtered.length && reviewPreview.length > 0 && (
+              {["Dashboard", "Recommended"].includes(active) && !filtered.length && reviewPreview.length > 0 && (
                 <section className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-5">
                   <h3 className="font-black text-amber-950">No verified 24-hour matches right now</h3>
                   <p className="mt-1 text-sm leading-6 text-amber-900/80">
@@ -1076,7 +1083,7 @@ function DashboardContent() {
                 </section>
               )}
               <JobList
-                jobs={active === "Dashboard" && !filtered.length ? reviewPreview : filtered}
+                jobs={visibleJobs}
                 preferences={preferences}
                 getTracking={jobTracking}
                 saveTracking={saveTracking}

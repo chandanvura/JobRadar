@@ -40,10 +40,10 @@ test('internship product area is isolated and uses explicit board filters',async
  assert.match(source,/active !== "Internships"[\s\S]*!\["Saved", "Applications"\]\.includes\(active\)[\s\S]*isInternship\(j\)/);
  assert.match(source,/f_JT=I&f_E=1%2C2&sortBy=DD/);
  assert.match(source,/f_JT=F&f_E=2&sortBy=DD/);
- assert.match(source,/active === "Internships" \? internshipBengaluru : bengaluru/);
- assert.match(source,/active === "Internships" \? internshipHyderabad : hyderabad/);
- assert.match(source,/active === "Internships" \? internshipChennai : chennai/);
- assert.match(source,/active === "Internships" \? internshipPune : pune/);
+ assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Bengaluru"\)\)/);
+ assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Hyderabad"\)\)/);
+ assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Chennai"\)\)/);
+ assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Pune"\)\)/);
  assert.match(source,/Official ATS internships — \$\{city.name\}/);
  assert.match(source,/apprentice\|apprenticeship/);
 });
@@ -51,7 +51,8 @@ test('internship product area is isolated and uses explicit board filters',async
 test('unknown experience jobs have a separate review area and no alert eligibility',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
  assert.match(source,/\["Needs Review", AlertTriangle\]/);
- assert.match(source,/active === "Needs Review" && \(isInternship\(j\) \|\| match\.experienceMatch !== null\)/);
+ assert.match(source,/active === "Needs Review" && \(isInternship\(j\)/);
+ assert.match(source,/"Posting date not verified within 24 hours"\]\.includes\(j\.eligibility_reason\)/);
  assert.match(source,/never trigger automatic alerts/);
 });
 
