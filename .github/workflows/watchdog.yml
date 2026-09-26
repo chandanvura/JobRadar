@@ -1,0 +1,34 @@
+name: JobRadar scan watchdog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/watchdog.yml"
+      - "scraper/watchdog.py"
+      - "tests/test_watchdog.py"
+  schedule:
+    # Separate from the scanner's schedule so a dropped scanner trigger has
+    # another chance to recover without running all eight shards unnecessarily.
+    - cron: "14,44 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: jobradar-watchdog
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  recover-stale-scan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v7
+      - name: Start one scan if production is stale and none is already queued
+        run: python -m scraper.watchdog
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}

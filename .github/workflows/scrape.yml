@@ -61,8 +61,6 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-        with:
-          ref: main
       - name: Report trigger timing
         env:
           TRIGGER_EVENT: ${{ github.event_name }}
@@ -98,15 +96,13 @@ jobs:
   discover:
     needs: validate
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
       - uses: actions/checkout@v7
-        with:
-          ref: main
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
@@ -121,7 +117,15 @@ jobs:
           path: .cache/jobradar-http
           key: jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
       - name: Discover shard ${{ matrix.shard }}
-        run: python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 8 --output "artifacts/shard-${{ matrix.shard }}.json"
+        run: |
+          for attempt in 1 2; do
+            if python -m scraper.distributed worker --index "${{ matrix.shard }}" --count 8 --output "artifacts/shard-${{ matrix.shard }}.json"; then
+              exit 0
+            fi
+            echo "Shard ${{ matrix.shard }} attempt $attempt failed"
+            if [ "$attempt" -eq 2 ]; then exit 1; fi
+            sleep 15
+          done
         env:
           JOBRADAR_SOURCE_CONCURRENCY: 5
           JOBRADAR_CUSTOM_CONCURRENCY: 2
@@ -142,8 +146,6 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
-        with:
-          ref: main
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"

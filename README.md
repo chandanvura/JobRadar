@@ -19,7 +19,7 @@ neutral custom domain can be attached without changing the application.
 - Browser-private Saved and application-stage tracking with JSON export
 - Initial company registry and tests for critical matching rules
 
-Architecture: `freshness-gated GitHub scheduler → 8 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. Two best-effort cron opportunities each hour recover from delayed scheduling, while the freshness gate normally permits one full scan per hour. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
+Architecture: `freshness-gated GitHub scheduler → 8 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. Four best-effort scanner triggers and two independent watchdog checks each hour recover from delayed or skipped schedules. The watchdog dispatches a scan only when the latest completed scan is at least 75 minutes old and none is running. Every scan uses one source revision; failed discovery shards get one bounded retry. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
 
 ## Local dashboard
 
@@ -116,7 +116,7 @@ Each distributed worker refreshes its deterministic share of listing feeds, then
 - No Telegram alert: message the bot first and verify the chat ID.
 - One company fails: verify the ATS identifier; other companies continue.
 - No matching jobs: inspect location, title, seniority, and experience rules.
-- A schedule starts late: GitHub schedules are best-effort; use manual dispatch while testing.
+- A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and production is at least 75 minutes stale. GitHub may delay both schedules; no schedule on GitHub Actions can guarantee hourly execution.
 
 ## Cost protection
 
