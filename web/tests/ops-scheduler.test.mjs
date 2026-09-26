@@ -28,3 +28,41 @@ test('external scheduler dispatches after health is blocked and a finalizer is s
     assert.equal(seen.filter(([url])=>url.includes('/dispatches')).length,1);
   }finally{globalThis.fetch=original}
 });
+
+test('chaos: a manually disabled workflow stays disabled',async()=>{
+  const original=globalThis.fetch;const seen=[];
+  globalThis.fetch=async(url)=>{
+    seen.push(url);
+    return Response.json({state:'disabled_manually'});
+  };
+  try{
+    assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'disabled');
+    assert.equal(seen.length,1);
+  }finally{globalThis.fetch=original}
+});
+
+test('chaos: a queued scan prevents recovery even with broken health',async()=>{
+  const original=globalThis.fetch;const seen=[];
+  globalThis.fetch=async(url)=>{
+    seen.push(url);
+    if(url.endsWith('/actions/workflows/scrape.yml'))return Response.json({state:'active'});
+    if(url.includes('/workflows/scrape.yml/runs?'))return Response.json({workflow_runs:[run('queued')]});
+    throw new Error(`Unexpected request ${url}`);
+  };
+  try{
+    assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'active');
+    assert.equal(seen.length,2);
+  }finally{globalThis.fetch=original}
+});
+
+test('chaos: GitHub authorization failure cannot dispatch another scan',async()=>{
+  const original=globalThis.fetch;const seen=[];
+  globalThis.fetch=async(url)=>{
+    seen.push(url);
+    return new Response('unauthorized',{status:401});
+  };
+  try{
+    await assert.rejects(checkAndRecover({GITHUB_DISPATCH_TOKEN:'expired'}),/HTTP 401/);
+    assert.equal(seen.length,1);
+  }finally{globalThis.fetch=original}
+});

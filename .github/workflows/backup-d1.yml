@@ -1,0 +1,64 @@
+name: Backup JobRadar database
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/backup-d1.yml"
+  schedule:
+    # Twice monthly; artifacts are retained for 90 days.
+    - cron: "2 22 1,15 * *"
+  workflow_dispatch:
+
+concurrency:
+  group: jobradar-d1-backup
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: web
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Export and verify production D1
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            account_id="$(curl --fail --silent --show-error \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              https://api.cloudflare.com/client/v4/accounts \
+              | jq -r 'if .success and (.result | length) == 1 then .result[0].id else empty end')"
+            test -n "$account_id"
+            echo "CLOUDFLARE_ACCOUNT_ID=$account_id" >> "$GITHUB_ENV"
+            export CLOUDFLARE_ACCOUNT_ID="$account_id"
+          fi
+          test "$(npx wrangler d1 list --json | jq '[.[] | select(.name == "jobradar-db")] | length')" -eq 1
+          mkdir -p backups
+          timeout 8m npx wrangler d1 export jobradar-db --remote --skip-confirmation --output=backups/jobradar.sql
+          test "$(wc -c < backups/jobradar.sql)" -gt 1024
+          gzip -9 backups/jobradar.sql
+          gzip -t backups/jobradar.sql.gz
+          (cd backups && sha256sum jobradar.sql.gz > SHA256SUMS)
+          echo "Backup compressed bytes: $(wc -c < backups/jobradar.sql.gz)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jobradar-d1-${{ github.run_id }}
+          path: web/backups/
+          if-no-files-found: error
+          retention-days: 90
