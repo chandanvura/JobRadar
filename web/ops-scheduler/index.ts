@@ -15,6 +15,7 @@ async function github(path:string,token:string,body?:unknown,method?:string){
   const response=await fetch(`${API}${path}`,{
     method:method||(body===undefined?"GET":"POST"),
     headers:{"Accept":"application/vnd.github+json","Authorization":`Bearer ${token}`,
+      "User-Agent":"JobRadar-recovery-scheduler",
       "X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},
     body:body===undefined?undefined:JSON.stringify(body),
   });
