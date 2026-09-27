@@ -1,6 +1,9 @@
 name: Telegram destination setup
 
 on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/telegram-setup.yml"]
   workflow_dispatch:
 
 permissions:
