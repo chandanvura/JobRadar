@@ -12,7 +12,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -57,6 +57,6 @@ jobs:
               print(json.dumps({"outcome":event.get("outcome"),"exceptions":event.get("exceptions"),"logs":event.get("logs")},default=str),flush=True)
               break
           PY
-          timeout 17m npx wrangler tail jobradar-ops-scheduler --format json 2>/tmp/tail-errors \
+          timeout 32m npx wrangler tail jobradar-ops-scheduler --format json 2>/tmp/tail-errors \
             | python3 -u /tmp/filter-tail.py
           test "${PIPESTATUS[1]}" -eq 0
