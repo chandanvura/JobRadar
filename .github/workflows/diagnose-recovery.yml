@@ -1,0 +1,39 @@
+name: Diagnose external recovery trigger
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/diagnose-recovery.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      JOBRADAR_DISPATCH_TOKEN: ${{ secrets.JOBRADAR_DISPATCH_TOKEN }}
+    steps:
+      - name: Check GitHub token and Cloudflare Cron metrics
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$JOBRADAR_DISPATCH_TOKEN"
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            CLOUDFLARE_ACCOUNT_ID="$(curl -fsS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" https://api.cloudflare.com/client/v4/accounts | jq -r 'if .success and (.result | length) == 1 then .result[0].id else empty end')"
+          fi
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          github_status="$(curl -sS --max-time 20 -o /tmp/github.json -w '%{http_code}' -H "Authorization: Bearer $JOBRADAR_DISPATCH_TOKEN" -H 'Accept: application/vnd.github+json' https://api.github.com/repos/chandanvura/JobRadar/actions/workflows/scrape.yml)"
+          echo "GitHub workflow API HTTP $github_status; state $(jq -r '.state // "unavailable"' /tmp/github.json)"
+          schedule_status="$(curl -sS --max-time 20 -o /tmp/schedules.json -w '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/jobradar-ops-scheduler/schedules")"
+          echo "Cloudflare schedules API HTTP $schedule_status; crons $(jq -c '[.result.schedules[]?.cron]' /tmp/schedules.json)"
+          export START_TIME="$(date -u -d '6 hours ago' +%Y-%m-%dT%H:%M:%SZ)" END_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          jq -n --arg account "$CLOUDFLARE_ACCOUNT_ID" --arg start "$START_TIME" --arg end "$END_TIME" '{query:"query($account: string, $start: string, $end: string) { viewer { accounts(filter: {accountTag: $account}) { workersInvocationsAdaptive(limit: 100, filter: {scriptName: \"jobradar-ops-scheduler\", datetime_geq: $start, datetime_leq: $end}) { sum {requests errors} dimensions {datetime status} } } } }",variables:{account:$account,start:$start,end:$end}}' > /tmp/query.json
+          metrics_status="$(curl -sS --max-time 20 -o /tmp/metrics.json -w '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'Content-Type: application/json' --data @/tmp/query.json https://api.cloudflare.com/client/v4/graphql)"
+          echo "Cloudflare analytics HTTP $metrics_status"
+          jq -c '{errors: [.errors[]?.message], worker: [.data.viewer.accounts[]?.workersInvocationsAdaptive[]? | {at:.dimensions.datetime,status:.dimensions.status,requests:.sum.requests,errors:.sum.errors}]}' /tmp/metrics.json
