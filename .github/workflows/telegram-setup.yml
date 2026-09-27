@@ -30,3 +30,5 @@ jobs:
           print(f"Send /start privately to @{bot['username']} to activate JobRadar notifications.")
           PY
           python -m scraper.telegram_setup
+
+# Recheck private chat after /start.
