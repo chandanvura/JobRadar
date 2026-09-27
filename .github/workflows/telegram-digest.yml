@@ -23,6 +23,23 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
+      - name: Verify saved private recipient
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import os
+          from scraper.telegram_setup import telegram_call
+          token=os.environ["TELEGRAM_BOT_TOKEN"]
+          chat_id=os.environ["TELEGRAM_CHAT_ID"]
+          base=f"https://api.telegram.org/bot{token}"
+          bot=telegram_call(base,"getMe")["result"]
+          chat=telegram_call(base,"getChat",{"chat_id":chat_id})["result"]
+          if str(chat["id"]) != chat_id or str(chat["id"]) == str(bot["id"]) or chat["type"] != "private":
+              raise RuntimeError("TELEGRAM_CHAT_ID must be the numeric private user chat ID sent by the bot")
+          print("Saved Telegram chat ID is a valid private recipient.")
+          PY
       - name: Send private status update
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
