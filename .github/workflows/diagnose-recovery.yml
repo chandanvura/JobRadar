@@ -58,3 +58,5 @@ jobs:
           status="$(curl -sS --max-time 20 -o /tmp/health.json -w '%{http_code}' https://jobradar.chandanvura.workers.dev/api/health)"
           echo "Site health HTTP $status"
           jq -c '{status,run_age_hours,latest_run:{finished_at:.latest_run.finished_at,source_count:.latest_run.source_count,candidate_count:.latest_run.candidate_count}}' /tmp/health.json
+
+# Verify first scheduled check after recovery deployment.
