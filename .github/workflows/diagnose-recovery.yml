@@ -41,6 +41,18 @@ jobs:
           metrics_status="$(curl -sS --max-time 20 -o /tmp/metrics.json -w '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'Content-Type: application/json' --data @/tmp/query.json https://api.cloudflare.com/client/v4/graphql)"
           echo "Cloudflare analytics HTTP $metrics_status"
           jq -c '{errors: [.errors[]?.message], worker: [.data.viewer.accounts[]?.workersInvocationsAdaptive[]? | {at:.dimensions.datetime,status:.dimensions.status,requests:.sum.requests,errors:.sum.errors}]}' /tmp/metrics.json
+      - name: Start one overdue scan if none is active
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS --max-time 20 -H "Authorization: Bearer $JOBRADAR_DISPATCH_TOKEN" -H 'Accept: application/vnd.github+json' 'https://api.github.com/repos/chandanvura/JobRadar/actions/workflows/scrape.yml/runs?per_page=30' > /tmp/scan-runs.json
+          if jq -e '[.workflow_runs[] | select(.status == "queued" or .status == "in_progress" or .status == "pending" or .status == "requested" or .status == "waiting")] | length > 0' /tmp/scan-runs.json >/dev/null; then
+            echo 'An active scan already exists'
+            exit 0
+          fi
+          status="$(curl -sS --max-time 20 -o /tmp/dispatch.json -w '%{http_code}' -X POST -H "Authorization: Bearer $JOBRADAR_DISPATCH_TOKEN" -H 'Accept: application/vnd.github+json' -H 'Content-Type: application/json' -d '{"ref":"main"}' 'https://api.github.com/repos/chandanvura/JobRadar/actions/workflows/scrape.yml/dispatches')"
+          echo "Recovery dispatch HTTP $status"
+          test "$status" = 204
       - name: Capture one Cron exception without printing credentials
         working-directory: web
         shell: bash
