@@ -93,12 +93,15 @@ async def finalize(paths):
     alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
     alert_jobs=[job for job in eligible if (f"{job.ats_provider}:{job.external_job_id}" in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
     telegram_chat=None
-    try:
-        telegram_chat=await ensure_telegram_ready()
-        print("Telegram health check: bot authentication and chat validation passed.")
-    except TelegramDeliveryError as exc:
-        telegram_failures+=1; print(f"ERROR {exc}",file=sys.stderr)
-        for job in alert_jobs: await record_notification(endpoint,headers,job,"failed",str(exc))
+    if alert_jobs:
+        try:
+            telegram_chat=await ensure_telegram_ready()
+            print("Telegram health check: bot authentication and chat validation passed.")
+        except TelegramDeliveryError as exc:
+            telegram_failures+=1; print(f"ERROR {exc}",file=sys.stderr)
+            for job in alert_jobs: await record_notification(endpoint,headers,job,"failed",str(exc))
+    else:
+        print("No alert candidates; Telegram delivery is not required for this scan.")
     for job in alert_jobs if telegram_chat else []:
         try:
             await notify(job,telegram_chat); sent+=1
