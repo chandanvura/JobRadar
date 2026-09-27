@@ -1482,7 +1482,7 @@ function SystemCard({
             ? "SCAN OVERDUE"
             : failed
               ? "SCAN FAILED SOURCES"
-              : "AUTOMATION HEALTHY";
+              : "SCAN HEALTHY";
   return (
     <div
       className={`m-4 rounded-2xl border p-4 ${attention ? "border-amber-200 bg-amber-50" : "border-[#cfe2d7] bg-[#edf8f2]"}`}
