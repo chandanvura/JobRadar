@@ -53,22 +53,3 @@ jobs:
           status="$(curl -sS --max-time 20 -o /tmp/dispatch.json -w '%{http_code}' -X POST -H "Authorization: Bearer $JOBRADAR_DISPATCH_TOKEN" -H 'Accept: application/vnd.github+json' -H 'Content-Type: application/json' -d '{"ref":"main"}' 'https://api.github.com/repos/chandanvura/JobRadar/actions/workflows/scrape.yml/dispatches')"
           echo "Recovery dispatch HTTP $status"
           test "$status" = 204
-      - name: Capture one Cron exception without printing credentials
-        working-directory: web
-        shell: bash
-        run: |
-          set -euo pipefail
-          npm ci --no-audit --no-fund > /dev/null
-          set +o pipefail
-          cat > /tmp/filter-tail.py <<'PY'
-          import sys,json
-          for line in sys.stdin:
-              try: event=json.loads(line)
-              except ValueError: continue
-              if "event" not in event: continue
-              print(json.dumps({"outcome":event.get("outcome"),"exceptions":event.get("exceptions"),"logs":event.get("logs")},default=str),flush=True)
-              break
-          PY
-          timeout 32m npx wrangler tail jobradar-ops-scheduler --format json 2>/tmp/tail-errors \
-            | python3 -u /tmp/filter-tail.py
-          test "${PIPESTATUS[1]}" -eq 0
