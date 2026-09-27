@@ -21,4 +21,12 @@ jobs:
       - name: Message the chat ID privately to users who sent /start
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: python -m scraper.telegram_setup
+        run: |
+          python - <<'PY'
+          import os
+          from scraper.telegram_setup import telegram_call
+          token=os.environ["TELEGRAM_BOT_TOKEN"]
+          bot=telegram_call(f"https://api.telegram.org/bot{token}","getMe")["result"]
+          print(f"Send /start privately to @{bot['username']} to activate JobRadar notifications.")
+          PY
+          python -m scraper.telegram_setup
