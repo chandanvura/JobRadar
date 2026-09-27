@@ -53,3 +53,8 @@ jobs:
           status="$(curl -sS --max-time 20 -o /tmp/dispatch.json -w '%{http_code}' -X POST -H "Authorization: Bearer $JOBRADAR_DISPATCH_TOKEN" -H 'Accept: application/vnd.github+json' -H 'Content-Type: application/json' -d '{"ref":"main"}' 'https://api.github.com/repos/chandanvura/JobRadar/actions/workflows/scrape.yml/dispatches')"
           echo "Recovery dispatch HTTP $status"
           test "$status" = 204
+      - name: Check published site health
+        run: |
+          status="$(curl -sS --max-time 20 -o /tmp/health.json -w '%{http_code}' https://jobradar.chandanvura.workers.dev/api/health)"
+          echo "Site health HTTP $status"
+          jq -c '{status,run_age_hours,latest_run:{finished_at:.latest_run.finished_at,source_count:.latest_run.source_count,candidate_count:.latest_run.candidate_count}}' /tmp/health.json
