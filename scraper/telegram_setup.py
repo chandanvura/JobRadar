@@ -45,7 +45,7 @@ def main():
         telegram_call(base,"sendMessage",{"chat_id":chat,"text":(
             f"Your JobRadar Telegram chat ID is: {chat}\n\n"
             "Set this exact number as the GitHub Actions repository secret TELEGRAM_CHAT_ID. "
-            "This is your private chat ID, not the bot ID. After saving, run the JobRadar hourly scan once."
+            "This is your private chat ID, not the bot ID. After saving, run the JobRadar Telegram daily update workflow to test delivery."
         )})
     print(f"Sent private setup instructions to {len(chats)} chat(s). No chat IDs were logged.")
 
