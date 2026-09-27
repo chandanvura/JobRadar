@@ -1,0 +1,30 @@
+name: JobRadar Telegram daily update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/telegram-digest.yml"
+  schedule:
+    # 08:00 Asia/Kolkata; GitHub scheduled runs can be delayed.
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install httpx==0.28.1
+      - name: Send private status update
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m scraper.telegram_digest
