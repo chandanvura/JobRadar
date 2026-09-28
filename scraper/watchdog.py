@@ -42,7 +42,7 @@ def minutes_since_scan(health, now=None):
 def should_dispatch(health, runs, now=None):
     age=minutes_since_scan(health,now)
     active=any(run.get("status") in ACTIVE_STATUSES for run in runs)
-    return (age is None or age>=75) and not active
+    return (age is None or age>=300) and not active
 
 
 def last_successful_finalization(runs, repository, token, fetch=request_json):

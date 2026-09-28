@@ -1469,7 +1469,7 @@ function SystemCard({
 }) {
   const run = data?.latest_run,
     age = exactAge(run?.finished_at),
-    stale = !loading && (age === null || age >= 1.5),
+    stale = !loading && (age === null || age >= 5),
     failed = Number(run?.companies_failed || 0),
     empty = Number(run?.companies_empty || 0),
     attention = stale || failed > 0,
@@ -2265,7 +2265,7 @@ function HealthView({ data }: { data: Payload | null }) {
     runs = data?.runs || [],
     age = exactAge(run?.finished_at),
     healthy =
-      age !== null && age < 1.5 && Number(run?.companies_failed || 0) === 0,
+      age !== null && age < 5 && Number(run?.companies_failed || 0) === 0,
     limited = (data?.companies || []).filter((c) =>
       c.warning?.startsWith("Limited coverage"),
     ).length;

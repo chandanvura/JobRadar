@@ -1,4 +1,4 @@
-name: JobRadar hourly scan
+name: JobRadar free-tier scan
 on:
   push:
     branches: [main]
@@ -9,13 +9,13 @@ on:
       - "requirements.txt"
       - "tests/**"
   schedule:
-    # Scheduled Actions may be delayed or skipped under load. Frequent cheap
-    # gates give the hourly scan more chances without repeating a fresh scan.
-    - cron: "7,22,37,52 * * * *"
+    # Six full scans per day keep D1 writes comfortably inside the free tier.
+    # Manual and push-triggered runs remain available for urgent refreshes.
+    - cron: "7 */4 * * *"
   workflow_dispatch:
 concurrency:
   # Queue overlapping push/manual/scheduled runs instead of cancelling an active scan.
-  group: jobradar-hourly
+  group: jobradar-free-tier-scan
   cancel-in-progress: false
 permissions:
   contents: read
@@ -46,7 +46,7 @@ jobs:
                   if finished:
                       value=datetime.datetime.fromisoformat(finished.replace("Z","+00:00"))
                       age=(datetime.datetime.now(datetime.timezone.utc)-value).total_seconds()/60
-                      should_run=age>=35
+                      should_run=age>=210
                       print(f"Latest completed scan is {age:.1f} minutes old")
               except Exception as exc:
                   print(f"Freshness check failed open: {type(exc).__name__}: {exc}")

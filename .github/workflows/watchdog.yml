@@ -8,9 +8,9 @@ on:
       - "scraper/watchdog.py"
       - "tests/test_watchdog.py"
   schedule:
-    # Separate from the scanner's schedule so a dropped scanner trigger has
-    # another chance to recover without running all eight shards unnecessarily.
-    - cron: "14,44 * * * *"
+    # One hourly check can recover a missed four-hour scan without creating
+    # enough recovery traffic to threaten the D1 free-tier write allowance.
+    - cron: "44 * * * *"
   workflow_dispatch:
 
 concurrency:

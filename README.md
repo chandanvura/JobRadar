@@ -52,7 +52,7 @@ Without `JOBRADAR_API_URL`, this performs a safe discovery run without storage o
 2. Send `/start` to your bot from the Telegram account that should receive alerts.
 3. In GitHub Actions, run **Telegram destination setup**. The bot will privately message you your numeric chat ID; it does not appear in Actions logs.
 4. Save that number as the GitHub Actions repository secret `TELEGRAM_CHAT_ID` (never the bot's ID or username).
-5. Run **JobRadar hourly scan** once and verify the finalizer says `Telegram health check: bot authentication and chat validation passed.`
+5. Run **JobRadar free-tier scan** once and verify the finalizer says `Telegram health check: bot authentication and chat validation passed.`
 
 The configured chat ID must be saved permanently. Telegram retains incoming `/start` updates for at most 24 hours, so automatic recovery from an incorrect ID cannot keep alerts working indefinitely.
 
@@ -92,7 +92,7 @@ cd web && npm test
 
 The standalone application lives under `web/` and does not require ChatGPT Sites at runtime. The **Deploy independent JobRadar** workflow creates an Asia-Pacific D1 database when needed, applies versioned migrations, builds the vinext application, deploys the Worker, configures protected ingestion, and verifies the deployment.
 
-Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scheduler receives opportunities at minutes 17 and 47 UTC; a freshness gate normally allows one full scan per hour and uses the second opportunity to recover from delayed GitHub scheduling. Verify the **Deploy independent JobRadar** and **JobRadar hourly scan** workflows in GitHub Actions after changing infrastructure or matching logic.
+Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scheduler runs every four hours, keeping D1 row writes comfortably within the free allowance while still refreshing each 24-hour job window six times per day. Verify the **Deploy independent JobRadar** and **JobRadar free-tier scan** workflows in GitHub Actions after changing infrastructure or matching logic.
 
 ## Matching guarantees
 
@@ -116,7 +116,7 @@ Each distributed worker refreshes its deterministic share of listing feeds, then
 - No Telegram alert: message the bot first and verify the chat ID.
 - One company fails: verify the ATS identifier; other companies continue.
 - No matching jobs: inspect location, title, seniority, and experience rules.
-- A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and production is at least 75 minutes stale. GitHub may delay both schedules; no schedule on GitHub Actions can guarantee hourly execution.
+- A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and production is at least five hours stale. GitHub may delay both schedules; no GitHub Actions schedule is guaranteed to run at an exact minute.
 - An untouched public repository may have scheduled workflows disabled after 60 days of inactivity. Monthly maintenance records a real scan status and commits it to `ops/last-monthly-check.json` as a best-effort activity signal. Check Actions if GitHub disables scheduling or changes its inactivity policy.
 
 ### Independent Cloudflare recovery schedule
