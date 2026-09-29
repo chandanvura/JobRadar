@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+.pytest_cache/
+job-search-results/
+job_search/profile.json
