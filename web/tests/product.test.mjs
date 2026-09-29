@@ -11,7 +11,7 @@ test('profile storage preserves owner keys and isolates other users',()=>{
 });
 test('untrusted search links normalize bounds and terms',()=>{
  const p=cleanSearch({titles:['Java','Java',null],locations:['Mars'],experienceMin:-5,experienceMax:'NaN'});
- assert.deepEqual(p.titles,['Java']);assert.equal(p.experienceMin,0);assert.equal(p.experienceMax,3);assert.deepEqual(p.locations,['Bengaluru','Hyderabad','Chennai','Pune']);
+ assert.deepEqual(p.titles,['Java']);assert.equal(p.experienceMin,0);assert.equal(p.experienceMax,3);assert.deepEqual(p.locations,['Bengaluru','Hyderabad']);
  assert.deepEqual(cleanSearch(null),cleanSearch({}));
 });
 test('search invites create a private workspace without sharing a profile id',async()=>{
@@ -42,8 +42,10 @@ test('internship product area is isolated and uses explicit board filters',async
  assert.match(source,/f_JT=F&f_E=2&sortBy=DD/);
  assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Bengaluru"\)\)/);
  assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Hyderabad"\)\)/);
- assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Chennai"\)\)/);
- assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Pune"\)\)/);
+ assert.doesNotMatch(source,/label="Chennai"/);
+ assert.doesNotMatch(source,/label="Pune"/);
+ assert.match(source,/site:myworkdayjobs\.com OR site:greenhouse\.io OR site:lever\.co OR site:icims\.com/);
+ assert.match(source,/site:jobs\.jobvite\.com/);
  assert.match(source,/Official ATS internships — \$\{city.name\}/);
  assert.match(source,/apprentice\|apprenticeship/);
 });
@@ -82,6 +84,7 @@ test('final ingestion deactivates stale jobs only after every upload succeeds',a
  assert.match(source,/successful_companies/);
  assert.match(source,/NOT IN \(SELECT value FROM json_each/);
  assert.match(source,/DO UPDATE SET[\s\S]*WHERE jobs\.title IS NOT excluded\.title/);
+ assert.match(source,/city IN \('Bengaluru','Hyderabad'\)/);
 });
 test('buyer-facing experience leads with the trust promise and hides operations',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');

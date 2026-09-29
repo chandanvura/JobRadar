@@ -4,7 +4,7 @@ import httpx
 import pytest
 from scraper.models import Job
 from bs4 import BeautifulSoup
-from scraper.adapters import cached_get, discover_ats, job_like_url, likely_target, location_text, parse_posted_at, parse_posting, request_bucket, workday_config
+from scraper.adapters import cached_get, discover_ats, job_like_url, jobvite_config, likely_target, location_text, parse_jobvite_xml, parse_posted_at, parse_posting, request_bucket, workday_config
 from scraper.models import Company
 from scraper.main import fetch_company_jobs, ingest_chunks, ingest_scan, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
 from scraper.distributed import load_artifacts, merge_artifacts, source_shard
@@ -50,10 +50,12 @@ def test_title_classification():
     assert classify_title("Application Support Associate")[1] == "Technical Support"
 
 def test_explicit_entry_title_can_fill_missing_experience_without_opening_generic_roles():
-    entry=enrich(sample(title="Associate Software Engineer",location="Pune",description="Build reliable services"))
+    entry=enrich(sample(title="Associate Software Engineer",location="Hyderabad",description="Build reliable services"))
     assert entry.is_eligible and entry.experience_label == "Entry-level title"
-    generic=enrich(sample(title="Software Engineer",location="Chennai",description="Build reliable services"))
+    generic=enrich(sample(title="Software Engineer",location="Bengaluru",description="Build reliable services"))
     assert not generic.is_eligible and generic.eligibility_reason == "Experience not stated — verify"
+    outside=enrich(sample(title="Associate Software Engineer",location="Pune",description="Build reliable services"))
+    assert not outside.is_eligible and outside.eligibility_reason == "Outside target cities"
 
 def test_internships_are_classified_and_eligible_without_full_time_experience():
     assert classify_employment_type("Software Engineer Intern") == "Internship"
@@ -294,6 +296,21 @@ def test_source_sharding_is_stable_and_has_one_owner():
     company=Company("Example","https://example.com/jobs","greenhouse","example")
     assert source_shard(company,4)==source_shard(company,4)
     assert source_shard(company,4) in range(4)
+
+def test_jobvite_configuration_and_xml_feed_parsing():
+    company=Company("Example","https://jobs.jobvite.com/example","jobvite","example|AbC123_-",4)
+    assert jobvite_config(company)==("example","AbC123_-")
+    xml="""<result><job><id>J1</id><title>Associate Software Engineer</title><location>Hyderabad, India</location><date>09/29/2026</date><description><![CDATA[Build Java services]]></description><detail-url><![CDATA[http://jobs.jobvite.com/example/job/J1]]></detail-url><apply-url><![CDATA[https://jobs.jobvite.com/example/job/J1/apply]]></apply-url></job></result>"""
+    jobs=parse_jobvite_xml(xml,"Example",company.careers_url)
+    assert len(jobs)==1 and jobs[0].external_job_id=="J1"
+    assert jobs[0].job_url.startswith("https://") and jobs[0].ats_provider=="jobvite"
+    assert jobs[0].posted_at.startswith("2026-09-29")
+
+def test_target_prefilter_excludes_removed_cities_and_accepts_broader_titles():
+    assert likely_target("Junior Data Engineer","Bangalore, India")
+    assert likely_target("Security Engineer I","Hyderabad, India")
+    assert not likely_target("Java Developer","Pune, India")
+    assert not likely_target("DevOps Engineer","Chennai, India")
 
 def test_distributed_merge_requires_complete_unique_shards(tmp_path):
     artifacts=[]

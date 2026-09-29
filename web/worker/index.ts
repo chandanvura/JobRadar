@@ -17,13 +17,13 @@ const authorized=(request:Request,env:Env)=>Boolean(env.JOBRADAR_INGEST_SECRET&&
 
 async function dashboard(env:Env){
   const [jobResult,companyResult,runResult,notificationResult]=await Promise.all([
-    env.DB.prepare("SELECT id,external_job_id,description,title,company,location,normalized_location,employment_type,experience_min,experience_max,experience_label,skills,ats_provider,application_url,career_page_url,posted_at,posted_label,posted_precision,reported_age_hours,first_seen_at,last_seen_at,relevance_score,role_category,hiring_signal,application_status,is_active,is_eligible,eligibility_reason FROM jobs WHERE is_active=1 ORDER BY CASE WHEN is_eligible=1 THEN 0 WHEN eligibility_reason IN ('Experience not stated — verify','Posting date not verified within 24 hours') THEN 1 ELSE 2 END,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 100").all(),
+    env.DB.prepare("SELECT id,external_job_id,description,title,company,location,normalized_location,employment_type,experience_min,experience_max,experience_label,skills,ats_provider,application_url,career_page_url,posted_at,posted_label,posted_precision,reported_age_hours,first_seen_at,last_seen_at,relevance_score,role_category,hiring_signal,application_status,is_active,is_eligible,eligibility_reason FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') ORDER BY CASE WHEN is_eligible=1 THEN 0 WHEN eligibility_reason IN ('Experience not stated — verify','Posting date not verified within 24 hours') THEN 1 ELSE 2 END,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 100").all(),
     env.DB.prepare("SELECT name,careers_url,ats_provider,last_checked_at,last_success_at,error_count,jobs_found,candidate_jobs,eligible_jobs,warning FROM companies WHERE enabled=1 ORDER BY priority DESC,name").all(),
     env.DB.prepare("SELECT * FROM scraper_runs ORDER BY id DESC LIMIT 24").all(),
     env.DB.prepare("SELECT n.id,n.channel,n.status,n.sent_at,n.error,j.title,j.company FROM notifications n JOIN jobs j ON j.id=n.job_id ORDER BY n.id DESC LIMIT 50").all(),
   ]);
   const runs=runResult.results;const latest=runs[0]||null;
-  return json({jobs:jobResult.results,companies:companyResult.results,latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad","Chennai","Pune"],max_age_hours:24,max_experience_years:3,skills_required:false}});
+  return json({jobs:jobResult.results,companies:companyResult.results,latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],max_age_hours:24,max_experience_years:3,skills_required:false}});
 }
 
 async function ingest(request:Request,env:Env){
@@ -67,7 +67,7 @@ const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<
   try{
     if(url.pathname==="/api/health"&&request.method==="GET")return health(env);
     if(url.pathname==="/api/dashboard"&&request.method==="GET")return dashboard(env);
-    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);const result=await env.DB.prepare("SELECT * FROM jobs WHERE is_active=1 AND id>? ORDER BY id LIMIT 501").bind(after).all();const jobs=result.results.slice(0,500);return json({jobs,next_cursor:result.results.length>500?jobs[jobs.length-1].id:null})}
+    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);const result=await env.DB.prepare("SELECT * FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') AND id>? ORDER BY id LIMIT 501").bind(after).all();const jobs=result.results.slice(0,500);return json({jobs,next_cursor:result.results.length>500?jobs[jobs.length-1].id:null})}
     if(url.pathname==="/api/ingest"&&request.method==="POST")return ingest(request,env);
     if(url.pathname==="/api/notifications"&&request.method==="POST")return recordNotification(request,env);
     const statusMatch=url.pathname.match(/^\/api\/jobs\/(\d+)\/status$/);if(statusMatch&&request.method==="PATCH")return updateStatus();

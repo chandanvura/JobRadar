@@ -1,6 +1,6 @@
 # JobRadar
 
-JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru, Hyderabad, Chennai and Pune. It checks a broad, continuously reviewed registry of official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
+JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks a broad, continuously reviewed registry of official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
 
 The production address is emitted and verified by the deployment workflow. A
 neutral custom domain can be attached without changing the application.
@@ -8,7 +8,8 @@ neutral custom domain can be attached without changing the application.
 ## Included
 
 - React/TypeScript dashboard, Cloudflare Worker API, and D1 schema
-- Python adapters for Greenhouse (including employer JSON-LD posting dates), Lever, Ashby, paginated Workday/SmartRecruiters, and conservative JSON-LD career pages that follow only official ATS links
+- Python adapters for Greenhouse (including employer JSON-LD posting dates), Lever, Jobvite XML, Ashby, paginated Workday/SmartRecruiters, and conservative JSON-LD career pages that follow only official ATS links
+- User-initiated Google searches across official Workday, Greenhouse, Lever, iCIMS, Jobvite, Ashby, and SmartRecruiters portals with a broader baked-in title set
 - Title, location, strictest-experience, skill, and freshness analysis
 - Immutable first-seen tracking and employer-relative date labels without invented timestamps
 - ATS/external-ID deduplication and notification history schema
@@ -96,7 +97,7 @@ Changes under `web/` deploy automatically from `main`; the workflow can also be 
 
 ## Matching guarantees
 
-- Bengaluru, Hyderabad, Chennai or Pune and a supported role are required.
+- Bengaluru or Hyderabad and a supported role are required.
 - Only verifiable 0–3 YOE requirements are accepted; skills are optional. Unknown experience remains visible in All Jobs but is not alerted.
 - Senior engineer titles may qualify when the requirement is explicitly within policy. Leadership titles such as manager, director, architect, principal, and staff are rejected. Unknown experience and ranges exceeding 3 YOE are rejected; 1+ and 2+ are accepted.
 - An employer-supplied timestamp within 24 hours or an explicit employer “posted today” label is mandatory for alerts.

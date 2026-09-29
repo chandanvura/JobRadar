@@ -297,8 +297,18 @@ const defaultPreferences: SearchPreferences = {
   skills: [],
   experienceMin: 0,
   experienceMax: 3,
-  locations: ["Bengaluru", "Hyderabad", "Chennai", "Pune"],
+  locations: ["Bengaluru", "Hyderabad"],
 };
+const TARGET_CITIES = ["Bengaluru", "Hyderabad"];
+const DEFAULT_JOB_TITLES = [
+  "Software Engineer", "Associate Software Engineer", "Graduate Engineer Trainee",
+  "Java Developer", "Backend Engineer", "Full Stack Developer", "Python Developer",
+  "Golang Developer", "Data Engineer", "DevOps Engineer", "Site Reliability Engineer",
+  "Platform Engineer", "Cloud Engineer", "Infrastructure Engineer", "Production Engineer",
+  "Systems Engineer", "Linux Engineer", "Build and Release Engineer", "SDET",
+  "QA Automation Engineer", "Security Engineer", "Technical Support Engineer",
+];
+const OFFICIAL_ATS_DOMAINS = "site:myworkdayjobs.com OR site:greenhouse.io OR site:lever.co OR site:icims.com OR site:jobs.jobvite.com OR site:ashbyhq.com OR site:smartrecruiters.com";
 const initialPreferences = () => {
   if (typeof window === "undefined") return defaultPreferences;
   try {
@@ -935,12 +945,10 @@ function DashboardContent() {
                       · official links
                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     <Metric value={active === "Internships" ? internshipUltra.length : ["Dashboard", "Recommended"].includes(active) && !filtered.length ? reviewPreview.length : ultra.length} label={["Dashboard", "Recommended"].includes(active) && !filtered.length ? "Review leads" : "Verified < 3h"} />
                     <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Bengaluru")).length} label="Bengaluru" />
                     <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Hyderabad")).length} label="Hyderabad" />
-                    <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Chennai")).length} label="Chennai" />
-                    <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Pune")).length} label="Pune" />
                   </div>
                 </div>
               </section>
@@ -950,7 +958,7 @@ function DashboardContent() {
                   Filters
                 </div>
                 <Pills
-                  items={["All cities", "Bengaluru", "Hyderabad", "Chennai", "Pune"]}
+                  items={["All cities", ...TARGET_CITIES]}
                   value={location}
                   setValue={setLocation}
                 />
@@ -1286,7 +1294,7 @@ function SearchPreferencesPanel({
       skills: splitTerms(skills),
       experienceMin: min,
       experienceMax: max,
-      locations: locations.length ? locations : ["Bengaluru", "Hyderabad", "Chennai", "Pune"],
+      locations: locations.length ? locations : TARGET_CITIES,
     });
   };
   const reset = () => {
@@ -1294,7 +1302,7 @@ function SearchPreferencesPanel({
     setSkills("");
     setExperienceMin(0);
     setExperienceMax(3);
-    setLocations(["Bengaluru", "Hyderabad", "Chennai", "Pune"]);
+    setLocations(TARGET_CITIES);
   };
   return (
     <section
@@ -1370,7 +1378,7 @@ function SearchPreferencesPanel({
         <fieldset>
           <legend className="text-sm font-bold">Locations</legend>
           <div className="mt-2 flex min-h-11 flex-wrap gap-2">
-            {["Bengaluru", "Hyderabad", "Chennai", "Pune"].map((city) => (
+            {TARGET_CITIES.map((city) => (
               <label
                 key={city}
                 className={`flex cursor-pointer items-center gap-2 rounded-xl border px-4 py-2 text-sm font-bold ${locations.includes(city) ? "border-[#3a8b60] bg-[#e3f3e9] text-[#155d3a]" : "bg-white"}`}
@@ -1938,18 +1946,16 @@ function Empty() {
 function InternshipDiscovery({ preferences }: { preferences: SearchPreferences }) {
   const preferred = preferences.titles.length
     ? preferences.titles.map((title) => `${title} Intern`)
-    : ["Software Engineer Intern", "DevOps Intern", "Java Intern", "Cloud Intern"];
+    : ["Software Engineer Intern", "DevOps Intern", "Java Intern", "Cloud Intern", "Data Engineer Intern", "SRE Intern", "Security Intern"];
   const query = encodeURIComponent(preferred.join(" OR "));
   const cities = [
     { name: "Bengaluru", linkedin: "Bengaluru, Karnataka, India", naukri: "bangalore" },
     { name: "Hyderabad", linkedin: "Hyderabad, Telangana, India", naukri: "hyderabad" },
-    { name: "Chennai", linkedin: "Chennai, Tamil Nadu, India", naukri: "chennai" },
-    { name: "Pune", linkedin: "Pune, Maharashtra, India", naukri: "pune" },
   ];
   const links = cities.flatMap((city) => [
     { name: `LinkedIn internships — ${city.name}`, url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(city.linkedin)}&f_TPR=r86400&f_JT=I&f_E=1%2C2&sortBy=DD` },
     { name: `Naukri internships — ${city.name}`, url: `https://www.naukri.com/internship-jobs-in-${city.naukri}?jobAge=1&k=${query}` },
-    { name: `Official ATS internships — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${preferred.join(" OR ")}) ${city.name} (site:boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com)`)}` },
+    { name: `Official ATS internships — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${preferred.map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}") (${OFFICIAL_ATS_DOMAINS})`)}` },
   ]);
   return (
     <section className="mb-5 rounded-3xl border border-violet-200 bg-violet-50 p-5">
@@ -1963,17 +1969,16 @@ function InternshipDiscovery({ preferences }: { preferences: SearchPreferences }
 function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
   const terms = preferences.titles.length
     ? preferences.titles
-    : ["DevOps Engineer", "Software Engineer", "Java Developer"];
+    : DEFAULT_JOB_TITLES;
   const query = encodeURIComponent(terms.join(" OR "));
   const cities = [
     { name: "Bengaluru", linkedin: "Bengaluru, Karnataka, India", naukri: "bangalore" },
     { name: "Hyderabad", linkedin: "Hyderabad, Telangana, India", naukri: "hyderabad" },
-    { name: "Chennai", linkedin: "Chennai, Tamil Nadu, India", naukri: "chennai" },
-    { name: "Pune", linkedin: "Pune, Maharashtra, India", naukri: "pune" },
   ];
   const links = cities.flatMap((city) => [
     { name: `LinkedIn — ${city.name}`, url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(city.linkedin)}&f_TPR=r86400&f_JT=F&f_E=2&sortBy=DD` },
     { name: `Naukri — ${city.name}`, url: `https://www.naukri.com/jobs-in-${city.naukri}?jobAge=1&k=${query}` },
+    { name: `Google official ATS — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${terms.map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}") (${OFFICIAL_ATS_DOMAINS})`)}` },
   ]);
   return (
     <div className="space-y-5">
@@ -2180,7 +2185,7 @@ function CompaniesView({
         {companies.map((c) => {
           const limited = c.warning?.startsWith("Limited coverage"),
             state = c.error_count ? "Failed" : limited ? "Limited coverage" : c.jobs_found === 0 ? "No current openings" : c.candidate_jobs === 0 ? "No target roles" : "Productive";
-          return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-white p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-slate-500">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-red-50 text-red-700" : limited || c.jobs_found === 0 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-slate-500">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-[#155d3a]"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a><a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad OR Chennai OR Pune)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
+          return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-white p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-slate-500">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-red-50 text-red-700" : limited || c.jobs_found === 0 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-slate-500">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-[#155d3a]"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a><a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
         })}
       </div>
       <div className="hidden overflow-x-auto rounded-2xl border bg-white md:block">
@@ -2247,8 +2252,8 @@ function CompaniesView({
                   <td>
                     <div className="flex gap-2">
                       <a href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(`${c.name} ${(preferences.titles.length ? preferences.titles : ["Software Engineer", "DevOps Engineer"]).join(" OR ")}`)}&location=India&f_TPR=r86400&sortBy=DD`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">LinkedIn</a>
-                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`${c.name} careers Bengaluru Hyderabad Chennai Pune ${(preferences.titles.length ? preferences.titles : ["Software Engineer", "DevOps Engineer"]).join(" OR ")}`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Web</a>
-                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad OR Chennai OR Pune)`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Contacts</a>
+                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`${c.name} careers Bengaluru Hyderabad ${(preferences.titles.length ? preferences.titles : ["Software Engineer", "DevOps Engineer"]).join(" OR ")}`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Web</a>
+                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Contacts</a>
                     </div>
                   </td>
                 </tr>
@@ -2422,7 +2427,7 @@ function SettingsView({
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <Info
           label="Locations"
-          value={policy?.cities.join(" + ") || "Bengaluru + Hyderabad + Chennai + Pune"}
+          value={policy?.cities.join(" + ") || "Bengaluru + Hyderabad"}
         />
         <Info
           label="Experience"

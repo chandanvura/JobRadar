@@ -4,6 +4,7 @@ from urllib.parse import urljoin, urlparse
 from pathlib import Path
 from hashlib import sha256
 import asyncio, html, json, os, re, time
+import xml.etree.ElementTree as ET
 import httpx
 from bs4 import BeautifulSoup
 from .models import Company, Job
@@ -20,7 +21,7 @@ def request_bucket(url):
     parsed=urlparse(url); host=(parsed.hostname or "").lower()
     if host=="myworkdayjobs.com" or host.endswith(".myworkdayjobs.com"):
         return "workday-listings" if parsed.path.rstrip("/").endswith("/jobs") else "workday-details"
-    for family in ("myworkdayjobs.com","greenhouse.io","lever.co","ashbyhq.com","smartrecruiters.com"):
+    for family in ("myworkdayjobs.com","greenhouse.io","lever.co","ashbyhq.com","smartrecruiters.com","jobvite.com"):
         if host==family or host.endswith("."+family): return family
     return host
 
@@ -31,6 +32,7 @@ def domain_limiter(url):
     if key not in _DOMAIN_LIMITERS:
         if bucket=="workday-listings": setting,default="JOBRADAR_WORKDAY_LISTING_CONCURRENCY","5"
         elif bucket=="workday-details": setting,default="JOBRADAR_WORKDAY_DETAIL_CONCURRENCY","10"
+        elif bucket=="jobvite.com": setting,default="JOBRADAR_JOBVITE_CONCURRENCY","1"
         else: setting,default="JOBRADAR_DOMAIN_CONCURRENCY","6"
         _DOMAIN_LIMITERS[key]=asyncio.Semaphore(int(os.getenv(setting,default)))
     return _DOMAIN_LIMITERS[key]
@@ -62,7 +64,7 @@ def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
 def likely_target(title, location):
-    return bool(re.search(r"\b(engineer|developer|devops|devsecops|sre|sde|swe|sdet|qa|quality assurance|platform|cloud|infrastructure|operations|support|release|build|site reliability|graduate|trainee|associate|intern|internship|co[ -]?op)\b",str(title),re.I) and re.search(r"\b(bangalore|bengaluru|hyderabad|chennai|madras|pune|poona)\b",str(location),re.I))
+    return bool(re.search(r"\b(engineer|developer|devops|devsecops|sre|sde|swe|sdet|qa|quality assurance|platform|cloud|infrastructure|operations|support|release|build|site reliability|security|cybersecurity|data|analytics|etl|graduate|trainee|associate|intern|internship|apprentice|co[ -]?op)\b",str(title),re.I) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
 
 def location_text(*values):
     """Flatten ATS primary and secondary locations without guessing a city."""
@@ -225,6 +227,58 @@ class WorkdayAdapter(JobSource):
             jobs=[job for job in converted if job]
         return jobs,len(postings)
 
+def jobvite_config(c):
+    parsed=urlparse(c.careers_url)
+    slug=next((part for part in parsed.path.split("/") if part),"")
+    configured=[part.strip() for part in c.ats_identifier.split("|") if part.strip()]
+    if configured: slug=configured[0]
+    eid=configured[1] if len(configured)>1 else None
+    if not slug: raise ValueError("Jobvite requires a board slug")
+    return slug,eid
+
+def parse_jobvite_xml(xml,company,careers_url):
+    root=ET.fromstring(xml); jobs=[]
+    for item in root.findall(".//job"):
+        value=lambda name: clean(item.findtext(name) or "")
+        title=value("title"); detail=value("detail-url"); apply=value("apply-url"); url=detail or apply
+        if not title or not url: continue
+        if url.startswith("http://"): url="https://"+url[7:]
+        try:
+            if urlparse(url).scheme!="https": continue
+        except ValueError: continue
+        posting=value("date") or None
+        if posting:
+            try: posting=datetime.strptime(posting,"%m/%d/%Y").replace(tzinfo=timezone.utc).isoformat()
+            except ValueError: pass
+        apply_url=apply or url
+        if apply_url.startswith("http://"): apply_url="https://"+apply_url[7:]
+        try:
+            if urlparse(apply_url).scheme!="https": apply_url=url
+        except ValueError: apply_url=url
+        external=value("id") or url
+        jobs.append(make_job(external,title,company,value("location"),value("description"),"jobvite","company_career",url,apply_url,careers_url,posting=posting))
+    return jobs
+
+class JobviteAdapter(JobSource):
+    async def fetch_jobs(self,c):
+        slug,eid=jobvite_config(c)
+        async with client(timeout=45) as x:
+            if not eid:
+                board=await request(x,"GET",f"https://jobs.jobvite.com/{slug}",params={"fr":"true","nl":"1"}); board.raise_for_status()
+                match=re.search(r"companyEId\s*[:=]\s*['\"]([A-Za-z0-9_-]{4,40})['\"]",board.text)
+                if not match: raise ValueError(f"Jobvite companyEId not found for {slug}")
+                eid=match.group(1)
+            feed_url="https://app.jobvite.com/CompanyJobs/Xml.aspx"
+            response=None
+            for attempt in range(2):
+                response=await request(x,"GET",feed_url,params={"c":eid})
+                if response.status_code!=429: break
+                if attempt==0: await asyncio.sleep(min(30,max(1,int(response.headers.get("Retry-After","30")))))
+            if response is None: raise RuntimeError("Jobvite feed request did not run")
+            if response.url.path.lower().endswith("/nojobs.htm"): return [],0
+            response.raise_for_status(); jobs=parse_jobvite_xml(response.text,c.name,c.careers_url)
+            return jobs,len(jobs)
+
 def jsonld_objects(soup):
     for script in soup.find_all("script",type="application/ld+json"):
         try: value=json.loads(script.string or "")
@@ -235,12 +289,13 @@ def jsonld_objects(soup):
             if isinstance(item,dict) and isinstance(item.get("@graph"),list):
                 yield from (node for node in item["@graph"] if isinstance(node,dict) and node.get("@type")=="JobPosting")
 
-ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com")
+ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com","jobvite.com","icims.com")
 ATS_PATTERNS=(
     ("greenhouse",re.compile(r"(?:boards|job-boards)\.greenhouse\.io/([\w.-]+)",re.I)),
     ("lever",re.compile(r"jobs\.lever\.co/([\w.-]+)",re.I)),
     ("ashby",re.compile(r"jobs\.ashbyhq\.com/([\w.-]+)",re.I)),
     ("smartrecruiters",re.compile(r"jobs\.smartrecruiters\.com/([\w.-]+)",re.I)),
+    ("jobvite",re.compile(r"jobs\.jobvite\.com/([\w.-]+)",re.I)),
 )
 def discover_ats(soup,base_url):
     """Find a public ATS linked or embedded by an employer's official page."""
@@ -311,4 +366,4 @@ class CustomCareerAdapter(JobSource):
         jobs=list(unique.values())
         return jobs,len(jobs)
 
-ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"custom":CustomCareerAdapter()}
+ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter()}

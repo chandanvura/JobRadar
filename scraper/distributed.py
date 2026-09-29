@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .adapters import ADAPTERS
 from .main import TELEGRAM_RETRY_IDS,TelegramDeliveryError,ensure_telegram_ready,ingest_scan,load_companies,notify,now,record_notification,run_health_status,scrape
+from .normalization import TARGET_CITIES
 from .models import Job
 
 ARTIFACT_VERSION=1
@@ -30,7 +31,7 @@ async def run_worker(index,count,output):
     custom_sem=asyncio.Semaphore(int(os.getenv("JOBRADAR_CUSTOM_CONCURRENCY","8")))
     batches=await asyncio.gather(*(scrape(c,sem,custom_sem) for c in owned))
     all_jobs=[job for jobs,_,_,_ in batches for job in jobs]
-    candidates=[job for job in all_jobs if job.city in {"Bengaluru","Hyderabad","Chennai","Pune"} and job.role_category!="Other"]
+    candidates=[job for job in all_jobs if job.city in TARGET_CITIES and job.role_category!="Other"]
     jobs=[]
     for job in candidates:
         item=job.as_dict(); item["description"]=item.get("description","")[:4000]; jobs.append(item)

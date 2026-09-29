@@ -6,7 +6,9 @@ ROLE_PATTERNS = {
     "DevOps": r"\bdev\s*sec\s*ops\b|\bdev\s*ops\b|\bbuild(?:/| and | & )?release\b|\brelease engineer\b|\bdeployment engineer\b", "Cloud": r"\bcloud (?:support |operations |infrastructure |migration |platform )?(?:engineer|associate)\b|\bcloud operations\b|\bcloudops\b",
     "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b", "Platform": r"\bplatform (?:software )?engineer\b",
     "Infrastructure / Operations": r"\binfrastructure (?:automation |operations |support )?engineer\b|\bsoftware engineer\s*[-–—:,]?\s*infrastructure\b|\blinux (?:systems? |infrastructure |cloud )?engineer\b|\bsystems? engineer\s*(?:i|1)\b",
-    "Java / Backend": r"\bjava (?:full[ -]?stack |software )?(?:developer|engineer)\b|\bback[ -]?end (?:software |application )?(?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*(?:java|back[ -]?end)\b",
+    "Java / Backend": r"\b(?:java|python|go(?:lang)?|node(?:\.js)?|\.net|c#) (?:full[ -]?stack |back[ -]?end |software |application )?(?:developer|engineer)\b|\bback[ -]?end (?:software |application )?(?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*(?:java|python|go(?:lang)?|node(?:\.js)?|\.net|back[ -]?end)\b",
+    "Data Engineering": r"\b(?:associate |junior |graduate )?(?:data|analytics|etl) engineer(?:\s+(?:i|1))?\b|\bdata platform engineer(?:\s+(?:i|1))?\b",
+    "Security Engineering": r"\b(?:associate |junior )?(?:security|cybersecurity|application security|cloud security|soc) (?:engineer|analyst)(?:\s+(?:i|1))?\b",
     "Quality Engineering": r"\b(?:associate |junior )?(?:qa|quality assurance|quality) (?:engineer|associate|analyst)(?:\s+(?:i|1))?\b|\b(?:software test|test automation|automation test) engineer(?:\s+(?:i|1))?\b|\bsdet(?:\s+(?:i|1))?\b",
     "Technical Support": r"\b(?:application|production|technical|product|software|cloud) support (?:engineer|associate|analyst)(?:\s+(?:i|1))?\b|\bsupport engineer(?:\s+(?:i|1))?\b",
     "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software (?:development )?(?:engineer(?:ing)?|developer)(?:\s+(?:i|1))?\b|\b(?:sde|swe|sw engineer)\s*(?:i|1)?\b|\b(?:application|front[ -]?end|full[ -]?stack|mobile) (?:developer|engineer)(?:\s+(?:i|1))?\b|\b(?:graduate )?engineer trainee\b|\bmember of technical staff(?:\s+(?:i|1))?\b|\bget\b",
@@ -23,7 +25,7 @@ INTERNSHIP_ROLE_PATTERNS = {
 SKILLS=["AWS","Azure","GCP","Linux","Docker","Kubernetes","Terraform","Jenkins","CI/CD","GitHub Actions","Argo CD","Ansible","Git","Helm","Bash","Python","Java","Spring Boot","Spring","REST API","Microservices","Kafka","SQL","PostgreSQL","MySQL","Redis","Prometheus","Grafana","ELK","Elasticsearch","Splunk","Datadog"]
 MAX_JOB_AGE_HOURS = 24
 MAX_EXPERIENCE_YEARS = 3
-TARGET_CITIES = {"Bengaluru", "Hyderabad", "Chennai", "Pune"}
+TARGET_CITIES = {"Bengaluru", "Hyderabad"}
 INDIA_TZ = timezone(timedelta(hours=5, minutes=30))
 LEADERSHIP_TITLE = re.compile(r"\b(?:architect|director|head|lead|manager|principal|staff|vice president|vp)\b", re.I)
 

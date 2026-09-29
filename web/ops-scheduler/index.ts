@@ -63,9 +63,10 @@ export async function checkAndRecover(env:Env){
   return "dispatched";
 }
 
-export default {
+const worker = {
   fetch(){return new Response("Not found",{status:404})},
   async scheduled(_controller:ScheduledController,env:Env,ctx:ExecutionContext){
     ctx.waitUntil(checkAndRecover(env));
   },
 };
+export default worker;
