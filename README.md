@@ -35,6 +35,10 @@ The dashboard reads live D1 data from `GET /api/dashboard` and automatically ref
 
 ## Local scraper
 
+For an optional configurable local JSON/CSV export with source and freshness
+filters, see [`job_search/README.md`](job_search/README.md). It also accepts
+user-supplied CSV rows from other sources.
+
 Requires Python 3.12+.
 
 ```bash
