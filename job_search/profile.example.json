@@ -1,0 +1,11 @@
+{
+  "experience_years": 1,
+  "experience_note": "Example only. Keep internship and full-time experience distinct.",
+  "maximum_required_years": 3,
+  "cities": ["Bengaluru", "Hyderabad"],
+  "allow_remote_india": true,
+  "freshness_hours": [24, 72, 168],
+  "roles": ["DevOps", "SRE", "Cloud", "Platform", "Infrastructure / Operations", "Java / Backend", "Software Engineering"],
+  "skills": ["Java", "Spring Boot", "AWS", "Docker", "Kubernetes"],
+  "exclude_title_terms": ["manager", "director", "architect", "principal", "staff", "lead", "head"]
+}
