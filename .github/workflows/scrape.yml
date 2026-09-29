@@ -1,16 +1,9 @@
 name: JobRadar free-tier scan
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/scrape.yml"
-      - "companies/**"
-      - "scraper/**"
-      - "requirements.txt"
-      - "tests/**"
   schedule:
     # Six full scans per day keep D1 writes comfortably inside the free tier.
-    # Manual and push-triggered runs remain available for urgent refreshes.
+    # Manual runs remain available for urgent refreshes; code pushes never
+    # start an expensive full scan automatically.
     - cron: "7 */4 * * *"
   workflow_dispatch:
 concurrency:
@@ -26,7 +19,7 @@ jobs:
     outputs:
       should_run: ${{ steps.freshness.outputs.should_run }}
     steps:
-      - name: Run pushes/manual requests; gate scheduled scans by freshness
+      - name: Run manual requests; gate scheduled scans by freshness
         id: freshness
         env:
           TRIGGER_EVENT: ${{ github.event_name }}

@@ -8,7 +8,7 @@ const ACTIVE=new Set(["queued","in_progress","pending","requested","waiting"]);
 export function needsScan(finished:string|null,runs:Run[],now=Date.now()){
   if(runs.some(run=>ACTIVE.has(run.status)))return false;
   const age=finished?now-Date.parse(finished):Infinity;
-  return !Number.isFinite(age)||age>=75*60_000;
+  return !Number.isFinite(age)||age>=300*60_000;
 }
 
 async function github(path:string,token:string,body?:unknown,method?:string){

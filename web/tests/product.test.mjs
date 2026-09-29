@@ -78,6 +78,10 @@ test('final ingestion deactivates stale jobs only after every upload succeeds',a
  assert.doesNotMatch(source,/UPDATE companies SET enabled=0/);
  assert.doesNotMatch(source,/for\(const name of successfulNames\)/);
  assert.match(source,/if\(payload\.run\).*UPDATE jobs SET is_active=0/);
+ assert.match(source,/seen_job_keys/);
+ assert.match(source,/successful_companies/);
+ assert.match(source,/NOT IN \(SELECT value FROM json_each/);
+ assert.match(source,/DO UPDATE SET[\s\S]*WHERE jobs\.title IS NOT excluded\.title/);
 });
 test('buyer-facing experience leads with the trust promise and hides operations',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');

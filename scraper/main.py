@@ -180,7 +180,21 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
         new_external_ids.extend(result.get("new_external_ids",[]))
         notification_keys.extend(result.get("notification_keys",[]))
         rejected+=int(result.get("rejected",0))
-    final_run={**run,"new_jobs":len(set(new_external_ids))}
+    successful_companies=[
+        str(company.get("name","")) for company in companies
+        if company.get("name") and not company.get("error_count")
+        and not str(company.get("warning","")).startswith("Limited coverage")
+    ]
+    seen_job_keys=[
+        f"{job.get('ats_provider','')}\x1f{job.get('external_job_id','')}"
+        for job in jobs if job.get("ats_provider") and job.get("external_job_id")
+    ]
+    final_run={
+        **run,
+        "new_jobs":len(set(new_external_ids)),
+        "successful_companies":successful_companies,
+        "seen_job_keys":seen_job_keys,
+    }
     await post_with_retry(url,headers,{"jobs":[],"companies":[],"run":final_run})
     return {"new_external_ids":list(dict.fromkeys(new_external_ids)),"notification_keys":list(dict.fromkeys(notification_keys)),"rejected":rejected}
 

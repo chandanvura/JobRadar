@@ -6,7 +6,7 @@ from scraper.models import Job
 from bs4 import BeautifulSoup
 from scraper.adapters import cached_get, discover_ats, job_like_url, likely_target, location_text, parse_posted_at, parse_posting, request_bucket, workday_config
 from scraper.models import Company
-from scraper.main import fetch_company_jobs, ingest_chunks, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
+from scraper.main import fetch_company_jobs, ingest_chunks, ingest_scan, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
 from scraper.distributed import load_artifacts, merge_artifacts, source_shard
 from scraper.normalization import classify_employment_type, classify_title, enrich, extract_experience, normalize_location
 
@@ -270,6 +270,25 @@ def test_ingest_chunks_preserve_every_job_below_request_batch_limit():
     batches=ingest_chunks(jobs,125)
     assert [len(batch) for batch in batches]==[125,125,51]
     assert [job for batch in batches for job in batch]==jobs
+
+def test_ingest_scan_finalizes_with_seen_manifest(monkeypatch):
+    payloads=[]
+    class Response:
+        def __init__(self,payload): self.payload=payload
+        def json(self): return {"new_external_ids":[],"notification_keys":[],"rejected":0}
+    async def post(url,headers,payload,attempts=3):
+        payloads.append(payload); return Response(payload)
+    monkeypatch.setattr("scraper.main.post_with_retry",post)
+    jobs=[{"ats_provider":"lever","external_job_id":"job:1"}]
+    companies=[
+        {"name":"Healthy","error_count":0,"warning":""},
+        {"name":"Failed","error_count":1,"warning":""},
+        {"name":"Limited","error_count":0,"warning":"Limited coverage: blocked"},
+    ]
+    asyncio.run(ingest_scan("https://example.test",{},jobs,companies,{"started_at":"now"}))
+    final=payloads[-1]["run"]
+    assert final["successful_companies"]==["Healthy"]
+    assert final["seen_job_keys"]==["lever\x1fjob:1"]
 
 def test_source_sharding_is_stable_and_has_one_owner():
     company=Company("Example","https://example.com/jobs","greenhouse","example")

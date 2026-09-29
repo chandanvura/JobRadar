@@ -6,8 +6,8 @@ const run=(status,conclusion=null)=>({id:7,status,conclusion,updated_at:'2026-09
 
 test('external scheduler suppresses duplicate active scans',()=>{
   assert.equal(needsScan(null,[run('queued')]),false);
-  assert.equal(needsScan('2026-09-26T10:00:00Z',[],Date.parse('2026-09-26T11:14:00Z')),false);
-  assert.equal(needsScan('2026-09-26T10:00:00Z',[],Date.parse('2026-09-26T11:16:00Z')),true);
+  assert.equal(needsScan('2026-09-26T10:00:00Z',[],Date.parse('2026-09-26T14:59:00Z')),false);
+  assert.equal(needsScan('2026-09-26T10:00:00Z',[],Date.parse('2026-09-26T15:01:00Z')),true);
 });
 
 test('external scheduler dispatches after health is blocked and a finalizer is stale',async()=>{
