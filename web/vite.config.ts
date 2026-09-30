@@ -16,6 +16,7 @@ const localBindingConfig = {
     database_id: process.env.CLOUDFLARE_D1_DATABASE_ID || SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
   }],
   r2_buckets: [],
+  assets: { binding: "ASSETS" },
 };
 
 export default defineConfig(async () => {

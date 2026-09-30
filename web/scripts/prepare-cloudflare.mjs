@@ -24,5 +24,6 @@ if(process.argv.includes("--patch-build")){
   output.name="jobradar";
   output.d1_databases=migrationConfig.d1_databases;
   output.observability={enabled:true};
+  output.assets={...output.assets,binding:"ASSETS"};
   await writeFile(path,JSON.stringify(output,null,2));
 }
