@@ -3,7 +3,6 @@
 import datetime
 import json
 import os
-import subprocess
 import urllib.error
 import urllib.request
 from urllib.parse import urlparse
@@ -77,7 +76,7 @@ def main():
         return
     try:
         health=request_json(HEALTH_URL)
-    except (RuntimeError,urllib.error.URLError,TimeoutError,ValueError,subprocess.SubprocessError) as exc:
+    except (RuntimeError,urllib.error.URLError,TimeoutError,ValueError) as exc:
         print(f"Production health unavailable ({type(exc).__name__}); checking completed GitHub finalizers")
         health=last_successful_finalization(runs,repository,token)
     if health.get("quota_exhausted"):

@@ -48,3 +48,13 @@ def test_watchdog_main_never_dispatches_on_quota(monkeypatch, capsys):
     monkeypatch.setattr(watchdog, "request_json", fetch)
     watchdog.main()
     assert "no recovery dispatch" in capsys.readouterr().out
+
+@pytest.mark.parametrize("failure", [subprocess.CalledProcessError(1, ["curl"], stderr="private diagnostic"), subprocess.TimeoutExpired(["curl"], 20)])
+def test_public_health_sanitizes_transport_failure(monkeypatch, failure):
+    monkeypatch.setattr(health.shutil, "which", lambda name: "/usr/bin/curl")
+    def fail(*args, **kwargs):
+        raise failure
+    monkeypatch.setattr(health.subprocess, "run", fail)
+    with pytest.raises(RuntimeError, match="Production health transport unavailable") as error:
+        health.read_health()
+    assert "private diagnostic" not in str(error.value)
