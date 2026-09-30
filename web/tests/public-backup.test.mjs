@@ -50,3 +50,14 @@ test('first deployment can bootstrap an explicitly partial snapshot from a valid
   const result=await captureCatalog('https://example.test',async url=>url.pathname==='/api/dashboard'?Response.json({...catalog,data_mode:undefined}):new Response('',{status:404}));
   assert.equal(result.coverage,'partial');assert.deepEqual(result.jobs,catalog.jobs);
 });
+test('quota deployment gate blocks schema changes and unrelated migration failures',async()=>{
+  const {verifyQuotaDeployment}=await import('../scripts/verify-quota-deployment.mjs');
+  const {readFile,readdir}=await import('node:fs/promises');const {createHash}=await import('node:crypto');
+  const hashes={};const dir=new URL('../drizzle/',import.meta.url);
+  for(const path of (await readdir(dir)).filter(p=>p.endsWith('.sql')))hashes[path]=createHash('sha256').update(await readFile(new URL(path,dir))).digest('hex');
+  const quota="Your account has exceeded D1's free tier daily row read limit. [code: 7500]";
+  assert.doesNotThrow(()=>verifyQuotaDeployment(quota,hashes));
+  assert.throws(()=>verifyQuotaDeployment('Unauthorized [code: 10000]',hashes));
+  assert.throws(()=>verifyQuotaDeployment(quota,{...hashes,'new.sql':'new'}));
+  assert.throws(()=>verifyQuotaDeployment(quota,{...hashes,'0000_nice_greymalkin.sql':'modified'}));
+});
