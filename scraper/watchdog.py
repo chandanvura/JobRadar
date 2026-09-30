@@ -3,12 +3,13 @@
 import datetime
 import json
 import os
+import subprocess
 import urllib.error
 import urllib.request
 from urllib.parse import urlparse
 
 
-HEALTH_URL="https://jobradar.chandanvura.workers.dev/api/health"
+from scraper.health import HEALTH_URL, read_health
 ACTIVE_STATUSES={"queued","in_progress","pending","requested","waiting"}
 
 
@@ -16,6 +17,8 @@ def request_json(url, token=None, data=None):
     parsed=urlparse(url)
     if parsed.scheme!="https" or parsed.hostname not in {"api.github.com","jobradar.chandanvura.workers.dev"}:
         raise RuntimeError("Watchdog URL is not allowed")
+    if url==HEALTH_URL and token is None and data is None:
+        return read_health()
     headers={"Accept":"application/vnd.github+json"} if token else {}
     if token:
         headers.update({"Authorization":f"Bearer {token}","X-GitHub-Api-Version":"2022-11-28"})
@@ -74,9 +77,12 @@ def main():
         return
     try:
         health=request_json(HEALTH_URL)
-    except (RuntimeError,urllib.error.URLError,TimeoutError,ValueError) as exc:
+    except (RuntimeError,urllib.error.URLError,TimeoutError,ValueError,subprocess.SubprocessError) as exc:
         print(f"Production health unavailable ({type(exc).__name__}); checking completed GitHub finalizers")
         health=last_successful_finalization(runs,repository,token)
+    if health.get("quota_exhausted"):
+        print("D1 daily quota exhausted; no recovery dispatch before",health.get("retry_at","next UTC reset"))
+        return
     age=minutes_since_scan(health)
     print(f"Latest scan age: {age:.1f} minutes" if age is not None else "No valid completed scan timestamp")
     if should_dispatch(health,runs):

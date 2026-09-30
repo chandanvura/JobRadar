@@ -173,3 +173,5 @@ expiry must extend beyond the intended unattended period.
 
 See [the production-readiness audit](docs/PRODUCTION-READINESS.md) and
 [recovery instructions](ops/RECOVERY.md) for evidence and remaining limitations.
+
+Collector health checks require `curl` on PATH. GitHub's Ubuntu runners include it; local collector/watchdog runs must install it too. Health uses the same bounded curl transport as deployment verification and accepts explicit HTTP 503 quota responses.

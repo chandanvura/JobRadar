@@ -19,23 +19,20 @@ jobs:
     outputs:
       should_run: ${{ steps.freshness.outputs.should_run }}
     steps:
+      - uses: actions/checkout@v7
       - name: Run manual requests; gate scheduled scans by freshness
         id: freshness
         env:
           TRIGGER_EVENT: ${{ github.event_name }}
         run: |
           python - <<'PY'
-          import datetime,json,os,urllib.error,urllib.request
+          import datetime,os
+          from scraper.health import read_health
           should_run=True
           if os.environ.get("TRIGGER_EVENT") in {"schedule", "workflow_dispatch"}:
               try:
-                  try:
-                      response=urllib.request.urlopen("https://jobradar.chandanvura.workers.dev/api/health",timeout=15)
-                  except urllib.error.HTTPError as error:
-                      response=error
-                  with response:
-                      health=json.load(response)
-                      latest=health.get("latest_run") or {}
+                  health=read_health()
+                  latest=health.get("latest_run") or {}
                   if health.get("quota_exhausted"):
                       should_run=False
                       print("D1 daily quota exhausted; defer expensive scan until reset")
@@ -46,7 +43,7 @@ jobs:
                       should_run=age>=210
                       print(f"Latest completed scan is {age:.1f} minutes old")
               except Exception as exc:
-                  print(f"Freshness check failed open: {type(exc).__name__}: {exc}")
+                  print(f"Freshness check failed open: {type(exc).__name__}")
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as output:
               output.write(f"should_run={'true' if should_run else 'false'}\n")
           print(f"Full distributed scan required: {should_run}")
