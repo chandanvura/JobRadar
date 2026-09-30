@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @utility scrollbar-thin {
   scrollbar-width: thin;
 }
@@ -20,6 +22,15 @@
 
 :root {
   color-scheme: light;
+  --hero: #123f2c;
+  --success: #176440;
+  --success-soft: #e3f3e9;
+  --warning: #854d0e;
+  --warning-soft: #fffbeb;
+  --danger: #b91c1c;
+  --danger-soft: #fef2f2;
+  --info: #5b21b6;
+  --info-soft: #f5f3ff;
   --background: #f5f7f8;
   --foreground: #17211c;
   --card: #ffffff;
@@ -56,71 +67,62 @@
 
 html[data-theme="dark"] {
   color-scheme: dark;
-  --background: #101a16;
-  --foreground: #e7efe9;
-  --card: #18251e;
-  --card-foreground: #e7efe9;
-  --popover: #18251e;
-  --popover-foreground: #e7efe9;
-  --primary: #86d4a6;
-  --primary-foreground: #102c1b;
-  --secondary: #22352a;
-  --secondary-foreground: #e7efe9;
-  --muted: #22352a;
-  --muted-foreground: #b4c5ba;
-  --accent: #284333;
-  --accent-foreground: #e7efe9;
-  --border: #3a5142;
-  --input: #3a5142;
-  --ring: #86d4a6;
-  --sidebar: #142019;
-  --sidebar-foreground: #e7efe9;
-  --sidebar-accent: #284333;
-  --sidebar-accent-foreground: #e7efe9;
-  --sidebar-border: #3a5142;
+  --background: #0b1220;
+  --foreground: #e8eef7;
+  --card: #121e30;
+  --card-foreground: #e8eef7;
+  --popover: #17263b;
+  --popover-foreground: #e8eef7;
+  --primary: #73deb0;
+  --primary-foreground: #09291f;
+  --secondary: #203149;
+  --secondary-foreground: #e8eef7;
+  --muted: #17263b;
+  --muted-foreground: #acbdd2;
+  --accent: #203b39;
+  --accent-foreground: #b7f4d6;
+  --border: #30435c;
+  --input: #30435c;
+  --ring: #73deb0;
+  --sidebar: #0e1929;
+  --sidebar-foreground: #e8eef7;
+  --sidebar-primary: #73deb0;
+  --sidebar-primary-foreground: #09291f;
+  --sidebar-accent: #203b39;
+  --sidebar-accent-foreground: #b7f4d6;
+  --sidebar-border: #30435c;
+  --hero: #123d36;
+  --success: #8ae7bc;
+  --success-soft: #173c35;
+  --warning: #f7d58a;
+  --warning-soft: #3b3021;
+  --danger: #ffb1b9;
+  --danger-soft: #3a2432;
+  --info: #c2b9ff;
+  --info-soft: #2b294a;
 }
 
-/* The portal's established utility palette also needs themed surfaces. */
-html[data-theme="dark"] :is([class*="bg-white"], [class*="bg-[#f"], [class*="bg-[#e"], [class*="bg-slate-50"], [class*="bg-gray-50"]) {
-  background-color: var(--card);
-}
-html[data-theme="dark"] :is([class*="text-[#1"], [class*="text-[#2"], [class*="text-[#3"], [class*="text-gray-900"], [class*="text-slate-900"]) {
-  color: #b3e4c6;
-}
-html[data-theme="dark"] :is([class*="text-[#5"], [class*="text-[#6"], [class*="text-[#7"], [class*="text-gray-500"], [class*="text-slate-500"]) {
-  color: var(--muted-foreground);
-}
-html[data-theme="dark"] :is([class*="border-[#"], [class*="border-gray-"], [class*="border-slate-"]) {
-  border-color: var(--border);
-}
+/* The exported document preview always uses a paper palette. */
+.resume-paper { background: #fff; color: #111; color-scheme: light; }
+.resume-paper h2 { border-color: #111; }
+
 html[data-theme="dark"] :is(input, select, textarea) {
   background-color: var(--background);
   color: var(--foreground);
-  border-color: var(--border);
+  border-color: var(--input);
 }
-html[data-theme="dark"] :is(button, a)[class*="bg-[#155d3a]"] {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-}
-html[data-theme="dark"] :is([class*="bg-[#dff3e8]"], [class*="bg-[#d9efe2]"]) {
-  background-color: var(--accent);
-  color: var(--foreground);
-}
-html[data-theme="dark"] button[class*="bg-white"] {
-  background-color: var(--card);
-  color: var(--foreground);
-}
-html[data-theme="dark"] :is(.bg-emerald-50, .bg-green-50, .bg-amber-50, .bg-red-50, .bg-blue-50) {
-  background-color: var(--accent);
-}
-html[data-theme="dark"] :is(.text-emerald-700, .text-emerald-800, .text-green-700, .text-green-800) {
-  color: #86d4a6;
-}
-html[data-theme="dark"] :is(.text-amber-700, .text-amber-800) { color: #f6cd80; }
-html[data-theme="dark"] :is(.text-red-700, .text-red-800) { color: #fda4af; }
-html[data-theme="dark"] :is(.text-slate-600, .text-slate-700, .text-slate-800, .text-gray-600, .text-gray-700, .text-gray-800) { color: var(--muted-foreground); }
+button:disabled { opacity: .5; cursor: not-allowed; }
 
 @theme inline {
+  --color-hero: var(--hero);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

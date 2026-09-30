@@ -804,7 +804,7 @@ function DashboardContent() {
   const visibleJobs = ["Dashboard", "Recommended"].includes(active) && !filtered.length ? reviewPreview : filtered;
   const navGroup = (title: string, items: Set<string>) => (
     <div className="mb-4">
-      <p className="mb-1 px-4 text-[10px] font-black uppercase tracking-[.18em] text-[#8b9991]">
+      <p className="mb-1 px-4 text-[10px] font-black uppercase tracking-[.18em] text-muted-foreground">
         {title}
       </p>
       {nav.filter(([label]) => items.has(label)).map(([label, Icon]) => (
@@ -812,7 +812,7 @@ function DashboardContent() {
           key={label}
           aria-current={active === label ? "page" : undefined}
           onClick={() => navigate(label)}
-          className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold ${active === label ? "bg-[#dff3e8] text-[#0e5c39]" : "text-[#607067] hover:bg-[#eef3f0]"}`}
+          className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold ${active === label ? "bg-success-soft text-success" : "text-muted-foreground hover:bg-muted"}`}
         >
           <Icon size={18} />
           {label}
@@ -827,17 +827,17 @@ function DashboardContent() {
     </div>
   );
   return (
-    <div className="min-h-screen bg-[#f5f7f8] text-[#17211c]">
+    <div className="min-h-screen bg-background text-foreground">
       <aside
-        className={`${mobile ? "flex" : "hidden"} fixed inset-y-0 left-0 z-40 w-72 flex-col border-r border-[#dce4df] bg-[#fbfcfb] lg:flex`}
+        className={`${mobile ? "flex" : "hidden"} fixed inset-y-0 left-0 z-40 w-72 flex-col border-r border-border bg-sidebar lg:flex`}
       >
-        <div className="flex h-20 items-center gap-3 border-b border-[#e4ebe7] px-6">
-          <div className="grid size-10 place-items-center rounded-xl bg-[#123f2c] text-white">
+        <div className="flex h-20 items-center gap-3 border-b border-border px-6">
+          <div className="grid size-10 place-items-center rounded-xl bg-hero text-white">
             <Radar size={22} />
           </div>
           <div>
             <p className="text-lg font-black">JOBRADAR</p>
-            <p className="text-[10px] font-bold uppercase tracking-[.22em] text-[#6a7d72]">
+            <p className="text-[10px] font-bold uppercase tracking-[.22em] text-muted-foreground">
               Official sources · truthful dates
             </p>
           </div>
@@ -858,7 +858,7 @@ function DashboardContent() {
             type="button"
             aria-expanded={showExplore}
             onClick={() => setShowExplore((value) => !value)}
-            className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-[#607067] hover:bg-[#eef3f0]"
+            className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-muted"
           >
             <Filter size={18} /> Browse by role
             {showExplore ? <ChevronUp className="ml-auto" size={16} /> : <ChevronDown className="ml-auto" size={16} />}
@@ -869,7 +869,7 @@ function DashboardContent() {
             type="button"
             aria-expanded={showOperations}
             onClick={() => setShowOperations((value) => !value)}
-            className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-[#607067] hover:bg-[#eef3f0]"
+            className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-muted"
           >
             <ShieldCheck size={18} /> System & privacy
             {showOperations ? <ChevronUp className="ml-auto" size={16} /> : <ChevronDown className="ml-auto" size={16} />}
@@ -879,7 +879,7 @@ function DashboardContent() {
         <SystemCard data={data} loading={loading} />
       </aside>
       <main className="pb-20 lg:pb-0 lg:pl-72">
-        <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-[#dfe6e2] bg-white/90 px-4 backdrop-blur-xl md:px-8">
+        <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-border bg-card/90 px-4 backdrop-blur-xl md:px-8">
           <button
             aria-label="Open navigation"
             onClick={() => setMobile(true)}
@@ -888,7 +888,7 @@ function DashboardContent() {
             <Menu />
           </button>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[.18em] text-[#7c8b83]">
+            <p className="text-xs font-bold uppercase tracking-[.18em] text-muted-foreground">
               Discover → verify → apply
             </p>
             <h1 className="text-xl font-black">{active}</h1>
@@ -952,10 +952,10 @@ function DashboardContent() {
                   internships={() => navigate("Internships")}
                 />
               )}
-              <section className="mb-6 rounded-3xl bg-[#123f2c] p-6 text-white md:p-8">
+              <section className="mb-6 rounded-3xl bg-hero p-6 text-white md:p-8">
                 <div className="flex flex-col justify-between gap-6 xl:flex-row xl:items-center">
                   <div>
-                    <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-[#9fd4b9]">
+                    <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-white/80">
                       <Radar size={16} />
                       Opportunity radar
                     </div>
@@ -966,7 +966,7 @@ function DashboardContent() {
                           ? `${reviewPreview.length} roles to review`
                           : `${filtered.length} ${active === "Internships" ? "internships" : "jobs"} in this view`}
                     </h2>
-                    <p className="mt-2 text-sm text-[#c4d8ce]">
+                    <p className="mt-2 text-sm text-white/80">
                       {preferences.locations.join(" + ")} ·{" "}
                       {preferences.experienceMin}–{preferences.experienceMax}{" "}
                       YOE ·{" "}
@@ -983,7 +983,7 @@ function DashboardContent() {
                   </div>
                 </div>
               </section>
-              <section className="mb-5 flex flex-col flex-wrap gap-3 rounded-2xl border border-[#dfe6e2] bg-white p-3 xl:flex-row xl:items-center">
+              <section className="mb-5 flex flex-col flex-wrap gap-3 rounded-2xl border border-border bg-card p-3 xl:flex-row xl:items-center">
                 <div className="flex items-center gap-2 px-2 text-sm font-bold">
                   <Filter size={17} />
                   Filters
@@ -1009,21 +1009,21 @@ function DashboardContent() {
                 </Button>
                 <Button
                   onClick={() => setEditingSearch((x) => !x)}
-                  className="rounded-xl bg-[#155d3a]"
+                  className="rounded-xl bg-primary"
                 >
                   <Settings size={15} /> Edit search
                 </Button>
                 <button
                   onClick={clearQuickFilters}
-                  className="px-2 text-xs font-bold text-[#5d7166] hover:text-[#155d3a]"
+                  className="px-2 text-xs font-bold text-muted-foreground hover:text-success"
                 >
                   Clear
                 </button>
-                <span className="ml-auto text-xs font-bold text-[#687970]">
+                <span className="ml-auto text-xs font-bold text-muted-foreground">
                   {visibleJobs.length} results
                 </span>
                 {showMoreFilters && (
-                  <div className="flex w-full flex-wrap items-center gap-3 border-t border-[#e7ece9] px-2 pt-3">
+                  <div className="flex w-full flex-wrap items-center gap-3 border-t border-border px-2 pt-3">
                     <Pills
                       items={["Recommended", "Exact"]}
                       value={matchMode}
@@ -1033,7 +1033,7 @@ function DashboardContent() {
                       aria-label="Role filter"
                       value={role}
                       onChange={(e) => setRole(e.target.value)}
-                      className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
+                      className="h-10 rounded-xl border bg-card px-3 text-xs font-bold"
                     >
                       <option>All roles</option>
                       <option>DevOps</option>
@@ -1050,7 +1050,7 @@ function DashboardContent() {
                       aria-label="ATS filter"
                       value={ats}
                       onChange={(e) => setAts(e.target.value)}
-                      className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
+                      className="h-10 rounded-xl border bg-card px-3 text-xs font-bold"
                     >
                       {atsOptions.map((x) => (
                         <option key={x}>{x}</option>
@@ -1060,7 +1060,7 @@ function DashboardContent() {
                       aria-label="Sort jobs"
                       value={sort}
                       onChange={(e) => setSort(e.target.value)}
-                      className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
+                      className="h-10 rounded-xl border bg-card px-3 text-xs font-bold"
                     >
                       {sortOptions.map((x) => (
                         <option key={x}>{x}</option>
@@ -1097,9 +1097,9 @@ function DashboardContent() {
                 </section>
               )}
               {active === "Needs Review" && (
-                <section className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-                  <h3 className="font-black text-amber-950">Date or experience needs verification</h3>
-                  <p className="mt-1 text-sm leading-6 text-amber-900/80">
+                <section className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5">
+                  <h3 className="font-black text-warning">Date or experience needs verification</h3>
+                  <p className="mt-1 text-sm leading-6 text-warning/80">
                     These active postings lack a verified 24-hour date or an experience range. They stay separate from confirmed matches and never trigger automatic alerts. Check the official description before applying.
                   </p>
                 </section>
@@ -1114,9 +1114,9 @@ function DashboardContent() {
           ) : showJobs ? (
             <>
               {["Dashboard", "Recommended"].includes(active) && !filtered.length && reviewPreview.length > 0 && (
-                <section className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-                  <h3 className="font-black text-amber-950">No verified 24-hour matches right now</h3>
-                  <p className="mt-1 text-sm leading-6 text-amber-900/80">
+                <section className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5">
+                  <h3 className="font-black text-warning">No verified 24-hour matches right now</h3>
+                  <p className="mt-1 text-sm leading-6 text-warning/80">
                     These roles were seen in the latest employer feeds, but their posting date or experience range needs checking. They are not counted as fresh matches and will not trigger alerts. Open the official listing before applying.
                   </p>
                 </section>
@@ -1150,7 +1150,7 @@ function DashboardContent() {
       </main>
       <nav
         aria-label="Quick navigation"
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-[#dfe6e2] bg-white/95 px-2 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-8px_24px_rgba(18,63,44,.08)] backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-border bg-card/95 px-2 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-8px_24px_rgba(18,63,44,.08)] backdrop-blur lg:hidden"
       >
         {([
           ["Dashboard", Radar],
@@ -1162,7 +1162,7 @@ function DashboardContent() {
             key={label}
             onClick={() => navigate(label)}
             aria-current={active === label ? "page" : undefined}
-            className={`flex flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold ${active === label ? "text-[#155d3a]" : "text-[#718077]"}`}
+            className={`flex flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold ${active === label ? "text-success" : "text-muted-foreground"}`}
           >
             <Icon size={18} />
             {label}
@@ -1181,22 +1181,22 @@ function WelcomeCard({
   dismiss: () => void;
 }) {
   return (
-    <section className="mb-5 overflow-hidden rounded-3xl border border-[#bdd8c8] bg-white shadow-sm">
+    <section className="mb-5 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
       <div className="grid gap-6 p-6 lg:grid-cols-[1.5fr_1fr] lg:p-8">
         <div>
-          <Badge className="bg-[#e4f4ea] text-[#176440]">
+          <Badge className="bg-success-soft text-success">
             WELCOME TO JOBRADAR
           </Badge>
           <h2 className="mt-4 text-2xl font-black md:text-3xl">
             Your job search, organized in one place.
           </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#63736a]">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
             Set your titles, skills, experience, and cities once. Review fresh
             official openings, save the strongest matches, apply on the employer
             site, and track every application here.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
-            <Button onClick={setup} className="h-11 rounded-xl bg-[#155d3a]">
+            <Button onClick={setup} className="h-11 rounded-xl bg-primary">
               <Settings size={16} /> Set up my search
             </Button>
             <Button
@@ -1230,22 +1230,22 @@ function ProductPromise({
   internships: () => void;
 }) {
   return (
-    <section className="mb-6 overflow-hidden rounded-3xl border border-[#c8dbd0] bg-white shadow-sm">
+    <section className="mb-6 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
       <div className="grid gap-6 p-6 lg:grid-cols-[1.4fr_1fr] lg:p-8">
         <div>
-          <Badge className="bg-[#e4f4ea] text-[#176440]">
+          <Badge className="bg-success-soft text-success">
             EARLY-CAREER OPPORTUNITY RADAR
           </Badge>
           <h2 className="mt-4 max-w-3xl text-2xl font-black leading-tight md:text-3xl">
             Skip stale reposts. Find verified roles where you can actually apply.
           </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[#5f7167]">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
             JobRadar checks official employer career pages, verifies posting age and
             experience evidence, explains every match, and takes you to the original
             application—not a copied listing.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
-            <Button onClick={setup} className="h-11 rounded-xl bg-[#155d3a] px-5">
+            <Button onClick={setup} className="h-11 rounded-xl bg-primary px-5">
               <Radar size={16} /> Personalize my radar
             </Button>
             <Button onClick={internships} variant="outline" className="h-11 rounded-xl">
@@ -1274,13 +1274,13 @@ function ProductPromise({
 
 function PromiseLine({ title, text }: { title: string; text: string }) {
   return (
-    <div className="flex gap-3 rounded-2xl bg-[#f2f7f4] p-4">
-      <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-[#d9efe2] text-[#176440]">
+    <div className="flex gap-3 rounded-2xl bg-muted p-4">
+      <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-success-soft text-success">
         <Check size={15} />
       </span>
       <div>
         <p className="text-sm font-black">{title}</p>
-        <p className="mt-1 text-xs leading-5 text-[#66776e]">{text}</p>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">{text}</p>
       </div>
     </div>
   );
@@ -1288,8 +1288,8 @@ function PromiseLine({ title, text }: { title: string; text: string }) {
 
 function OnboardingStep({ number, text }: { number: string; text: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-[#f1f7f3] p-3">
-      <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#155d3a] text-xs font-black text-white">
+    <div className="flex items-center gap-3 rounded-2xl bg-muted p-3">
+      <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-xs font-black text-primary-foreground">
         {number}
       </span>
       <span className="text-sm font-bold">{text}</span>
@@ -1338,17 +1338,17 @@ function SearchPreferencesPanel({
   return (
     <section
       aria-label="Edit job search preferences"
-      className="mb-5 rounded-3xl border border-[#b9d7c6] bg-[#f8fcfa] p-5 shadow-sm md:p-6"
+      className="mb-5 rounded-3xl border border-border bg-muted p-5 shadow-sm md:p-6"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[.16em] text-[#28714c]">
+          <p className="text-xs font-black uppercase tracking-[.16em] text-success">
             My job search
           </p>
           <h2 className="mt-1 text-xl font-black">
             Overwrite search preferences
           </h2>
-          <p className="mt-1 text-sm text-[#63756b]">
+          <p className="mt-1 text-sm text-muted-foreground">
             Comma-separate multiple titles or skills. They improve ranking in
             Recommended mode; Exact mode can require them.
           </p>
@@ -1356,7 +1356,7 @@ function SearchPreferencesPanel({
         <button
           aria-label="Close search preferences"
           onClick={close}
-          className="rounded-lg p-2 hover:bg-[#e6f2eb]"
+          className="rounded-lg p-2 hover:bg-success-soft"
         >
           <X size={18} />
         </button>
@@ -1368,7 +1368,7 @@ function SearchPreferencesPanel({
             value={titles}
             onChange={(e) => setTitles(e.target.value)}
             rows={3}
-            className="mt-2 w-full resize-y rounded-xl border border-[#cad8d0] bg-white p-3 text-sm font-normal outline-none focus:ring-2 focus:ring-[#72a78a]"
+            className="mt-2 w-full resize-y rounded-xl border border-border bg-card p-3 text-sm font-normal outline-none focus:ring-2 focus:ring-ring"
             placeholder="DevOps Engineer, Platform Engineer, Java Developer"
           />
         </label>
@@ -1378,7 +1378,7 @@ function SearchPreferencesPanel({
             value={skills}
             onChange={(e) => setSkills(e.target.value)}
             rows={3}
-            className="mt-2 w-full resize-y rounded-xl border border-[#cad8d0] bg-white p-3 text-sm font-normal outline-none focus:ring-2 focus:ring-[#72a78a]"
+            className="mt-2 w-full resize-y rounded-xl border border-border bg-card p-3 text-sm font-normal outline-none focus:ring-2 focus:ring-ring"
             placeholder="AWS, Kubernetes, Java, Spring Boot"
           />
         </label>
@@ -1392,7 +1392,7 @@ function SearchPreferencesPanel({
             max={10}
             value={experienceMin}
             onChange={(e) => setExperienceMin(Number(e.target.value))}
-            className="mt-2 h-11 bg-white"
+            className="mt-2 h-11 bg-card"
           />
         </label>
         <label className="text-sm font-bold">
@@ -1403,7 +1403,7 @@ function SearchPreferencesPanel({
             max={10}
             value={experienceMax}
             onChange={(e) => setExperienceMax(Number(e.target.value))}
-            className="mt-2 h-11 bg-white"
+            className="mt-2 h-11 bg-card"
           />
         </label>
         <fieldset>
@@ -1412,7 +1412,7 @@ function SearchPreferencesPanel({
             {TARGET_CITIES.map((city) => (
               <label
                 key={city}
-                className={`flex cursor-pointer items-center gap-2 rounded-xl border px-4 py-2 text-sm font-bold ${locations.includes(city) ? "border-[#3a8b60] bg-[#e3f3e9] text-[#155d3a]" : "bg-white"}`}
+                className={`flex cursor-pointer items-center gap-2 rounded-xl border px-4 py-2 text-sm font-bold ${locations.includes(city) ? "border-primary/50 bg-success-soft text-success" : "bg-card"}`}
               >
                 <input
                   type="checkbox"
@@ -1427,13 +1427,13 @@ function SearchPreferencesPanel({
         </fieldset>
       </div>
       <div className="mt-5 flex flex-wrap items-center gap-2">
-        <Button onClick={submit} className="h-11 rounded-xl bg-[#155d3a] px-5">
+        <Button onClick={submit} className="h-11 rounded-xl bg-primary px-5">
           <Search size={16} /> Save & search jobs
         </Button>
         <Button onClick={reset} variant="outline" className="h-11 rounded-xl">
           Reset defaults
         </Button>
-        <span className="text-xs text-[#6c7c73] md:ml-auto">
+        <span className="text-xs text-muted-foreground md:ml-auto">
           Saved privately in this browser and applied instantly.
         </span>
       </div>
@@ -1452,11 +1452,11 @@ function SearchBox({
 }) {
   return (
     <div className="relative">
-      <Search className="absolute left-3 top-2.5 text-[#7b8c83]" size={18} />
+      <Search className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
       <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="h-10 rounded-xl bg-[#f7f9f8] pl-10"
+        className="h-10 rounded-xl bg-muted pl-10"
         placeholder={placeholder}
       />
     </div>
@@ -1475,10 +1475,10 @@ function Notice({
 }) {
   const style =
     tone === "error"
-      ? "border-red-200 bg-red-50 text-red-900"
+      ? "border-danger/40 bg-danger-soft text-danger"
       : tone === "success"
-        ? "border-emerald-200 bg-emerald-50 text-emerald-950"
-        : "border-amber-200 bg-amber-50 text-amber-950";
+        ? "border-success/40 bg-success-soft text-success"
+        : "border-warning/40 bg-warning-soft text-warning";
   return (
     <div
       role="status"
@@ -1524,17 +1524,17 @@ function SystemCard({
               : "SCAN HEALTHY";
   return (
     <div
-      className={`m-4 rounded-2xl border p-4 ${attention ? "border-amber-200 bg-amber-50" : "border-[#cfe2d7] bg-[#edf8f2]"}`}
+      className={`m-4 rounded-2xl border p-4 ${attention ? "border-warning/40 bg-warning-soft" : "border-border bg-success-soft"}`}
     >
       <div
-        className={`mb-2 flex items-center gap-2 text-xs font-bold ${attention ? "text-amber-800" : "text-[#176440]"}`}
+        className={`mb-2 flex items-center gap-2 text-xs font-bold ${attention ? "text-warning" : "text-success"}`}
       >
         <span
           className={`size-2 rounded-full ${loading && !run ? "animate-pulse bg-slate-400" : attention ? "bg-amber-500" : "bg-[#22a060]"}`}
         />
         {label}
       </div>
-      <p className="text-xs text-[#567065]">
+      <p className="text-xs text-muted-foreground">
         {loading && !run
           ? "Checking latest run…"
           : run?.finished_at
@@ -1552,16 +1552,16 @@ function SystemCard({
 }
 function Loading() {
   return (
-    <div className="grid place-items-center rounded-3xl border bg-white p-20">
-      <LoaderCircle className="animate-spin text-[#155d3a]" />
+    <div className="grid place-items-center rounded-3xl border bg-card p-20">
+      <LoaderCircle className="animate-spin text-success" />
     </div>
   );
 }
 function Metric({ value, label }: { value: number; label: string }) {
   return (
-    <div className="min-w-24 rounded-2xl bg-white/10 p-4">
+    <div className="min-w-24 rounded-2xl bg-card/10 p-4">
       <span className="text-2xl font-black">{value}</span>
-      <p className="mt-1 text-[11px] font-bold uppercase text-[#b8cec3]">
+      <p className="mt-1 text-[11px] font-bold uppercase text-white/80">
         {label}
       </p>
     </div>
@@ -1569,8 +1569,8 @@ function Metric({ value, label }: { value: number; label: string }) {
 }
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl border border-[#dfe6e2] bg-white p-5">
-      <p className="text-xs font-bold uppercase text-[#7c8982]">{label}</p>
+    <div className="rounded-2xl border border-border bg-card p-5">
+      <p className="text-xs font-bold uppercase text-muted-foreground">{label}</p>
       <p className="mt-2 text-3xl font-black">{value}</p>
     </div>
   );
@@ -1585,13 +1585,13 @@ function Pills({
   setValue: (x: string) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-1 rounded-xl bg-[#f1f5f2] p-1">
+    <div className="flex flex-wrap gap-1 rounded-xl bg-muted p-1">
       {items.map((x) => (
         <button
           key={x}
           aria-pressed={value === x}
           onClick={() => setValue(x)}
-          className={`rounded-lg px-3 py-2 text-xs font-bold ${value === x ? "bg-white text-[#155d3a] shadow-sm" : "text-[#718077]"}`}
+          className={`rounded-lg px-3 py-2 text-xs font-bold ${value === x ? "bg-card text-success shadow-sm" : "text-muted-foreground"}`}
         >
           {x}
         </button>
@@ -1632,7 +1632,7 @@ function JobList({
       {jobs.length > limit && (
         <button
           onClick={() => setLimit((n) => n + 30)}
-          className="w-full rounded-xl border bg-white p-4 font-bold"
+          className="w-full rounded-xl border bg-card p-4 font-bold"
         >
           Show more jobs ({jobs.length - limit} remaining)
         </button>
@@ -1657,10 +1657,10 @@ function ApplicationSummary({
       ]),
     );
   return (
-    <section className="mb-5 rounded-3xl border bg-white p-5">
+    <section className="mb-5 rounded-3xl border bg-card p-5">
       <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
         <div>
-          <p className="text-xs font-black uppercase tracking-[.15em] text-[#6d7c74]">
+          <p className="text-xs font-black uppercase tracking-[.15em] text-muted-foreground">
             Application pipeline
           </p>
           <h2 className="mt-1 text-xl font-black">
@@ -1678,7 +1678,7 @@ function ApplicationSummary({
           aria-label="Application stage filter"
           value={stage}
           onChange={(e) => setStage(e.target.value)}
-          className="h-11 rounded-xl border bg-white px-4 text-sm font-bold"
+          className="h-11 rounded-xl border bg-card px-4 text-sm font-bold"
         >
           <option>All stages</option>
           {["Applied", "Interview", "Offer", "Rejected"].map((x) => (
@@ -1691,10 +1691,10 @@ function ApplicationSummary({
           <button
             key={status}
             onClick={() => setStage(status === stage ? "All stages" : status)}
-            className={`rounded-2xl border p-4 text-left ${stage === status ? "border-[#3a8b60] bg-[#edf8f2]" : "bg-[#fafcfb]"}`}
+            className={`rounded-2xl border p-4 text-left ${stage === status ? "border-primary/50 bg-success-soft" : "bg-muted"}`}
           >
             <span className="text-2xl font-black">{counts[status] || 0}</span>
-            <p className="mt-1 text-xs font-bold uppercase text-[#6f7e76]">
+            <p className="mt-1 text-xs font-bold uppercase text-muted-foreground">
               {status}
             </p>
           </button>
@@ -1738,25 +1738,25 @@ function JobCard({
           : tracking.appliedAt,
     });
   return (
-    <article className="overflow-hidden rounded-3xl border border-[#dfe6e2] bg-white shadow-sm transition-shadow hover:shadow-md">
+    <article className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col lg:flex-row">
         <div className="flex-1 p-6">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Badge
               className={
                 job.is_eligible
-                  ? "bg-[#edf8f2] text-[#176440]"
-                  : "bg-amber-50 text-amber-900"
+                  ? "bg-success-soft text-success"
+                  : "bg-warning-soft text-warning"
               }
             >
               {job.is_eligible ? fresh : "REVIEW"}
             </Badge>
             <Badge variant="outline">{job.role_category}</Badge>
             {isInternship(job) && (
-              <Badge className="bg-violet-50 text-violet-800">INTERNSHIP</Badge>
+              <Badge className="bg-info-soft text-info">INTERNSHIP</Badge>
             )}
             {!job.is_eligible && (
-              <span className="text-xs text-amber-800">
+              <span className="text-xs text-warning">
                 {job.eligibility_reason}
               </span>
             )}
@@ -1766,24 +1766,24 @@ function JobCard({
               </Badge>
             )}
             {tracking.status !== "New" && (
-              <Badge className="bg-[#eef2ff] text-[#3746a0]">
+              <Badge className="bg-info-soft text-info">
                 {tracking.status}
               </Badge>
             )}
-            <span className="ml-auto text-xs text-[#738078]">
+            <span className="ml-auto text-xs text-muted-foreground">
               First detected <b>{relative(job.first_seen_at)}</b>
             </span>
           </div>
           <div className="flex gap-4">
-            <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#e8f0eb] font-black text-[#185d3c]">
+            <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-muted font-black text-success">
               {job.company[0]}
             </div>
             <div>
               <h3 className="text-xl font-black">{job.title}</h3>
-              <p className="mt-1 text-sm font-semibold text-[#5e6d65]">
+              <p className="mt-1 text-sm font-semibold text-muted-foreground">
                 {job.company}
               </p>
-              <div className="mt-3 flex flex-wrap gap-4 text-xs text-[#6e7c74]">
+              <div className="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <MapPin size={14} />
                   {job.normalized_location}
@@ -1801,13 +1801,13 @@ function JobCard({
               skills.slice(0, 6).map((s: string) => (
                 <span
                   key={s}
-                  className="rounded-lg bg-[#f0f4f1] px-2.5 py-1.5 text-[11px] font-bold"
+                  className="rounded-lg bg-muted px-2.5 py-1.5 text-[11px] font-bold"
                 >
                   {s}
                 </span>
               ))
             ) : (
-              <span className="text-xs text-[#75837b]">
+              <span className="text-xs text-muted-foreground">
                 Skills optional / not specified
               </span>
             )}
@@ -1815,29 +1815,29 @@ function JobCard({
               <button
                 type="button"
                 onClick={() => setDetails(true)}
-                className="rounded-lg border px-2.5 py-1.5 text-[11px] font-bold text-[#52665b]"
+                className="rounded-lg border px-2.5 py-1.5 text-[11px] font-bold text-muted-foreground"
               >
                 +{skills.length - 6} more
               </button>
             )}
           </div>
         </div>
-        <div className="flex min-w-72 flex-col justify-between border-t bg-[#fafcfb] p-5 lg:border-l lg:border-t-0">
+        <div className="flex min-w-72 flex-col justify-between border-t bg-muted p-5 lg:border-l lg:border-t-0">
           <div>
             <div className="flex items-end justify-between">
-              <span className="text-xs font-bold uppercase text-[#718077]">
+              <span className="text-xs font-bold uppercase text-muted-foreground">
                 Personal match
               </span>
-              <span className="text-3xl font-black text-[#155d3a]">
+              <span className="text-3xl font-black text-success">
                 {match.score}
                 <small className="text-xs">/100</small>
               </span>
             </div>
             <Progress value={match.score} className="mt-3 h-2" />
-            <p className="mt-2 text-[11px] text-[#78867e]">
+            <p className="mt-2 text-[11px] text-muted-foreground">
               {match.reasons.slice(0, 3).join(" · ") || "Target role to review"}
             </p>
-            <p className="mt-2 text-[11px] capitalize text-[#78867e]">
+            <p className="mt-2 text-[11px] capitalize text-muted-foreground">
               {job.ats_provider} · official source
             </p>
           </div>
@@ -1851,7 +1851,7 @@ function JobCard({
                   tracking.status === "New" ? "Viewed" : tracking.status,
                 )
               }
-              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#155d3a] text-sm font-black text-white"
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-black text-primary-foreground"
             >
               Apply now <ExternalLink size={15} />
             </a>
@@ -1869,7 +1869,7 @@ function JobCard({
               href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in (recruiter OR \"talent acquisition\" OR \"campus hiring\") \"${job.company}\"`)}`}
               target="_blank"
               rel="noreferrer"
-              className="mt-2 flex h-10 items-center justify-center gap-2 rounded-xl border bg-white text-xs font-bold text-[#155d3a]"
+              className="mt-2 flex h-10 items-center justify-center gap-2 rounded-xl border bg-card text-xs font-bold text-success"
             >
               Find public hiring contacts <ExternalLink size={14} />
             </a>
@@ -1878,7 +1878,7 @@ function JobCard({
             <button
               aria-label={tracking.saved ? "Remove saved job" : "Save job"}
               onClick={() => saveTracking(job, { saved: !tracking.saved })}
-              className={`grid size-10 place-items-center rounded-xl border ${tracking.saved ? "bg-[#fff1ee] text-[#e04d38]" : ""}`}
+              className={`grid size-10 place-items-center rounded-xl border ${tracking.saved ? "bg-danger-soft text-danger" : ""}`}
             >
               <Bookmark
                 size={17}
@@ -1889,7 +1889,7 @@ function JobCard({
               aria-label={`Application stage for ${job.title}`}
               value={tracking.status}
               onChange={(e) => updateStatus(e.target.value)}
-              className="h-10 rounded-xl border bg-white px-3 text-xs font-bold"
+              className="h-10 rounded-xl border bg-card px-3 text-xs font-bold"
             >
               {statuses.map((s) => (
                 <option key={s}>{s}</option>
@@ -1909,7 +1909,7 @@ function JobCard({
           <button
             aria-expanded={details}
             onClick={() => setDetails((x) => !x)}
-            className="mt-3 w-full rounded-xl py-2 text-xs font-bold text-[#416352] hover:bg-[#edf5f0]"
+            className="mt-3 w-full rounded-xl py-2 text-xs font-bold text-muted-foreground hover:bg-muted"
           >
             {details
               ? "Hide application details"
@@ -1918,11 +1918,11 @@ function JobCard({
         </div>
       </div>
       {details && (
-        <div className="grid gap-4 border-t bg-[#f8fbf9] p-5 md:grid-cols-2">
+        <div className="grid gap-4 border-t bg-muted p-5 md:grid-cols-2">
           {job.description && (
             <div className="md:col-span-2">
               <h4 className="font-bold">Employer description</h4>
-              <p className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap text-sm text-slate-600">
+              <p className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap text-sm text-muted-foreground">
                 {job.description}
               </p>
             </div>
@@ -1934,7 +1934,7 @@ function JobCard({
               onChange={(e) =>
                 saveTracking(job, { referralStatus: e.target.value })
               }
-              className="mt-2 h-11 w-full rounded-xl border bg-white px-3 text-sm font-normal"
+              className="mt-2 h-11 w-full rounded-xl border bg-card px-3 text-sm font-normal"
             >
               {referralStatuses.map((x) => (
                 <option key={x}>{x}</option>
@@ -1947,12 +1947,12 @@ function JobCard({
               value={tracking.notes || ""}
               onChange={(e) => saveTracking(job, { notes: e.target.value })}
               rows={3}
-              className="mt-2 w-full resize-y rounded-xl border bg-white p-3 text-sm font-normal"
+              className="mt-2 w-full resize-y rounded-xl border bg-card p-3 text-sm font-normal"
               placeholder="Recruiter, referral contact, interview date, follow-up…"
             />
           </label>
           {tracking.appliedAt && (
-            <p className="text-xs text-[#687970] md:col-span-2">
+            <p className="text-xs text-muted-foreground md:col-span-2">
               Marked applied {relative(tracking.appliedAt)}. Stored only in this
               browser.
             </p>
@@ -1964,10 +1964,10 @@ function JobCard({
 }
 function Empty() {
   return (
-    <div className="rounded-3xl border border-dashed bg-white p-16 text-center">
-      <Radar className="mx-auto mb-4 text-[#6a8074]" />
+    <div className="rounded-3xl border border-dashed bg-card p-16 text-center">
+      <Radar className="mx-auto mb-4 text-muted-foreground" />
       <h3 className="text-lg font-bold">No jobs in this view</h3>
-      <p className="mt-1 text-sm text-[#738078]">
+      <p className="mt-1 text-sm text-muted-foreground">
         Change filters or check after the next completed scan.
       </p>
     </div>
@@ -1989,10 +1989,10 @@ function InternshipDiscovery({ preferences }: { preferences: SearchPreferences }
     { name: `Official ATS internships — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${preferred.map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}") (${OFFICIAL_ATS_DOMAINS})`)}` },
   ]);
   return (
-    <section className="mb-5 rounded-3xl border border-violet-200 bg-violet-50 p-5">
-      <div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-700 text-white"><GraduationCap size={20} /></div><div><h3 className="font-black text-violet-950">Internship & apprenticeship discovery</h3><p className="mt-1 text-sm leading-6 text-violet-900/75">Kept separate from full-time jobs. JobRadar indexes official employer sources and offers user-initiated LinkedIn, Naukri and official ATS searches; it never scrapes those job boards.</p></div></div>
-      <div className="mt-4 grid gap-2 md:grid-cols-2">{links.map((link) => <a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-violet-200 bg-white p-3 text-sm font-bold text-violet-900 hover:border-violet-500">{link.name} <ExternalLink size={15} /></a>)}</div>
-      <p className="mt-3 text-xs text-violet-900/70">Use the Companies area to open a company-specific public recruiter search. Verify employment before sending a short, personalized referral request; JobRadar collects no personal data.</p>
+    <section className="mb-5 rounded-3xl border border-info/40 bg-info-soft p-5">
+      <div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-700 text-white"><GraduationCap size={20} /></div><div><h3 className="font-black text-info">Internship & apprenticeship discovery</h3><p className="mt-1 text-sm leading-6 text-info/75">Kept separate from full-time jobs. JobRadar indexes official employer sources and offers user-initiated LinkedIn, Naukri and official ATS searches; it never scrapes those job boards.</p></div></div>
+      <div className="mt-4 grid gap-2 md:grid-cols-2">{links.map((link) => <a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-info/40 bg-card p-3 text-sm font-bold text-info hover:border-info/40">{link.name} <ExternalLink size={15} /></a>)}</div>
+      <p className="mt-3 text-xs text-info/70">Use the Companies area to open a company-specific public recruiter search. Verify employment before sending a short, personalized referral request; JobRadar collects no personal data.</p>
     </section>
   );
 }
@@ -2020,7 +2020,7 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
         title="Search job boards safely"
         text="One-click searches use your preferred titles and the last-24-hours filter"
       />
-      <div className="rounded-2xl border bg-white p-5 text-sm text-[#5e6d65]">
+      <div className="rounded-2xl border bg-card p-5 text-sm text-muted-foreground">
         JobRadar cannot copy these sites automatically without authorized access.
         Fallback searches cover LinkedIn, Naukri, Indeed, Glassdoor and official
         ATS pages from the last day. Verify the employer and posting date, then
@@ -2033,7 +2033,7 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
             href={link.url}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-between rounded-2xl border bg-white p-5 font-black text-[#155d3a] shadow-sm hover:border-[#6aa184]"
+            className="flex items-center justify-between rounded-2xl border bg-card p-5 font-black text-success shadow-sm hover:border-primary/50"
           >
             {link.name} <ExternalLink size={17} />
           </a>
@@ -2126,14 +2126,14 @@ function OutreachView({
         title="Recruiter outreach & referrals"
         text="Find public contact paths, verify them, then send a short personalized message"
       />
-      <section className="rounded-3xl border border-[#c8dbd0] bg-white p-5 shadow-sm md:p-6">
+      <section className="rounded-3xl border border-border bg-card p-5 shadow-sm md:p-6">
         <div className="grid gap-4 lg:grid-cols-2">
           <label className="text-sm font-bold">
             Company
             <select
               value={company.name}
               onChange={(event) => { setCompanyName(event.target.value); setJobKey(""); }}
-              className="mt-2 h-11 w-full rounded-xl border bg-white px-3 text-sm font-normal"
+              className="mt-2 h-11 w-full rounded-xl border bg-card px-3 text-sm font-normal"
             >
               {companies.map((item) => <option key={item.name}>{item.name}</option>)}
             </select>
@@ -2143,7 +2143,7 @@ function OutreachView({
             <select
               value={selectedJob ? trackingKey(selectedJob) : ""}
               onChange={(event) => setJobKey(event.target.value)}
-              className="mt-2 h-11 w-full rounded-xl border bg-white px-3 text-sm font-normal"
+              className="mt-2 h-11 w-full rounded-xl border bg-card px-3 text-sm font-normal"
             >
               {companyJobs.length ? companyJobs.map((job) => (
                 <option key={trackingKey(job)} value={trackingKey(job)}>{job.title} · {job.normalized_location}</option>
@@ -2151,18 +2151,18 @@ function OutreachView({
             </select>
           </label>
         </div>
-        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl bg-[#f2f7f4] p-4 text-sm">
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl bg-muted p-4 text-sm">
           <span className="font-black">{company.name}</span>
-          <span className="text-[#687970]">{domain || "Official career source"}</span>
-          <a href={company.careers_url} target="_blank" rel="noreferrer" className="ml-auto inline-flex items-center gap-1 font-bold text-[#155d3a]">Official careers <ExternalLink size={14} /></a>
+          <span className="text-muted-foreground">{domain || "Official career source"}</span>
+          <a href={company.careers_url} target="_blank" rel="noreferrer" className="ml-auto inline-flex items-center gap-1 font-bold text-success">Official careers <ExternalLink size={14} /></a>
         </div>
       </section>
       <div className="grid gap-3 md:grid-cols-2">
         {searches.map(({ label, detail, url, icon: Icon }) => (
-          <a key={label} href={url} target="_blank" rel="noreferrer" className="group flex items-center gap-4 rounded-2xl border bg-white p-5 shadow-sm hover:border-[#6aa184]">
-            <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#e4f4ea] text-[#155d3a]"><Icon size={20} /></span>
-            <span><span className="block font-black">{label}</span><span className="mt-1 block text-xs leading-5 text-[#687970]">{detail}</span></span>
-            <ExternalLink className="ml-auto text-[#6f8278] group-hover:text-[#155d3a]" size={17} />
+          <a key={label} href={url} target="_blank" rel="noreferrer" className="group flex items-center gap-4 rounded-2xl border bg-card p-5 shadow-sm hover:border-primary/50">
+            <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-success-soft text-success"><Icon size={20} /></span>
+            <span><span className="block font-black">{label}</span><span className="mt-1 block text-xs leading-5 text-muted-foreground">{detail}</span></span>
+            <ExternalLink className="ml-auto text-muted-foreground group-hover:text-success" size={17} />
           </a>
         ))}
       </div>
@@ -2170,7 +2170,7 @@ function OutreachView({
         <OutreachTemplate title="Message a recruiter" text={recruiterMessage} copied={copied === "recruiter"} copy={() => copy("recruiter", recruiterMessage)} />
         <OutreachTemplate title="Ask for a referral" text={referralMessage} copied={copied === "referral"} copy={() => copy("referral", referralMessage)} />
       </div>
-      <section className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+      <section className="rounded-2xl border border-warning/40 bg-warning-soft p-4 text-sm text-warning">
         <p className="font-black">Safe outreach checklist</p>
         <p className="mt-1 leading-6">Use only emails published on the official company domain, verify the person still works there, apply first when possible, personalize one proof point, and send one respectful follow-up at most. JobRadar never guesses email patterns, scrapes private profiles, or stores contacts.</p>
         <a href={`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(recruiterMessage)}`} className="mt-3 inline-flex items-center gap-2 rounded-xl bg-amber-900 px-4 py-2 font-bold text-white"><Mail size={15} /> Open email draft</a>
@@ -2181,12 +2181,12 @@ function OutreachView({
 
 function OutreachTemplate({ title, text, copied, copy }: { title: string; text: string; copied: boolean; copy: () => void }) {
   return (
-    <section className="rounded-2xl border bg-white p-5 shadow-sm">
+    <section className="rounded-2xl border bg-card p-5 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <h3 className="font-black">{title}</h3>
-        <button type="button" onClick={copy} className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-bold text-[#155d3a]"><Copy size={14} /> {copied ? "Copied" : "Copy"}</button>
+        <button type="button" onClick={copy} className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-bold text-success"><Copy size={14} /> {copied ? "Copied" : "Copy"}</button>
       </div>
-      <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-[#586b61]">{text}</p>
+      <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{text}</p>
     </section>
   );
 }
@@ -2220,12 +2220,12 @@ function CompaniesView({
           const limited = c.warning?.startsWith("Limited coverage"),
             state = c.error_count ? "Failed" : limited ? "Limited coverage" : c.jobs_found === 0 ? "No current openings" : c.candidate_jobs === 0 ? "No target roles" : "Productive";
           const fallback = companyFallbackLinks(c.name, preferences);
-          return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-white p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-slate-500">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-red-50 text-red-700" : limited || c.jobs_found === 0 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-slate-500">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-[#155d3a]"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a>{(limited || c.error_count > 0 || c.jobs_found === 0) && fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer">{link.name}</a>)}<a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
+          return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-card p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-muted-foreground">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-danger-soft text-danger" : limited || c.jobs_found === 0 ? "bg-warning-soft text-warning" : "bg-success-soft text-success"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-muted-foreground">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-success"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a>{(limited || c.error_count > 0 || c.jobs_found === 0) && fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer">{link.name}</a>)}<a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
         })}
       </div>
-      <div className="hidden overflow-x-auto rounded-2xl border bg-white md:block">
+      <div className="hidden overflow-x-auto rounded-2xl border bg-card md:block">
         <table className="w-full min-w-[900px] text-left text-sm">
-          <thead className="bg-[#f7faf8] text-xs uppercase">
+          <thead className="bg-muted text-xs uppercase">
             <tr>
               <th className="p-4">Company</th>
               <th>ATS</th>
@@ -2262,15 +2262,15 @@ function CompaniesView({
                   <td
                     className={
                       c.error_count
-                        ? "text-red-700"
+                        ? "text-danger"
                         : limited || c.jobs_found === 0
-                          ? "text-amber-700"
-                          : "text-emerald-700"
+                          ? "text-warning"
+                          : "text-success"
                     }
                   >
                     {state}
                     {c.warning && (
-                      <span className="block max-w-52 text-[10px] text-slate-500">
+                      <span className="block max-w-52 text-[10px] text-muted-foreground">
                         {c.warning}
                       </span>
                     )}
@@ -2280,15 +2280,15 @@ function CompaniesView({
                       href={c.careers_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-bold text-[#155d3a]"
+                      className="inline-flex items-center gap-1 font-bold text-success"
                     >
                       Open <ExternalLink size={14} />
                     </a>
                   </td>
                   <td>
                     <div className="flex max-w-72 flex-wrap gap-2">
-                      {fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">{link.name}</a>)}
-                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Contacts</a>
+                      {fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="font-bold text-success">{link.name}</a>)}
+                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer" className="font-bold text-success">Contacts</a>
                     </div>
                   </td>
                 </tr>
@@ -2335,7 +2335,7 @@ function HealthView({ data }: { data: Payload | null }) {
         <Stat label="Raw jobs" value={Number(run?.jobs_scanned || 0)} />
         <Stat label="Eligible" value={Number(run?.matching_jobs || 0)} />
       </div>
-      <div className="overflow-x-auto rounded-2xl border bg-white">
+      <div className="overflow-x-auto rounded-2xl border bg-card">
         <div className="flex items-center gap-2 border-b p-4 font-black">
           <History size={18} />
           Recent scan history
@@ -2360,8 +2360,8 @@ function HealthView({ data }: { data: Payload | null }) {
                 <td
                   className={
                     r.status === "success"
-                      ? "text-emerald-700"
-                      : "text-amber-700"
+                      ? "text-success"
+                      : "text-warning"
                   }
                 >
                   {r.status}
@@ -2407,7 +2407,7 @@ function NotificationsView({ data }: { data: Payload | null }) {
         />
         <Info label="Message links" value="Application + career page" />
       </div>
-      <div className="overflow-hidden rounded-2xl border bg-white">
+      <div className="overflow-hidden rounded-2xl border bg-card">
         <div className="border-b p-4 font-black">Recent notifications</div>
         {notifications.length ? (
           notifications.map((n) => (
@@ -2420,19 +2420,19 @@ function NotificationsView({ data }: { data: Payload | null }) {
               <span className="capitalize">{n.channel}</span>
               <span
                 className={
-                  n.status === "sent" ? "text-emerald-700" : "text-red-700"
+                  n.status === "sent" ? "text-success" : "text-danger"
                 }
               >
                 {n.status}
               </span>
               <span>{relative(n.sent_at)}</span>
               {n.error && (
-                <p className="col-span-full text-xs text-red-700">{n.error}</p>
+                <p className="col-span-full text-xs text-danger">{n.error}</p>
               )}
             </div>
           ))
         ) : (
-          <p className="p-8 text-sm text-[#738078]">
+          <p className="p-8 text-sm text-muted-foreground">
             Delivery tracking will appear after the next eligible alert.
           </p>
         )}
@@ -2477,9 +2477,9 @@ function SettingsView({
           value={policy?.skills_required ? "Required" : "Optional"}
         />
       </div>
-      <div className="rounded-2xl border bg-white p-6">
+      <div className="rounded-2xl border bg-card p-6">
         <h3 className="font-black">Private application tracking</h3>
-        <p className="mt-1 text-sm text-[#6e7c74]">
+        <p className="mt-1 text-sm text-muted-foreground">
           {Object.keys(tracking).length} jobs tracked in this browser. Export a
           backup before clearing browser data.
         </p>
@@ -2490,13 +2490,13 @@ function SettingsView({
           <Button
             onClick={clearTracking}
             variant="outline"
-            className="text-red-700"
+            className="text-danger"
           >
             <Trash2 size={16} /> Clear tracking
           </Button>
         </div>
       </div>
-      <div className="rounded-2xl border bg-white p-6">
+      <div className="rounded-2xl border bg-card p-6">
         <h3 className="font-black">Reliability controls</h3>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <CheckLine text="Employer relative dates remain labels, not invented timestamps" />
@@ -2521,14 +2521,14 @@ function SectionTitle({
   text: string;
 }) {
   return (
-    <div className="rounded-3xl bg-[#123f2c] p-6 text-white">
+    <div className="rounded-3xl bg-hero p-6 text-white">
       <div className="flex items-center gap-3">
-        <div className="grid size-11 place-items-center rounded-xl bg-white/10">
+        <div className="grid size-11 place-items-center rounded-xl bg-card/10">
           <Icon />
         </div>
         <div>
           <h2 className="text-2xl font-black">{title}</h2>
-          <p className="mt-1 text-sm text-[#c4d8ce]">{text}</p>
+          <p className="mt-1 text-sm text-white/80">{text}</p>
         </div>
       </div>
     </div>
@@ -2536,16 +2536,16 @@ function SectionTitle({
 }
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border bg-white p-5">
-      <p className="text-xs font-bold uppercase text-[#7c8982]">{label}</p>
+    <div className="rounded-2xl border bg-card p-5">
+      <p className="text-xs font-bold uppercase text-muted-foreground">{label}</p>
       <p className="mt-2 font-black">{value}</p>
     </div>
   );
 }
 function CheckLine({ text }: { text: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl bg-[#f3f8f5] p-3 text-sm font-semibold">
-      <Check size={16} className="text-emerald-700" />
+    <div className="flex items-center gap-2 rounded-xl bg-muted p-3 text-sm font-semibold">
+      <Check size={16} className="text-success" />
       {text}
     </div>
   );
