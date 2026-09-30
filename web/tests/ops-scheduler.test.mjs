@@ -66,7 +66,7 @@ test('chaos: GitHub authorization failure cannot dispatch another scan',async()=
     assert.equal(seen.length,1);
   }finally{globalThis.fetch=original}
 });
-test('quota outage suppresses repeated recovery dispatch and applies request deadlines',async()=>{
+test('503 degradation suppresses repeated recovery dispatch and applies request deadlines',async()=>{
   const original=globalThis.fetch;let dispatched=false;
   globalThis.fetch=async(url,options={})=>{
     assert.ok(options.signal);
@@ -75,7 +75,7 @@ test('quota outage suppresses repeated recovery dispatch and applies request dea
     if(url.includes('/api/health'))return Response.json({ok:false,quota_exhausted:true},{status:503});
     dispatched=true;throw Error('must not dispatch');
   };
-  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'quota');assert.equal(dispatched,false);}finally{globalThis.fetch=original}
+  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'degraded');assert.equal(dispatched,false);}finally{globalThis.fetch=original}
 });
 test('availability probe checks the HTML and D1-independent backup with bounded requests',async()=>{
   const {probeAvailability}=await import('../ops-scheduler/index.ts');const original=globalThis.fetch;
