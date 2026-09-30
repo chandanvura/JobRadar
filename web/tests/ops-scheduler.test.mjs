@@ -31,14 +31,8 @@ test('external scheduler dispatches after health is blocked and a finalizer is s
 
 test('chaos: a manually disabled workflow stays disabled',async()=>{
   const original=globalThis.fetch;const seen=[];
-  globalThis.fetch=async(url)=>{
-    seen.push(url);
-    return Response.json({state:'disabled_manually'});
-  };
-  try{
-    assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'disabled');
-    assert.equal(seen.length,1);
-  }finally{globalThis.fetch=original}
+  globalThis.fetch=async(url)=>{seen.push(url);return Response.json({state:'disabled_manually'});};
+  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'disabled');assert.equal(seen.length,1);}finally{globalThis.fetch=original}
 });
 
 test('chaos: a queued scan prevents recovery even with broken health',async()=>{
@@ -49,34 +43,40 @@ test('chaos: a queued scan prevents recovery even with broken health',async()=>{
     if(url.includes('/workflows/scrape.yml/runs?'))return Response.json({workflow_runs:[run('queued')]});
     throw new Error(`Unexpected request ${url}`);
   };
-  try{
-    assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'active');
-    assert.equal(seen.length,2);
-  }finally{globalThis.fetch=original}
+  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'active');assert.equal(seen.length,2);}finally{globalThis.fetch=original}
 });
 
 test('chaos: GitHub authorization failure cannot dispatch another scan',async()=>{
   const original=globalThis.fetch;const seen=[];
-  globalThis.fetch=async(url)=>{
-    seen.push(url);
-    return new Response('unauthorized',{status:401});
-  };
-  try{
-    await assert.rejects(checkAndRecover({GITHUB_DISPATCH_TOKEN:'expired'}),/HTTP 401/);
-    assert.equal(seen.length,1);
-  }finally{globalThis.fetch=original}
+  globalThis.fetch=async(url)=>{seen.push(url);return new Response('unauthorized',{status:401});};
+  try{await assert.rejects(checkAndRecover({GITHUB_DISPATCH_TOKEN:'expired'}),/HTTP 401/);assert.equal(seen.length,1);}finally{globalThis.fetch=original}
 });
-test('503 degradation suppresses repeated recovery dispatch and applies request deadlines',async()=>{
+
+test('D1 quota 503 suppresses repeated recovery dispatch and applies request deadlines',async()=>{
   const original=globalThis.fetch;let dispatched=false;
   globalThis.fetch=async(url,options={})=>{
     assert.ok(options.signal);
     if(url.endsWith('/actions/workflows/scrape.yml'))return Response.json({state:'active'});
     if(url.includes('/workflows/scrape.yml/runs?'))return Response.json({workflow_runs:[]});
-    if(url.includes('/api/health'))return Response.json({ok:false,quota_exhausted:true},{status:503});
+    if(url.includes('/api/health'))return Response.json({ok:false,quota_exhausted:true,retry_at:'2026-10-01T00:00:00.000Z'},{status:503});
     dispatched=true;throw Error('must not dispatch');
   };
-  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'degraded');assert.equal(dispatched,false);}finally{globalThis.fetch=original}
+  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'quota');assert.equal(dispatched,false);}finally{globalThis.fetch=original}
 });
+
+test('stale non-quota 503 can recover instead of being mistaken for quota exhaustion',async()=>{
+  const original=globalThis.fetch;let dispatches=0;
+  globalThis.fetch=async(url,options={})=>{
+    assert.ok(options.signal);
+    if(url.endsWith('/actions/workflows/scrape.yml'))return Response.json({state:'active'});
+    if(url.includes('/workflows/scrape.yml/runs?'))return Response.json({workflow_runs:[]});
+    if(url.includes('/api/health'))return Response.json({ok:false,quota_exhausted:false,stale:true,latest_run:{finished_at:'2020-01-01T00:00:00Z'}},{status:503});
+    if(url.includes('/dispatches')){dispatches++;return new Response(null,{status:204});}
+    throw new Error(`Unexpected URL ${url}`);
+  };
+  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'dispatched');assert.equal(dispatches,1);}finally{globalThis.fetch=original}
+});
+
 test('availability probe checks the HTML and D1-independent backup with bounded requests',async()=>{
   const {probeAvailability}=await import('../ops-scheduler/index.ts');const original=globalThis.fetch;
   try{
@@ -86,6 +86,7 @@ test('availability probe checks the HTML and D1-independent backup with bounded 
     const failure=await probeAvailability();assert.equal(failure.ok,false);assert.equal(failure.root_status,503);
   }finally{globalThis.fetch=original}
 });
+
 test('inactive operational schedules recover while intentionally disabled workflows stay disabled',async()=>{
   const {restoreInactiveSchedules}=await import('../ops-scheduler/index.ts');const original=globalThis.fetch;const enabled=[];
   globalThis.fetch=async(url,options)=>{
