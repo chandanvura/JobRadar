@@ -3,12 +3,24 @@ import { pathToFileURL } from 'node:url';
 
 export async function captureCatalog(origin, fetcher = fetch) {
   const read = async path => {
-    const r = await fetcher(new URL(path, origin), { signal: AbortSignal.timeout(20000), headers: { Accept: 'application/json' } });
-    if (!r.ok) throw Error(`Catalog read ${path} returned ${r.status}`);
-    return r.json();
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const r = await fetcher(new URL(path, origin), { signal: AbortSignal.timeout(20000), headers: { Accept: '*/*', 'Accept-Encoding': 'identity' } });
+        if (!r.ok) {
+          await r.body?.cancel();
+          if (r.status >= 500 && attempt < 2) continue;
+          throw Error(`Catalog read ${path} returned ${r.status}`);
+        }
+        return await r.json();
+      } catch (error) {
+        if (attempt === 2 || (error.message?.startsWith('Catalog read') && !error.message.match(/returned 5\d\d$/))) throw error;
+      }
+    }
+    throw Error(`Catalog read ${path} failed after three attempts`);
   };
+  let dashboard;
   try {
-    const dashboard = await read('/api/dashboard');
+    dashboard = await read('/api/dashboard');
     if (dashboard.data_mode === 'backup') throw Error('Live data unavailable');
     const jobs = new Map();
     let cursor = 0;
@@ -30,7 +42,13 @@ export async function captureCatalog(origin, fetcher = fetch) {
     // Never replace an existing backup with an empty catalog during an outage.
     let prior;
     try { prior = await read('/backup/catalog.json'); }
-    catch (backupError) { throw new AggregateError([liveError, backupError], 'Cannot capture live catalog or recover prior backup'); }
+    catch (backupError) {
+      if (dashboard?.data_mode !== 'backup' && Array.isArray(dashboard?.companies) && Array.isArray(dashboard?.jobs) && dashboard.jobs.length && dashboard.jobs.every(job => Number.isSafeInteger(job.id))) {
+        console.warn('Initial backup contains the dashboard page only; refresh deployment after API recovery for full coverage');
+        return {...dashboard,version:1,data_mode:'backup',snapshot_at:new Date().toISOString(),coverage:'partial'};
+      }
+      throw new AggregateError([liveError, backupError], 'Cannot capture live catalog or recover prior backup');
+    }
     if (prior.version !== 1 || !Number.isFinite(Date.parse(prior.snapshot_at)) || !Array.isArray(prior.jobs) || !prior.jobs.length || !Array.isArray(prior.companies)) throw Error('No valid public backup available');
     return prior;
   }

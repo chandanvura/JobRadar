@@ -121,6 +121,7 @@ type Notification = {
 type Payload = {
   data_mode?: "backup";
   snapshot_at?: string;
+  coverage?: "partial";
   jobs: ApiJob[];
   companies: Company[];
   latest_run: Run | null;
@@ -949,7 +950,7 @@ function DashboardContent() {
           {data?.data_mode === "backup" && (
             <div role="status" className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5 text-warning">
               <h2 className="font-bold">Backup mode — saved job catalog</h2>
-              <p className="mt-2 text-sm">Live data is temporarily unavailable. Showing the catalog saved {data.snapshot_at ? new Date(data.snapshot_at).toLocaleString() : "earlier"}. Listings and scan history may be outdated; verify openings on the employer site. Saving jobs, notes and application tracking still work in this browser. Refresh retries live data automatically.</p>
+              <p className="mt-2 text-sm">Live data is temporarily unavailable. Showing the catalog saved {data.snapshot_at ? new Date(data.snapshot_at).toLocaleString() : "earlier"}. {data.coverage === "partial" ? "This backup contains a limited selection of jobs. " : ""}Listings and scan history may be outdated; verify openings on the employer site. Saving jobs, notes and application tracking still work in this browser. Refresh retries live data automatically.</p>
             </div>
           )}
           {!notice && !data?.configured && !loading && (
