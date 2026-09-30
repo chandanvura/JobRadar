@@ -82,7 +82,7 @@ test('outreach workspace finds only public contacts and provides referral templa
 });
 test('final ingestion deactivates stale jobs only after every upload succeeds',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../worker/index.ts',import.meta.url),'utf8');
- assert.doesNotMatch(source,/UPDATE companies SET enabled=0/);
+ assert.doesNotMatch(source,/UPDATE companies SET enabled=0 WHERE/);
  assert.doesNotMatch(source,/for\(const name of successfulNames\)/);
  assert.match(source,/if\(payload\.run\).*UPDATE jobs SET is_active=0/);
  assert.match(source,/seen_job_keys/);
@@ -90,6 +90,14 @@ test('final ingestion deactivates stale jobs only after every upload succeeds',a
  assert.match(source,/NOT IN \(SELECT value FROM json_each/);
  assert.match(source,/DO UPDATE SET[\s\S]*WHERE jobs\.title IS NOT excluded\.title/);
  assert.match(source,/city IN \('Bengaluru','Hyderabad'\)/);
+ assert.match(source,/dedupeCompanies\(companyResult\.results/);
+ assert.match(source,/UPDATE companies SET enabled=0,updated_at=CURRENT_TIMESTAMP/);
+ assert.match(source,/lower\(name\) \|\| char\(31\) \|\| ats_provider/);
+});
+test('company registry contains one active source per company name',async()=>{
+ const csv=await (await import('node:fs/promises')).readFile(new URL('../../companies/companies.csv',import.meta.url),'utf8');
+ const names=csv.trim().split(/\r?\n/).slice(1).map(line=>line.split(',')[0].trim().toLowerCase());
+ assert.equal(new Set(names).size,names.length);
 });
 test('buyer-facing experience leads with the trust promise and hides operations',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
