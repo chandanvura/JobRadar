@@ -110,6 +110,15 @@ html[data-theme="dark"] button[class*="bg-white"] {
   background-color: var(--card);
   color: var(--foreground);
 }
+html[data-theme="dark"] :is(.bg-emerald-50, .bg-green-50, .bg-amber-50, .bg-red-50, .bg-blue-50) {
+  background-color: var(--accent);
+}
+html[data-theme="dark"] :is(.text-emerald-700, .text-emerald-800, .text-green-700, .text-green-800) {
+  color: #86d4a6;
+}
+html[data-theme="dark"] :is(.text-amber-700, .text-amber-800) { color: #f6cd80; }
+html[data-theme="dark"] :is(.text-red-700, .text-red-800) { color: #fda4af; }
+html[data-theme="dark"] :is(.text-slate-600, .text-slate-700, .text-slate-800, .text-gray-600, .text-gray-700, .text-gray-800) { color: var(--muted-foreground); }
 
 @theme inline {
   --color-background: var(--background);
