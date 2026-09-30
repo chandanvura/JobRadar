@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+@layer base {
+  * { border-color: var(--border); }
+}
+
 @utility scrollbar-thin {
   scrollbar-width: thin;
 }
@@ -112,6 +116,7 @@ html[data-theme="dark"] :is(input, select, textarea) {
   border-color: var(--input);
 }
 button:disabled { opacity: .5; cursor: not-allowed; }
+::placeholder { color: var(--muted-foreground); opacity: 1; }
 
 @theme inline {
   --color-hero: var(--hero);

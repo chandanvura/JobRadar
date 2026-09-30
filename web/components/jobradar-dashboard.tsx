@@ -1087,12 +1087,12 @@ function DashboardContent() {
                 <InternshipDiscovery preferences={preferences} />
               )}
               {active === "Latest Jobs" && (
-                <section className="mb-5 rounded-2xl border border-sky-200 bg-sky-50 p-5 text-sm text-sky-950">
+                <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
                   Sorted by when JobRadar first discovered each active listing. Employer posting dates may be older or unavailable; check the date shown on each card.
                 </section>
               )}
               {active === "All Jobs" && (
-                <section className="mb-5 rounded-2xl border border-sky-200 bg-sky-50 p-5 text-sm text-sky-950">
+                <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
                   All active target-city listings, including roles outside your experience range. Review each card’s eligibility reason before applying.
                 </section>
               )}
@@ -1559,7 +1559,7 @@ function Loading() {
 }
 function Metric({ value, label }: { value: number; label: string }) {
   return (
-    <div className="min-w-24 rounded-2xl bg-card/10 p-4">
+    <div className="min-w-24 rounded-2xl bg-white/10 p-4">
       <span className="text-2xl font-black">{value}</span>
       <p className="mt-1 text-[11px] font-bold uppercase text-white/80">
         {label}
@@ -2523,7 +2523,7 @@ function SectionTitle({
   return (
     <div className="rounded-3xl bg-hero p-6 text-white">
       <div className="flex items-center gap-3">
-        <div className="grid size-11 place-items-center rounded-xl bg-card/10">
+        <div className="grid size-11 place-items-center rounded-xl bg-white/10">
           <Icon />
         </div>
         <div>
