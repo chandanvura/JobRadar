@@ -6,7 +6,7 @@ from scraper.models import Job
 from bs4 import BeautifulSoup
 from scraper.adapters import cached_get, discover_ats, job_like_url, jobvite_config, likely_target, location_text, parse_jobvite_xml, parse_posted_at, parse_posting, request_bucket, workday_config
 from scraper.models import Company
-from scraper.main import fetch_company_jobs, ingest_chunks, ingest_scan, private_start_chat_id, run_health_status, telegram_chat_id, telegram_error
+from scraper.main import fetch_company_jobs, ingest_chunks, ingest_scan, private_start_chat_id, run_health_status, source_job_key, telegram_chat_id, telegram_error
 from scraper.distributed import load_artifacts, merge_artifacts, source_shard
 from scraper.normalization import classify_employment_type, classify_title, enrich, extract_experience, normalize_location
 
@@ -281,7 +281,7 @@ def test_ingest_scan_finalizes_with_seen_manifest(monkeypatch):
     async def post(url,headers,payload,attempts=3):
         payloads.append(payload); return Response(payload)
     monkeypatch.setattr("scraper.main.post_with_retry",post)
-    jobs=[{"ats_provider":"lever","external_job_id":"job:1"}]
+    jobs=[{"company":"Example","ats_provider":"lever","external_job_id":"job:1"}]
     companies=[
         {"name":"Healthy","error_count":0,"warning":""},
         {"name":"Failed","error_count":1,"warning":""},
@@ -290,7 +290,11 @@ def test_ingest_scan_finalizes_with_seen_manifest(monkeypatch):
     asyncio.run(ingest_scan("https://example.test",{},jobs,companies,{"started_at":"now"}))
     final=payloads[-1]["run"]
     assert final["successful_companies"]==["Healthy"]
-    assert final["seen_job_keys"]==["lever\x1fjob:1"]
+    assert final["seen_job_keys"]==["Example\x1flever\x1fjob:1"]
+
+def test_job_identity_includes_company_for_tenant_local_external_ids():
+    first=sample(); second=sample(); second.company="Another Employer"
+    assert source_job_key(first)!=source_job_key(second)
 
 def test_source_sharding_is_stable_and_has_one_owner():
     company=Company("Example","https://example.com/jobs","greenhouse","example")
@@ -306,6 +310,10 @@ def test_jobvite_configuration_and_xml_feed_parsing():
     assert jobs[0].job_url.startswith("https://") and jobs[0].ats_provider=="jobvite"
     assert jobs[0].posted_at.startswith("2026-09-29")
 
+def test_jobvite_xml_rejects_entities():
+    with pytest.raises(Exception):
+        parse_jobvite_xml('<!DOCTYPE x [<!ENTITY secret SYSTEM "file:///etc/passwd">]><result><job><title>&secret;</title></job></result>',"Example","https://example.com/careers")
+
 def test_target_prefilter_excludes_removed_cities_and_accepts_broader_titles():
     assert likely_target("Junior Data Engineer","Bangalore, India")
     assert likely_target("Security Engineer I","Hyderabad, India")
@@ -315,10 +323,10 @@ def test_target_prefilter_excludes_removed_cities_and_accepts_broader_titles():
 def test_distributed_merge_requires_complete_unique_shards(tmp_path):
     artifacts=[]
     for index in range(2):
-        artifact={"version":1,"shard_index":index,"shard_count":2,"started_at":"2026-09-17T00:00:00+00:00","finished_at":"2026-09-17T00:01:00+00:00","sources":1,"jobs_scanned":1,"raw_jobs":1,"failures":0,"companies":[{"name":f"C{index}","ats_provider":"custom","ats_identifier":f"c{index}"}],"jobs":[{"ats_provider":"custom","external_job_id":"same","title":f"T{index}"}]}
+        artifact={"version":1,"shard_index":index,"shard_count":2,"started_at":"2026-09-17T00:00:00+00:00","finished_at":"2026-09-17T00:01:00+00:00","sources":1,"jobs_scanned":1,"raw_jobs":1,"failures":0,"companies":[{"name":f"C{index}","ats_provider":"custom","ats_identifier":f"c{index}"}],"jobs":[{"company":f"C{index}","ats_provider":"custom","external_job_id":"same","title":f"T{index}"}]}
         path=tmp_path/f"shard-{index}.json"; path.write_text(json.dumps(artifact)); artifacts.append(path)
     merged=merge_artifacts(load_artifacts(artifacts),2)
-    assert len(merged["companies"])==2 and len(merged["jobs"])==1
+    assert len(merged["companies"])==2 and len(merged["jobs"])==2
     with pytest.raises(ValueError): load_artifacts(artifacts[:1])
 
 def test_expansion_covers_product_mnc_gcc_and_underrated_employers():

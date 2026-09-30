@@ -46,9 +46,11 @@ jobs:
           fi
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
-      - name: Validate private profiles and frontend types
+      - name: Audit and validate production build inputs
         run: |
-          npm run test:product
+          npm audit --omit=dev --audit-level=high
+          npm test
+          npm run lint
           npm run typecheck:ui
       - name: Ensure a workers.dev hostname exists
         run: |

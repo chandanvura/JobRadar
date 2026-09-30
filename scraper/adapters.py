@@ -4,9 +4,9 @@ from urllib.parse import urljoin, urlparse
 from pathlib import Path
 from hashlib import sha256
 import asyncio, html, json, os, re, time
-import xml.etree.ElementTree as ET
 import httpx
 from bs4 import BeautifulSoup
+from defusedxml import ElementTree as ET
 from .models import Company, Job
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}

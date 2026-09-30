@@ -5,7 +5,7 @@ from datetime import datetime,timezone
 from pathlib import Path
 
 from .adapters import ADAPTERS
-from .main import TELEGRAM_RETRY_IDS,TelegramDeliveryError,ensure_telegram_ready,ingest_scan,load_companies,notify,now,record_notification,run_health_status,scrape
+from .main import TELEGRAM_RETRY_IDS,TelegramDeliveryError,ensure_telegram_ready,ingest_scan,load_companies,notify,now,record_notification,run_health_status,scrape,source_job_key
 from .normalization import TARGET_CITIES
 from .models import Job
 
@@ -64,7 +64,7 @@ def merge_artifacts(artifacts,expected_sources=None):
         raise ValueError(f"Incomplete distributed scan: expected {expected_sources} sources, received {len(companies)}")
     jobs={}
     for artifact in artifacts:
-        for job in artifact["jobs"]: jobs[(job["ats_provider"],job["external_job_id"])]=job
+        for job in artifact["jobs"]: jobs[(job["company"],job["ats_provider"],job["external_job_id"])]=job
     return {
         "started_at":min(item["started_at"] for item in artifacts),
         "finished_at":max(item["finished_at"] for item in artifacts),
@@ -92,7 +92,7 @@ async def finalize(paths):
     if bypass: headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
     result=await ingest_scan(endpoint,headers,payload_jobs,statuses,run)
     alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
-    alert_jobs=[job for job in eligible if (f"{job.ats_provider}:{job.external_job_id}" in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
+    alert_jobs=[job for job in eligible if (source_job_key(job) in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
     telegram_chat=None
     if alert_jobs:
         try:

@@ -14,6 +14,8 @@ export function readPrivate(key: string) { try { return localStorage.getItem(pri
 export function writePrivate(key: string, value: string) { try { localStorage.setItem(privateKey(key), value); } catch { window.dispatchEvent(new Event('jobradar-storage-error')); } }
 export function removePrivate(key: string) { try { localStorage.removeItem(privateKey(key)); } catch { window.dispatchEvent(new Event('jobradar-storage-error')); } }
 export const defaultSearch = {titles: [] as string[], skills: [] as string[], experienceMin: 0, experienceMax: 3, locations: ['Bengaluru','Hyderabad']};
+export const trackingIdentity = (job:{company:unknown;ats_provider:unknown;external_job_id:unknown}) =>
+  `${String(job.company)}\u001f${String(job.ats_provider)}\u001f${String(job.external_job_id)}`;
 export function cleanSearch(value: unknown) {
   const v = value && typeof value === 'object' ? value as Record<string,unknown> : {};
   const terms = (x: unknown) => Array.isArray(x) ? [...new Set(x.filter((s): s is string => typeof s === 'string').map(s=>s.trim().slice(0,100)).filter(Boolean))].slice(0,30) : [];
@@ -30,15 +32,16 @@ export function safeTracking(value: unknown): Record<string,unknown> {
     const t=item as Record<string,unknown>, j=t.job as Record<string,unknown>;
     if (!j || typeof j !== 'object') continue;
     if (!['title','company','normalized_location','skills','role_category','ats_provider','external_job_id','first_seen_at'].every(k=>typeof j[k]==='string')) continue;
-    if (!['application_url','career_page_url'].every(k=>{try{return new URL(String(j[k])).protocol==='https:'}catch{return false}})) continue;
-    if (key !== `${j.ats_provider}:${j.external_job_id}`) continue;
+    if (!['application_url','career_page_url'].every(k=>{try{const url=new URL(String(j[k]));return url.protocol==='https:'&&Boolean(url.hostname)&&!url.username&&!url.password}catch{return false}})) continue;
+    const canonical=trackingIdentity(j as {company:unknown;ats_provider:unknown;external_job_id:unknown});
+    if (key !== canonical && key !== `${j.ats_provider}:${j.external_job_id}`) continue;
     const cleanJob={...j};
     for(const field of ['relevance_score','is_active','is_eligible','id'])cleanJob[field]=typeof j[field]==='number'&&Number.isFinite(j[field])?j[field]:0;
     for(const field of ['experience_min','experience_max','reported_age_hours'])cleanJob[field]=typeof j[field]==='number'&&Number.isFinite(j[field])?j[field]:null;
     for(const field of ['experience_label','posted_precision','eligibility_reason','last_seen_at'])cleanJob[field]=typeof j[field]==='string'?j[field]:'';
     for(const field of ['description','posted_at','posted_label','hiring_signal'])cleanJob[field]=typeof j[field]==='string'?j[field]:null;
     try{const skills=JSON.parse(String(j.skills));cleanJob.skills=JSON.stringify(Array.isArray(skills)?skills.filter(x=>typeof x==='string'):[])}catch{cleanJob.skills='[]'}
-    valid[key]={...t,saved:t.saved===true,status:['New','Viewed','Applied','Interview','Offer','Rejected','Ignored'].includes(String(t.status))?t.status:'New',notes:typeof t.notes==='string'?t.notes.slice(0,10000):'',job:cleanJob};
+    valid[canonical]={...t,saved:t.saved===true,status:['New','Viewed','Applied','Interview','Offer','Rejected','Ignored'].includes(String(t.status))?t.status:'New',notes:typeof t.notes==='string'?t.notes.slice(0,10000):'',job:cleanJob};
   }
   return valid;
 }

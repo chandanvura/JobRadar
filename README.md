@@ -13,7 +13,7 @@ neutral custom domain can be attached without changing the application.
 - Last-24-hour fallback discovery for limited sources through user-initiated LinkedIn, Indeed, Glassdoor, and Naukri searches without scraping those services or consuming D1 writes
 - Title, location, strictest-experience, skill, and freshness analysis
 - Immutable first-seen tracking and employer-relative date labels without invented timestamps
-- ATS/external-ID deduplication and notification history schema
+- Employer/ATS/external-ID deduplication, database uniqueness constraints, idempotent scan history, and notification history
 - Telegram alerts with official application links
 - Redundant GitHub Actions scheduling, bounded retries, overlap protection, and manual dispatch
 - Automatic official-page ATS discovery, domain-aware concurrency, and cached immutable job details
@@ -81,13 +81,14 @@ company_name,careers_url,ats_provider,ats_identifier,priority,enabled
 Example,https://example.com/careers,greenhouse,example,5,true
 ```
 
-The identifier is the company/board segment from the official Greenhouse, Lever, or Ashby URL. Verify each source and test small batches before expanding.
+The identifier is the company/board segment from the official ATS URL. Company names and ATS provider/identifier pairs must both be unique. Verify each source and test small batches before expanding.
 
 ## Tests
 
 ```bash
 python -m pytest -q
 cd web && npm test
+npm audit --omit=dev
 ```
 
 ## Independent Cloudflare deployment

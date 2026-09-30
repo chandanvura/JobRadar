@@ -4,7 +4,10 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 UA='JobRadarSourceReview/1.0'
 def get(url):
- req=urllib.request.Request(url,headers={'User-Agent':UA});r=urllib.request.urlopen(req,timeout=18)
+ parsed=urllib.parse.urlsplit(url)
+ if parsed.scheme not in {'http','https'} or not parsed.hostname:raise ValueError('Only public HTTP(S) candidate URLs are allowed')
+ # get() accepts only parsed HTTP(S) URLs with a hostname.
+ req=urllib.request.Request(url,headers={'User-Agent':UA});r=urllib.request.urlopen(req,timeout=18)  # nosec B310
  return r.read(1500000).decode('utf8','replace'),r.url
 
 def allowed(url):

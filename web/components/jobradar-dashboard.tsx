@@ -43,6 +43,7 @@ import {
   cleanSearch,
   profileId,
   safeTracking,
+  trackingIdentity,
   readPrivate,
   writePrivate,
   removePrivate,
@@ -273,8 +274,7 @@ const parseSkills = (value: string) => {
     return [];
   }
 };
-const trackingKey = (job: ApiJob) =>
-  `${job.ats_provider}:${job.external_job_id}`;
+const trackingKey = (job: ApiJob) => trackingIdentity(job);
 const isInternship = (job: ApiJob) =>
   job.employment_type === "Internship" ||
   /\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b/i.test(job.title);

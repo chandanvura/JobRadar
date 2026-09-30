@@ -25,25 +25,25 @@ flowchart TD
 |---|---|---|---|
 | Discovery worker | Registry plus shard index/count | Versioned JSON artifact | Stateless horizontal matrix; no production secrets |
 | Coordinator | Complete set of version-compatible artifacts | Bounded API batches and alerts | Singleton prevents duplicate finalization and notifications |
-| Ingestion API | Companies, batches of up to 125 jobs, final run | Deduplicated D1 records and notification keys | Idempotent on `(ats_provider, external_job_id)` |
+| Ingestion API | Companies, batches of up to 125 jobs, final run | Deduplicated D1 records and notification keys | Idempotent on `(company, ats_provider, external_job_id)` and scan `started_at` |
 | Dashboard API | Browser GET | Active jobs, source health, run history | Cloudflare edge distribution |
 
 Artifact invariants:
 
 - Exactly one artifact is required for every index from `0` to `shard_count - 1`.
 - Every enabled source must have exactly one owner and one status record.
-- Jobs are deduplicated by ATS provider and external job ID before ingestion.
+- Jobs are deduplicated by employer, ATS provider and external job ID before ingestion because tenant-local IDs can overlap between employers.
 - A run is finalized only after all artifacts and all ingestion batches succeed.
 - A partial distributed failure leaves the previous completed run authoritative.
 
 ## Load, payload, and failure controls
 
 - Stable sharding keeps retries predictable and balances hundreds of sources.
-- Cron opportunities run every ten minutes, but a production freshness check skips a full scan until the last completion is at least twenty minutes old. The gate fails open so a dashboard outage cannot permanently stop discovery.
+- GitHub scan opportunities run every four hours, but a production freshness check skips a full scan until the last completion is at least 210 minutes old. The gate fails open so a dashboard outage cannot permanently stop discovery.
 - Per-worker source and provider semaphores cap outbound load; Workday receives stricter limits.
 - Candidate-only artifacts avoid moving irrelevant descriptions.
 - Descriptions are capped at 4,000 characters and ingestion batches at 125 jobs.
-- HTTP retries use exponential backoff; job IDs and notification records make replay safe.
+- HTTP retries use exponential backoff; employer-scoped job IDs, unique scan start times and notification records make replay safe.
 - Workflow concurrency queues overlapping schedules instead of corrupting a running scan.
 - Artifacts expire after one day and do not contain credentials.
 

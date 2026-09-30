@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta, timezone
 
-from scraper.watchdog import last_successful_finalization, should_dispatch
+import pytest
+
+from scraper.watchdog import last_successful_finalization, request_json, should_dispatch
 
 
 def test_watchdog_recovers_stale_scan_but_does_not_duplicate_active_run():
@@ -21,3 +23,8 @@ def test_fallback_ignores_successful_gate_only_runs():
         return {"jobs":[{"name":"finalize","conclusion":"success","completed_at":"2026-09-26T12:00:00Z"}]}
     assert last_successful_finalization(runs,"owner/repo","token",fetch)=={
         "latest_run":{"finished_at":"2026-09-26T12:00:00Z"}}
+
+
+def test_watchdog_rejects_unapproved_urls():
+    with pytest.raises(RuntimeError,match="not allowed"):
+        request_json("file:///etc/passwd")

@@ -1,1 +1,12 @@
 .firecrawl/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+.venv/
+artifacts/
+web/.dev.vars
+web/.next/
+web/next-env.d.ts
+web/.wrangler/
+web/wrangler.migrations.json

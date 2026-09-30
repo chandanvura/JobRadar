@@ -1,4 +1,6 @@
-from scraper.telegram_setup import private_start_chats
+import pytest
+
+from scraper.telegram_setup import private_start_chats, telegram_call
 
 
 def test_setup_only_messages_private_chats_that_started_the_bot():
@@ -10,3 +12,8 @@ def test_setup_only_messages_private_chats_that_started_the_bot():
         {"message":{"text":"/start","chat":{"type":"private","id":999}}},
     ]}
     assert private_start_chats(updates,bot_id=999)=={"123"}
+
+
+def test_telegram_setup_rejects_non_telegram_urls():
+    with pytest.raises(RuntimeError,match="not allowed"):
+        telegram_call("file:///tmp","getMe")

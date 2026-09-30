@@ -5,13 +5,18 @@ import os
 import urllib.error
 import urllib.parse
 import urllib.request
+from urllib.parse import urlparse
 
 
 def telegram_call(base, method, fields=None):
+    parsed=urlparse(base)
+    if parsed.scheme!="https" or parsed.hostname!="api.telegram.org":
+        raise RuntimeError("Telegram API base URL is not allowed")
     data=urllib.parse.urlencode(fields).encode() if fields is not None else None
     request=urllib.request.Request(f"{base}/{method}",data=data)
     try:
-        with urllib.request.urlopen(request,timeout=20) as response:
+        # The base URL is restricted to the exact HTTPS Telegram API host above.
+        with urllib.request.urlopen(request,timeout=20) as response:  # nosec B310
             result=json.load(response)
     except urllib.error.HTTPError as exc:
         raise RuntimeError(f"Telegram {method} failed (HTTP {exc.code})") from None

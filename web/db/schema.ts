@@ -8,7 +8,7 @@ export const companies = sqliteTable("companies", {
   lastJobFoundAt: text("last_job_found_at"), errorCount: integer("error_count").notNull().default(0), jobsFound: integer("jobs_found").notNull().default(0),
   candidateJobs: integer("candidate_jobs").notNull().default(0), eligibleJobs: integer("eligible_jobs").notNull().default(0), warning: text("warning"), createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
-}, (t) => [uniqueIndex("companies_ats_key").on(t.atsProvider, t.atsIdentifier)]);
+}, (t) => [uniqueIndex("companies_ats_key").on(t.atsProvider, t.atsIdentifier), uniqueIndex("companies_name_key").on(t.name), index("companies_enabled_priority_name_idx").on(t.enabled,t.priority,t.name)]);
 
 export const jobs = sqliteTable("jobs", {
   id: integer("id").primaryKey({ autoIncrement: true }), externalJobId: text("external_job_id").notNull(), companyId: integer("company_id").references(() => companies.id),
@@ -24,12 +24,12 @@ export const jobs = sqliteTable("jobs", {
   hiringSignal: text("hiring_signal"), applicantCount: integer("applicant_count"), applicationStatus: text("application_status").notNull().default("New"), appliedAt: text("applied_at"),
   notes: text("notes"), referralStatus: text("referral_status"), recruiterName: text("recruiter_name"), recruiterContact: text("recruiter_contact"),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`), updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
-}, (t) => [uniqueIndex("jobs_source_key").on(t.atsProvider, t.externalJobId), index("jobs_freshness_idx").on(t.firstSeenAt), index("jobs_score_idx").on(t.relevanceScore)]);
+}, (t) => [uniqueIndex("jobs_source_key").on(t.company,t.atsProvider,t.externalJobId), index("jobs_freshness_idx").on(t.firstSeenAt), index("jobs_score_idx").on(t.relevanceScore), index("jobs_active_city_id_idx").on(t.isActive,t.city,t.id)]);
 
 export const notifications = sqliteTable("notifications", {
   id: integer("id").primaryKey({ autoIncrement: true }), jobId: integer("job_id").notNull().references(() => jobs.id), channel: text("channel").notNull(),
   status: text("status").notNull(), sentAt: text("sent_at").notNull().default(sql`CURRENT_TIMESTAMP`), error: text("error"),
-}, (t) => [uniqueIndex("notifications_once").on(t.jobId, t.channel)]);
+}, (t) => [uniqueIndex("notifications_once").on(t.jobId, t.channel), index("notifications_sent_at_idx").on(t.sentAt)]);
 
 export const scraperRuns = sqliteTable("scraper_runs", {
   id: integer("id").primaryKey({ autoIncrement: true }), startedAt: text("started_at").notNull(), finishedAt: text("finished_at"),
@@ -37,4 +37,4 @@ export const scraperRuns = sqliteTable("scraper_runs", {
   companiesFailed: integer("companies_failed").notNull().default(0), jobsScanned: integer("jobs_scanned").notNull().default(0), newJobs: integer("new_jobs").notNull().default(0),
   candidateJobs: integer("candidate_jobs").notNull().default(0), companiesEmpty: integer("companies_empty").notNull().default(0),
   matchingJobs: integer("matching_jobs").notNull().default(0), notificationsSent: integer("notifications_sent").notNull().default(0), status: text("status").notNull().default("running"),
-});
+}, (t) => [uniqueIndex("scraper_runs_started_key").on(t.startedAt), index("scraper_runs_finished_idx").on(t.finishedAt)]);

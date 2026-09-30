@@ -1,7 +1,7 @@
 # JobRadar recovery
 
 The independent Cloudflare Cron Worker checks the scan every 15 minutes. It
-dispatches a scan after 75 minutes without a completed run, unless a scan is
+dispatches a scan after five hours without a completed run, unless a scan is
 already active. The GitHub watchdog is a second trigger. Neither component
 changes stored jobs or tries to rewrite application code.
 

@@ -5,6 +5,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from urllib.parse import urlparse
 
 
 HEALTH_URL="https://jobradar.chandanvura.workers.dev/api/health"
@@ -12,12 +13,16 @@ ACTIVE_STATUSES={"queued","in_progress","pending","requested","waiting"}
 
 
 def request_json(url, token=None, data=None):
+    parsed=urlparse(url)
+    if parsed.scheme!="https" or parsed.hostname not in {"api.github.com","jobradar.chandanvura.workers.dev"}:
+        raise RuntimeError("Watchdog URL is not allowed")
     headers={"Accept":"application/vnd.github+json"} if token else {}
     if token:
         headers.update({"Authorization":f"Bearer {token}","X-GitHub-Api-Version":"2022-11-28"})
     request=urllib.request.Request(url,data=json.dumps(data).encode() if data is not None else None,headers=headers)
     try:
-        response=urllib.request.urlopen(request,timeout=20)
+        # Only the two exact HTTPS hosts allowlisted above can reach this call.
+        response=urllib.request.urlopen(request,timeout=20)  # nosec B310
     except urllib.error.HTTPError as exc:
         if url==HEALTH_URL and exc.code==503:
             response=exc

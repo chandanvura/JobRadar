@@ -76,6 +76,8 @@ jobs:
           if len(enabled)<500: raise SystemExit(f"Registry unexpectedly shrank: {len(enabled)} enabled companies")
           keys=[(row["ats_provider"].lower(),row["ats_identifier"].lower()) for row in enabled]
           if len(keys)!=len(set(keys)): raise SystemExit("Duplicate ATS identifiers found in company registry")
+          names=[row["name"].strip().casefold() for row in enabled]
+          if len(names)!=len(set(names)): raise SystemExit("Duplicate company names found in company registry")
           PY
       - uses: actions/setup-python@v7
         with:

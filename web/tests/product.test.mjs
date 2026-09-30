@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {cleanSearch,privateKey,writePrivate,readPrivate,safeTracking} from '../lib/private-profile.ts';
+import {cleanSearch,privateKey,writePrivate,readPrivate,safeTracking,trackingIdentity} from '../lib/private-profile.ts';
 import {postingAge,currentPosting} from '../lib/job-time.ts';
 test('profile storage preserves owner keys and isolates other users',()=>{
  const memory=new Map();globalThis.localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v)};
@@ -24,8 +24,13 @@ test('search invites create a private workspace without sharing a profile id',as
 });
 test('backup import rejects executable application links and malformed records',()=>{
  const job={title:'Engineer',company:'Test',normalized_location:'Bengaluru',skills:'[]',role_category:'Software Engineering',ats_provider:'test',external_job_id:'1',first_seen_at:'2026-09-13',application_url:'javascript:alert(1)',career_page_url:'https://example.com'};
- assert.deepEqual(safeTracking({'test:1':{job}}),{});job.application_url='https://example.com/job';assert.ok(safeTracking({'test:1':{job}})['test:1']);
+ assert.deepEqual(safeTracking({'test:1':{job}}),{});job.application_url='https://example.com/job';assert.ok(safeTracking({'test:1':{job}})['Test\u001ftest\u001f1']);
  assert.deepEqual(safeTracking({'test:1':null}),{});
+});
+test('tracking identity separates tenant-local job ids and migrates legacy keys',()=>{
+ const base={title:'Engineer',normalized_location:'Bengaluru',skills:'[]',role_category:'Software Engineering',ats_provider:'workday',external_job_id:'REQ-1',first_seen_at:'2026-09-13',application_url:'https://example.com/job',career_page_url:'https://example.com'};
+ assert.notEqual(trackingIdentity({...base,company:'A'}),trackingIdentity({...base,company:'B'}));
+ assert.ok(safeTracking({'workday:REQ-1':{job:{...base,company:'A'}}})['A\u001fworkday\u001fREQ-1']);
 });
 test('relative employer ages advance after observation',()=>{
  const now=Date.parse('2026-09-13T12:00:00Z');const job={reported_age_hours:2,posted_at:null,last_seen_at:'2026-09-12T12:00:00Z',posted_precision:'hour'};
@@ -89,10 +94,17 @@ test('final ingestion deactivates stale jobs only after every upload succeeds',a
  assert.match(source,/successful_companies/);
  assert.match(source,/NOT IN \(SELECT value FROM json_each/);
  assert.match(source,/DO UPDATE SET[\s\S]*WHERE jobs\.title IS NOT excluded\.title/);
+ assert.match(source,/ON CONFLICT\(company,ats_provider,external_job_id\)/);
+ assert.match(source,/ON CONFLICT\(started_at\) DO UPDATE/);
+ assert.match(source,/company \|\| char\(31\) \|\| ats_provider/);
  assert.match(source,/city IN \('Bengaluru','Hyderabad'\)/);
  assert.match(source,/dedupeCompanies\(companyResult\.results/);
  assert.match(source,/UPDATE companies SET enabled=0,updated_at=CURRENT_TIMESTAMP/);
  assert.match(source,/lower\(name\) \|\| char\(31\) \|\| ats_provider/);
+ assert.doesNotMatch(source,/SELECT \* FROM jobs/);
+ assert.match(source,/PUBLIC_JOB_COLUMNS/);
+ assert.match(source,/NULL AS error/);
+ assert.match(source,/Content-Security-Policy/);
 });
 test('company registry contains one active source per company name',async()=>{
  const csv=await (await import('node:fs/promises')).readFile(new URL('../../companies/companies.csv',import.meta.url),'utf8');

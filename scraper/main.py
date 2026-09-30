@@ -11,6 +11,14 @@ _TELEGRAM_CHAT_OVERRIDE=None
 # Kept empty during normal operation; prevents replaying already-ingested alerts.
 TELEGRAM_RETRY_IDS=set()
 
+def source_job_key(job):
+    """Stable identity across ATS tenants where external IDs can overlap."""
+    if isinstance(job,dict):
+        company,provider,external=(job.get("company",""),job.get("ats_provider",""),job.get("external_job_id",""))
+    else:
+        company,provider,external=(job.company,job.ats_provider,job.external_job_id)
+    return f"{company}\x1f{provider}\x1f{external}"
+
 class TelegramDeliveryError(RuntimeError):
     """A Telegram failure that is safe to print and persist."""
 
@@ -147,7 +155,7 @@ async def notify(job,chat=None):
     return True
 
 async def record_notification(endpoint,headers,job,status,error=None):
-    payload={"ats_provider":job.ats_provider,"external_job_id":job.external_job_id,"status":status,"error":error}
+    payload={"company":job.company,"ats_provider":job.ats_provider,"external_job_id":job.external_job_id,"status":status,"error":error}
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(30,connect=10)) as x:
             response=await x.post(endpoint.rstrip("/")+"/api/notifications",headers=headers,json=payload)
@@ -185,10 +193,7 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
         if company.get("name") and not company.get("error_count")
         and not str(company.get("warning","")).startswith("Limited coverage")
     ]
-    seen_job_keys=[
-        f"{job.get('ats_provider','')}\x1f{job.get('external_job_id','')}"
-        for job in jobs if job.get("ats_provider") and job.get("external_job_id")
-    ]
+    seen_job_keys=[source_job_key(job) for job in jobs if job.get("company") and job.get("ats_provider") and job.get("external_job_id")]
     final_run={
         **run,
         "new_jobs":len(set(new_external_ids)),
@@ -223,7 +228,7 @@ async def main():
         item=job.as_dict(); item["description"]=item.get("description","")[:4000]; payload_jobs.append(item)
     result=await ingest_scan(endpoint,headers,payload_jobs,statuses,run)
     alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
-    alert_jobs=[job for job in eligible if (f"{job.ats_provider}:{job.external_job_id}" in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
+    alert_jobs=[job for job in eligible if (source_job_key(job) in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
     telegram_chat=None
     try:
         # Validate the bot and destination on every scan, including scans with
