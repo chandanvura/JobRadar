@@ -51,7 +51,15 @@ export async function checkAndRecover(env:Env){
   let finished:string|null=null;
   try{
     const response=await fetch(HEALTH,{signal:AbortSignal.timeout(10_000)});
-    if(!response.ok&&response.status!==503)throw new Error(`Health returned HTTP ${response.status}`);
+    // A 503 means production is intentionally unavailable/degraded (including
+    // D1 free-tier exhaustion). Never turn that condition into a recovery
+    // dispatch loop: the scan cannot ingest successfully while the API is 503.
+    if(response.status===503){
+      console.log("Production health is 503; suppress recovery scan until service recovers/reset completes");
+      await response.body?.cancel();
+      return "degraded";
+    }
+    if(!response.ok)throw new Error(`Health returned HTTP ${response.status}`);
     const health=await response.json() as {latest_run?:{finished_at?:string};quota_exhausted?:boolean};
     if(health.quota_exhausted){console.log("D1 daily quota exhausted; recovery waits for reset");return "quota"}
     finished=health.latest_run?.finished_at||null;
