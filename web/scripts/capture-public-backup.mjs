@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 export async function captureCatalog(origin, fetcher = fetch) {
   const read = async path => {
     const r = await fetcher(new URL(path, origin), { signal: AbortSignal.timeout(20000), headers: { Accept: 'application/json' } });
-    if (!r.ok) throw Error(`Catalog read returned ${r.status}`);
+    if (!r.ok) throw Error(`Catalog read ${path} returned ${r.status}`);
     return r.json();
   };
   try {
@@ -26,9 +26,11 @@ export async function captureCatalog(origin, fetcher = fetch) {
     }
     if (!Array.isArray(dashboard.companies) || !jobs.size) throw Error('Empty or invalid live catalog; preserve prior backup');
     return { ...dashboard, jobs: [...jobs.values()], version: 1, data_mode: 'backup', snapshot_at: new Date().toISOString() };
-  } catch {
+  } catch (liveError) {
     // Never replace an existing backup with an empty catalog during an outage.
-    const prior = await read('/backup/catalog.json');
+    let prior;
+    try { prior = await read('/backup/catalog.json'); }
+    catch (backupError) { throw new AggregateError([liveError, backupError], 'Cannot capture live catalog or recover prior backup'); }
     if (prior.version !== 1 || !Number.isFinite(Date.parse(prior.snapshot_at)) || !Array.isArray(prior.jobs) || !prior.jobs.length || !Array.isArray(prior.companies)) throw Error('No valid public backup available');
     return prior;
   }
