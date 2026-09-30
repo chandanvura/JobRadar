@@ -6,8 +6,9 @@ on:
     paths:
       - ".github/workflows/backup-d1.yml"
   schedule:
-    # Twice monthly; artifacts are retained for 90 days.
-    - cron: "2 22 1,15 * *"
+    # Daily independent SQL snapshot. Kept deliberately once/day to stay
+    # lightweight on the free tiers while giving much better recovery coverage.
+    - cron: "17 1 * * *"
   workflow_dispatch:
 
 concurrency:
