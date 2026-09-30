@@ -51,18 +51,24 @@ export async function checkAndRecover(env:Env){
   let finished:string|null=null;
   try{
     const response=await fetch(HEALTH,{signal:AbortSignal.timeout(10_000)});
-    // A 503 means production is intentionally unavailable/degraded (including
-    // D1 free-tier exhaustion). Never turn that condition into a recovery
-    // dispatch loop: the scan cannot ingest successfully while the API is 503.
-    if(response.status===503){
-      console.log("Production health is 503; suppress recovery scan until service recovers/reset completes");
-      await response.body?.cancel();
-      return "degraded";
+    // Health intentionally uses 503 for both stale data and D1 quota exhaustion.
+    // Only quota exhaustion must suppress recovery; stale health is exactly what
+    // this scheduler exists to recover from.
+    if(response.status===200 || response.status===503){
+      const health=await response.json() as {latest_run?:{finished_at?:string};quota_exhausted?:boolean;retry_at?:string;stale?:boolean};
+      if(health.quota_exhausted){
+        console.log(`D1 daily quota exhausted; recovery waits until ${health.retry_at||"the UTC reset"}`);
+        return "quota";
+      }
+      if(response.status===503 && !health.latest_run){
+        console.log("Production health unavailable without a quota signal; using GitHub finalizer history");
+        finished=await latestCompletedScan(runs,token);
+      }else{
+        finished=health.latest_run?.finished_at||null;
+      }
+    }else{
+      throw new Error(`Health returned HTTP ${response.status}`);
     }
-    if(!response.ok)throw new Error(`Health returned HTTP ${response.status}`);
-    const health=await response.json() as {latest_run?:{finished_at?:string};quota_exhausted?:boolean};
-    if(health.quota_exhausted){console.log("D1 daily quota exhausted; recovery waits for reset");return "quota"}
-    finished=health.latest_run?.finished_at||null;
   }catch{
     console.log("Production health unavailable; using GitHub finalizer history");
     finished=await latestCompletedScan(runs,token);
