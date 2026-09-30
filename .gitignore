@@ -10,3 +10,4 @@ web/.next/
 web/next-env.d.ts
 web/.wrangler/
 web/wrangler.migrations.json
+web/public/backup/

@@ -64,6 +64,9 @@ jobs:
           fi
           test -n "$current_subdomain"
           echo "Workers hostname: jobradar.$current_subdomain.workers.dev"
+          echo "JOBRADAR_BACKUP_ORIGIN=https://jobradar.$current_subdomain.workers.dev" >> "$GITHUB_ENV"
+      - name: Capture independent public catalog backup
+        run: node scripts/capture-public-backup.mjs
       - name: Create or resolve production database
         run: |
           database_id="$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "jobradar-db") | .uuid' | head -n 1)"
@@ -80,6 +83,7 @@ jobs:
       - name: Build and deploy production Worker
         run: |
           npm run build
+          test -s dist/client/backup/catalog.json
           node scripts/prepare-cloudflare.mjs --patch-build
           deploy_output="$(npx wrangler deploy --config dist/server/wrangler.json)"
           printf '%s\n' "$deploy_output"

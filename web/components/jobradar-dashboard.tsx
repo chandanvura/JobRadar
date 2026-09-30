@@ -119,6 +119,8 @@ type Notification = {
   company: string;
 };
 type Payload = {
+  data_mode?: "backup";
+  snapshot_at?: string;
   jobs: ApiJob[];
   companies: Company[];
   latest_run: Run | null;
@@ -406,7 +408,7 @@ function DashboardContent() {
       // Render the first page while the remaining job pages load.
       setData(payload);
       if (!silent) setLoading(false);
-      if (payload.jobs.length >= 100) {
+      if (payload.jobs.length >= 100 && payload.data_mode !== "backup") {
         const collected = new Map(payload.jobs.map((j) => [j.id, j]));
         let cursor = 0;
         while (true) {
@@ -417,6 +419,16 @@ function DashboardContent() {
           if (!page.ok)
             throw Error("Additional job pages could not load. Retry refresh.");
           const batch = await page.json();
+          if (batch.data_mode === "backup") {
+            // Switch the whole catalog together; do not mix snapshots with live pages.
+            const backup = await fetch("/api/dashboard?source=backup", { cache: "no-store", signal: AbortSignal.timeout(20000) });
+            if (!backup.ok) throw Error("Backup catalog could not load. Retry refresh.");
+            const saved: Payload = await backup.json();
+            Object.assign(payload, saved);
+            collected.clear();
+            for (const job of saved.jobs) collected.set(job.id, job);
+            break;
+          }
           for (const job of batch.jobs) collected.set(job.id, job);
           if (batch.next_cursor === null) break;
           if (
@@ -934,6 +946,12 @@ function DashboardContent() {
             />
           )}{" "}
           {notice && <Notice {...notice} close={() => setNotice(null)} />}{" "}
+          {data?.data_mode === "backup" && (
+            <div role="status" className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5 text-warning">
+              <h2 className="font-bold">Backup mode — saved job catalog</h2>
+              <p className="mt-2 text-sm">Live data is temporarily unavailable. Showing the catalog saved {data.snapshot_at ? new Date(data.snapshot_at).toLocaleString() : "earlier"}. Listings and scan history may be outdated; verify openings on the employer site. Saving jobs, notes and application tracking still work in this browser. Refresh retries live data automatically.</p>
+            </div>
+          )}
           {!notice && !data?.configured && !loading && (
             <Notice
               tone="warning"

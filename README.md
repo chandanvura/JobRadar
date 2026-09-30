@@ -133,3 +133,11 @@ The reliability path uses deterministic checks and retries. Free hosted AI servi
 ## Cost protection
 
 The system avoids paid APIs, proxies, browsers, and continuously running servers. D1 ingestion uses conditional upserts: unchanged companies and jobs cause zero row writes, while a compact final manifest deactivates only jobs actually missing from a successful scan. Code pushes deploy safely but never start a full discovery scan automatically. Monitor Actions duration and Cloudflare requests/database usage while expanding the company registry.
+
+### Free D1 outage fallback
+
+Production deployments capture the complete public job catalog into a static Worker asset before deploying. If a public dashboard or catalog query fails (including a D1 daily quota error), the portal automatically serves that snapshot without another database. Personal saved jobs, notes, resume and application tracking remain in the browser. The portal clearly labels backup mode and its capture time; listings, source health and notifications may be stale. A subsequent refresh retries D1 and returns to live data when it recovers.
+
+The snapshot refreshes on deployment, not on every scan. It is a browsing continuity backup, not a SQL restore point or a queue for new ingestion. Ingestion and Telegram recording are never reported successful when their database writes fail. The separate scheduled D1 SQL backup remains the recovery mechanism. This fallback does not bypass Workers request/CPU limits or a Cloudflare-wide outage.
+
+Deployments preserve the prior public snapshot if live capture fails, and fail rather than publish an empty backup if neither source is valid. `/api/dashboard?source=backup` explicitly serves the packaged snapshot for read-only verification. `/backup/catalog.json` contains only the already-public catalog API data; never add private profile or credential data to it.

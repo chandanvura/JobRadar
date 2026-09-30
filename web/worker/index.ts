@@ -1,5 +1,6 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { publicRead } from "./public-backup";
 
 interface Env { ASSETS: Fetcher; DB: D1Database; JOBRADAR_INGEST_SECRET?: string; IMAGES: { input(stream: ReadableStream): { transform(options: Record<string, unknown>): { output(options: { format: string; quality: number }): Promise<{ response(): Response }> } } } }
 interface ExecutionContext { waitUntil(promise: Promise<unknown>): void; passThroughOnException(): void }
@@ -87,8 +88,8 @@ const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<
   }
   try{
     if(url.pathname==="/api/health"&&request.method==="GET")return health(env);
-    if(url.pathname==="/api/dashboard"&&request.method==="GET")return dashboard(env);
-    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') AND id>? ORDER BY id LIMIT 501`).bind(after).all();const jobs=result.results.slice(0,500);return json({jobs,next_cursor:result.results.length>500?jobs[jobs.length-1].id:null})}
+    if(url.pathname==="/api/dashboard"&&request.method==="GET")return await publicRead(request,env.ASSETS,()=>dashboard(env),SECURITY_HEADERS);
+    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);return await publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') AND id>? ORDER BY id LIMIT 501`).bind(after).all();const jobs=result.results.slice(0,500);return json({jobs,next_cursor:result.results.length>500?jobs[jobs.length-1].id:null})},SECURITY_HEADERS)}
     if(url.pathname==="/api/ingest"&&request.method==="POST")return ingest(request,env);
     if(url.pathname==="/api/notifications"&&request.method==="POST")return recordNotification(request,env);
     const statusMatch=url.pathname.match(/^\/api\/jobs\/(\d+)\/status$/);if(statusMatch&&request.method==="PATCH")return updateStatus();
