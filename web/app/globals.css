@@ -98,6 +98,18 @@ html[data-theme="dark"] :is(input, select, textarea) {
   color: var(--foreground);
   border-color: var(--border);
 }
+html[data-theme="dark"] :is(button, a)[class*="bg-[#155d3a]"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+html[data-theme="dark"] :is([class*="bg-[#dff3e8]"], [class*="bg-[#d9efe2]"]) {
+  background-color: var(--accent);
+  color: var(--foreground);
+}
+html[data-theme="dark"] button[class*="bg-white"] {
+  background-color: var(--card);
+  color: var(--foreground);
+}
 
 @theme inline {
   --color-background: var(--background);
