@@ -61,6 +61,11 @@ test('unknown experience jobs have a separate review area and no alert eligibili
 test('company coverage has safe career and contact fallback discovery',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
  assert.match(source,/Fallback discovery/);
+ assert.match(source,/site:in\.indeed\.com\/viewjob/);
+ assert.match(source,/site:glassdoor\.co\.in\/job-listing/);
+ assert.match(source,/site:naukri\.com\/job-listings/);
+ assert.match(source,/tbs=qdr:d/);
+ assert.match(source,/These searches do not write to D1/);
  assert.match(source,/recruiter OR talent acquisition OR engineering manager/);
  assert.match(source,/>Contacts<\/a>/);
 });

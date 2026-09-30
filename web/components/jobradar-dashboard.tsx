@@ -309,6 +309,35 @@ const DEFAULT_JOB_TITLES = [
   "QA Automation Engineer", "Security Engineer", "Technical Support Engineer",
 ];
 const OFFICIAL_ATS_DOMAINS = "site:myworkdayjobs.com OR site:greenhouse.io OR site:lever.co OR site:icims.com OR site:jobs.jobvite.com OR site:ashbyhq.com OR site:smartrecruiters.com";
+const AGGREGATOR_DOMAINS = [
+  ["LinkedIn", "site:linkedin.com/jobs/view"],
+  ["Indeed", "site:in.indeed.com/viewjob"],
+  ["Glassdoor", "site:glassdoor.co.in/job-listing"],
+  ["Naukri", "site:naukri.com/job-listings"],
+] as const;
+const googleJobsUrl = (query: string) =>
+  `https://www.google.com/search?tbs=qdr:d&q=${encodeURIComponent(query)}`;
+const fallbackTerms = (preferences: SearchPreferences) =>
+  (preferences.titles.length ? preferences.titles : DEFAULT_JOB_TITLES)
+    .slice(0, 8)
+    .map((title) => `"${title}"`)
+    .join(" OR ");
+const companyFallbackLinks = (
+  company: string,
+  preferences: SearchPreferences,
+) => {
+  const query = `"${company}" (${fallbackTerms(preferences)}) (Bengaluru OR Bangalore OR Hyderabad)`;
+  return [
+    ...AGGREGATOR_DOMAINS.map(([name, domain]) => ({
+      name,
+      url: googleJobsUrl(`${domain} ${query}`),
+    })),
+    {
+      name: "Official ATS",
+      url: googleJobsUrl(`(${OFFICIAL_ATS_DOMAINS}) ${query}`),
+    },
+  ];
+};
 const initialPreferences = () => {
   if (typeof window === "undefined") return defaultPreferences;
   try {
@@ -1978,6 +2007,8 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
   const links = cities.flatMap((city) => [
     { name: `LinkedIn — ${city.name}`, url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(city.linkedin)}&f_TPR=r86400&f_JT=F&f_E=2&sortBy=DD` },
     { name: `Naukri — ${city.name}`, url: `https://www.naukri.com/jobs-in-${city.naukri}?jobAge=1&k=${query}` },
+    { name: `Indeed via Google — ${city.name}`, url: googleJobsUrl(`site:in.indeed.com/viewjob (${terms.slice(0, 8).map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}")`) },
+    { name: `Glassdoor via Google — ${city.name}`, url: googleJobsUrl(`site:glassdoor.co.in/job-listing (${terms.slice(0, 8).map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}")`) },
     { name: `Google official ATS — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${terms.map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}") (${OFFICIAL_ATS_DOMAINS})`)}` },
   ]);
   return (
@@ -1989,8 +2020,9 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
       />
       <div className="rounded-2xl border bg-white p-5 text-sm text-[#5e6d65]">
         JobRadar cannot copy these sites automatically without authorized access.
-        Open a search, verify the employer and posting date, then use the official
-        application link. These searches do not change your JobRadar profile.
+        Fallback searches cover LinkedIn, Naukri, Indeed, Glassdoor and official
+        ATS pages from the last day. Verify the employer and posting date, then
+        apply through the official employer link. These searches do not write to D1.
       </div>
       <div className="grid gap-3 md:grid-cols-2">
         {links.map((link) => (
@@ -2185,7 +2217,8 @@ function CompaniesView({
         {companies.map((c) => {
           const limited = c.warning?.startsWith("Limited coverage"),
             state = c.error_count ? "Failed" : limited ? "Limited coverage" : c.jobs_found === 0 ? "No current openings" : c.candidate_jobs === 0 ? "No target roles" : "Productive";
-          return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-white p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-slate-500">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-red-50 text-red-700" : limited || c.jobs_found === 0 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-slate-500">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-[#155d3a]"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a><a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
+          const fallback = companyFallbackLinks(c.name, preferences);
+          return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-white p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-slate-500">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-red-50 text-red-700" : limited || c.jobs_found === 0 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-slate-50 p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-slate-500">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-[#155d3a]"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a>{(limited || c.error_count > 0 || c.jobs_found === 0) && fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer">{link.name}</a>)}<a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
         })}
       </div>
       <div className="hidden overflow-x-auto rounded-2xl border bg-white md:block">
@@ -2206,6 +2239,7 @@ function CompaniesView({
           <tbody>
             {companies.map((c) => {
               const limited = c.warning?.startsWith("Limited coverage"),
+                fallback = companyFallbackLinks(c.name, preferences),
                 state = c.error_count
                   ? "Failed"
                   : limited
@@ -2250,9 +2284,8 @@ function CompaniesView({
                     </a>
                   </td>
                   <td>
-                    <div className="flex gap-2">
-                      <a href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(`${c.name} ${(preferences.titles.length ? preferences.titles : ["Software Engineer", "DevOps Engineer"]).join(" OR ")}`)}&location=India&f_TPR=r86400&sortBy=DD`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">LinkedIn</a>
-                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`${c.name} careers Bengaluru Hyderabad ${(preferences.titles.length ? preferences.titles : ["Software Engineer", "DevOps Engineer"]).join(" OR ")}`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Web</a>
+                    <div className="flex max-w-72 flex-wrap gap-2">
+                      {fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">{link.name}</a>)}
                       <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer" className="font-bold text-[#155d3a]">Contacts</a>
                     </div>
                   </td>

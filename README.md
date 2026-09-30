@@ -10,6 +10,7 @@ neutral custom domain can be attached without changing the application.
 - React/TypeScript dashboard, Cloudflare Worker API, and D1 schema
 - Python adapters for Greenhouse (including employer JSON-LD posting dates), Lever, Jobvite XML, Ashby, paginated Workday/SmartRecruiters, and conservative JSON-LD career pages that follow only official ATS links
 - User-initiated Google searches across official Workday, Greenhouse, Lever, iCIMS, Jobvite, Ashby, and SmartRecruiters portals with a broader baked-in title set
+- Last-24-hour fallback discovery for limited sources through user-initiated LinkedIn, Indeed, Glassdoor, and Naukri searches without scraping those services or consuming D1 writes
 - Title, location, strictest-experience, skill, and freshness analysis
 - Immutable first-seen tracking and employer-relative date labels without invented timestamps
 - ATS/external-ID deduplication and notification history schema
