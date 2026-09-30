@@ -25,15 +25,20 @@ Architecture: `freshness-gated GitHub scheduler → 8 stateless discovery worker
 
 ## Local dashboard
 
-Requires Node.js 22+.
+Requires Node.js 22.13+ and GNU `timeout` (Linux/WSL).
 
 ```bash
 cd web
 npm ci
+npm run build
+# Initialize an empty local database; these commands never contact production.
+for migration in drizzle/*.sql; do
+  npx wrangler d1 execute jobradar-db --local --config dist/server/wrangler.json --file "$migration"
+done
 npm run dev
 ```
 
-The dashboard reads live D1 data from `GET /api/dashboard` and automatically refreshes every five minutes while visible.
+The dashboard reads `GET /api/dashboard` and automatically refreshes every five minutes while visible. A fresh local database starts empty. `npm run test:api` creates an isolated in-memory test database, applies all migrations and verifies the compiled Worker without production credentials.
 
 ## Local scraper
 
@@ -95,7 +100,7 @@ npm audit --omit=dev
 
 The standalone application lives under `web/` and does not require ChatGPT Sites at runtime. The **Deploy independent JobRadar** workflow creates an Asia-Pacific D1 database when needed, applies versioned migrations, builds the vinext application, deploys the Worker, configures protected ingestion, and verifies the deployment.
 
-Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scheduler runs every four hours, keeping D1 row writes comfortably within the free allowance while still refreshing each 24-hour job window six times per day. Verify the **Deploy independent JobRadar** and **JobRadar free-tier scan** workflows in GitHub Actions after changing infrastructure or matching logic.
+Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scheduler runs every four hours, reducing repeated D1 writes while still refreshing each 24-hour job window six times per day. Verify the **Deploy independent JobRadar** and **JobRadar free-tier scan** workflows in GitHub Actions after changing infrastructure or matching logic.
 
 ## Matching guarantees
 
@@ -141,3 +146,30 @@ Production deployments capture the complete public job catalog into a static Wor
 The snapshot refreshes on deployment, not on every scan. It is a browsing continuity backup, not a SQL restore point or a queue for new ingestion. Ingestion and Telegram recording are never reported successful when their database writes fail. The separate scheduled D1 SQL backup remains the recovery mechanism. This fallback does not bypass Workers request/CPU limits or a Cloudflare-wide outage.
 
 Deployments preserve the prior public snapshot if live capture fails, and fail rather than publish an empty backup if neither source is valid. `/api/dashboard?source=backup` explicitly serves the packaged snapshot for read-only verification. `/backup/catalog.json` contains only the already-public catalog API data; never add private profile or credential data to it.
+
+
+## Unattended operation and availability target
+
+The deployment workflow now refreshes the public fallback every day at 01:17 UTC
+(06:47 IST), after the first scheduled scan. GitHub schedules are best effort; a
+failed capture preserves the previous valid snapshot. The first emergency
+snapshot is explicitly marked partial. A full snapshot requires D1 to be
+available. No payment plan or paid dependency was added.
+
+The Cloudflare recovery Worker samples the portal HTML and independent backup
+API every 15 minutes and emits structured `availability` logs. With a valid
+`JOBRADAR_DISPATCH_TOKEN`, it restores known operational workflows disabled
+for inactivity, while leaving manually disabled workflows alone. Quota-aware
+health returns HTTP 503 with a reset time and `Retry-After`; schedulers stop
+dispatching expensive scans while the daily quota is exhausted.
+
+The **99.9% target is not a measured or guaranteed SLA**. Over 30 days its error
+budget is 43 minutes 12 seconds. Portal availability and fresh-job coverage
+are separate: the saved catalog can remain usable while ingestion is blocked.
+Free Workers/D1 quotas, employer-feed changes, provider outages and credential
+expiry still apply. Fifteen-minute probes can miss short outages; their logs
+are evidence of samples, not a full-month uptime percentage. Recovery token
+expiry must extend beyond the intended unattended period.
+
+See [the production-readiness audit](docs/PRODUCTION-READINESS.md) and
+[recovery instructions](ops/RECOVERY.md) for evidence and remaining limitations.

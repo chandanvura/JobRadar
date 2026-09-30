@@ -1,0 +1,45 @@
+import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
+import {readFile,readdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const saved={version:1,data_mode:'backup',snapshot_at:new Date().toISOString(),jobs:[{id:900,title:'Saved fixture'}],companies:[]};
+const serverRoot=new URL('../dist/server/',import.meta.url);
+const modulePaths=['index.js',...(await readdir(serverRoot,{recursive:true})).filter(path=>path.endsWith('.js') && path!=='index.js')];
+const modules=modulePaths.map(path=>({type:'ESModule',path:new URL(path,serverRoot).pathname}));
+const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"jobradar-api-audit",modules,modulesRoot:new URL('../dist/server/',import.meta.url).pathname,scriptPath:new URL('../dist/server/index.js',import.meta.url).pathname,compatibilityDate:'2026-09-26',compatibilityFlags:['nodejs_compat'],d1Databases:{DB:'audit-db'},bindings:{JOBRADAR_INGEST_SECRET:'local-audit-only'},serviceBindings:{ASSETS:async()=>Response.json(saved)}}]}));
+const request=(path,body,authorized=true)=>mf.dispatchFetch(`https://audit.example${path}`,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json',...(authorized?{Authorization:'Bearer local-audit-only'}:{})},body:JSON.stringify(body)});
+try {
+  assert.equal((await request('/api/ingest',{},false)).status,401);
+  assert.equal((await request('/api/ingest',null)).status,400);
+  assert.equal((await request('/api/ingest',{jobs:[null]})).status,400);
+  assert.equal((await request('/api/ingest',{jobs:Array.from({length:2001},()=>({}))})).status,413);
+  assert.equal((await request('/api/notifications',null)).status,400);
+  assert.equal((await request('/api/unknown')).status,404);
+  assert.equal((await request('/api/jobs?after=-1')).status,400);
+  assert.equal((await (await request('/api/dashboard')).json()).data_mode,'backup');
+  assert.equal((await request('/api/health')).status,503);
+  const db=await mf.getD1Database('DB');const dir=new URL('../drizzle/',import.meta.url);
+  for(const file of (await readdir(dir)).filter(p=>p.endsWith('.sql')).sort()){
+    for(const statement of (await readFile(new URL(file,dir),'utf8')).split('--> statement-breakpoint'))if(statement.trim())await db.prepare(statement).run();
+  }
+  assert.equal((await (await request('/api/dashboard')).json()).jobs.length,0);
+  const job={company:'Example',ats_provider:'workday',external_job_id:'REQ-1',title:'Java Engineer',job_url:'https://example.test/job/1',application_url:'https://example.test/job/1',career_page_url:'https://example.test/careers',city:'Bengaluru',location:'Bengaluru',normalized_location:'Bengaluru',role_category:'Java / Backend',skills:[]};
+  for(const company of ['Example','example'])assert.equal((await request('/api/ingest',{jobs:[{...job,company}]})).status,200);
+  assert.equal((await db.prepare('SELECT count(*) AS total FROM jobs').first()).total,1);
+  const run={started_at:new Date().toISOString(),finished_at:new Date().toISOString(),companies_checked:1,companies_successful:1,companies_failed:0,status:'success',successful_companies:['Example'],seen_job_keys:[...Array.from({length:5001},(_,i)=>`unrelated-${i}`),'Example\x1fworkday\x1fREQ-1']};
+  assert.equal((await request('/api/ingest',{run})).status,200);
+  assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);
+  assert.equal((await request('/api/ingest',{run:{...run,seen_job_keys:Array(50001).fill('x')}})).status,413);
+  for(let attempt=0;attempt<2;attempt++)assert.equal((await request('/api/notifications',{company:'example',ats_provider:'workday',external_job_id:'REQ-1',status:'sent'})).status,200);
+  assert.equal((await db.prepare('SELECT notifications_sent FROM scraper_runs').first()).notifications_sent,1);
+  const results=await Promise.all([request('/api/ingest',{jobs:[job]}),request('/api/ingest',{jobs:[job]})]);
+  assert.ok(results.every(r=>r.status===200));
+  assert.equal((await db.prepare('SELECT count(*) AS total FROM jobs').first()).total,1);
+  assert.equal((await request('/api/health')).status,200);
+  const live=await (await request('/api/dashboard')).json();assert.equal(live.jobs.length,1);assert.equal(live.data_mode,undefined);
+  const page=await (await request('/api/jobs?after=0')).json();assert.equal(page.jobs.length,1);assert.equal(page.next_cursor,null);
+  assert.equal((await (await request('/api/dashboard?source=backup')).json()).data_mode,'backup');
+  await db.prepare('DROP TABLE scraper_runs').run();
+  assert.equal((await request('/api/health')).status,503);
+  assert.equal((await (await request('/api/dashboard')).json()).data_mode,'backup');
+  console.log('VERIFIED: compiled Worker auth, invalid inputs, fresh migrations, case-insensitive deduplication, concurrency, notification replay, live recovery, pagination, static failover, and caught database errors.');
+}finally{await mf.dispose();}

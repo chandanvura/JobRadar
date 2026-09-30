@@ -41,7 +41,7 @@ test('capture retries transient server failure with a strict attempt bound',asyn
     if(url.pathname==='/api/dashboard') return ++attempts===1?new Response('',{status:503}):Response.json({...catalog,data_mode:undefined});
     return Response.json({jobs:[{id:9}],next_cursor:null});
   });
-  assert.equal(attempts,2);assert.equal(result.jobs[0].id,9);
+  assert.equal(attempts,3);assert.equal(result.jobs[0].id,9);
   let failures=0;
   await assert.rejects(captureCatalog('https://example.test',async()=>{failures++;return new Response('',{status:503})}));
   assert.equal(failures,6);

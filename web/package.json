@@ -15,7 +15,8 @@
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate",
     "test:product": "node --experimental-strip-types --test tests/*.test.mjs",
-    "typecheck:ui": "tsc --project tsconfig.ui.json"
+    "typecheck:ui": "tsc --project tsconfig.ui.json",
+    "test:api": "node tests/worker-api.integration.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -60,7 +61,8 @@
     "typescript": "5.9.3",
     "vinext": "1.0.0",
     "vite": "8.3.1",
-    "wrangler": "4.144.0"
+    "wrangler": "4.144.0",
+    "miniflare": "5.20260926.1-alpha"
   },
   "type": "module",
   "displayName": "JobRadar"

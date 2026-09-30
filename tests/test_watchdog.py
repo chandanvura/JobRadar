@@ -28,3 +28,7 @@ def test_fallback_ignores_successful_gate_only_runs():
 def test_watchdog_rejects_unapproved_urls():
     with pytest.raises(RuntimeError,match="not allowed"):
         request_json("file:///etc/passwd")
+
+
+def test_watchdog_never_dispatches_into_known_daily_quota_outage():
+    assert not should_dispatch({'quota_exhausted':True,'latest_run':None},[])

@@ -45,5 +45,6 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm audit --omit=dev --audit-level=high
       - run: npm test
+      - run: npm run test:api
       - run: npm run lint
       - run: npm run typecheck:ui

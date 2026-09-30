@@ -37,3 +37,32 @@ def test_integrity_migration_cleans_legacy_duplicates_and_enforces_identity():
     assert db.execute("SELECT count(*) FROM jobs WHERE ats_provider='custom' AND external_job_id='REQ-1'").fetchone()[0] == 2
     with pytest.raises(sqlite3.IntegrityError):
         db.execute("INSERT INTO scraper_runs(started_at,status) VALUES ('2026-09-30T00:00:00Z','success')")
+
+
+def test_production_job_identity_lookups_use_bounded_index_search():
+    import re
+    db = sqlite3.connect(':memory:')
+    for path in sorted((ROOT / 'web' / 'drizzle').glob('*.sql')):
+        apply_migration(db, path.name)
+    source = (ROOT / 'web' / 'worker' / 'index.ts').read_text()
+    queries = re.findall(r'prepare\("(SELECT [^"\n]+(?:FROM jobs|JOIN jobs)[^"\n]+)"\)', source)
+    identity_queries = [query for query in queries if 'external_job_id=?' in query]
+    assert len(identity_queries) >= 3
+    for query in identity_queries:
+        plan = ' '.join(row[3] for row in db.execute('EXPLAIN QUERY PLAN ' + query, ('Company', 'workday', 'REQ-1')))
+        assert 'SEARCH' in plan and 'jobs_source_key (company=? AND ats_provider=? AND external_job_id=?)' in plan, (query, plan)
+        assert 'SCAN' not in plan, (query, plan)
+
+
+def test_public_pagination_merges_bounded_city_index_pages_without_sorting_full_catalog():
+    import re
+    db=sqlite3.connect(':memory:')
+    for path in sorted((ROOT/'web'/'drizzle').glob('*.sql')):apply_migration(db,path.name)
+    source=(ROOT/'web'/'worker'/'index.ts').read_text()
+    sql=re.search(r'prepare\(`(SELECT \$\{PUBLIC_JOB_COLUMNS\} FROM jobs WHERE id IN [^`]+)`\)',source).group(1).replace('${PUBLIC_JOB_COLUMNS}','id')
+    for i in range(1000):
+        db.execute("INSERT INTO jobs(external_job_id,company,title,normalized_title,role_category,location,normalized_location,city,ats_provider,source,job_url,application_url,career_page_url,first_seen_at,last_seen_at,relevance_score,freshness_score,priority_score) VALUES (?,'Example','Engineer','engineer','Java / Backend','City','City',?,'workday','company_career','https://example.test','https://example.test','https://example.test','2026-09-30','2026-09-30',1,1,1)",(str(i),['Bengaluru','Hyderabad','Pune'][i%3]))
+    expected=db.execute("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') AND id>100 ORDER BY id LIMIT 101").fetchall()
+    assert db.execute(sql,(100,100)).fetchall()==expected
+    plan=' '.join(row[3] for row in db.execute('EXPLAIN QUERY PLAN '+sql,(100,100)))
+    assert plan.count('SEARCH jobs USING COVERING INDEX jobs_active_city_id_idx (is_active=? AND city=? AND id>?)')==2,plan

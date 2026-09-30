@@ -25,7 +25,7 @@ export async function captureCatalog(origin, fetcher = fetch) {
     const jobs = new Map();
     let cursor = 0;
     for (let page = 0; ; page++) {
-      if (page >= 40) throw Error('Catalog exceeds snapshot page limit');
+      if (page >= 200) throw Error('Catalog exceeds snapshot page limit');
       const batch = await read(`/api/jobs?after=${cursor}`);
       if (batch.data_mode === 'backup' || !Array.isArray(batch.jobs)) throw Error('Catalog changed to backup during capture');
       for (const job of batch.jobs) {
@@ -37,6 +37,8 @@ export async function captureCatalog(origin, fetcher = fetch) {
       cursor = batch.next_cursor;
     }
     if (!Array.isArray(dashboard.companies) || !jobs.size) throw Error('Empty or invalid live catalog; preserve prior backup');
+    const latest = await read('/api/dashboard');
+    if (latest.data_mode === 'backup' || JSON.stringify(latest.latest_run) !== JSON.stringify(dashboard.latest_run)) throw Error('Scan changed during backup capture; preserve prior snapshot');
     return { ...dashboard, jobs: [...jobs.values()], version: 1, data_mode: 'backup', snapshot_at: new Date().toISOString() };
   } catch (liveError) {
     // Never replace an existing backup with an empty catalog during an outage.

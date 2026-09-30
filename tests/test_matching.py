@@ -368,3 +368,16 @@ def test_expansion_covers_product_mnc_gcc_and_underrated_employers():
     }
     for cohort in cohorts.values():
         assert cohort <= names
+
+
+def test_rejected_ingestion_never_finalizes_or_deactivates_existing_jobs(monkeypatch):
+    calls=[]
+    class Response:
+        def json(self):return {'rejected':1}
+    async def post(url,headers,payload):
+        calls.append(payload)
+        return Response()
+    monkeypatch.setattr('scraper.main.post_with_retry',post)
+    with pytest.raises(RuntimeError,match='finalization withheld'):
+        asyncio.run(ingest_scan('https://example.test',{},[{'company':'Example'}],[],{'started_at':'now'}))
+    assert not any('run' in payload for payload in calls)

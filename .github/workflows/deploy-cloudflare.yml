@@ -2,6 +2,9 @@ name: Deploy independent JobRadar
 
 on:
   workflow_dispatch:
+  schedule:
+    # Refresh the independent public snapshot after the first daily scan/reset.
+    - cron: "17 1 * * *"
   push:
     branches: [main]
     paths:
@@ -50,6 +53,7 @@ jobs:
         run: |
           npm audit --omit=dev --audit-level=high
           npm test
+          npm run test:api
           npm run lint
           npm run typecheck:ui
       - name: Ensure a workers.dev hostname exists

@@ -66,3 +66,31 @@ test('chaos: GitHub authorization failure cannot dispatch another scan',async()=
     assert.equal(seen.length,1);
   }finally{globalThis.fetch=original}
 });
+test('quota outage suppresses repeated recovery dispatch and applies request deadlines',async()=>{
+  const original=globalThis.fetch;let dispatched=false;
+  globalThis.fetch=async(url,options={})=>{
+    assert.ok(options.signal);
+    if(url.endsWith('/actions/workflows/scrape.yml'))return Response.json({state:'active'});
+    if(url.includes('/workflows/scrape.yml/runs?'))return Response.json({workflow_runs:[]});
+    if(url.includes('/api/health'))return Response.json({ok:false,quota_exhausted:true},{status:503});
+    dispatched=true;throw Error('must not dispatch');
+  };
+  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test-token'}),'quota');assert.equal(dispatched,false);}finally{globalThis.fetch=original}
+});
+test('availability probe checks the HTML and D1-independent backup with bounded requests',async()=>{
+  const {probeAvailability}=await import('../ops-scheduler/index.ts');const original=globalThis.fetch;
+  try{
+    globalThis.fetch=async(url,options)=>{assert.ok(options.signal);return new Response('fixture',{headers:{'Content-Type':url.endsWith('/')?'text/html':'application/json'}})};
+    assert.equal((await probeAvailability()).ok,true);
+    globalThis.fetch=async()=>new Response('outage',{status:503});
+    const failure=await probeAvailability();assert.equal(failure.ok,false);assert.equal(failure.root_status,503);
+  }finally{globalThis.fetch=original}
+});
+test('inactive operational schedules recover while intentionally disabled workflows stay disabled',async()=>{
+  const {restoreInactiveSchedules}=await import('../ops-scheduler/index.ts');const original=globalThis.fetch;const enabled=[];
+  globalThis.fetch=async(url,options)=>{
+    if(url.endsWith('/actions/workflows?per_page=100'))return Response.json({workflows:[{path:'.github/workflows/deploy-cloudflare.yml',state:'disabled_inactivity'},{path:'.github/workflows/backup-d1.yml',state:'disabled_manually'},{path:'.github/workflows/unrelated.yml',state:'disabled_inactivity'}]});
+    assert.equal(options.method,'PUT');enabled.push(url);return new Response(null,{status:204});
+  };
+  try{assert.equal(await restoreInactiveSchedules({GITHUB_DISPATCH_TOKEN:'test-token'}),1);assert.equal(enabled.length,1);assert.match(enabled[0],/deploy-cloudflare.yml\/enable$/)}finally{globalThis.fetch=original}
+});

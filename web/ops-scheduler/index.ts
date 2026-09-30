@@ -18,6 +18,7 @@ async function github(path:string,token:string,body?:unknown,method?:string){
       "User-Agent":"JobRadar-recovery-scheduler",
       "X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},
     body:body===undefined?undefined:JSON.stringify(body),
+    signal:AbortSignal.timeout(10_000),
   });
   if(!response.ok)throw new Error(`GitHub API returned HTTP ${response.status}`);
   return response.status===204?null:response.json();
@@ -51,7 +52,8 @@ export async function checkAndRecover(env:Env){
   try{
     const response=await fetch(HEALTH,{signal:AbortSignal.timeout(10_000)});
     if(!response.ok&&response.status!==503)throw new Error(`Health returned HTTP ${response.status}`);
-    const health=await response.json() as {latest_run?:{finished_at?:string}};
+    const health=await response.json() as {latest_run?:{finished_at?:string};quota_exhausted?:boolean};
+    if(health.quota_exhausted){console.log("D1 daily quota exhausted; recovery waits for reset");return "quota"}
     finished=health.latest_run?.finished_at||null;
   }catch{
     console.log("Production health unavailable; using GitHub finalizer history");
@@ -63,10 +65,40 @@ export async function checkAndRecover(env:Env){
   return "dispatched";
 }
 
+export async function restoreInactiveSchedules(env:Env){
+  if(!env.GITHUB_DISPATCH_TOKEN)return 0;
+  const allowed=new Set(["deploy-cloudflare.yml","backup-d1.yml","watchdog.yml","monthly-maintenance.yml","telegram-digest.yml"]);
+  const result=await github("/actions/workflows?per_page=100",env.GITHUB_DISPATCH_TOKEN) as {workflows:{path:string;state:string}[]};
+  let restored=0;
+  for(const workflow of result.workflows){
+    const name=workflow.path.split("/").pop()||"";
+    if(allowed.has(name) && workflow.state==="disabled_inactivity"){
+      await github(`/actions/workflows/${name}/enable`,env.GITHUB_DISPATCH_TOKEN,undefined,"PUT");
+      restored++;console.log(`Restored inactive operational schedule: ${name}`);
+    }
+  }
+  return restored;
+}
+
+export async function probeAvailability(){
+  const started=Date.now();const statuses:number[]=[];
+  for(const path of ["/","/api/dashboard?source=backup"]){
+    try{
+      const response=await fetch(`https://jobradar.chandanvura.workers.dev${path}`,{signal:AbortSignal.timeout(10_000),cache:"no-store"});
+      const validType=response.headers.get("Content-Type")?.includes(path==="/"?"text/html":"application/json");
+      statuses.push(response.status===200 && validType?200:response.status===200?502:response.status);
+      await response.body?.cancel();
+    }catch{statuses.push(0);}
+  }
+  const result={event:"availability",checked_at:new Date().toISOString(),ok:statuses.every(status=>status===200),root_status:statuses[0],backup_api_status:statuses[1],duration_ms:Date.now()-started};
+  console.log(JSON.stringify(result));
+  return result;
+}
+
 const worker = {
   fetch(){return new Response("Not found",{status:404})},
   async scheduled(_controller:ScheduledController,env:Env,ctx:ExecutionContext){
-    ctx.waitUntil(checkAndRecover(env));
+    ctx.waitUntil(Promise.all([checkAndRecover(env),probeAvailability(),restoreInactiveSchedules(env)]));
   },
 };
 export default worker;

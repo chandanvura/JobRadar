@@ -189,6 +189,8 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
         new_job_keys.extend(result.get("new_job_keys",[]))
         notification_keys.extend(result.get("notification_keys",[]))
         rejected+=int(result.get("rejected",0))
+        if rejected:
+            raise RuntimeError("Ingestion rejected records; scan finalization withheld to protect existing data")
     successful_companies=[
         str(company.get("name","")) for company in companies
         if company.get("name") and not company.get("error_count")

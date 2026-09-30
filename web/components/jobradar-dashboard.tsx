@@ -1,6 +1,7 @@
 "use client";
+import { loadPublicCatalog } from "@/lib/public-catalog";
 import { ThemeToggle } from "./theme-toggle";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   Bell,
@@ -397,60 +398,29 @@ function DashboardContent() {
     [showExplore, setShowExplore] = useState(false),
     [showMoreFilters, setShowMoreFilters] = useState(false),
     [showOperations, setShowOperations] = useState(false);
+  const loadGeneration = useRef(0);
+  const activeLoad = useRef<AbortController | null>(null);
   const load = useCallback(async (silent = false) => {
+    const generation = ++loadGeneration.current;
+    activeLoad.current?.abort();
+    const controller = new AbortController();
+    activeLoad.current = controller;
     if (!silent) setLoading(true);
     try {
-      const r = await fetch("/api/dashboard", {
-        cache: "no-store",
-        signal: AbortSignal.timeout(20000),
-      });
-      if (!r.ok) throw new Error(`Dashboard API returned ${r.status}`);
-      const payload: Payload = await r.json();
-      // Render the first page while the remaining job pages load.
-      setData(payload);
-      if (!silent) setLoading(false);
-      if (payload.jobs.length >= 100 && payload.data_mode !== "backup") {
-        const collected = new Map(payload.jobs.map((j) => [j.id, j]));
-        let cursor = 0;
-        while (true) {
-          const page = await fetch(`/api/jobs?after=${cursor}`, {
-            cache: "no-store",
-            signal: AbortSignal.timeout(20000),
-          });
-          if (!page.ok)
-            throw Error("Additional job pages could not load. Retry refresh.");
-          const batch = await page.json();
-          if (batch.data_mode === "backup") {
-            // Switch the whole catalog together; do not mix snapshots with live pages.
-            const backup = await fetch("/api/dashboard?source=backup", { cache: "no-store", signal: AbortSignal.timeout(20000) });
-            if (!backup.ok) throw Error("Backup catalog could not load. Retry refresh.");
-            const saved: Payload = await backup.json();
-            Object.assign(payload, saved);
-            collected.clear();
-            for (const job of saved.jobs) collected.set(job.id, job);
-            break;
-          }
-          for (const job of batch.jobs) collected.set(job.id, job);
-          if (batch.next_cursor === null) break;
-          if (
-            !Number.isInteger(batch.next_cursor) ||
-            batch.next_cursor <= cursor
-          )
-            throw Error("Invalid job pagination cursor");
-          cursor = batch.next_cursor;
+      const payload = await loadPublicCatalog<Payload>((initial) => {
+        if (generation === loadGeneration.current) {
+          setData(initial);
+          if (!silent) setLoading(false);
         }
-        payload.jobs = [...collected.values()];
-      }
+      }, fetch, controller.signal);
+      if (generation !== loadGeneration.current || controller.signal.aborted) return;
       setData(payload);
       if (!silent) setNotice(null);
     } catch (e) {
-      setNotice({
-        tone: "error",
-        title: "Dashboard could not refresh",
-        text: e instanceof Error ? e.message : "Unable to load JobRadar",
-      });
+      if (generation !== loadGeneration.current || controller.signal.aborted) return;
+      setNotice({tone:"error",title:"Dashboard could not refresh",text:e instanceof Error?e.message:"Unable to load JobRadar"});
     } finally {
-      if (!silent) setLoading(false);
+      if (generation === loadGeneration.current && !silent) setLoading(false);
     }
   }, []);
   useEffect(() => {
@@ -471,6 +441,7 @@ function DashboardContent() {
       window.removeEventListener("hashchange", syncHash);
       window.clearTimeout(kickoff);
       window.clearInterval(timer);
+      activeLoad.current?.abort();
     };
   }, [load]);
   useEffect(() => {
@@ -1530,9 +1501,10 @@ function SystemCard({
     stale = !loading && (age === null || age >= 5),
     failed = Number(run?.companies_failed || 0),
     empty = Number(run?.companies_empty || 0),
-    attention = stale || failed > 0,
+    backup = data?.data_mode === "backup",
+    attention = backup || stale || failed > 0,
     label =
-      loading && !run
+      backup ? "BACKUP MODE" : loading && !run
         ? "LOADING LIVE STATUS"
         : !run
           ? "AWAITING FIRST SCAN"
@@ -2324,7 +2296,7 @@ function HealthView({ data }: { data: Payload | null }) {
     runs = data?.runs || [],
     age = exactAge(run?.finished_at),
     healthy =
-      age !== null && age < 5 && Number(run?.companies_failed || 0) === 0,
+      data?.data_mode !== "backup" && age !== null && age < 5 && Number(run?.companies_failed || 0) === 0,
     limited = (data?.companies || []).filter((c) =>
       c.warning?.startsWith("Limited coverage"),
     ).length;

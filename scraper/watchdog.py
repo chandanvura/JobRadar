@@ -45,6 +45,8 @@ def minutes_since_scan(health, now=None):
 
 
 def should_dispatch(health, runs, now=None):
+    if health.get("quota_exhausted"):
+        return False
     age=minutes_since_scan(health,now)
     active=any(run.get("status") in ACTIVE_STATUSES for run in runs)
     return (age is None or age>=300) and not active

@@ -27,16 +27,20 @@ jobs:
           python - <<'PY'
           import datetime,json,os,urllib.error,urllib.request
           should_run=True
-          if os.environ.get("TRIGGER_EVENT")=="schedule":
+          if os.environ.get("TRIGGER_EVENT") in {"schedule", "workflow_dispatch"}:
               try:
                   try:
                       response=urllib.request.urlopen("https://jobradar.chandanvura.workers.dev/api/health",timeout=15)
                   except urllib.error.HTTPError as error:
                       response=error
                   with response:
-                      latest=json.load(response).get("latest_run") or {}
+                      health=json.load(response)
+                      latest=health.get("latest_run") or {}
+                  if health.get("quota_exhausted"):
+                      should_run=False
+                      print("D1 daily quota exhausted; defer expensive scan until reset")
                   finished=latest.get("finished_at")
-                  if finished:
+                  if finished and should_run and os.environ.get("TRIGGER_EVENT")=="schedule":
                       value=datetime.datetime.fromisoformat(finished.replace("Z","+00:00"))
                       age=(datetime.datetime.now(datetime.timezone.utc)-value).total_seconds()/60
                       should_run=age>=210
