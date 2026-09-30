@@ -1,4 +1,5 @@
 "use client";
+import { ThemeToggle } from "./theme-toggle";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -903,6 +904,7 @@ function DashboardContent() {
               }
             />
           </div>
+          <ThemeToggle />
           <Button
             variant="outline"
             onClick={() => void load()}

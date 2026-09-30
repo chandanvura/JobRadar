@@ -19,6 +19,7 @@
 }
 
 :root {
+  color-scheme: light;
   --background: #f5f7f8;
   --foreground: #17211c;
   --card: #ffffff;
@@ -51,6 +52,51 @@
   --sidebar-accent-foreground: #171717;
   --sidebar-border: #e5e5e5;
   --sidebar-ring: #a1a1a1;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #101a16;
+  --foreground: #e7efe9;
+  --card: #18251e;
+  --card-foreground: #e7efe9;
+  --popover: #18251e;
+  --popover-foreground: #e7efe9;
+  --primary: #86d4a6;
+  --primary-foreground: #102c1b;
+  --secondary: #22352a;
+  --secondary-foreground: #e7efe9;
+  --muted: #22352a;
+  --muted-foreground: #b4c5ba;
+  --accent: #284333;
+  --accent-foreground: #e7efe9;
+  --border: #3a5142;
+  --input: #3a5142;
+  --ring: #86d4a6;
+  --sidebar: #142019;
+  --sidebar-foreground: #e7efe9;
+  --sidebar-accent: #284333;
+  --sidebar-accent-foreground: #e7efe9;
+  --sidebar-border: #3a5142;
+}
+
+/* The portal's established utility palette also needs themed surfaces. */
+html[data-theme="dark"] :is([class*="bg-white"], [class*="bg-[#f"], [class*="bg-[#e"], [class*="bg-slate-50"], [class*="bg-gray-50"]) {
+  background-color: var(--card);
+}
+html[data-theme="dark"] :is([class*="text-[#1"], [class*="text-[#2"], [class*="text-[#3"], [class*="text-gray-900"], [class*="text-slate-900"]) {
+  color: #b3e4c6;
+}
+html[data-theme="dark"] :is([class*="text-[#5"], [class*="text-[#6"], [class*="text-[#7"], [class*="text-gray-500"], [class*="text-slate-500"]) {
+  color: var(--muted-foreground);
+}
+html[data-theme="dark"] :is([class*="border-[#"], [class*="border-gray-"], [class*="border-slate-"]) {
+  border-color: var(--border);
+}
+html[data-theme="dark"] :is(input, select, textarea) {
+  background-color: var(--background);
+  color: var(--foreground);
+  border-color: var(--border);
 }
 
 @theme inline {
