@@ -292,6 +292,29 @@ def test_ingest_scan_finalizes_with_seen_manifest(monkeypatch):
     assert final["successful_companies"]==["Healthy"]
     assert final["seen_job_keys"]==["Example\x1flever\x1fjob:1"]
 
+def test_ingest_scan_counts_new_jobs_by_employer_scoped_identity(monkeypatch):
+    payloads=[]
+    class Response:
+        def __init__(self,payload): self.payload=payload
+        def json(self):
+            jobs=self.payload.get("jobs",[])
+            return {
+                "new_external_ids":[job["external_job_id"] for job in jobs],
+                "new_job_keys":[source_job_key(job) for job in jobs],
+                "notification_keys":[],"rejected":0,
+            }
+    async def post(url,headers,payload,attempts=3):
+        payloads.append(payload); return Response(payload)
+    monkeypatch.setattr("scraper.main.post_with_retry",post)
+    jobs=[
+        {"company":"Employer A","ats_provider":"workday","external_job_id":"REQ-1"},
+        {"company":"Employer B","ats_provider":"workday","external_job_id":"REQ-1"},
+    ]
+    result=asyncio.run(ingest_scan("https://example.test",{},jobs,[],{"started_at":"now"}))
+    assert result["new_external_ids"]==["REQ-1"]
+    assert len(result["new_job_keys"])==2
+    assert payloads[-1]["run"]["new_jobs"]==2
+
 def test_job_identity_includes_company_for_tenant_local_external_ids():
     first=sample(); second=sample(); second.company="Another Employer"
     assert source_job_key(first)!=source_job_key(second)

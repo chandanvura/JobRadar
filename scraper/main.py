@@ -182,10 +182,11 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
     """Upload one logical scan in bounded requests and finalize it exactly once."""
     url=endpoint.rstrip("/")+"/api/ingest"
     await post_with_retry(url,headers,{"jobs":[],"companies":companies})
-    new_external_ids=[]; notification_keys=[]; rejected=0
+    new_external_ids=[]; new_job_keys=[]; notification_keys=[]; rejected=0
     for batch in ingest_chunks(jobs):
         result=(await post_with_retry(url,headers,{"jobs":batch,"companies":[]})).json()
         new_external_ids.extend(result.get("new_external_ids",[]))
+        new_job_keys.extend(result.get("new_job_keys",[]))
         notification_keys.extend(result.get("notification_keys",[]))
         rejected+=int(result.get("rejected",0))
     successful_companies=[
@@ -196,12 +197,12 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
     seen_job_keys=[source_job_key(job) for job in jobs if job.get("company") and job.get("ats_provider") and job.get("external_job_id")]
     final_run={
         **run,
-        "new_jobs":len(set(new_external_ids)),
+        "new_jobs":len(set(new_job_keys)),
         "successful_companies":successful_companies,
         "seen_job_keys":seen_job_keys,
     }
     await post_with_retry(url,headers,{"jobs":[],"companies":[],"run":final_run})
-    return {"new_external_ids":list(dict.fromkeys(new_external_ids)),"notification_keys":list(dict.fromkeys(notification_keys)),"rejected":rejected}
+    return {"new_external_ids":list(dict.fromkeys(new_external_ids)),"new_job_keys":list(dict.fromkeys(new_job_keys)),"notification_keys":list(dict.fromkeys(notification_keys)),"rejected":rejected}
 
 class _NoopAsyncContext:
     async def __aenter__(self): return self
@@ -252,7 +253,7 @@ async def main():
     empty_names=[s["name"] for s in statuses if not s.get("error_count") and not s.get("jobs_found") and not str(s.get("warning","")).startswith("Limited coverage")]
     limited_names=[s["name"] for s in statuses if str(s.get("warning","")).startswith("Limited coverage")]
     failed_names=[s["name"] for s in statuses if s.get("error_count")]
-    print(f"Scanned {len(all_jobs)} jobs; {len(candidates)} target candidates; {len(eligible)} eligible; {len(result.get('new_external_ids',[]))} new; {sent} alerts.")
+    print(f"Scanned {len(all_jobs)} jobs; {len(candidates)} target candidates; {len(eligible)} eligible; {len(result.get('new_job_keys',[]))} new; {sent} alerts.")
     print(f"Source diagnostics: {len(empty_names)} empty; {len(limited_names)} limited; {len(failed_names)} failed.")
     elapsed=(datetime.now(timezone.utc)-datetime.fromisoformat(started)).total_seconds()
     print(f"Scan duration: {elapsed:.1f}s across {len(enabled)} enabled sources.")

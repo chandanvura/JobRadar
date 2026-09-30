@@ -113,7 +113,7 @@ async def finalize(paths):
     limited=[s["name"] for s in statuses if str(s.get("warning","")).startswith("Limited coverage")]
     failed=[s["name"] for s in statuses if s.get("error_count")]
     elapsed=(datetime.now(timezone.utc)-datetime.fromisoformat(merged["started_at"])).total_seconds()
-    print(f"Distributed scan: {merged['raw_jobs']} raw; {len(payload_jobs)} candidates; {len(eligible)} eligible; {len(result.get('new_external_ids',[]))} new; {sent} alerts.")
+    print(f"Distributed scan: {merged['raw_jobs']} raw; {len(payload_jobs)} candidates; {len(eligible)} eligible; {len(result.get('new_job_keys',[]))} new; {sent} alerts.")
     print(f"Source diagnostics: {empty} empty; {len(limited)} limited; {len(failed)} failed. End-to-end duration: {elapsed:.1f}s.")
     if failed: print("Failed sources: "+", ".join(failed))
     if telegram_failures:

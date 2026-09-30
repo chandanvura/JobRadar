@@ -95,6 +95,7 @@ test('final ingestion deactivates stale jobs only after every upload succeeds',a
  assert.match(source,/NOT IN \(SELECT value FROM json_each/);
  assert.match(source,/DO UPDATE SET[\s\S]*WHERE jobs\.title IS NOT excluded\.title/);
  assert.match(source,/ON CONFLICT\(company,ats_provider,external_job_id\)/);
+ assert.match(source,/new_job_keys:newJobKeys/);
  assert.match(source,/ON CONFLICT\(started_at\) DO UPDATE/);
  assert.match(source,/company \|\| char\(31\) \|\| ats_provider/);
  assert.match(source,/city IN \('Bengaluru','Hyderabad'\)/);
