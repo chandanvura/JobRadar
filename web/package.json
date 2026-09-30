@@ -65,5 +65,11 @@
     "miniflare": "5.20260926.1-alpha"
   },
   "type": "module",
-  "displayName": "JobRadar"
+  "displayName": "JobRadar",
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.12"
+    },
+    "fflate": "0.8.3"
+  }
 }
