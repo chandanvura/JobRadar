@@ -93,3 +93,14 @@ def test_network_failure_retries_are_bounded(monkeypatch, failure):
     with pytest.raises(failure):
         asyncio.run(main.post_with_retry("https://example.test/api/ingest", {}, {}))
     assert len(attempts) == 3
+
+
+@pytest.mark.parametrize("event", ["schedule", "workflow_dispatch"])
+def test_stale_but_available_database_allows_recovery(event):
+    health = {"ok": False, "stale": True, "database": True, "ingestion_configured": True,
+              "latest_run": {"finished_at": "2026-10-04T00:00:00Z"}}
+    now = datetime(2026, 10, 4, 6, tzinfo=timezone.utc)
+    assert scan_gate.should_scan(health, event, now)
+    assert not scan_gate.should_scan({**health, "quota_exhausted": True}, event, now)
+    assert not scan_gate.should_scan({**health, "database": False}, event, now)
+    assert not scan_gate.should_scan({**health, "ingestion_configured": False}, event, now)

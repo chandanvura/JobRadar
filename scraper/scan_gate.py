@@ -5,7 +5,11 @@ from scraper.watchdog import minutes_since_scan
 
 
 def should_scan(health, event, now=None):
-    if health.get("quota_exhausted") or not health.get("ok"):
+    recoverable_staleness = (
+        health.get("stale") is True and health.get("database") is True
+        and health.get("ingestion_configured") is True
+    )
+    if health.get("quota_exhausted") or (not health.get("ok") and not recoverable_staleness):
         return False
     if event == "workflow_dispatch":
         return True
