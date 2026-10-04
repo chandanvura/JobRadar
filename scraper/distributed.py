@@ -5,7 +5,7 @@ from datetime import datetime,timezone
 from pathlib import Path
 
 from .adapters import ADAPTERS
-from .main import TELEGRAM_RETRY_IDS,TelegramDeliveryError,ensure_telegram_ready,ingest_scan,load_companies,notify,now,record_notification,run_health_status,scrape,source_job_key
+from .main import TELEGRAM_RETRY_IDS,QuotaDeferred,TelegramDeliveryError,ensure_telegram_ready,ingest_scan,load_companies,notify,now,record_notification,run_health_status,scrape,source_job_key
 from .normalization import TARGET_CITIES
 from .models import Job
 
@@ -90,7 +90,16 @@ async def finalize(paths):
     if not endpoint or not secret: raise RuntimeError("JOBRADAR_API_URL/INGEST_SECRET missing")
     headers={"Authorization":f"Bearer {secret}"}; bypass=os.getenv("JOBRADAR_SITE_BYPASS_TOKEN")
     if bypass: headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
-    result=await ingest_scan(endpoint,headers,payload_jobs,statuses,run)
+    try:
+        result=await ingest_scan(endpoint,headers,payload_jobs,statuses,run)
+    except QuotaDeferred:
+        message = "DEFERRED: D1 daily quota reached; no completed scan or notifications recorded. Shard artifacts retained for 7 days; next healthy scan recollects current jobs."
+        print(message)
+        summary = os.getenv("GITHUB_STEP_SUMMARY")
+        if summary:
+            with open(summary, "a", encoding="utf-8") as output:
+                output.write(message + "\n")
+        return
     alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
     alert_jobs=[job for job in eligible if (source_job_key(job) in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
     telegram_chat=None

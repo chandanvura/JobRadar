@@ -163,13 +163,28 @@ async def record_notification(endpoint,headers,job,status,error=None):
     except Exception as exc:
         print(f"WARN Notification audit {job.external_job_id}: {type(exc).__name__}",file=sys.stderr)
 
+class QuotaDeferred(RuntimeError):
+    """Known D1 daily quota: pause without claiming successful ingestion."""
+
+
 async def post_with_retry(url,headers,payload,attempts=3):
     last=None
     for attempt in range(attempts):
         try:
             async with httpx.AsyncClient(timeout=httpx.Timeout(150,connect=20)) as x:
-                response=await x.post(url,headers=headers,json=payload); response.raise_for_status(); return response
+                response=await x.post(url,headers=headers,json=payload)
+                if response.status_code == 503:
+                    try:
+                        body = response.json()
+                    except ValueError:
+                        body = {}
+                    if isinstance(body, dict) and body.get("quota_exhausted") is True:
+                        raise QuotaDeferred("D1 daily quota exhausted; collection deferred until UTC reset")
+                response.raise_for_status()
+                return response
         except (httpx.TimeoutException,httpx.NetworkError,httpx.HTTPStatusError) as exc:
+            if isinstance(exc, httpx.HTTPStatusError) and exc.response.status_code not in {408, 429, 500, 502, 503, 504}:
+                raise
             last=exc
             if attempt+1<attempts: await asyncio.sleep(2**attempt)
     raise last or RuntimeError("Request failed")
