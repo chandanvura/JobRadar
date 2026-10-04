@@ -1,5 +1,7 @@
 "use client";
 import { loadPublicCatalog } from "@/lib/public-catalog";
+import { JobSearchStrategy } from "./job-search-strategy";
+import { hiringManagerDraft } from "@/lib/job-search-strategy";
 import { ThemeToggle } from "./theme-toggle";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -2006,6 +2008,7 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
   ]);
   return (
     <div className="space-y-5">
+      <JobSearchStrategy titles={preferences.titles} />
       <SectionTitle
         icon={ExternalLink}
         title="Search job boards safely"
@@ -2014,7 +2017,7 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
       <div className="rounded-2xl border bg-card p-5 text-sm text-muted-foreground">
         JobRadar cannot copy these sites automatically without authorized access.
         Fallback searches cover LinkedIn, Naukri, Indeed, Glassdoor and official
-        ATS pages from the last day. Verify the employer and posting date, then
+        ATS discovery pages. Search date filters do not verify posting dates. Check the employer and posting date, then
         apply through the official employer link. These searches do not write to D1.
       </div>
       <div className="grid gap-3 md:grid-cols-2">
@@ -2085,6 +2088,12 @@ function OutreachView({
   };
   if (!company) return <Empty />;
   const searches = [
+    {
+      label: "Potential hiring managers",
+      detail: "Verify current team ownership before contacting anyone",
+      url: `https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in "${company?.name || ""}" ("engineering manager" OR "team lead" OR "head of engineering")`)}`,
+      icon: Users,
+    },
     {
       label: "Recruiters on LinkedIn",
       detail: "Public talent-acquisition and campus-hiring profiles",
@@ -2158,6 +2167,7 @@ function OutreachView({
         ))}
       </div>
       <div className="grid gap-4 xl:grid-cols-2">
+        <OutreachTemplate title="Message a hiring manager" text={hiringManagerDraft(company.name, role, selectedJob?.application_url)} copied={copied === "manager"} copy={() => copy("manager", hiringManagerDraft(company.name, role, selectedJob?.application_url))} />
         <OutreachTemplate title="Message a recruiter" text={recruiterMessage} copied={copied === "recruiter"} copy={() => copy("recruiter", recruiterMessage)} />
         <OutreachTemplate title="Ask for a referral" text={referralMessage} copied={copied === "referral"} copy={() => copy("referral", referralMessage)} />
       </div>
