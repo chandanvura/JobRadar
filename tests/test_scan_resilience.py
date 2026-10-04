@@ -75,3 +75,21 @@ def test_mid_scan_quota_never_notifies_or_claims_completed_scan(monkeypatch, tmp
     asyncio.run(distributed.finalize(['unused']))
     assert 'DEFERRED:' in summary.read_text()
     assert 'Distributed scan:' not in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("failure", [httpx.ConnectError, httpx.ReadTimeout])
+def test_network_failure_retries_are_bounded(monkeypatch, failure):
+    attempts = []
+    class Client:
+        def __init__(self, **kwargs): pass
+        async def __aenter__(self): return self
+        async def __aexit__(self, *args): pass
+        async def post(self, url, **kwargs):
+            attempts.append(url)
+            raise failure("fixture network failure")
+    async def sleep(seconds): pass
+    monkeypatch.setattr(main.httpx, "AsyncClient", Client)
+    monkeypatch.setattr(main.asyncio, "sleep", sleep)
+    with pytest.raises(failure):
+        asyncio.run(main.post_with_retry("https://example.test/api/ingest", {}, {}))
+    assert len(attempts) == 3

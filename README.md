@@ -175,3 +175,30 @@ See [the production-readiness audit](docs/PRODUCTION-READINESS.md) and
 [recovery instructions](ops/RECOVERY.md) for evidence and remaining limitations.
 
 Collector health checks require `curl` on PATH. GitHub's Ubuntu runners include it; local collector/watchdog runs must install it too. Health uses the same bounded curl transport as deployment verification and accepts explicit HTTP 503 quota responses.
+
+
+### Repeatable reliability harness
+
+On Linux/WSL with Python 3.12, Node 22 and GNU timeout, install dependencies
+from the lock files and run the same entry point used by GitHub validation:
+
+```bash
+python -m venv .venv
+.venv/bin/python -m pip install -r requirements-dev.txt
+npm --prefix web ci --no-audit --no-fund
+JOBRADAR_HARNESS_PYTHON="$PWD/.venv/bin/python" bash scripts/verify-harness.sh all
+```
+
+Use `python` or `web` instead of `all` to select one suite. Each check has a
+10-minute deadline, fails immediately on errors, and prints named START/PASS/FAIL
+results. CI runs the two suites in parallel on fresh runners. The harness does
+not deploy, dispatch collectors or write production D1. Worker integration uses
+fresh local Miniflare databases; collector faults use fixtures.
+
+Coverage includes malformed/duplicate inputs, concurrent imports, notification
+replay, migrations, pagination, quota and static fallback, network failures,
+retry bounds, freshness boundaries and deferred finalization. Passing these
+checks is release evidence, not a promise of future uptime or employer coverage.
+The production-only npm audit is a required gate. The October 4 unpatched
+`braces` development-tool advisory remains documented in the readiness report;
+this harness does not claim a clean full dependency audit.
