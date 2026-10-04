@@ -154,3 +154,11 @@ Future scheduled capture/resumption, continuous 99.9% uptime, all 670 employer f
 
 - VERIFIED: fresh npm ci, production build, 50 web tests, real compiled Worker API integration, ESLint and UI typecheck passed. Live dashboard and backup catalog both HTTP 200.
 - OPEN P2: full npm audit reports eight high dev-tool dependency findings rooted in braces <=3.0.3 recursion DoS (GHSA-vfj7-8cjw-p6xm). npm registry latest remains 3.0.3 at audit time; automatic recommendation downgrades eslint-config-next incompatibly. No dependency forced downgrade applied. Development tooling uses repository-controlled patterns; untrusted glob input must not be supplied. Production-only audit checked separately; full audit is not clean.
+
+
+## October 4 — braces recursion mitigation
+
+- FIXED + VERIFIED locally: reproduced braces 3.0.3 expansion of a 9,003-character nested pattern causing RangeError: Maximum call stack size exceeded. Added nesting guards to parser and all three recursive AST walkers. Deep strings, parentheses and directly supplied ASTs now fail early with a controlled SyntaxError; ordinary globs, ranges and nesting remain correct.
+- Installation automatically applies the patch using pinned SHA-256 original/patched source fingerprints. Repeated installation is idempotent; unexpected upstream versions or source bytes fail closed. Every installed real braces directory is checked; symlinks are not followed. MIT license retained.
+- Eleven regression tests run in the shared web harness, including refusal of unexpected versions and tampered source. A clean npm ci must apply the patch; installations with ignored lifecycle scripts must not be released.
+- The registry advisory GHSA-vfj7-8cjw-p6xm remains visible: upstream reports no patched version. This mitigates the reproduced recursion vulnerability locally without claiming a clean full npm audit or suppressing alerts. Production dependency audit remains a separate required gate.

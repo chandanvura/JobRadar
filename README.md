@@ -199,6 +199,11 @@ Coverage includes malformed/duplicate inputs, concurrent imports, notification
 replay, migrations, pagination, quota and static fallback, network failures,
 retry bounds, freshness boundaries and deferred finalization. Passing these
 checks is release evidence, not a promise of future uptime or employer coverage.
-The production-only npm audit is a required gate. The October 4 unpatched
-`braces` development-tool advisory remains documented in the readiness report;
-this harness does not claim a clean full dependency audit.
+The production-only npm audit is a required gate. The October 4 `braces` development-tool advisory is locally mitigated by a
+hash-checked postinstall depth patch and exploit regression tests. Upstream has
+no patched release, so full npm audit still reports the affected version; no
+advisory is suppressed. Do not use `npm ci --ignore-scripts`: the security tests
+will reject an unpatched installation. The patch rejects nesting at 128 levels,
+retains ordinary glob behavior, and fails installation on unexpected upstream
+source/version changes. Original MIT licensing is retained under web/security.
+Remove the patch only after verifying a safe upstream release.

@@ -16,7 +16,8 @@
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate",
     "test:product": "node --experimental-strip-types --test tests/*.test.mjs",
     "typecheck:ui": "tsc --project tsconfig.ui.json",
-    "test:api": "node tests/worker-api.integration.mjs"
+    "test:api": "node tests/worker-api.integration.mjs",
+    "postinstall": "node scripts/patch-braces.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
