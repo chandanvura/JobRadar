@@ -1,0 +1,1839 @@
+{
+  "audit_date": "2026-10-05",
+  "companies_attempted": 260,
+  "attempts": [
+    {
+      "company": "AMD",
+      "official_url": "https://careers.amd.com/careers-home/jobs",
+      "slug": "amd",
+      "status": 404
+    },
+    {
+      "company": "Apple",
+      "official_url": "https://jobs.apple.com/en-in/search",
+      "slug": "apple",
+      "status": 404
+    },
+    {
+      "company": "Arcesium",
+      "official_url": "https://www.arcesium.com/careers.html",
+      "slug": "arcesium",
+      "status": 404
+    },
+    {
+      "company": "Atlassian",
+      "official_url": "https://www.atlassian.com/company/careers/all-jobs",
+      "slug": "atlassian",
+      "status": 404
+    },
+    {
+      "company": "Capgemini",
+      "official_url": "https://www.capgemini.com/in-en/careers/join-capgemini/job-search/",
+      "slug": "capgemini",
+      "status": 404
+    },
+    {
+      "company": "Cashfree Payments",
+      "official_url": "https://www.cashfree.com/careers/",
+      "slug": "cashfree",
+      "status": 404
+    },
+    {
+      "company": "Chargebee",
+      "official_url": "https://www.chargebee.com/careers/",
+      "slug": "chargebee",
+      "status": 404
+    },
+    {
+      "company": "Cognizant",
+      "official_url": "https://careers.cognizant.com/global-en/jobs/",
+      "slug": "cognizant",
+      "status": 404
+    },
+    {
+      "company": "Darwinbox",
+      "official_url": "https://darwinbox.com/careers",
+      "slug": "darwinbox",
+      "status": 404
+    },
+    {
+      "company": "Dell Technologies",
+      "official_url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/jobs",
+      "slug": "dell",
+      "status": 404
+    },
+    {
+      "company": "Flipkart",
+      "official_url": "https://www.flipkartcareers.com/#!/joblist",
+      "slug": "flipkart",
+      "status": 404
+    },
+    {
+      "company": "GitHub",
+      "official_url": "https://www.github.careers/careers-home/jobs",
+      "slug": "github",
+      "status": 404
+    },
+    {
+      "company": "Google",
+      "official_url": "https://www.google.com/about/careers/applications/jobs/results/",
+      "slug": "google",
+      "status": 404
+    },
+    {
+      "company": "HSBC",
+      "official_url": "https://www.hsbc.com/careers",
+      "slug": "hsbc",
+      "status": 404
+    },
+    {
+      "company": "HashiCorp",
+      "official_url": "https://www.hashicorp.com/en/careers/open-positions",
+      "slug": "hashicorp",
+      "status": 404
+    },
+    {
+      "company": "Hasura",
+      "official_url": "https://hasura.io/careers",
+      "slug": "hasura",
+      "status": 404
+    },
+    {
+      "company": "Hasura",
+      "official_url": "https://hasura.io/careers",
+      "slug": "promptql",
+      "status": 404
+    },
+    {
+      "company": "IBM",
+      "official_url": "https://www.ibm.com/careers/search",
+      "slug": "ibm",
+      "status": 404
+    },
+    {
+      "company": "Informatica",
+      "official_url": "https://informatica.gr8people.com/jobs",
+      "slug": "informatica",
+      "status": 404
+    },
+    {
+      "company": "Infosys",
+      "official_url": "https://career.infosys.com/joblist",
+      "slug": "infosys",
+      "status": 404
+    },
+    {
+      "company": "Intuit",
+      "official_url": "https://www.intuit.com/careers/",
+      "slug": "intuit",
+      "status": 404
+    },
+    {
+      "company": "Jupiter",
+      "official_url": "https://jupiter.money/careers/",
+      "slug": "jupiter",
+      "status": 404
+    },
+    {
+      "company": "Juspay",
+      "official_url": "https://juspay.io/careers",
+      "slug": "juspay",
+      "status": 404
+    },
+    {
+      "company": "Mercedes-Benz Research and Development India",
+      "official_url": "https://www.mbrdi.co.in/careers",
+      "slug": "mercedesbenzresearchanddevelopmentindia",
+      "status": 404
+    },
+    {
+      "company": "Meta",
+      "official_url": "https://www.metacareers.com/jobs/",
+      "slug": "meta",
+      "status": 404
+    },
+    {
+      "company": "Myntra",
+      "official_url": "https://careers.myntra.com/",
+      "slug": "myntra",
+      "status": 404
+    },
+    {
+      "company": "Navi",
+      "official_url": "https://navi.com/careers",
+      "slug": "navi",
+      "status": 200,
+      "count": 3,
+      "sample": [
+        {
+          "id": "cc6d60fb-bff3-42bf-90ac-7c00f4cee87c",
+          "title": "Founding Software Engineer",
+          "location": "San Francisco",
+          "jobUrl": "https://jobs.ashbyhq.com/navi/cc6d60fb-bff3-42bf-90ac-7c00f4cee87c"
+        },
+        {
+          "id": "c0ef075b-b0ee-4f22-9d27-c8eda345ec19",
+          "title": "Forward Deployed Engineer",
+          "location": "San Francisco",
+          "jobUrl": "https://jobs.ashbyhq.com/navi/c0ef075b-b0ee-4f22-9d27-c8eda345ec19"
+        },
+        {
+          "id": "e89a2b49-5a72-403b-94b5-07a3c8e2f5eb",
+          "title": "Office Manager",
+          "location": "San Francisco",
+          "jobUrl": "https://jobs.ashbyhq.com/navi/e89a2b49-5a72-403b-94b5-07a3c8e2f5eb"
+        }
+      ]
+    },
+    {
+      "company": "NetApp",
+      "official_url": "https://careers.netapp.com/",
+      "slug": "netapp",
+      "status": 404
+    },
+    {
+      "company": "Open Financial Technologies",
+      "official_url": "https://open.money/careers",
+      "slug": "open",
+      "status": 404
+    },
+    {
+      "company": "Persistent Systems",
+      "official_url": "https://careers.persistent.com/",
+      "slug": "persistentsystems",
+      "status": 404
+    },
+    {
+      "company": "Postman",
+      "official_url": "https://www.postman.com/company/careers/",
+      "slug": "postman",
+      "status": 404
+    },
+    {
+      "company": "Rippling",
+      "official_url": "https://www.rippling.com/careers/open-roles",
+      "slug": "rippling",
+      "status": 404
+    },
+    {
+      "company": "Slice",
+      "official_url": "https://www.sliceit.com/careers",
+      "slug": "slice",
+      "status": 404
+    },
+    {
+      "company": "Splunk",
+      "official_url": "https://www.splunk.com/en_us/careers.html",
+      "slug": "splunk",
+      "status": 404
+    },
+    {
+      "company": "TCS",
+      "official_url": "https://www.tcs.com/careers/india",
+      "slug": "tcs",
+      "status": 404
+    },
+    {
+      "company": "ThoughtSpot",
+      "official_url": "https://www.thoughtspot.com/careers",
+      "slug": "thoughtspot",
+      "status": 404
+    },
+    {
+      "company": "Upstox",
+      "official_url": "https://upstox.com/careers/",
+      "slug": "upstox",
+      "status": 404
+    },
+    {
+      "company": "Walmart Global Tech",
+      "official_url": "https://careers.walmart.com/technology",
+      "slug": "walmart",
+      "status": 404
+    },
+    {
+      "company": "Zerodha",
+      "official_url": "https://careers.zerodha.com/",
+      "slug": "zerodha",
+      "status": 404
+    },
+    {
+      "company": "Zeta",
+      "official_url": "https://www.zeta.tech/in/careers",
+      "slug": "zeta",
+      "status": 404
+    },
+    {
+      "company": "ACKO",
+      "official_url": "https://www.acko.com/careers/",
+      "slug": "acko",
+      "status": 404
+    },
+    {
+      "company": "ADP",
+      "official_url": "https://jobs.adp.com/",
+      "slug": "adp",
+      "status": 404
+    },
+    {
+      "company": "ASML",
+      "official_url": "https://www.asml.com/en/careers",
+      "slug": "asml",
+      "status": 404
+    },
+    {
+      "company": "AXA",
+      "official_url": "https://careers.axa.com/",
+      "slug": "axa",
+      "status": 404
+    },
+    {
+      "company": "Ajio",
+      "official_url": "https://careers.ril.com/",
+      "slug": "ajio",
+      "status": 404
+    },
+    {
+      "company": "Amagi",
+      "official_url": "https://www.amagi.com/careers",
+      "slug": "amagi",
+      "status": 404
+    },
+    {
+      "company": "Angel One",
+      "official_url": "https://www.angelone.in/careers",
+      "slug": "angelone",
+      "status": 404
+    },
+    {
+      "company": "Ansys",
+      "official_url": "https://careers.ansys.com/",
+      "slug": "ansys",
+      "status": 404
+    },
+    {
+      "company": "Aon",
+      "official_url": "https://jobs.aon.com/",
+      "slug": "aon",
+      "status": 404
+    },
+    {
+      "company": "Ather Energy",
+      "official_url": "https://www.atherenergy.com/careers",
+      "slug": "atherenergy",
+      "status": 404
+    },
+    {
+      "company": "Avaamo",
+      "official_url": "https://avaamo.ai/careers/",
+      "slug": "avaamo",
+      "status": 404
+    },
+    {
+      "company": "Avalara",
+      "official_url": "https://careers.avalara.com/",
+      "slug": "avalara",
+      "status": 404
+    },
+    {
+      "company": "BD",
+      "official_url": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+      "slug": "bd",
+      "status": 404
+    },
+    {
+      "company": "BNP Paribas",
+      "official_url": "https://group.bnpparibas/en/careers",
+      "slug": "bnpparibas",
+      "status": 404
+    },
+    {
+      "company": "BP",
+      "official_url": "https://www.bp.com/en/global/corporate/careers.html",
+      "slug": "bp",
+      "status": 404
+    },
+    {
+      "company": "Bain & Company",
+      "official_url": "https://www.bain.com/careers/",
+      "slug": "baincompany",
+      "status": 404
+    },
+    {
+      "company": "Bank of America",
+      "official_url": "https://careers.bankofamerica.com/en-us",
+      "slug": "bankofamerica",
+      "status": 404
+    },
+    {
+      "company": "Bayer",
+      "official_url": "https://career.bayer.com/",
+      "slug": "bayer",
+      "status": 404
+    },
+    {
+      "company": "Best Buy",
+      "official_url": "https://jobs.bestbuy.com/bby?id=career_area",
+      "slug": "bestbuy",
+      "status": 404
+    },
+    {
+      "company": "BigBasket",
+      "official_url": "https://www.bigbasket.com/careers/",
+      "slug": "bigbasket",
+      "status": 404
+    },
+    {
+      "company": "Blackhawk Network",
+      "official_url": "https://careers.blackhawknetwork.com/",
+      "slug": "blackhawknetwork",
+      "status": 404
+    },
+    {
+      "company": "Boehringer Ingelheim",
+      "official_url": "https://jobs.boehringer-ingelheim.com/",
+      "slug": "boehringeringelheim",
+      "status": 404
+    },
+    {
+      "company": "Booking.com",
+      "official_url": "https://jobs.booking.com/careers",
+      "slug": "bookingcom",
+      "status": 404
+    },
+    {
+      "company": "CBRE",
+      "official_url": "https://careers.cbre.com/en_US/careers/SearchJobs/",
+      "slug": "cbre",
+      "status": 404
+    },
+    {
+      "company": "CGI",
+      "official_url": "https://www.cgi.com/en/careers-search",
+      "slug": "cgi",
+      "status": 404
+    },
+    {
+      "company": "CVS Health",
+      "official_url": "https://jobs.cvshealth.com/",
+      "slug": "cvshealth",
+      "status": 404
+    },
+    {
+      "company": "CarDekho",
+      "official_url": "https://careers.cardekho.com/",
+      "slug": "cardekho",
+      "status": 404
+    },
+    {
+      "company": "Cargill",
+      "official_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+      "slug": "cargill",
+      "status": 404
+    },
+    {
+      "company": "Cars24",
+      "official_url": "https://www.cars24.com/careers/",
+      "slug": "cars24",
+      "status": 404
+    },
+    {
+      "company": "Caterpillar",
+      "official_url": "https://careers.caterpillar.com/",
+      "slug": "caterpillar",
+      "status": 404
+    },
+    {
+      "company": "Checkout.com",
+      "official_url": "https://www.checkout.com/careers",
+      "slug": "checkoutcom",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Citrix",
+      "official_url": "https://www.cloud.com/careers",
+      "slug": "citrix",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Cleartrip",
+      "official_url": "https://www.cleartrip.com/careers",
+      "slug": "cleartrip",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "CleverTap",
+      "official_url": "https://clevertap.com/careers/",
+      "slug": "clevertap",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "CloudBees",
+      "official_url": "https://www.cloudbees.com/careers",
+      "slug": "cloudbees",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Coforge",
+      "official_url": "https://careers.coforge.com/",
+      "slug": "coforge",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "CoinDCX",
+      "official_url": "https://careers.coindcx.com/",
+      "slug": "coindcx",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Collins Aerospace",
+      "official_url": "https://careers.rtx.com/global/en/collins-aerospace",
+      "slug": "collinsaerospace",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "ColorTokens",
+      "official_url": "https://colortokens.com/careers/",
+      "slug": "colortokens",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Cornerstone OnDemand",
+      "official_url": "https://www.cornerstoneondemand.com/careers/",
+      "slug": "cornerstoneondemand",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Costco",
+      "official_url": "https://careers.costco.com/jobs",
+      "slug": "costco",
+      "status": 404
+    },
+    {
+      "company": "CyberArk",
+      "official_url": "https://www.cyberark.com/careers/",
+      "slug": "cyberark",
+      "status": 404
+    },
+    {
+      "company": "Dassault Systemes",
+      "official_url": "https://www.3ds.com/careers",
+      "slug": "dassaultsystemes",
+      "status": 404
+    },
+    {
+      "company": "DataStax",
+      "official_url": "https://www.datastax.com/company/careers",
+      "slug": "datastax",
+      "status": 404
+    },
+    {
+      "company": "Deloitte",
+      "official_url": "https://southasiacareers.deloitte.com/",
+      "slug": "deloitte",
+      "status": 404
+    },
+    {
+      "company": "Delta Air Lines",
+      "official_url": "https://delta.avature.net/careers",
+      "slug": "deltaairlines",
+      "status": 404
+    },
+    {
+      "company": "Deutsche Bank",
+      "official_url": "https://careers.db.com/",
+      "slug": "deutschebank",
+      "status": 404
+    },
+    {
+      "company": "Deutsche Boerse Group",
+      "official_url": "https://careers.deutsche-boerse.com/",
+      "slug": "deutscheboersegroup",
+      "status": 404
+    },
+    {
+      "company": "Deutsche Telekom",
+      "official_url": "https://www.telekom.com/en/careers",
+      "slug": "deutschetelekom",
+      "status": 404
+    },
+    {
+      "company": "Dhruva Space",
+      "official_url": "https://www.dhruvaspace.com/careers",
+      "slug": "dhruvaspace",
+      "status": 404
+    },
+    {
+      "company": "Discover",
+      "official_url": "https://jobs.discover.com/",
+      "slug": "discover",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "DocuSign",
+      "official_url": "https://careers.docusign.com/",
+      "slug": "docusign",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Dream Sports",
+      "official_url": "https://www.dreamsports.group/careers/",
+      "slug": "dreamsports",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Dynatrace",
+      "official_url": "https://careers.dynatrace.com/",
+      "slug": "dynatrace",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "E2open",
+      "official_url": "https://www.e2open.com/company/careers/",
+      "slug": "e2open",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "EPAM",
+      "official_url": "https://www.epam.com/careers/job-listings",
+      "slug": "epam",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Electronic Arts India",
+      "official_url": "https://www.ea.com/careers",
+      "slug": "electronicartsindia",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Exotel",
+      "official_url": "https://exotel.com/careers/",
+      "slug": "exotel",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "FedEx",
+      "official_url": "https://careers.fedex.com/",
+      "slug": "fedex",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Fidelity Investments",
+      "official_url": "https://jobs.fidelity.com/en/",
+      "slug": "fidelityinvestments",
+      "error": "ReadTimeout"
+    },
+    {
+      "company": "Fractal Analytics",
+      "official_url": "https://fractal.ai/careers/",
+      "slug": "fractalanalytics",
+      "status": 404
+    },
+    {
+      "company": "Fujitsu",
+      "official_url": "https://www.fujitsu.com/global/about/careers/",
+      "slug": "fujitsu",
+      "status": 404
+    },
+    {
+      "company": "Games24x7",
+      "official_url": "https://www.games24x7.com/careers/",
+      "slug": "games24x7",
+      "status": 404
+    },
+    {
+      "company": "Globant",
+      "official_url": "https://career.globant.com/",
+      "slug": "globant",
+      "status": 404
+    },
+    {
+      "company": "Goldman Sachs",
+      "official_url": "https://higher.gs.com/",
+      "slug": "goldmansachs",
+      "status": 404
+    },
+    {
+      "company": "Growfin",
+      "official_url": "https://www.growfin.ai/careers",
+      "slug": "growfin",
+      "status": 404
+    },
+    {
+      "company": "Guidewire",
+      "official_url": "https://careers.guidewire.com/",
+      "slug": "guidewire",
+      "status": 404
+    },
+    {
+      "company": "HARMAN",
+      "official_url": "https://jobs.harman.com/",
+      "slug": "harman",
+      "status": 404
+    },
+    {
+      "company": "Happiest Minds",
+      "official_url": "https://www.happiestminds.com/careers/",
+      "slug": "happiestminds",
+      "status": 404
+    },
+    {
+      "company": "Highspot",
+      "official_url": "https://www.highspot.com/careers/",
+      "slug": "highspot",
+      "status": 404
+    },
+    {
+      "company": "Infineon Technologies",
+      "official_url": "https://www.infineon.com/cms/en/careers/",
+      "slug": "infineontechnologies",
+      "status": 404
+    },
+    {
+      "company": "Intercontinental Exchange",
+      "official_url": "https://careers.ice.com/",
+      "slug": "intercontinentalexchange",
+      "status": 404
+    },
+    {
+      "company": "Ivanti",
+      "official_url": "https://careers.ivanti.com/",
+      "slug": "ivanti",
+      "status": 404
+    },
+    {
+      "company": "Keka",
+      "official_url": "https://www.keka.com/careers",
+      "slug": "keka",
+      "status": 404
+    },
+    {
+      "company": "Kenvue",
+      "official_url": "https://www.kenvue.com/careers",
+      "slug": "kenvue",
+      "status": 404
+    },
+    {
+      "company": "Keysight Technologies",
+      "official_url": "https://jobs.keysight.com/",
+      "slug": "keysighttechnologies",
+      "status": 404
+    },
+    {
+      "company": "Khatabook",
+      "official_url": "https://khatabook.com/careers",
+      "slug": "khatabook",
+      "status": 404
+    },
+    {
+      "company": "Kimberly-Clark",
+      "official_url": "https://careers.kimberly-clark.com/",
+      "slug": "kimberlyclark",
+      "status": 404
+    },
+    {
+      "company": "Kissflow",
+      "official_url": "https://careers.kissflow.com/",
+      "slug": "kissflow",
+      "status": 404
+    },
+    {
+      "company": "Klarna",
+      "official_url": "https://www.klarna.com/careers/",
+      "slug": "klarna",
+      "status": 404
+    },
+    {
+      "company": "KreditBee",
+      "official_url": "https://www.kreditbee.in/careers",
+      "slug": "kreditbee",
+      "status": 404
+    },
+    {
+      "company": "L&T Technology Services",
+      "official_url": "https://www.ltts.com/careers",
+      "slug": "lttechnologyservices",
+      "status": 404
+    },
+    {
+      "company": "LTIMindtree",
+      "official_url": "https://careers.ltimindtree.com/",
+      "slug": "ltimindtree",
+      "status": 404
+    },
+    {
+      "company": "LambdaTest",
+      "official_url": "https://www.lambdatest.com/career",
+      "slug": "lambdatest",
+      "status": 404
+    },
+    {
+      "company": "LatentView Analytics",
+      "official_url": "https://www.latentview.com/careers/",
+      "slug": "latentviewanalytics",
+      "status": 404
+    },
+    {
+      "company": "LeadSquared",
+      "official_url": "https://www.leadsquared.com/careers/",
+      "slug": "leadsquared",
+      "status": 404
+    },
+    {
+      "company": "Lenovo",
+      "official_url": "https://jobs.lenovo.com/",
+      "slug": "lenovo",
+      "status": 404
+    },
+    {
+      "company": "Licious",
+      "official_url": "https://www.licious.in/careers",
+      "slug": "licious",
+      "status": 404
+    },
+    {
+      "company": "Lowe's India",
+      "official_url": "https://talent.lowes.com/in/en",
+      "slug": "lowesindia",
+      "status": 404
+    },
+    {
+      "company": "Lululemon",
+      "official_url": "https://careers.lululemon.com/",
+      "slug": "lululemon",
+      "status": 404
+    },
+    {
+      "company": "M2P Fintech",
+      "official_url": "https://m2pfintech.com/careers/",
+      "slug": "m2pfintech",
+      "status": 404
+    },
+    {
+      "company": "MSCI",
+      "official_url": "https://careers.msci.com/",
+      "slug": "msci",
+      "status": 404
+    },
+    {
+      "company": "Macquarie Group",
+      "official_url": "https://recruitment.macquarie.com/",
+      "slug": "macquariegroup",
+      "status": 404
+    },
+    {
+      "company": "Maersk",
+      "official_url": "https://www.maersk.com/careers",
+      "slug": "maersk",
+      "status": 404
+    },
+    {
+      "company": "MakeMyTrip",
+      "official_url": "https://careers.makemytrip.com/",
+      "slug": "makemytrip",
+      "status": 404
+    },
+    {
+      "company": "Manhattan Associates",
+      "official_url": "https://careers.manh.com/",
+      "slug": "manhattanassociates",
+      "status": 404
+    },
+    {
+      "company": "MathWorks",
+      "official_url": "https://in.mathworks.com/company/jobs/opportunities.html",
+      "slug": "mathworks",
+      "status": 404
+    },
+    {
+      "company": "McDonald's",
+      "official_url": "https://careers.mcdonalds.com/",
+      "slug": "mcdonalds",
+      "status": 404
+    },
+    {
+      "company": "McKinsey & Company",
+      "official_url": "https://www.mckinsey.com/careers/search-jobs",
+      "slug": "mckinseycompany",
+      "status": 404
+    },
+    {
+      "company": "MediBuddy",
+      "official_url": "https://www.medibuddy.in/careers",
+      "slug": "medibuddy",
+      "status": 404
+    },
+    {
+      "company": "MediaTek",
+      "official_url": "https://corp.mediatek.com/careers",
+      "slug": "mediatek",
+      "status": 404
+    },
+    {
+      "company": "MetLife",
+      "official_url": "https://www.metlifecareers.com/",
+      "slug": "metlife",
+      "status": 404
+    },
+    {
+      "company": "Microchip Technology",
+      "official_url": "https://careers.microchip.com/",
+      "slug": "microchiptechnology",
+      "status": 404
+    },
+    {
+      "company": "Millennium",
+      "official_url": "https://www.mlp.com/careers/",
+      "slug": "millennium",
+      "status": 404
+    },
+    {
+      "company": "Mimecast",
+      "official_url": "https://careers.mimecast.com/",
+      "slug": "mimecast",
+      "status": 404
+    },
+    {
+      "company": "MoEngage",
+      "official_url": "https://www.moengage.com/careers/",
+      "slug": "moengage",
+      "status": 404
+    },
+    {
+      "company": "Mobile Premier League",
+      "official_url": "https://www.mpl.live/careers",
+      "slug": "mpl",
+      "status": 404
+    },
+    {
+      "company": "Mondelez International",
+      "official_url": "https://careers.mondelezinternational.com/",
+      "slug": "mondelezinternational",
+      "status": 404
+    },
+    {
+      "company": "Moneyview",
+      "official_url": "https://moneyview.in/careers",
+      "slug": "moneyview",
+      "status": 404
+    },
+    {
+      "company": "Morningstar",
+      "official_url": "https://careers.morningstar.com/",
+      "slug": "morningstar",
+      "status": 404
+    },
+    {
+      "company": "Mphasis",
+      "official_url": "https://careers.mphasis.com/",
+      "slug": "mphasis",
+      "status": 404
+    },
+    {
+      "company": "NEC",
+      "official_url": "https://www.nec.com/en/global/careers/",
+      "slug": "nec",
+      "status": 404
+    },
+    {
+      "company": "NTT DATA",
+      "official_url": "https://careers.nttdata.com/global/en",
+      "slug": "nttdata",
+      "status": 404
+    },
+    {
+      "company": "Namma Yatri",
+      "official_url": "https://nammayatri.in/careers",
+      "slug": "nammayatri",
+      "status": 404
+    },
+    {
+      "company": "NatWest Group",
+      "official_url": "https://jobs.natwestgroup.com/",
+      "slug": "natwestgroup",
+      "status": 404
+    },
+    {
+      "company": "NoBroker",
+      "official_url": "https://www.nobroker.in/careers",
+      "slug": "nobroker",
+      "status": 404
+    },
+    {
+      "company": "Nomura",
+      "official_url": "https://www.nomura.com/careers/",
+      "slug": "nomura",
+      "status": 404
+    },
+    {
+      "company": "OfBusiness",
+      "official_url": "https://www.ofbcareers.com/",
+      "slug": "ofbusiness",
+      "status": 404
+    },
+    {
+      "company": "Ola",
+      "official_url": "https://www.olacabs.com/careers",
+      "slug": "ola",
+      "status": 404
+    },
+    {
+      "company": "Ola Electric",
+      "official_url": "https://www.olaelectric.com/careers",
+      "slug": "olaelectric",
+      "status": 404
+    },
+    {
+      "company": "Omnissa",
+      "official_url": "https://careers.omnissa.com/",
+      "slug": "omnissa",
+      "status": 404
+    },
+    {
+      "company": "PayU",
+      "official_url": "https://corporate.payu.com/careers/",
+      "slug": "payu",
+      "status": 404
+    },
+    {
+      "company": "Pegasystems",
+      "official_url": "https://www.pega.com/about/careers",
+      "slug": "pegasystems",
+      "status": 404
+    },
+    {
+      "company": "PepsiCo",
+      "official_url": "https://www.pepsicojobs.com/",
+      "slug": "pepsico",
+      "status": 404
+    },
+    {
+      "company": "Perfios",
+      "official_url": "https://perfios.ai/careers/",
+      "slug": "perfios",
+      "status": 404
+    },
+    {
+      "company": "PharmEasy",
+      "official_url": "https://pharmeasy.in/careers",
+      "slug": "pharmeasy",
+      "status": 404
+    },
+    {
+      "company": "Pine Labs",
+      "official_url": "https://www.pinelabs.com/careers",
+      "slug": "pinelabs",
+      "status": 404
+    },
+    {
+      "company": "Planful",
+      "official_url": "https://planful.com/jobs/careers-list/",
+      "slug": "planful",
+      "status": 404
+    },
+    {
+      "company": "Porter",
+      "official_url": "https://porter.in/careers",
+      "slug": "porter",
+      "status": 404
+    },
+    {
+      "company": "Practo",
+      "official_url": "https://www.practo.com/company/careers",
+      "slug": "practo",
+      "status": 404
+    },
+    {
+      "company": "Principal Financial Group",
+      "official_url": "https://careers.principal.com/in/jobs",
+      "slug": "principalfinancialgroup",
+      "status": 404
+    },
+    {
+      "company": "Providence India",
+      "official_url": "https://www.providence.in/careers",
+      "slug": "providenceindia",
+      "status": 404
+    },
+    {
+      "company": "Ralph Lauren",
+      "official_url": "https://careers.ralphlauren.com/",
+      "slug": "ralphlauren",
+      "status": 404
+    },
+    {
+      "company": "Rapido",
+      "official_url": "https://rapido.bike/Careers",
+      "slug": "rapido",
+      "status": 404
+    },
+    {
+      "company": "Rebel Foods",
+      "official_url": "https://www.rebelfoods.com/join-our-team",
+      "slug": "rebelfoods",
+      "status": 404
+    },
+    {
+      "company": "Redis",
+      "official_url": "https://redis.io/careers/",
+      "slug": "redis",
+      "status": 200,
+      "count": 32,
+      "sample": [
+        {
+          "id": "e305fc8c-a434-4d46-8ede-5e8c430f232d",
+          "title": "Partner Sales manager ",
+          "location": "France",
+          "jobUrl": "https://jobs.ashbyhq.com/redis/e305fc8c-a434-4d46-8ede-5e8c430f232d"
+        },
+        {
+          "id": "80ff1298-ad88-4d77-95ca-b597f0d18e2b",
+          "title": "Regional Account Executive",
+          "location": "India",
+          "jobUrl": "https://jobs.ashbyhq.com/redis/80ff1298-ad88-4d77-95ca-b597f0d18e2b"
+        },
+        {
+          "id": "c93c891c-5ccf-4777-91d0-5745629646bf",
+          "title": "Enterprise Account Executive",
+          "location": "London, England",
+          "jobUrl": "https://jobs.ashbyhq.com/redis/c93c891c-5ccf-4777-91d0-5745629646bf"
+        },
+        {
+          "id": "d8092b32-0985-4fa7-9f55-6563f7f93475",
+          "title": "Senior Principal Software Engineer, Feature Store",
+          "location": "Canada",
+          "jobUrl": "https://jobs.ashbyhq.com/redis/d8092b32-0985-4fa7-9f55-6563f7f93475"
+        }
+      ]
+    },
+    {
+      "company": "Regeneron",
+      "official_url": "https://careers.regeneron.com/en/jobs/",
+      "slug": "regeneron",
+      "status": 404
+    },
+    {
+      "company": "Reliance Jio",
+      "official_url": "https://careers.jio.com/",
+      "slug": "reliancejio",
+      "status": 404
+    },
+    {
+      "company": "Revolut",
+      "official_url": "https://www.revolut.com/careers/",
+      "slug": "revolut",
+      "status": 404
+    },
+    {
+      "company": "Rupeek",
+      "official_url": "https://rupeek.com/careers",
+      "slug": "rupeek",
+      "status": 404
+    },
+    {
+      "company": "SAS",
+      "official_url": "https://www.sas.com/en_in/careers.html",
+      "slug": "sas",
+      "status": 404
+    },
+    {
+      "company": "SLB",
+      "official_url": "https://careers.slb.com/",
+      "slug": "slb",
+      "status": 404
+    },
+    {
+      "company": "Safe Security",
+      "official_url": "https://safe.security/careers/",
+      "slug": "safe",
+      "status": 200,
+      "count": 11,
+      "sample": [
+        {
+          "id": "c964ba52-ed9a-474e-afc7-aa9fb8ad0a6e",
+          "title": "Senior Product Designer, FME Flow",
+          "location": "Canada Wide - Excluding Quebec",
+          "jobUrl": "https://jobs.ashbyhq.com/safe/c964ba52-ed9a-474e-afc7-aa9fb8ad0a6e"
+        },
+        {
+          "id": "2f709f91-5d2f-432f-9f09-3ec1861e78cf",
+          "title": "Senior Manager, People Operations & Total Rewards",
+          "location": "British Columbia",
+          "jobUrl": "https://jobs.ashbyhq.com/safe/2f709f91-5d2f-432f-9f09-3ec1861e78cf"
+        },
+        {
+          "id": "4ed16852-977a-4aea-9c31-7d564bde3fd2",
+          "title": "VP, Revenue Operations",
+          "location": "Canada Wide - Excluding Quebec",
+          "jobUrl": "https://jobs.ashbyhq.com/safe/4ed16852-977a-4aea-9c31-7d564bde3fd2"
+        },
+        {
+          "id": "b2d8ae01-b6f9-4266-9363-8141304b199a",
+          "title": "Marketing Specialist, Webinars (14-Month Contract)",
+          "location": "British Columbia",
+          "jobUrl": "https://jobs.ashbyhq.com/safe/b2d8ae01-b6f9-4266-9363-8141304b199a"
+        }
+      ]
+    },
+    {
+      "company": "Sanofi",
+      "official_url": "https://jobs.sanofi.com/en",
+      "slug": "sanofi",
+      "status": 404
+    },
+    {
+      "company": "Scaler",
+      "official_url": "https://www.scaler.com/careers/",
+      "slug": "scaler",
+      "status": 200,
+      "count": 0,
+      "sample": []
+    },
+    {
+      "company": "Schneider Electric",
+      "official_url": "https://www.se.com/ww/en/about-us/careers/",
+      "slug": "schneiderelectric",
+      "status": 404
+    },
+    {
+      "company": "Seclore",
+      "official_url": "https://www.seclore.com/careers/",
+      "slug": "seclore",
+      "status": 404
+    },
+    {
+      "company": "Securonix",
+      "official_url": "https://www.securonix.com/careers/",
+      "slug": "securonix",
+      "status": 404
+    },
+    {
+      "company": "ShareChat",
+      "official_url": "https://sharechat.com/careers",
+      "slug": "sharechat",
+      "status": 404
+    },
+    {
+      "company": "Shiprocket",
+      "official_url": "https://careers.shiprocket.in/",
+      "slug": "shiprocket",
+      "status": 404
+    },
+    {
+      "company": "Siemens",
+      "official_url": "https://jobs.siemens.com/careers",
+      "slug": "siemens",
+      "status": 404
+    },
+    {
+      "company": "Skyroot Aerospace",
+      "official_url": "https://skyroot.in/careers.html",
+      "slug": "skyrootaerospace",
+      "status": 404
+    },
+    {
+      "company": "Societe Generale",
+      "official_url": "https://careers.societegenerale.com/en",
+      "slug": "societegenerale",
+      "status": 404
+    },
+    {
+      "company": "Sonata Software",
+      "official_url": "https://www.sonata-software.com/careers",
+      "slug": "sonatasoftware",
+      "status": 404
+    },
+    {
+      "company": "Sony",
+      "official_url": "https://www.sonyjobs.com/",
+      "slug": "sony",
+      "status": 404
+    },
+    {
+      "company": "Syneos Health",
+      "official_url": "https://www.syneoshealth.com/careers",
+      "slug": "syneoshealth",
+      "status": 404
+    },
+    {
+      "company": "Tata 1mg",
+      "official_url": "https://www.1mg.com/jobs",
+      "slug": "tata1mg",
+      "status": 404
+    },
+    {
+      "company": "Tata Digital",
+      "official_url": "https://www.tatadigital.com/careers",
+      "slug": "tatadigital",
+      "status": 404
+    },
+    {
+      "company": "Tata Elxsi",
+      "official_url": "https://www.tataelxsi.com/careers",
+      "slug": "tataelxsi",
+      "status": 404
+    },
+    {
+      "company": "Tata Technologies",
+      "official_url": "https://www.tatatechnologies.com/in/careers/",
+      "slug": "tatatechnologies",
+      "status": 404
+    },
+    {
+      "company": "Tech Mahindra",
+      "official_url": "https://careers.techmahindra.com/",
+      "slug": "techmahindra",
+      "status": 404
+    },
+    {
+      "company": "Teradata",
+      "official_url": "https://careers.teradata.com/",
+      "slug": "teradata",
+      "status": 404
+    },
+    {
+      "company": "Tesco Bengaluru",
+      "official_url": "https://www.tescobengaluru.com/careers/",
+      "slug": "tescobengaluru",
+      "status": 404
+    },
+    {
+      "company": "Tredence",
+      "official_url": "https://www.tredence.com/careers",
+      "slug": "tredence",
+      "status": 404
+    },
+    {
+      "company": "UBS",
+      "official_url": "https://www.ubs.com/global/en/careers.html",
+      "slug": "ubs",
+      "status": 404
+    },
+    {
+      "company": "UST",
+      "official_url": "https://www.ust.com/en/careers",
+      "slug": "ust",
+      "status": 404
+    },
+    {
+      "company": "Udaan",
+      "official_url": "https://udaan.com/careers",
+      "slug": "udaan",
+      "status": 404
+    },
+    {
+      "company": "Unacademy",
+      "official_url": "https://unacademy.com/careers",
+      "slug": "unacademy",
+      "status": 404
+    },
+    {
+      "company": "Urban Company",
+      "official_url": "https://careers.urbancompany.com/",
+      "slug": "urbancompany",
+      "status": 404
+    },
+    {
+      "company": "Viatris",
+      "official_url": "https://careers.viatris.com/",
+      "slug": "viatris",
+      "status": 404
+    },
+    {
+      "company": "Victoria's Secret",
+      "official_url": "https://careers.victoriassecret.com/",
+      "slug": "victoriassecret",
+      "status": 404
+    },
+    {
+      "company": "Vimeo",
+      "official_url": "https://vimeo.com/careers",
+      "slug": "vimeo",
+      "status": 404
+    },
+    {
+      "company": "Vodafone",
+      "official_url": "https://careers.vodafone.com/",
+      "slug": "vodafone",
+      "status": 404
+    },
+    {
+      "company": "WTW",
+      "official_url": "https://careers.wtwco.com/",
+      "slug": "wtw",
+      "status": 404
+    },
+    {
+      "company": "Wayfair",
+      "official_url": "https://www.wayfair.com/careers",
+      "slug": "wayfair",
+      "status": 404
+    },
+    {
+      "company": "WebEngage",
+      "official_url": "https://webengage.com/careers/",
+      "slug": "webengage",
+      "status": 404
+    },
+    {
+      "company": "Yellow.ai",
+      "official_url": "https://yellow.ai/careers/",
+      "slug": "yellowai",
+      "status": 404
+    },
+    {
+      "company": "Yubi",
+      "official_url": "https://www.go-yubi.com/careers",
+      "slug": "yubi",
+      "status": 404
+    },
+    {
+      "company": "Yulu",
+      "official_url": "https://www.yulu.bike/careers",
+      "slug": "yulu",
+      "status": 404
+    },
+    {
+      "company": "Zepto",
+      "official_url": "https://www.zepto.com/s/careers",
+      "slug": "zepto",
+      "status": 404
+    },
+    {
+      "company": "Zetwerk",
+      "official_url": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+      "slug": "zetwerk",
+      "status": 404
+    },
+    {
+      "company": "Zoho",
+      "official_url": "https://www.zoho.com/careers/",
+      "slug": "zoho",
+      "status": 404
+    },
+    {
+      "company": "Zomato",
+      "official_url": "https://www.zomato.com/careers",
+      "slug": "zomato",
+      "status": 404
+    },
+    {
+      "company": "Zoom",
+      "official_url": "https://careers.zoom.us/home",
+      "slug": "zoom",
+      "status": 404
+    },
+    {
+      "company": "ASUS",
+      "official_url": "https://www.asus.com/about-asus/careers/",
+      "slug": "asus",
+      "status": 404
+    },
+    {
+      "company": "Acer",
+      "official_url": "https://www.acer.com/corporate/en/careers",
+      "slug": "acer",
+      "status": 404
+    },
+    {
+      "company": "Adidas",
+      "official_url": "https://careers.adidas-group.com/",
+      "slug": "adidas",
+      "status": 404
+    },
+    {
+      "company": "Antropi Robotics",
+      "official_url": "https://www.antropi.world/careers",
+      "slug": "antropirobotics",
+      "status": 404
+    },
+    {
+      "company": "Apollo",
+      "official_url": "https://www.apollofirst.xyz/careers2",
+      "slug": "apollo",
+      "status": 404
+    },
+    {
+      "company": "Apollo Hospitals",
+      "official_url": "https://www.apollohospitals.com/careers",
+      "slug": "apollohospitals",
+      "status": 404
+    },
+    {
+      "company": "Bounce",
+      "official_url": "https://bounceinfinity.com/pages/careers",
+      "slug": "bounce",
+      "status": 200,
+      "count": 7,
+      "sample": [
+        {
+          "id": "3749f4c6-5e1a-409e-b498-31c60a981420",
+          "title": "Business Development Specialist (Supply)",
+          "location": "San Francisco, California",
+          "jobUrl": "https://jobs.ashbyhq.com/bounce/3749f4c6-5e1a-409e-b498-31c60a981420"
+        },
+        {
+          "id": "3b027ec9-42dc-4631-90ab-1aa7a8cda3f2",
+          "title": "Senior Product Manager, Demand Growth ",
+          "location": "San Francisco, California",
+          "jobUrl": "https://jobs.ashbyhq.com/bounce/3b027ec9-42dc-4631-90ab-1aa7a8cda3f2"
+        },
+        {
+          "id": "5d39e2de-c96a-48d3-ab36-e161d3ab2033",
+          "title": "Growth Engineer",
+          "location": "Lisbon",
+          "jobUrl": "https://jobs.ashbyhq.com/bounce/5d39e2de-c96a-48d3-ab36-e161d3ab2033"
+        },
+        {
+          "id": "b669c4c4-ff7c-4496-9c9e-0f07f7e0ef67",
+          "title": "Product Engineer, New Verticals",
+          "location": "Lisbon",
+          "jobUrl": "https://jobs.ashbyhq.com/bounce/b669c4c4-ff7c-4496-9c9e-0f07f7e0ef67"
+        }
+      ]
+    },
+    {
+      "company": "Clear",
+      "official_url": "https://www.clear.in/s/careers",
+      "slug": "clear",
+      "status": 404
+    },
+    {
+      "company": "Credit Agricole",
+      "official_url": "https://jobs.ca-cib.com/",
+      "slug": "creditagricole",
+      "status": 404
+    },
+    {
+      "company": "Decentro",
+      "official_url": "https://decentro.tech/careers",
+      "slug": "decentro",
+      "status": 404
+    },
+    {
+      "company": "Emirates Group",
+      "official_url": "https://www.emiratesgroupcareers.com/",
+      "slug": "emiratesgroup",
+      "status": 404
+    },
+    {
+      "company": "Flux Auto",
+      "official_url": "https://fluxauto.ai/careers.html",
+      "slug": "fluxauto",
+      "status": 404
+    },
+    {
+      "company": "Grant Thornton",
+      "official_url": "https://www.grantthornton.in/careers/",
+      "slug": "grantthornton",
+      "status": 404
+    },
+    {
+      "company": "Ivy Homes",
+      "official_url": "https://ivy.homes/career",
+      "slug": "ivyhomes",
+      "status": 404
+    },
+    {
+      "company": "Jumbotail",
+      "official_url": "https://jumbotail.com/careers/",
+      "slug": "jumbotail",
+      "status": 404
+    },
+    {
+      "company": "Larsen & Toubro",
+      "official_url": "https://www.larsentoubro.com/corporate/careers/",
+      "slug": "larsentoubro",
+      "status": 404
+    },
+    {
+      "company": "Mitsubishi Electric",
+      "official_url": "https://www.mitsubishielectric.com/en/careers/",
+      "slug": "mitsubishielectric",
+      "status": 404
+    },
+    {
+      "company": "Mu Sigma",
+      "official_url": "https://www.mu-sigma.com/careers",
+      "slug": "musigma",
+      "status": 404
+    },
+    {
+      "company": "OCBC",
+      "official_url": "https://www.ocbc.com/group/careers",
+      "slug": "ocbc",
+      "status": 404
+    },
+    {
+      "company": "Orange Health Labs",
+      "official_url": "https://www.orangehealth.in/jobs",
+      "slug": "orangehealthlabs",
+      "status": 404
+    },
+    {
+      "company": "Otis",
+      "official_url": "https://careers.otis.com/",
+      "slug": "otis",
+      "status": 404
+    },
+    {
+      "company": "Panasonic",
+      "official_url": "https://careers.na.panasonic.com/",
+      "slug": "panasonic",
+      "status": 404
+    },
+    {
+      "company": "Peoplebox.ai",
+      "official_url": "https://www.peoplebox.ai/careers/",
+      "slug": "peopleboxai",
+      "status": 404
+    },
+    {
+      "company": "Portea",
+      "official_url": "https://www.portea.com/careers/",
+      "slug": "portea",
+      "status": 404
+    },
+    {
+      "company": "PostHog",
+      "official_url": "https://posthog.com/careers",
+      "slug": "posthog",
+      "status": 200,
+      "count": 8,
+      "sample": [
+        {
+          "id": "0be1b52c-2401-4ae2-b7fc-5d018c1ff96f",
+          "title": "Technical Customer Success Manager - EMEA",
+          "location": "Remote (EMEA)",
+          "jobUrl": "https://jobs.ashbyhq.com/posthog/0be1b52c-2401-4ae2-b7fc-5d018c1ff96f"
+        },
+        {
+          "id": "43dbf072-0fc1-48c9-8c1e-7416db7d4a14",
+          "title": "ClickHouse Operations Engineer ",
+          "location": "Remote",
+          "jobUrl": "https://jobs.ashbyhq.com/posthog/43dbf072-0fc1-48c9-8c1e-7416db7d4a14"
+        },
+        {
+          "id": "20ab9628-20ff-4ae3-bd6a-46ae7e9dc6b8",
+          "title": "Product Engineer",
+          "location": "Remote",
+          "jobUrl": "https://jobs.ashbyhq.com/posthog/20ab9628-20ff-4ae3-bd6a-46ae7e9dc6b8"
+        },
+        {
+          "id": "8dc3f33a-b930-4c54-b4c4-3e6bd2ff28d3",
+          "title": "AI Research Engineer",
+          "location": "Hybrid (UK)",
+          "jobUrl": "https://jobs.ashbyhq.com/posthog/8dc3f33a-b930-4c54-b4c4-3e6bd2ff28d3"
+        }
+      ]
+    },
+    {
+      "company": "SALT",
+      "official_url": "https://www.salt.pe/careers",
+      "slug": "salt",
+      "status": 404
+    },
+    {
+      "company": "SMBC",
+      "official_url": "https://www.smbcgroup.com/careers/",
+      "slug": "smbc",
+      "status": 404
+    },
+    {
+      "company": "Sarla Aviation",
+      "official_url": "https://www.sarla-aviation.com/open-roles/",
+      "slug": "sarlaaviation",
+      "status": 404
+    },
+    {
+      "company": "Simplilearn",
+      "official_url": "https://www.simplilearn.com/careers",
+      "slug": "simplilearn",
+      "status": 404
+    },
+    {
+      "company": "Tilt",
+      "official_url": "https://www.tilt.bike/careers",
+      "slug": "tilt",
+      "status": 200,
+      "count": 2,
+      "sample": [
+        {
+          "id": "6f20db55-183c-4dc4-b269-879b74a91d75",
+          "title": "Inventory & Operations Associate",
+          "location": "London",
+          "jobUrl": "https://jobs.ashbyhq.com/tilt/6f20db55-183c-4dc4-b269-879b74a91d75"
+        },
+        {
+          "id": "2ff80f4c-9d1f-462e-b26c-7df32310bcf5",
+          "title": "Live Streamer",
+          "location": "London",
+          "jobUrl": "https://jobs.ashbyhq.com/tilt/2ff80f4c-9d1f-462e-b26c-7df32310bcf5"
+        }
+      ]
+    },
+    {
+      "company": "Toshiba",
+      "official_url": "https://www.global.toshiba/ww/recruit.html",
+      "slug": "toshiba",
+      "status": 404
+    },
+    {
+      "company": "Traveloka",
+      "official_url": "https://careers.traveloka.com/",
+      "slug": "traveloka",
+      "status": 404
+    },
+    {
+      "company": "Valeo",
+      "official_url": "https://www.valeo.com/en/career/",
+      "slug": "valeo",
+      "status": 404
+    },
+    {
+      "company": "Vedantu",
+      "official_url": "https://www.vedantu.com/careers",
+      "slug": "vedantu",
+      "status": 404
+    },
+    {
+      "company": "smallcase",
+      "official_url": "https://app.pyjamahr.com/careers?company=smallcase&company_uuid=2615584222",
+      "slug": "smallcase",
+      "status": 404
+    },
+    {
+      "company": "upGrad",
+      "official_url": "https://www.upgrad.com/about/careers/",
+      "slug": "upgrad",
+      "status": 404
+    },
+    {
+      "company": "xPay",
+      "official_url": "https://www.xpaycheckout.com/careers",
+      "slug": "xpay",
+      "status": 404
+    }
+  ],
+  "collection_checks": [
+    {
+      "name": "Redis",
+      "status": {
+        "name": "Redis",
+        "careers_url": "https://jobs.ashbyhq.com/redis",
+        "ats_provider": "ashby",
+        "ats_identifier": "redis",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T17:48:23.028498+00:00",
+        "last_success_at": "2026-10-05T17:48:30.139986+00:00",
+        "error_count": 0,
+        "jobs_found": 32,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "sample": [
+        {
+          "title": "Partner Sales manager ",
+          "location": "France",
+          "description_length": 5459,
+          "posted_at": "2026-09-17T10:16:18.744000+00:00",
+          "job_url": "https://jobs.ashbyhq.com/redis/e305fc8c-a434-4d46-8ede-5e8c430f232d"
+        },
+        {
+          "title": "Regional Account Executive",
+          "location": "India",
+          "description_length": 4909,
+          "posted_at": "2026-06-19T07:45:48.552000+00:00",
+          "job_url": "https://jobs.ashbyhq.com/redis/80ff1298-ad88-4d77-95ca-b597f0d18e2b"
+        },
+        {
+          "title": "Enterprise Account Executive",
+          "location": "London, England",
+          "description_length": 4717,
+          "posted_at": "2026-02-16T16:43:44.785000+00:00",
+          "job_url": "https://jobs.ashbyhq.com/redis/c93c891c-5ccf-4777-91d0-5745629646bf"
+        }
+      ]
+    },
+    {
+      "name": "PostHog",
+      "status": {
+        "name": "PostHog",
+        "careers_url": "https://jobs.ashbyhq.com/posthog",
+        "ats_provider": "ashby",
+        "ats_identifier": "posthog",
+        "priority": 3,
+        "last_checked_at": "2026-10-05T17:48:30.140164+00:00",
+        "last_success_at": "2026-10-05T17:48:36.727161+00:00",
+        "error_count": 0,
+        "jobs_found": 8,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "sample": [
+        {
+          "title": "Technical Customer Success Manager - EMEA",
+          "location": "Remote (EMEA)",
+          "description_length": 7761,
+          "posted_at": "2026-09-18T08:41:19.683000+00:00",
+          "job_url": "https://jobs.ashbyhq.com/posthog/0be1b52c-2401-4ae2-b7fc-5d018c1ff96f"
+        },
+        {
+          "title": "ClickHouse Operations Engineer ",
+          "location": "Remote",
+          "description_length": 6137,
+          "posted_at": "2026-08-25T07:00:51.155000+00:00",
+          "job_url": "https://jobs.ashbyhq.com/posthog/43dbf072-0fc1-48c9-8c1e-7416db7d4a14"
+        },
+        {
+          "title": "Product Engineer",
+          "location": "Remote",
+          "description_length": 7957,
+          "posted_at": "2026-09-24T16:56:29.377000+00:00",
+          "job_url": "https://jobs.ashbyhq.com/posthog/20ab9628-20ff-4ae3-bd6a-46ae7e9dc6b8"
+        }
+      ]
+    }
+  ],
+  "verified_updates": [
+    {
+      "company": "Redis",
+      "official_url": "https://redis.io/company/careers/",
+      "public_board": "https://jobs.ashbyhq.com/redis",
+      "identity_evidence": "Official employer page contains current board job identifier e305fc8c-a434-4d46-8ede-5e8c430f232d; board links redis.io."
+    },
+    {
+      "company": "PostHog",
+      "official_url": "https://posthog.com/careers",
+      "public_board": "https://jobs.ashbyhq.com/posthog",
+      "identity_evidence": "Official employer page lists current board role titles. Ashby documents its customer integration at https://www.ashbyhq.com/customers/posthog-customer-story."
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "registry_company": "Navi",
+      "slug": "navi",
+      "reason": "Board is Navi AI and links flynavi.com, not navi.com."
+    },
+    {
+      "registry_company": "Safe Security",
+      "slug": "safe",
+      "reason": "Board is Safe Software and links safe.com, not safe.security."
+    },
+    {
+      "registry_company": "Bounce",
+      "slug": "bounce",
+      "reason": "No attribution to the Indian electric-scooter employer; global travel/luggage business roles. Kept unresolved."
+    },
+    {
+      "registry_company": "Tilt",
+      "slug": "tilt",
+      "reason": "No attribution to the Indian bicycle employer; London commerce/live-streaming roles. Kept unresolved."
+    }
+  ],
+  "scope": "One normalized board-name candidate per remaining company, with selected alternate identifiers. This is a discovery audit, not an exhaustive audit of all ATS providers or board-name variants. HTTP failures and empty boards do not justify removing a warning."
+}

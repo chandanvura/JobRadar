@@ -32,7 +32,12 @@ def changed_sources(companies, catalog):
     for c in companies:
         row = existing.get(c.name.strip().casefold())
         if not c.enabled or not row: continue
-        if normalized_source_url(row.get("careers_url")) == normalized_source_url(c.careers_url) and row.get("ats_provider") == c.ats_provider: continue
+        pending = (row.get("warning") or "") in (
+            "Limited coverage: source update awaiting verification",
+            "Source updated; awaiting verification",
+        )
+        if (normalized_source_url(row.get("careers_url")) == normalized_source_url(c.careers_url)
+                and row.get("ats_provider") == c.ats_provider and not pending): continue
         update = {key: row.get(key) for key in ("last_checked_at", "last_success_at", "error_count",
                   "jobs_found", "candidate_jobs", "eligible_jobs")}
         update.update(name=c.name, careers_url=c.careers_url, ats_provider=c.ats_provider,
@@ -101,7 +106,10 @@ def main():
             raise RuntimeError("Company source publication failed")
     with urlopen(dashboard_request, timeout=30) as response:  # nosec B310
         live = json.load(response)
-    if missing_sources(companies, live) or changed_sources(companies, live):
+    # A saved mapping is not a verified repair. Pending sources remain retryable
+    # and fail this workflow until a real collection replaces the pending warning.
+    remaining = changed_sources(companies, live)
+    if missing_sources(companies, live) or remaining:
         raise RuntimeError("Company sources not yet verified in live catalog")
     print(f"Verified {len(pending)} company source updates in the live portal; scheduled scans remain unchanged")
 

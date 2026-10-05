@@ -40,6 +40,7 @@ def test_registry_sync_uses_company_only_ingestion_response(monkeypatch):
     monkeypatch.setattr(sync_company_registry, "urlopen", read)
     monkeypatch.setattr(sync_company_registry, "load_companies", lambda: [row])
     monkeypatch.setenv("JOBRADAR_INGEST_SECRET", "test-only")
+    monkeypatch.delenv("JOBRADAR_VERIFY_SOURCE_UPDATES", raising=False)
     sync_company_registry.main()
     payload = json.loads(calls[1].data)
     assert set(payload) == {"companies"}
@@ -57,6 +58,8 @@ def test_repaired_sources_preserve_counts_and_dates_until_real_rescan():
     assert updates[0]["warning"] == "Source updated; awaiting verification"
     for key in ("jobs_found", "candidate_jobs", "eligible_jobs", "last_checked_at", "last_success_at"):
         assert updates[0][key] == previous[key]
+    assert changed_sources([company], {"companies": updates})
+    updates[0]["warning"] = None
     assert not changed_sources([company], {"companies": updates})
     with pytest.raises(ValueError):
         changed_sources([company], {"companies": [previous], "data_mode": "backup"})
@@ -114,3 +117,40 @@ def test_unverified_source_update_keeps_existing_limited_coverage_visible():
     result=changed_sources([company],catalog)
     assert result[0]['warning']=='Limited coverage: source update awaiting verification'
     assert result[0]['jobs_found']==0
+
+
+@pytest.mark.parametrize('warning', [
+    'Limited coverage: source update awaiting verification',
+    'Source updated; awaiting verification',
+])
+def test_saved_but_unverified_mapping_is_retried(warning):
+    company = Company('Example', 'https://jobs.lever.co/example', 'lever', 'example')
+    previous = dict(name=company.name, careers_url=company.careers_url,
+                    ats_provider=company.ats_provider, warning=warning, jobs_found=19)
+    updates = changed_sources([company], {'companies': [previous]})
+    assert len(updates) == 1
+    assert updates[0]['jobs_found'] == 19
+    previous['warning'] = 'Limited coverage: no structured public job feed'
+    assert not changed_sources([company], {'companies': [previous]})
+
+
+def test_failed_verification_cannot_report_mapping_publication_as_success(monkeypatch):
+    company = Company('Example', 'https://jobs.lever.co/example', 'lever', 'example')
+    previous = dict(name=company.name, careers_url=company.careers_url,
+                    ats_provider=company.ats_provider,
+                    warning='Source updated; awaiting verification', jobs_found=19)
+    responses = iter([{'companies': [previous]}, {'accepted': 0, 'rejected': 0},
+                      {'companies': [previous]}])
+    checks = []
+    async def failed_scan(source, *args):
+        checks.append(source.name)
+        return [], {'name': source.name}, 'timeout', 0
+    monkeypatch.setattr(sync_company_registry, 'urlopen',
+                        lambda *args, **kwargs: BytesIO(json.dumps(next(responses)).encode()))
+    monkeypatch.setattr(sync_company_registry, 'load_companies', lambda: [company])
+    monkeypatch.setattr(sync_company_registry, 'scrape', failed_scan)
+    monkeypatch.setenv('JOBRADAR_VERIFY_SOURCE_UPDATES', 'true')
+    monkeypatch.setenv('JOBRADAR_INGEST_SECRET', 'test-only')
+    with pytest.raises(RuntimeError, match='not yet verified'):
+        sync_company_registry.main()
+    assert checks == ['Example']

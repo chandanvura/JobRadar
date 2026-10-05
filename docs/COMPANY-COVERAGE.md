@@ -231,3 +231,36 @@ Millennium's new redirect requires another interface and is not remapped to a
 nonworking Eightfold tenant. Shared-parent brands and stale boards remain
 unresolved until a correctly attributed public feed is verified. The reduction
 target is not met by hiding warnings, inventing vacancies or relaxing job filters.
+
+## Verification retries and Ashby follow-up — 2026-10-05
+
+The handoff was checked against the live portal: 700 enabled companies, 260
+Limited coverage warnings, and a successful full scan with zero failed sources.
+The latest registry-publishing and validation workflows both passed.
+
+Registry synchronization now retries mappings whose previous focused collection
+failed. Previously, saving the new URL/provider could make the next workflow
+attempt skip collection and report success while the verification warning
+remained. Pending warnings now keep those sources in the refresh queue, and
+post-publication verification fails until real collection replaces the pending
+warning. Ordinary limited coverage warnings do not cause repeated refreshes.
+Previous metrics remain preserved on a failed refresh.
+
+Redis and PostHog have verified public Ashby boards. Redis's official career page
+contains a current Ashby job identifier; PostHog's official career page contains
+current board titles and Ashby independently documents its PostHog integration.
+Live adapter checks collected 32 and 8 published jobs respectively, with full
+descriptions and employer posting dates. Neither check returned a role with a
+published target-city location. Country-only and remote listings retain the
+existing city policy.
+
+Public references:
+- https://redis.io/company/careers/
+- https://jobs.ashbyhq.com/redis
+- https://posthog.com/careers
+- https://jobs.ashbyhq.com/posthog
+- https://www.ashbyhq.com/customers/posthog-customer-story
+
+Exact probe attempts, collection checks and excluded name collisions are recorded
+in `companies/ashby-follow-up-2026-10-05.json`. Probing a board-name candidate is
+only a discovery attempt, not evidence of employer identity or complete coverage.
