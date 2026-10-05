@@ -112,7 +112,7 @@ jobs:
           name: jobradar-shard-${{ matrix.shard }}
           path: artifacts/shard-${{ matrix.shard }}.json
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 2
   finalize:
     needs: discover
     runs-on: ubuntu-24.04

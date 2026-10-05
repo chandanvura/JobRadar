@@ -1,0 +1,32 @@
+name: Clean disposable JobRadar storage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/cleanup-storage.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "43 2 * * *"
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: jobradar-storage-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Clear disposable caches and expired scan artifacts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # Push/manual runs clear all rebuildable caches once. Daily maintenance
+          # keeps current dependencies and removes detail caches older than 48h.
+          CLEAR_ALL_CACHES: ${{ github.event_name != 'schedule' }}
+        run: python scripts/cleanup_actions.py
