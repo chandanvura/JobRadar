@@ -1,0 +1,32 @@
+name: Publish company registry additions
+on:
+  push:
+    branches: [main]
+    paths: ["companies/companies.csv", "scripts/sync_company_registry.py", ".github/workflows/sync-company-registry.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  # Share the scan lock so a registry sync cannot overwrite a first scan's counts.
+  group: jobradar-free-tier-scan
+  cancel-in-progress: false
+jobs:
+  register:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Publish new companies without running a full scan
+        run: |
+          for attempt in 1 2 3; do
+            if python -m scripts.sync_company_registry; then exit 0; fi
+            if [ "$attempt" -eq 3 ]; then exit 1; fi
+            sleep 5
+          done
+        env:
+          JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}

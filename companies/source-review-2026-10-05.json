@@ -1,0 +1,318 @@
+{
+  "reviewed_at": "2026-10-05",
+  "method": "Official employer career sites and employer-hosted ATS boards; an HTTP probe is not evidence of active hiring. Browser-only or blocked sources retain limited coverage diagnostics. No current Fortune ranking or private valuation is asserted.",
+  "sources": [
+    {
+      "name": "Costco",
+      "careers_url": "https://careers.costco.com/jobs",
+      "ats_provider": "custom",
+      "ats_identifier": "costco-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": null,
+      "probe_error": "URLError"
+    },
+    {
+      "name": "Marriott International",
+      "careers_url": "https://careers.marriott.com/jobs?filter%5Bcategory%5D%5B0%5D=Information+Technology",
+      "ats_provider": "custom",
+      "ats_identifier": "marriott-international-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://careers.marriott.com/jobs?filter%5Bcategory%5D%5B0%5D=Information+Technology",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "Southwest Airlines",
+      "careers_url": "https://careers.southwestair.com/in/en/search-results",
+      "ats_provider": "custom",
+      "ats_identifier": "southwest-airlines-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": null,
+      "probe_error": "URLError"
+    },
+    {
+      "name": "DoorDash India",
+      "careers_url": "https://job-boards.greenhouse.io/doordashindia",
+      "ats_provider": "greenhouse",
+      "ats_identifier": "doordashindia",
+      "reviewed_at": "2026-10-05",
+      "http_status": null,
+      "probe_error": "URLError"
+    },
+    {
+      "name": "Regeneron",
+      "careers_url": "https://careers.regeneron.com/en/jobs/",
+      "ats_provider": "custom",
+      "ats_identifier": "regeneron-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://careers.regeneron.com/en/jobs/",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "McKesson",
+      "careers_url": "https://careers.mckesson.com/en/location/india-jobs/733/1269750/2",
+      "ats_provider": "custom",
+      "ats_identifier": "mckesson-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://careers.mckesson.com/en/location/india-jobs/733/1269750/2",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "Allstate",
+      "careers_url": "https://allstate.wd5.myworkdayjobs.com/allstate_careers",
+      "ats_provider": "workday",
+      "ats_identifier": "allstate|allstate_careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://allstate.wd5.myworkdayjobs.com/allstate_careers",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "MassMutual India",
+      "careers_url": "https://massmutual.wd1.myworkdayjobs.com/MMINDCareersite",
+      "ats_provider": "workday",
+      "ats_identifier": "massmutual|MMINDCareersite",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://massmutual.wd1.myworkdayjobs.com/MMINDCareersite",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "HARMAN",
+      "careers_url": "https://jobs.harman.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "harman-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 502
+    },
+    {
+      "name": "Cargill",
+      "careers_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+      "ats_provider": "custom",
+      "ats_identifier": "cargill-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "CBRE",
+      "careers_url": "https://careers.cbre.com/en_US/careers/SearchJobs/",
+      "ats_provider": "custom",
+      "ats_identifier": "cbre-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 202,
+      "resolved_url": "https://careers.cbre.com/en_US/careers/SearchJobs/",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "JLL",
+      "careers_url": "https://jll.wd1.myworkdayjobs.com/jllcareers",
+      "ats_provider": "workday",
+      "ats_identifier": "jll|jllcareers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://jll.wd1.myworkdayjobs.com/jllcareers",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "Principal Financial Group",
+      "careers_url": "https://careers.principal.com/in/jobs",
+      "ats_provider": "custom",
+      "ats_identifier": "principal-financial-group-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 403
+    },
+    {
+      "name": "The Hartford",
+      "careers_url": "https://www.jointhehartford.com/jobs/in-telangana-hyderabad/",
+      "ats_provider": "custom",
+      "ats_identifier": "the-hartford-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://www.jointhehartford.com/jobs/in-telangana-hyderabad/",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "GE Vernova",
+      "careers_url": "https://careers.gevernova.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "ge-vernova-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://careers.gevernova.com/",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "BD",
+      "careers_url": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+      "ats_provider": "custom",
+      "ats_identifier": "bd-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "Zepto",
+      "careers_url": "https://www.zepto.com/s/careers",
+      "ats_provider": "custom",
+      "ats_identifier": "zepto-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 202,
+      "resolved_url": "https://www.zepto.com/s/careers",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "Zetwerk",
+      "careers_url": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+      "ats_provider": "custom",
+      "ats_identifier": "zetwerk-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "OfBusiness",
+      "careers_url": "https://www.ofbcareers.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "ofbusiness-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": null,
+      "probe_error": "URLError"
+    },
+    {
+      "name": "Rebel Foods",
+      "careers_url": "https://www.rebelfoods.com/join-our-team",
+      "ats_provider": "custom",
+      "ats_identifier": "rebel-foods-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://www.rebelfoods.com/join-our-team",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "Cars24",
+      "careers_url": "https://www.cars24.com/careers/",
+      "ats_provider": "custom",
+      "ats_identifier": "cars24-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://www.cars24.com/careers/",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "Shiprocket",
+      "careers_url": "https://careers.shiprocket.in/",
+      "ats_provider": "custom",
+      "ats_identifier": "shiprocket-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://careers.shiprocket.in/",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "CarDekho",
+      "careers_url": "https://careers.cardekho.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "cardekho-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": null,
+      "probe_error": "URLError"
+    },
+    {
+      "name": "Workato",
+      "careers_url": "https://www.workato.com/careers",
+      "ats_provider": "greenhouse",
+      "ats_identifier": "workato",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://www.workato.com/careers",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "Automation Anywhere",
+      "careers_url": "https://automationanywhere.wd5.myworkdayjobs.com/AutomationAnywhereJobs",
+      "ats_provider": "workday",
+      "ats_identifier": "automationanywhere|AutomationAnywhereJobs",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://automationanywhere.wd5.myworkdayjobs.com/AutomationAnywhereJobs",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "Figma",
+      "careers_url": "https://www.figma.com/careers/",
+      "ats_provider": "greenhouse",
+      "ats_identifier": "figma",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://www.figma.com/careers/",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "Couchbase",
+      "careers_url": "https://www.couchbase.com/careers/",
+      "ats_provider": "greenhouse",
+      "ats_identifier": "couchbaseinc",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://www.couchbase.com/careers/",
+      "target_city_on_page": false,
+      "ats_links": []
+    },
+    {
+      "name": "Vimeo",
+      "careers_url": "https://vimeo.com/careers",
+      "ats_provider": "custom",
+      "ats_identifier": "vimeo-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://vimeo.com/careers",
+      "target_city_on_page": true,
+      "ats_links": []
+    },
+    {
+      "name": "ChargePoint",
+      "careers_url": "https://www.chargepoint.com/about/opportunities",
+      "ats_provider": "custom",
+      "ats_identifier": "chargepoint-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": null,
+      "probe_error": "URLError"
+    },
+    {
+      "name": "Avaamo",
+      "careers_url": "https://avaamo.ai/careers/",
+      "ats_provider": "custom",
+      "ats_identifier": "avaamo-careers",
+      "reviewed_at": "2026-10-05",
+      "http_status": 200,
+      "resolved_url": "https://avaamo.ai/careers/",
+      "target_city_on_page": true,
+      "ats_links": []
+    }
+  ]
+}

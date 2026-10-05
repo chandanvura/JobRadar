@@ -2254,12 +2254,12 @@ function CompaniesView({
       <div className="grid gap-3 sm:grid-cols-3">
         <Info label="Structured ATS" value={String(companies.filter((c) => c.ats_provider !== "custom").length)} />
         <Info label="Productive now" value={String(companies.filter((c) => c.candidate_jobs > 0).length)} />
-        <Info label="Healthy sources" value={String(companies.filter((c) => !c.error_count).length)} />
+        <Info label="Healthy sources" value={String(companies.filter((c) => c.last_checked_at && !c.error_count).length)} />
       </div>
       <div className="grid gap-3 md:hidden">
         {companies.map((c) => {
           const limited = c.warning?.startsWith("Limited coverage"),
-            state = c.error_count ? "Failed" : limited ? "Limited coverage" : c.jobs_found === 0 ? "No current openings" : c.candidate_jobs === 0 ? "No target roles" : "Productive";
+            state = !c.last_checked_at ? "Awaiting scan" : c.error_count ? "Failed" : limited ? "Limited coverage" : c.jobs_found === 0 ? "No current openings" : c.candidate_jobs === 0 ? "No target roles" : "Productive";
           const fallback = companyFallbackLinks(c.name, preferences);
           return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-card p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-muted-foreground">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-danger-soft text-danger" : limited || c.jobs_found === 0 ? "bg-warning-soft text-warning" : "bg-success-soft text-success"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-muted-foreground">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-success"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a>{(limited || c.error_count > 0 || c.jobs_found === 0) && fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer">{link.name}</a>)}<a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
         })}
@@ -2283,7 +2283,9 @@ function CompaniesView({
             {companies.map((c) => {
               const limited = c.warning?.startsWith("Limited coverage"),
                 fallback = companyFallbackLinks(c.name, preferences),
-                state = c.error_count
+                state = !c.last_checked_at
+                  ? "Awaiting scan"
+                  : c.error_count
                   ? "Failed"
                   : limited
                     ? "Limited coverage"

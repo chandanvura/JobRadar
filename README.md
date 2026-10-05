@@ -19,7 +19,7 @@ neutral custom domain can be attached without changing the application.
 - Automatic official-page ATS discovery, domain-aware concurrency, and cached immutable job details
 - Live run history, stale-run detection, per-source raw/candidate/eligible counts, notification history, and policy views
 - Browser-private Saved and application-stage tracking with JSON export
-- Initial company registry and tests for critical matching rules
+- 700-company registry covering major enterprises, MNCs, startups and scaleups; [coverage notes](docs/COMPANY-COVERAGE.md)
 
 Architecture: `freshness-gated GitHub scheduler → 8 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. Six best-effort scans per day are backed by hourly GitHub and 15-minute Cloudflare recovery checks. A watchdog dispatches only when the latest completed scan is at least five hours old and none is running. Every scan uses one source revision; failed discovery shards get one bounded retry. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
 

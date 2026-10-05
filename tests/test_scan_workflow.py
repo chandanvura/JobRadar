@@ -15,4 +15,6 @@ def test_scan_workflow_registry_gate_runs_against_real_csv():
         capture_output=True, text=True, check=False,
     )
     assert result.returncode == 0, result.stderr
-    assert "670 enabled" in result.stdout
+    from scraper.main import load_companies
+    enabled = sum(company.enabled for company in load_companies())
+    assert f"{enabled} enabled" in result.stdout

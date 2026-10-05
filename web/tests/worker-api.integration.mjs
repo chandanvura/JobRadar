@@ -35,6 +35,11 @@ try {
   assert.ok(results.every(r=>r.status===200));
   assert.equal((await db.prepare('SELECT count(*) AS total FROM jobs').first()).total,1);
   assert.equal((await request('/api/health')).status,200);
+  const beforeRegistryRun = await db.prepare('SELECT * FROM scraper_runs').all();
+  assert.equal((await request('/api/ingest',{companies:[{name:'New source',careers_url:'https://new.test/careers',ats_provider:'custom',ats_identifier:'new-source',priority:4,warning:'Awaiting first scheduled scan'}]})).status,200);
+  assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);
+  assert.deepEqual((await db.prepare('SELECT * FROM scraper_runs').all()).results,beforeRegistryRun.results);
+  assert.equal((await db.prepare('SELECT last_checked_at FROM companies WHERE name=?').bind('New source').first()).last_checked_at,null);
   const live=await (await request('/api/dashboard')).json();assert.equal(live.jobs.length,1);assert.equal(live.data_mode,undefined);
   const page=await (await request('/api/jobs?after=0')).json();assert.equal(page.jobs.length,1);assert.equal(page.next_cursor,null);
   assert.equal((await (await request('/api/dashboard?source=backup')).json()).data_mode,'backup');
