@@ -156,8 +156,14 @@ class GreenhouseAdapter(JobSource):
 
 class LeverAdapter(JobSource):
     async def fetch_jobs(self,c):
+        parts=c.ats_identifier.split("|")
+        slug=parts[-1]
+        region="eu." if len(parts)==2 and parts[0]=="eu" else ""
+        if not re.fullmatch(r"[\w.-]+",slug) or (len(parts)>1 and not region):
+            raise ValueError("Invalid public Lever board identifier")
         async with client() as x:
-            response=await request(x,"GET",f"https://api.lever.co/v0/postings/{c.ats_identifier}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
+            response=await request(x,"GET",f"https://api.{region}lever.co/v0/postings/{slug}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
+        if not isinstance(data,list): raise ValueError("Lever public board returned an unexpected schema")
         jobs=[make_job(str(j["id"]),j["text"],c.name,location_text(j.get("categories",{}).get("location",""),j.get("categories",{}).get("allLocations",[])),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
         return jobs,len(data)
 
@@ -254,6 +260,23 @@ def workday_config(c):
     if not parsed.hostname or not tenant or not site: raise ValueError("Workday requires a board URL and tenant|site identifier")
     return f"https://{parsed.hostname}",tenant,site
 
+def workday_country_facets(nodes,country):
+    """Prefer an exact employer-published country facet over location suffixes."""
+    countries={}; locations=[]
+    def visit(entries):
+        for node in entries:
+            parameter=node.get("facetParameter","")
+            if re.sub(r"[^a-z]","",parameter.lower()).endswith("country"):
+                ids=[value["id"] for value in node.get("values",[])
+                     if value.get("descriptor","").casefold()==country.casefold() and value.get("id")]
+                if ids: countries[parameter]=ids
+            if parameter=="locations":
+                locations.extend(value["id"] for value in node.get("values",[])
+                                 if value.get("id") and re.search(r",\s*"+re.escape(country)+r"$",value.get("descriptor",""),re.I))
+            visit(node.get("values",[]))
+    visit(nodes)
+    return countries or ({"locations":locations} if locations else {})
+
 class WorkdayAdapter(JobSource):
     async def fetch_jobs(self,c):
         origin,tenant,site=workday_config(c); api=f"{origin}/wday/cxs/{tenant}/{site}"
@@ -263,16 +286,8 @@ class WorkdayAdapter(JobSource):
             if country:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":0,"searchText":""})
                 response.raise_for_status()
-                def find_locations(nodes):
-                    for node in nodes:
-                        if node.get("facetParameter")=="locations":
-                            for value in node.get("values",[]):
-                                if re.search(r",\s*"+re.escape(country)+r"$",value.get("descriptor",""),re.I):
-                                    yield value["id"]
-                        yield from find_locations(node.get("values",[]))
-                locations=list(find_locations(response.json().get("facets",[])))
-                if not locations: raise ValueError("Workday does not expose the configured country locations")
-                facets={"locations":locations}
+                facets=workday_country_facets(response.json().get("facets",[]),country)
+                if not facets: raise ValueError("Workday does not expose the configured country locations")
             while offset < 1000:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
@@ -380,8 +395,10 @@ def parse_public_xml(xml,company,careers_url):
         title=clean(fields.get("title")); url=fields.get("link") or fields.get("url")
         if not title or not url: continue
         parsed=urlparse(url)
+        if parsed.scheme=="http" and parsed.hostname==urlparse(careers_url).hostname:
+            url=parsed._replace(scheme="https").geturl(); parsed=urlparse(url)
         if parsed.scheme!="https" or not parsed.hostname: continue
-        location=clean(fields.get("location"))
+        location=clean(fields.get("location")) or location_text(fields.get("locationCity"),fields.get("locationState"),fields.get("locationCountry"))
         if location and title.endswith(f" ({location})"): title=title[:-(len(location)+3)]
         description=clean(html.unescape(fields.get("description", "")))
         posting=fields.get("datePosted") or fields.get("publish_date")
@@ -487,12 +504,12 @@ def jsonld_objects(soup):
 
 ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com","jobvite.com","icims.com","oraclecloud.com")
 ATS_BOARD_HOSTS={"greenhouse":{"boards.greenhouse.io","job-boards.greenhouse.io"},
-                 "lever":{"jobs.lever.co"},"ashby":{"jobs.ashbyhq.com"},
+                 "lever":{"jobs.lever.co","jobs.eu.lever.co"},"ashby":{"jobs.ashbyhq.com"},
                  "smartrecruiters":{"jobs.smartrecruiters.com","careers.smartrecruiters.com"},
                  "jobvite":{"jobs.jobvite.com"}}
 ATS_PATTERNS=(
     ("greenhouse",re.compile(r"(?:boards|job-boards)\.greenhouse\.io/([\w.-]+)",re.I)),
-    ("lever",re.compile(r"jobs\.lever\.co/([\w.-]+)",re.I)),
+    ("lever",re.compile(r"jobs\.(?:eu\.)?lever\.co/([\w.-]+)",re.I)),
     ("ashby",re.compile(r"jobs\.ashbyhq\.com/([\w.-]+)",re.I)),
     ("smartrecruiters",re.compile(r"(?:jobs|careers)\.smartrecruiters\.com/([\w.-]+)",re.I)),
     ("jobvite",re.compile(r"jobs\.jobvite\.com/([\w.-]+)",re.I)),
@@ -545,7 +562,9 @@ def discover_ats(soup,base_url):
             for provider,pattern in ATS_PATTERNS:
                 if hostname not in ATS_BOARD_HOSTS[provider]: continue
                 match=pattern.search(hostname+parsed.path)
-                if match: return provider,match.group(1),absolute
+                if match:
+                    identifier=("eu|" if provider=="lever" and hostname=="jobs.eu.lever.co" else "")+match.group(1)
+                    return provider,identifier,absolute
     return None
 def job_like_url(url,base_host):
     parsed=urlparse(url); host=(parsed.hostname or "").lower(); path=parsed.path.lower()
@@ -605,5 +624,7 @@ from .eightfold import EightfoldCareerAdapter
 from .talentbrew import TalentBrewCareerAdapter
 
 from .mynexthire import MyNextHireCareerAdapter
+from .career_widgets import JuspayCareerAdapter, KulaCareerAdapter, BambooCareerAdapter, PyjamaCareerAdapter
 
 ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter(),"phenom":PhenomCareerAdapter(),"workable":WorkableCareerAdapter(),"eightfold":EightfoldCareerAdapter(),"talentbrew":TalentBrewCareerAdapter(),"mynexthire":MyNextHireCareerAdapter()}
+ADAPTERS.update(juspay=JuspayCareerAdapter(),kula=KulaCareerAdapter(),bamboohr=BambooCareerAdapter(),pyjamahr=PyjamaCareerAdapter())

@@ -1,0 +1,4840 @@
+{
+  "checked_at": "2026-10-05",
+  "scope": "258 remaining Limited coverage sources; public official pages and linked recruiting platforms",
+  "primary_page_audit": {
+    "checked_at": "2026-10-05T18:00:24Z",
+    "companies_attempted": 258,
+    "results": [
+      {
+        "company": "AMD",
+        "official_url": "https://careers.amd.com/careers-home/jobs",
+        "status": 403,
+        "final_url": "https://careers.amd.com/careers-home/jobs"
+      },
+      {
+        "company": "Apple",
+        "official_url": "https://jobs.apple.com/en-in/search",
+        "status": 200,
+        "final_url": "https://jobs.apple.com/en-in/search?location=india-INDC",
+        "ats": null,
+        "title": "Search Jobs - India - Jobs at Apple (IN)",
+        "platforms": []
+      },
+      {
+        "company": "Arcesium",
+        "official_url": "https://www.arcesium.com/careers.html",
+        "status": 404,
+        "final_url": "https://www.arcesium.com/careers.html"
+      },
+      {
+        "company": "Atlassian",
+        "official_url": "https://www.atlassian.com/company/careers/all-jobs",
+        "status": 200,
+        "final_url": "https://www.atlassian.com/company/careers/all-jobs",
+        "ats": null,
+        "title": "Atlassian Jobs: View Listings for Open Positions | Atlassian",
+        "platforms": [
+          "beamery"
+        ]
+      },
+      {
+        "company": "Capgemini",
+        "official_url": "https://www.capgemini.com/in-en/careers/join-capgemini/job-search/",
+        "status": 200,
+        "final_url": "https://www.capgemini.com/in-en/careers/join-capgemini/job-search/",
+        "ats": null,
+        "title": "Join us for Bright Careers | Capgemini India",
+        "platforms": []
+      },
+      {
+        "company": "Cashfree Payments",
+        "official_url": "https://www.cashfree.com/careers/",
+        "status": 200,
+        "final_url": "https://www.cashfree.com/careers/",
+        "ats": null,
+        "title": "Discover Your Career Path | Explore Job Opportunities at Cashfree Payments",
+        "platforms": [
+          "zoho"
+        ]
+      },
+      {
+        "company": "Chargebee",
+        "official_url": "https://www.chargebee.com/careers/",
+        "status": 200,
+        "final_url": "https://www.chargebee.com/careers/",
+        "ats": null,
+        "title": "Join a Global Product Company | Hiring Globally",
+        "platforms": []
+      },
+      {
+        "company": "Cognizant",
+        "official_url": "https://careers.cognizant.com/global-en/jobs/",
+        "status": 200,
+        "final_url": "https://careers.cognizant.com/global-en/jobs/",
+        "ats": null,
+        "title": "Your first job at Cognizant is just the beginning of your journey | Cognizant Careers",
+        "platforms": []
+      },
+      {
+        "company": "Darwinbox",
+        "official_url": "https://darwinbox.com/careers",
+        "status": 200,
+        "final_url": "https://darwinbox.com/careers",
+        "ats": null,
+        "title": "Careers - Darwinbox | End-to-End HRMS Suite",
+        "platforms": [
+          "phenom",
+          "darwinbox",
+          "bamboohr"
+        ]
+      },
+      {
+        "company": "Dell Technologies",
+        "official_url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/jobs",
+        "status": 200,
+        "final_url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/jobs",
+        "ats": null,
+        "title": "Dell",
+        "platforms": []
+      },
+      {
+        "company": "Flipkart",
+        "official_url": "https://www.flipkartcareers.com/#!/joblist",
+        "status": 200,
+        "final_url": "https://www.flipkartcareers.com/#!/joblist",
+        "ats": null,
+        "title": "Flipkart Careers - Maximise Your Potential",
+        "platforms": []
+      },
+      {
+        "company": "GitHub",
+        "official_url": "https://www.github.careers/careers-home/jobs",
+        "status": 403,
+        "final_url": "https://www.github.careers/careers-home/jobs"
+      },
+      {
+        "company": "Google",
+        "official_url": "https://www.google.com/about/careers/applications/jobs/results/",
+        "status": 200,
+        "final_url": "https://www.google.com/about/careers/applications/jobs/results/",
+        "ats": null,
+        "title": "Search Jobs \u2014 Google Careers",
+        "platforms": []
+      },
+      {
+        "company": "HSBC",
+        "official_url": "https://www.hsbc.com/careers",
+        "status": 200,
+        "final_url": "https://www.hsbc.com/careers",
+        "ats": null,
+        "title": "Careers: Discover opportunities | HSBC Holdings plc",
+        "platforms": []
+      },
+      {
+        "company": "HashiCorp",
+        "official_url": "https://www.hashicorp.com/en/careers/open-positions",
+        "status": 200,
+        "final_url": "https://www.ibm.com/careers/search?q=hashicorp",
+        "ats": null,
+        "title": "Site Unavailable",
+        "platforms": []
+      },
+      {
+        "company": "Hasura",
+        "official_url": "https://hasura.io/careers",
+        "status": 200,
+        "final_url": "https://promptql.io/careers",
+        "ats": null,
+        "title": "Join us to build the future of reliable AI | PromptQL",
+        "platforms": []
+      },
+      {
+        "company": "IBM",
+        "official_url": "https://www.ibm.com/careers/search",
+        "status": 200,
+        "final_url": "https://www.ibm.com/careers/search",
+        "ats": null,
+        "title": "Site Unavailable",
+        "platforms": []
+      },
+      {
+        "company": "Informatica",
+        "official_url": "https://informatica.gr8people.com/jobs",
+        "status": 200,
+        "final_url": "https://www.salesforce.com/company/careers/jobs/?search=&bc=OTH",
+        "ats": null,
+        "title": "Salesforce Jobs | Salesforce",
+        "platforms": []
+      },
+      {
+        "company": "Infosys",
+        "official_url": "https://career.infosys.com/joblist",
+        "status": 200,
+        "final_url": "https://career.infosys.com/joblist",
+        "ats": null,
+        "title": "Infosys Careers | Move Forward. Take the World with You.",
+        "platforms": []
+      },
+      {
+        "company": "Intuit",
+        "official_url": "https://www.intuit.com/careers/",
+        "status": 200,
+        "final_url": "https://www.intuit.com/careers/",
+        "ats": null,
+        "title": "Explore Career and Job Opportunities | Intuit Careers",
+        "platforms": []
+      },
+      {
+        "company": "Jupiter",
+        "official_url": "https://jupiter.money/careers/",
+        "status": 200,
+        "final_url": "https://jupiter.money/careers/",
+        "ats": null,
+        "title": "Careers",
+        "platforms": []
+      },
+      {
+        "company": "Juspay",
+        "official_url": "https://juspay.io/careers",
+        "status": 200,
+        "final_url": "https://juspay.io/careers",
+        "ats": null,
+        "title": "Juspay | Explore career opportunities in payments tech",
+        "platforms": []
+      },
+      {
+        "company": "Mercedes-Benz Research and Development India",
+        "official_url": "https://www.mbrdi.co.in/careers",
+        "status": 200,
+        "final_url": "https://www.mbrdi.co.in/careers",
+        "ats": null,
+        "title": "Mercedes-Benz Research & Development India",
+        "platforms": []
+      },
+      {
+        "company": "Meta",
+        "official_url": "https://www.metacareers.com/jobs/",
+        "status": 200,
+        "final_url": "https://www.metacareers.com/jobsearch/",
+        "ats": null,
+        "title": "Meta Careers",
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Myntra",
+        "official_url": "https://careers.myntra.com/",
+        "status": 200,
+        "final_url": "https://careers.myntra.com/",
+        "ats": null,
+        "title": "Career",
+        "platforms": []
+      },
+      {
+        "company": "Navi",
+        "official_url": "https://navi.com/careers",
+        "status": 200,
+        "final_url": "https://navi.com/careers",
+        "ats": null,
+        "title": "Careers At Navi | Join Our Team",
+        "platforms": []
+      },
+      {
+        "company": "NetApp",
+        "official_url": "https://careers.netapp.com/",
+        "status": 200,
+        "final_url": "https://careers.netapp.com/",
+        "ats": null,
+        "title": "Site Unavailable",
+        "platforms": []
+      },
+      {
+        "company": "Open Financial Technologies",
+        "official_url": "https://open.money/careers",
+        "status": 403,
+        "final_url": "https://open.money/careers"
+      },
+      {
+        "company": "Persistent Systems",
+        "official_url": "https://careers.persistent.com/",
+        "status": 200,
+        "final_url": "https://careers.persistent.com/",
+        "ats": null,
+        "title": "Careers & Job Opportunities",
+        "platforms": []
+      },
+      {
+        "company": "Postman",
+        "official_url": "https://www.postman.com/company/careers/",
+        "status": 200,
+        "final_url": "https://www.postman.com/company/careers/",
+        "ats": null,
+        "title": "Careers | Postman",
+        "platforms": []
+      },
+      {
+        "company": "Rippling",
+        "official_url": "https://www.rippling.com/careers/open-roles",
+        "status": 403,
+        "final_url": "https://www.rippling.com/careers/open-roles"
+      },
+      {
+        "company": "Slice",
+        "official_url": "https://www.sliceit.com/careers",
+        "status": 200,
+        "final_url": "https://slice.bank.in/careers",
+        "ats": null,
+        "title": "Careers | We go big. We go beyond | slice",
+        "platforms": []
+      },
+      {
+        "company": "Splunk",
+        "official_url": "https://www.splunk.com/en_us/careers.html",
+        "status": 200,
+        "final_url": "https://careers.cisco.com/global/en/splunk",
+        "ats": null,
+        "title": "Site Unavailable",
+        "platforms": []
+      },
+      {
+        "company": "TCS",
+        "official_url": "https://www.tcs.com/careers/india",
+        "status": 200,
+        "final_url": "https://www.tcs.com/careers/india",
+        "ats": null,
+        "title": "TCS India Careers",
+        "platforms": []
+      },
+      {
+        "company": "ThoughtSpot",
+        "official_url": "https://www.thoughtspot.com/careers",
+        "status": 200,
+        "final_url": "https://www.thoughtspot.com/careers",
+        "ats": null,
+        "title": "Join Our Team | ThoughtSpot",
+        "platforms": []
+      },
+      {
+        "company": "Upstox",
+        "official_url": "https://upstox.com/careers/",
+        "status": 200,
+        "final_url": "https://upstox.com/careers/",
+        "ats": null,
+        "title": "Careers \u2013 Latest Opening at Upstox",
+        "platforms": []
+      },
+      {
+        "company": "Walmart Global Tech",
+        "official_url": "https://careers.walmart.com/technology",
+        "status": 200,
+        "final_url": "https://careers.walmart.com/us/en/home/careers-areas/technology",
+        "ats": null,
+        "title": "Technology",
+        "platforms": []
+      },
+      {
+        "company": "Zerodha",
+        "official_url": "https://careers.zerodha.com/",
+        "status": 200,
+        "final_url": "https://careers.zerodha.com/",
+        "ats": null,
+        "title": "Careers - Zerodha",
+        "platforms": []
+      },
+      {
+        "company": "Zeta",
+        "official_url": "https://www.zeta.tech/in/careers",
+        "status": 200,
+        "final_url": "https://www.zeta.tech/in/careers",
+        "ats": null,
+        "title": "Zeta Careers",
+        "platforms": []
+      },
+      {
+        "company": "ACKO",
+        "official_url": "https://www.acko.com/careers/",
+        "status": 200,
+        "final_url": "https://www.acko.com/careers/",
+        "ats": null,
+        "title": "ACKO Careers | Ready to make a difference? Join ACKO!",
+        "platforms": []
+      },
+      {
+        "company": "ADP",
+        "official_url": "https://jobs.adp.com/",
+        "status": 200,
+        "final_url": "https://jobs.adp.com/en/",
+        "ats": null,
+        "title": "Jobs at ADP - Careers at ADP - ADP Jobs - ADP Careers - Apply Online at ADP | ADP Careers",
+        "platforms": []
+      },
+      {
+        "company": "ASML",
+        "official_url": "https://www.asml.com/en/careers",
+        "status": 200,
+        "final_url": "https://www.asml.com/en/careers",
+        "ats": null,
+        "title": "ASML Careers  - World's supplier to the semiconductor industry",
+        "platforms": []
+      },
+      {
+        "company": "AXA",
+        "official_url": "https://careers.axa.com/",
+        "status": 403,
+        "final_url": "https://careers.axa.com/"
+      },
+      {
+        "company": "Ajio",
+        "official_url": "https://careers.ril.com/",
+        "status": 200,
+        "final_url": "https://careers.ril.com/",
+        "ats": null,
+        "title": "Careers Portal",
+        "platforms": []
+      },
+      {
+        "company": "Amagi",
+        "official_url": "https://www.amagi.com/careers",
+        "status": 200,
+        "final_url": "https://www.amagi.com/careers",
+        "ats": null,
+        "title": "Amagi Culture and Values | Amagi Careers",
+        "platforms": []
+      },
+      {
+        "company": "Angel One",
+        "official_url": "https://www.angelone.in/careers",
+        "status": 200,
+        "final_url": "https://www.angelone.in/careers",
+        "ats": null,
+        "title": "Angel One Careers | Join a Leading Fintech Company in India",
+        "platforms": []
+      },
+      {
+        "company": "Ansys",
+        "official_url": "https://careers.ansys.com/",
+        "status": 502,
+        "final_url": "https://careers.ansys.com/"
+      },
+      {
+        "company": "Aon",
+        "official_url": "https://jobs.aon.com/",
+        "status": 403,
+        "final_url": "https://jobs.aon.com/"
+      },
+      {
+        "company": "Ather Energy",
+        "official_url": "https://www.atherenergy.com/careers",
+        "status": 200,
+        "final_url": "https://careers.atherenergy.com/",
+        "ats": null,
+        "title": "Be the Story | Join Ather",
+        "platforms": []
+      },
+      {
+        "company": "Avaamo",
+        "official_url": "https://avaamo.ai/careers/",
+        "status": 200,
+        "final_url": "https://avaamo.ai/careers/",
+        "ats": null,
+        "title": "Careers at Avaamo",
+        "platforms": [
+          "zoho"
+        ]
+      },
+      {
+        "company": "Avalara",
+        "official_url": "https://careers.avalara.com/",
+        "status": 403,
+        "final_url": "https://careers.avalara.com/"
+      },
+      {
+        "company": "BD",
+        "official_url": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+        "status": 200,
+        "final_url": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+        "ats": null,
+        "title": "",
+        "platforms": []
+      },
+      {
+        "company": "BNP Paribas",
+        "official_url": "https://group.bnpparibas/en/careers",
+        "status": 200,
+        "final_url": "https://group.bnpparibas/en/careers",
+        "ats": null,
+        "title": "Jobs and careers : all our job offers - BNP Paribas",
+        "platforms": []
+      },
+      {
+        "company": "BP",
+        "official_url": "https://www.bp.com/en/global/corporate/careers.html",
+        "status": 403,
+        "final_url": "https://www.bp.com/en/global/corporate/careers.html"
+      },
+      {
+        "company": "Bain & Company",
+        "official_url": "https://www.bain.com/careers/",
+        "status": 200,
+        "final_url": "https://www.bain.com/careers/",
+        "ats": null,
+        "title": "Careers at Bain | Bain & Company",
+        "platforms": []
+      },
+      {
+        "company": "Bank of America",
+        "official_url": "https://careers.bankofamerica.com/en-us",
+        "status": 200,
+        "final_url": "https://careers.bankofamerica.com/en-us",
+        "ats": [
+          "workday",
+          "ghr|lateral-us",
+          "https://ghr.wd1.myworkdayjobs.com/en-us/lateral-us/login"
+        ],
+        "title": "Bank of America Careers Site - Apply at Bank of America",
+        "platforms": [
+          "avature",
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Bayer",
+        "official_url": "https://career.bayer.com/",
+        "status": 403,
+        "final_url": "https://www.bayer.com/en/career"
+      },
+      {
+        "company": "Best Buy",
+        "official_url": "https://jobs.bestbuy.com/bby?id=career_area",
+        "status": 200,
+        "final_url": "https://jobs.bestbuy.com/bby?id=career_area",
+        "ats": null,
+        "title": "Explore Career Area - Best Buy  Jobs",
+        "platforms": []
+      },
+      {
+        "company": "BigBasket",
+        "official_url": "https://www.bigbasket.com/careers/",
+        "status": 200,
+        "final_url": "https://careers.bigbasket.com/",
+        "ats": null,
+        "title": "BB-Careers",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Blackhawk Network",
+        "official_url": "https://careers.blackhawknetwork.com/",
+        "status": 502,
+        "final_url": "https://careers.blackhawknetwork.com/"
+      },
+      {
+        "company": "Boehringer Ingelheim",
+        "official_url": "https://jobs.boehringer-ingelheim.com/",
+        "status": 200,
+        "final_url": "https://jobs.boehringer-ingelheim.com/",
+        "ats": null,
+        "title": "Boehringer Ingelheim Careers | Explore Job Opportunities",
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Booking.com",
+        "official_url": "https://jobs.booking.com/careers",
+        "status": 403,
+        "final_url": "https://jobs.booking.com/careers"
+      },
+      {
+        "company": "CBRE",
+        "official_url": "https://careers.cbre.com/en_US/careers/SearchJobs/",
+        "status": 202,
+        "final_url": "https://careers.cbre.com/en_US/careers/SearchJobs/"
+      },
+      {
+        "company": "CGI",
+        "official_url": "https://www.cgi.com/en/careers-search",
+        "status": 200,
+        "final_url": "https://cgi.njoyn.com/CORP/xweb/xweb.asp?page=joblisting&CLID=21001",
+        "ats": null,
+        "title": "Careers | CGI.com",
+        "platforms": []
+      },
+      {
+        "company": "CVS Health",
+        "official_url": "https://jobs.cvshealth.com/",
+        "status": 200,
+        "final_url": "https://jobs.cvshealth.com/us/en/home",
+        "ats": null,
+        "title": "CVS Health Careers",
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "CarDekho",
+        "official_url": "https://careers.cardekho.com/",
+        "status": 200,
+        "final_url": "https://careers.cardekho.com/",
+        "ats": null,
+        "title": "Career",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Cargill",
+        "official_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+        "status": 200,
+        "final_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+        "ats": null,
+        "title": "Bengaluru",
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Cars24",
+        "official_url": "https://www.cars24.com/careers/",
+        "status": 200,
+        "final_url": "https://www.cars24.com/careers/",
+        "ats": null,
+        "title": "Cars24 | Careers",
+        "platforms": []
+      },
+      {
+        "company": "Caterpillar",
+        "official_url": "https://careers.caterpillar.com/",
+        "status": 200,
+        "final_url": "https://careers.caterpillar.com/en/",
+        "ats": null,
+        "title": "Do The Work That Matters | Caterpillar Careers",
+        "platforms": [
+          "beamery"
+        ]
+      },
+      {
+        "company": "Checkout.com",
+        "official_url": "https://www.checkout.com/careers",
+        "status": 200,
+        "final_url": "https://www.checkout.com/careers",
+        "ats": null,
+        "title": "Work alongside amazing people",
+        "platforms": []
+      },
+      {
+        "company": "Citrix",
+        "official_url": "https://www.cloud.com/careers",
+        "status": 404,
+        "final_url": "https://www.cloud.com/careers"
+      },
+      {
+        "company": "Cleartrip",
+        "official_url": "https://www.cleartrip.com/careers",
+        "status": 404,
+        "final_url": "https://www.cleartrip.com/careers"
+      },
+      {
+        "company": "CleverTap",
+        "official_url": "https://clevertap.com/careers/",
+        "status": 200,
+        "final_url": "https://clevertap.com/careers/",
+        "ats": null,
+        "title": "Discover Career Opportunities at CleverTap & explore global openings.",
+        "platforms": [
+          "darwinbox",
+          "zoho"
+        ]
+      },
+      {
+        "company": "CloudBees",
+        "official_url": "https://www.cloudbees.com/careers",
+        "status": 200,
+        "final_url": "https://www.cloudbees.com/careers",
+        "ats": null,
+        "title": "Careers at CloudBees",
+        "platforms": []
+      },
+      {
+        "company": "Coforge",
+        "official_url": "https://careers.coforge.com/",
+        "status": 200,
+        "final_url": "https://careers.coforge.com/coforge/",
+        "ats": null,
+        "title": "Coforge - Career Opportunities | Grow & Move Ahead",
+        "platforms": []
+      },
+      {
+        "company": "CoinDCX",
+        "official_url": "https://careers.coindcx.com/",
+        "status": 200,
+        "final_url": "https://coindcx.com/about-us",
+        "ats": null,
+        "title": "CoinDCX Careers | About us",
+        "platforms": []
+      },
+      {
+        "company": "Collins Aerospace",
+        "official_url": "https://careers.rtx.com/global/en/collins-aerospace",
+        "status": 200,
+        "final_url": "https://careers.rtx.com/global/en/collins-aerospace",
+        "ats": null,
+        "title": "Collins Aerospace",
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "ColorTokens",
+        "official_url": "https://colortokens.com/careers/",
+        "status": 200,
+        "final_url": "https://colortokens.com/careers/",
+        "ats": null,
+        "title": "Cybersecurity Careers | ColorTokens Inc",
+        "platforms": [
+          "jibe",
+          "recruiterbox"
+        ]
+      },
+      {
+        "company": "Cornerstone OnDemand",
+        "official_url": "https://www.cornerstoneondemand.com/careers/",
+        "status": 200,
+        "final_url": "https://www.cornerstoneondemand.com/careers/",
+        "ats": null,
+        "title": "Careers at Cornerstone | Grow Your Future with Us",
+        "platforms": []
+      },
+      {
+        "company": "Costco",
+        "official_url": "https://careers.costco.com/jobs",
+        "status": 403,
+        "final_url": "https://careers.costco.com/jobs"
+      },
+      {
+        "company": "CyberArk",
+        "official_url": "https://www.cyberark.com/careers/",
+        "error": "ReadTimeout"
+      },
+      {
+        "company": "Dassault Systemes",
+        "official_url": "https://www.3ds.com/careers",
+        "status": 200,
+        "final_url": "https://www.3ds.com/careers",
+        "ats": null,
+        "title": "Imagine New Horizons | Careers - Dassault Syst\u00e8mes",
+        "platforms": []
+      },
+      {
+        "company": "DataStax",
+        "official_url": "https://www.datastax.com/company/careers",
+        "error": "ReadTimeout"
+      },
+      {
+        "company": "Deloitte",
+        "official_url": "https://southasiacareers.deloitte.com/",
+        "error": "ReadTimeout"
+      },
+      {
+        "company": "Delta Air Lines",
+        "official_url": "https://delta.avature.net/careers",
+        "error": "ReadTimeout"
+      },
+      {
+        "company": "Deutsche Bank",
+        "official_url": "https://careers.db.com/",
+        "error": "ReadTimeout"
+      },
+      {
+        "company": "Deutsche Boerse Group",
+        "official_url": "https://careers.deutsche-boerse.com/",
+        "status": 200,
+        "final_url": "https://careers.deutsche-boerse.com/",
+        "ats": null,
+        "title": "Jobs at Deutsche B\u00f6rse | Shape the Future of Finance",
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Deutsche Telekom",
+        "official_url": "https://www.telekom.com/en/careers",
+        "status": 200,
+        "final_url": "https://www.telekom.com/en/telekom-as-an-employer",
+        "ats": null,
+        "title": "Telekom as an Employer | Deutsche Telekom",
+        "platforms": []
+      },
+      {
+        "company": "Dhruva Space",
+        "official_url": "https://www.dhruvaspace.com/careers",
+        "status": 200,
+        "final_url": "https://www.dhruvaspace.com/careers",
+        "ats": null,
+        "title": "Work with us | Dhruva Space",
+        "platforms": []
+      },
+      {
+        "company": "Discover",
+        "official_url": "https://jobs.discover.com/",
+        "status": 502,
+        "final_url": "https://jobs.discover.com/"
+      },
+      {
+        "company": "DocuSign",
+        "official_url": "https://careers.docusign.com/",
+        "status": 403,
+        "final_url": "https://careers.docusign.com/"
+      },
+      {
+        "company": "Dream Sports",
+        "official_url": "https://www.dreamsports.group/careers/",
+        "status": 200,
+        "final_url": "https://www.dreamsports.group/lifeatdreamsports",
+        "ats": [
+          "lever",
+          "dreamsports",
+          "https://jobs.lever.co/dreamsports"
+        ],
+        "title": "DreamSports",
+        "platforms": [
+          "lever.co"
+        ]
+      },
+      {
+        "company": "Dynatrace",
+        "official_url": "https://careers.dynatrace.com/",
+        "status": 200,
+        "final_url": "https://www.dynatrace.com/careers/",
+        "ats": null,
+        "title": "Home | Dynatrace Careers",
+        "platforms": []
+      },
+      {
+        "company": "E2open",
+        "official_url": "https://www.e2open.com/company/careers/",
+        "status": 200,
+        "final_url": "https://www.e2open.com/company/careers/",
+        "ats": null,
+        "title": "Supply Chain Careers with e2open - Supply Chain Software",
+        "platforms": []
+      },
+      {
+        "company": "EPAM",
+        "official_url": "https://www.epam.com/careers/job-listings",
+        "status": 200,
+        "final_url": "https://careers.epam.com/en/jobs?utm_source=www.epam.com&utm_medium=direct-link&utm_campaign=ta",
+        "ats": null,
+        "title": "Discover Exciting Job Opportunities | EPAM Careers",
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Electronic Arts India",
+        "official_url": "https://www.ea.com/careers",
+        "status": 200,
+        "final_url": "https://www.ea.com/careers",
+        "ats": null,
+        "title": "Careers at Electronic Arts - Start your Job Search - Official EA Site",
+        "platforms": []
+      },
+      {
+        "company": "Exotel",
+        "official_url": "https://exotel.com/careers/",
+        "status": 200,
+        "final_url": "https://exotel.com/about-us/careers/",
+        "ats": null,
+        "title": "Careers | Exotel",
+        "platforms": []
+      },
+      {
+        "company": "FedEx",
+        "official_url": "https://careers.fedex.com/",
+        "status": 200,
+        "final_url": "https://careers.fedex.com/",
+        "ats": null,
+        "title": "Find FedEx Jobs Near You | FedEx Careers",
+        "platforms": []
+      },
+      {
+        "company": "Fidelity Investments",
+        "official_url": "https://jobs.fidelity.com/en/",
+        "status": 200,
+        "final_url": "https://jobs.fidelity.com/en/",
+        "ats": null,
+        "title": "Find a meaningful career at Fidelity | Fidelity Careers",
+        "platforms": [
+          "myworkday",
+          "beamery"
+        ]
+      },
+      {
+        "company": "Fractal Analytics",
+        "official_url": "https://fractal.ai/careers/",
+        "status": 200,
+        "final_url": "https://fractal.wd1.myworkdayjobs.com/Careers",
+        "ats": null,
+        "title": "",
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Fujitsu",
+        "official_url": "https://www.fujitsu.com/global/about/careers/",
+        "status": 200,
+        "final_url": "https://global.fujitsu/en-global/about",
+        "ats": null,
+        "title": "About Fujitsu | Fujitsu Global",
+        "platforms": []
+      },
+      {
+        "company": "Games24x7",
+        "official_url": "https://www.games24x7.com/careers/",
+        "status": 404,
+        "final_url": "https://www.games24x7.com/careers"
+      },
+      {
+        "company": "Globant",
+        "official_url": "https://career.globant.com/",
+        "status": 200,
+        "final_url": "https://career.globant.com/",
+        "ats": null,
+        "title": "Join our team | Globant Careers",
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Goldman Sachs",
+        "official_url": "https://higher.gs.com/",
+        "status": 200,
+        "final_url": "https://higher.gs.com/results",
+        "ats": null,
+        "title": "Opportunities | Goldman Sachs",
+        "platforms": []
+      },
+      {
+        "company": "Growfin",
+        "official_url": "https://www.growfin.ai/careers",
+        "status": 200,
+        "final_url": "https://careers.kula.ai/growfin",
+        "ats": null,
+        "title": "Careers | Growfin",
+        "platforms": []
+      },
+      {
+        "company": "Guidewire",
+        "official_url": "https://careers.guidewire.com/",
+        "status": 429,
+        "final_url": "https://www.guidewire.com/about/careers"
+      },
+      {
+        "company": "HARMAN",
+        "official_url": "https://jobs.harman.com/",
+        "status": 502,
+        "final_url": "https://jobs.harman.com/"
+      },
+      {
+        "company": "Happiest Minds",
+        "official_url": "https://www.happiestminds.com/careers/",
+        "status": 200,
+        "final_url": "https://www.happiestminds.com",
+        "ats": null,
+        "title": "Happiest Minds | AI First Customer-Centric Digital Engineering and Mindful IT Company",
+        "platforms": []
+      },
+      {
+        "company": "Highspot",
+        "official_url": "https://www.highspot.com/careers/",
+        "status": 200,
+        "final_url": "https://www.seismic.com/careers/",
+        "ats": null,
+        "title": "Explore Open Roles and Opportunities | Seismic",
+        "platforms": []
+      },
+      {
+        "company": "Infineon Technologies",
+        "official_url": "https://www.infineon.com/cms/en/careers/",
+        "status": 200,
+        "final_url": "https://www.infineon.com/careers",
+        "ats": null,
+        "title": "Careers | Infineon Technologies",
+        "platforms": [
+          "eightfold"
+        ]
+      },
+      {
+        "company": "Intercontinental Exchange",
+        "official_url": "https://careers.ice.com/",
+        "status": 403,
+        "final_url": "https://careers.ice.com/"
+      },
+      {
+        "company": "Ivanti",
+        "official_url": "https://careers.ivanti.com/",
+        "status": 502,
+        "final_url": "https://careers.ivanti.com/"
+      },
+      {
+        "company": "Keka",
+        "official_url": "https://www.keka.com/careers",
+        "status": 200,
+        "final_url": "https://www.keka.com/careers",
+        "ats": null,
+        "title": "Careers | Keka HR",
+        "platforms": []
+      },
+      {
+        "company": "Kenvue",
+        "official_url": "https://www.kenvue.com/careers",
+        "status": 200,
+        "final_url": "https://www.kenvue.com/careers",
+        "ats": null,
+        "title": "Kenvue careers | Kenvue - A new view of care",
+        "platforms": []
+      },
+      {
+        "company": "Keysight Technologies",
+        "official_url": "https://jobs.keysight.com/",
+        "status": 403,
+        "final_url": "https://jobs.keysight.com/"
+      },
+      {
+        "company": "Khatabook",
+        "official_url": "https://khatabook.com/careers",
+        "status": 200,
+        "final_url": "https://khatabook.com/hiring/",
+        "ats": null,
+        "title": "",
+        "platforms": []
+      },
+      {
+        "company": "Kimberly-Clark",
+        "official_url": "https://careers.kimberly-clark.com/",
+        "status": 200,
+        "final_url": "https://careers.kimberly-clark.com/",
+        "ats": null,
+        "title": "Explore Careers at Kimberly-Clark | Kimberly-Clark Careers",
+        "platforms": []
+      },
+      {
+        "company": "Kissflow",
+        "official_url": "https://careers.kissflow.com/",
+        "status": 200,
+        "final_url": "https://careers.kissflow.com/",
+        "ats": null,
+        "title": "Careers - Kissflow",
+        "platforms": [
+          "zoho"
+        ]
+      },
+      {
+        "company": "Klarna",
+        "official_url": "https://www.klarna.com/careers/",
+        "status": 200,
+        "final_url": "https://www.klarna.com/careers/",
+        "ats": null,
+        "title": "Step into your stretch zone | Klarna Careers",
+        "platforms": []
+      },
+      {
+        "company": "KreditBee",
+        "official_url": "https://www.kreditbee.in/careers",
+        "status": 200,
+        "final_url": "https://www.kreditbee.in/careers",
+        "ats": null,
+        "title": "KreditBee",
+        "platforms": []
+      },
+      {
+        "company": "L&T Technology Services",
+        "official_url": "https://www.ltts.com/careers",
+        "status": 200,
+        "final_url": "https://www.ltts.com/careers",
+        "ats": null,
+        "title": "Careers | L&T Technology Services",
+        "platforms": []
+      },
+      {
+        "company": "LTIMindtree",
+        "official_url": "https://careers.ltimindtree.com/",
+        "status": 502,
+        "final_url": "https://careers.ltimindtree.com/"
+      },
+      {
+        "company": "LambdaTest",
+        "official_url": "https://www.lambdatest.com/career",
+        "status": 200,
+        "final_url": "https://www.lambdatest.com/career",
+        "ats": null,
+        "title": "Site Unavailable",
+        "platforms": []
+      },
+      {
+        "company": "LatentView Analytics",
+        "official_url": "https://www.latentview.com/careers/",
+        "status": 404,
+        "final_url": "https://www.latentview.com/careers/"
+      },
+      {
+        "company": "LeadSquared",
+        "official_url": "https://www.leadsquared.com/careers/",
+        "status": 200,
+        "final_url": "https://www.leadsquared.com/careers/",
+        "ats": null,
+        "title": "Work With Us | LeadSquared Careers",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Lenovo",
+        "official_url": "https://jobs.lenovo.com/",
+        "status": 200,
+        "final_url": "https://jobs.lenovo.com/en_US/careers",
+        "ats": null,
+        "title": "Jobs at Lenovo",
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Licious",
+        "official_url": "https://www.licious.in/careers",
+        "status": 200,
+        "final_url": "https://www.licious.in/careers",
+        "ats": null,
+        "title": "Careers - You are the magic ingredient",
+        "platforms": []
+      },
+      {
+        "company": "Lowe's India",
+        "official_url": "https://talent.lowes.com/in/en",
+        "status": 200,
+        "final_url": "https://talent.lowes.com/in/en",
+        "ats": null,
+        "title": "Careers Home | Lowe's Careers",
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "Lululemon",
+        "official_url": "https://careers.lululemon.com/",
+        "status": 200,
+        "final_url": "https://careers.lululemon.com/en_US/careers",
+        "ats": null,
+        "title": "Job Search | Lululemon",
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "M2P Fintech",
+        "official_url": "https://m2pfintech.com/careers/",
+        "status": 200,
+        "final_url": "https://careers.m2pfintech.com",
+        "ats": null,
+        "title": "M2P Fintech | Build your career in fintech with us",
+        "platforms": []
+      },
+      {
+        "company": "MSCI",
+        "official_url": "https://careers.msci.com/",
+        "status": 200,
+        "final_url": "https://careers.msci.com/",
+        "ats": null,
+        "title": "Careers at MSCI",
+        "platforms": [
+          "icims",
+          "jibe"
+        ]
+      },
+      {
+        "company": "Macquarie Group",
+        "official_url": "https://recruitment.macquarie.com/",
+        "status": 200,
+        "final_url": "https://recruitment.macquarie.com/timeslots/Login",
+        "ats": null,
+        "title": "Timeslots Portal",
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Maersk",
+        "official_url": "https://www.maersk.com/careers",
+        "status": 200,
+        "final_url": "https://www.maersk.com/careers",
+        "ats": null,
+        "title": "Jobs and Careers | Maersk",
+        "platforms": []
+      },
+      {
+        "company": "MakeMyTrip",
+        "official_url": "https://careers.makemytrip.com/",
+        "status": 200,
+        "final_url": "https://careers.makemytrip.com/",
+        "ats": null,
+        "title": "MakeMyTrip",
+        "platforms": []
+      },
+      {
+        "company": "Manhattan Associates",
+        "official_url": "https://careers.manh.com/",
+        "status": 502,
+        "final_url": "https://careers.manh.com/"
+      },
+      {
+        "company": "MathWorks",
+        "official_url": "https://in.mathworks.com/company/jobs/opportunities.html",
+        "status": 200,
+        "final_url": "https://in.mathworks.com/company/jobs/opportunities.html",
+        "ats": null,
+        "title": "MathWorks Careers | Explore Job Openings - MATLAB & Simulink",
+        "platforms": []
+      },
+      {
+        "company": "McDonald's",
+        "official_url": "https://careers.mcdonalds.com/",
+        "status": 200,
+        "final_url": "https://careers.mcdonalds.com/",
+        "ats": null,
+        "title": "McDonald's Restaurant Global Careers",
+        "platforms": []
+      },
+      {
+        "company": "McKinsey & Company",
+        "official_url": "https://www.mckinsey.com/careers/search-jobs",
+        "status": 200,
+        "final_url": "https://www.mckinsey.com/careers/search-jobs",
+        "ats": null,
+        "title": "McKinsey Job Search | Consulting and Internal Roles | Careers | McKinsey & Company",
+        "platforms": []
+      },
+      {
+        "company": "MediBuddy",
+        "official_url": "https://www.medibuddy.in/careers",
+        "status": 200,
+        "final_url": "https://www.medibuddy.in/careers",
+        "ats": null,
+        "title": "MediBuddy | Book Health Checks, Lab tests, Online Medicine & Doctor Consultation",
+        "platforms": []
+      },
+      {
+        "company": "MediaTek",
+        "official_url": "https://corp.mediatek.com/careers",
+        "status": 404,
+        "final_url": "https://corp.mediatek.com/careers"
+      },
+      {
+        "company": "MetLife",
+        "official_url": "https://www.metlifecareers.com/",
+        "status": 200,
+        "final_url": "https://www.metlifecareers.com/en_US/ml",
+        "ats": null,
+        "title": "Home",
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Microchip Technology",
+        "official_url": "https://careers.microchip.com/",
+        "status": 200,
+        "final_url": "https://www.microchip.com/en-us/about/careers",
+        "ats": null,
+        "title": "Careers | Microchip Technology",
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Millennium",
+        "official_url": "https://www.mlp.com/careers/",
+        "status": 200,
+        "final_url": "https://www.mlp.com/careers/",
+        "ats": null,
+        "title": "Millennium Management | Grow Your Career at Millennium",
+        "platforms": [
+          "eightfold"
+        ]
+      },
+      {
+        "company": "Mimecast",
+        "official_url": "https://careers.mimecast.com/",
+        "status": 200,
+        "final_url": "https://careers.mimecast.com/en/",
+        "ats": null,
+        "title": "Careers at Mimecast | Mimecast Careers",
+        "platforms": []
+      },
+      {
+        "company": "MoEngage",
+        "official_url": "https://www.moengage.com/careers/",
+        "status": 200,
+        "final_url": "https://www.moengage.com/careers/",
+        "ats": null,
+        "title": "Work with MoEngage - Careers & Job Openings",
+        "platforms": [
+          "trakstar"
+        ]
+      },
+      {
+        "company": "Mobile Premier League",
+        "official_url": "https://www.mpl.live/careers",
+        "status": 404,
+        "final_url": "https://www.mpl.live/careers"
+      },
+      {
+        "company": "Mondelez International",
+        "official_url": "https://careers.mondelezinternational.com/",
+        "status": 200,
+        "final_url": "https://www.mondelezinternational.com:443/careers/",
+        "ats": null,
+        "title": "Tasty Jobs and Careers at Mondel\u00c4\u0093z International | Mondel\u00c4\u0093z International, Inc.",
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "Moneyview",
+        "official_url": "https://moneyview.in/careers",
+        "status": 200,
+        "final_url": "https://moneyview.in/careers",
+        "ats": null,
+        "title": "Moneyview Careers - Join us & grow with us!",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Morningstar",
+        "official_url": "https://careers.morningstar.com/",
+        "status": 202,
+        "final_url": "https://www.morningstar.com/company/careers"
+      },
+      {
+        "company": "Mphasis",
+        "official_url": "https://careers.mphasis.com/",
+        "status": 200,
+        "final_url": "https://careers.mphasis.com/home.html",
+        "ats": null,
+        "title": "Careers at Mphasis | Explore Technology and IT Careers at Mphasis",
+        "platforms": []
+      },
+      {
+        "company": "NEC",
+        "official_url": "https://www.nec.com/en/global/careers/",
+        "status": 404,
+        "final_url": "https://www.nec.com/en/global/careers/"
+      },
+      {
+        "company": "NTT DATA",
+        "official_url": "https://careers.nttdata.com/global/en",
+        "status": 200,
+        "final_url": "https://careers.nttdata.com/global/en",
+        "ats": [
+          "workday",
+          "nttglobaldatacenters|External",
+          "https://nttglobaldatacenters.wd501.myworkdayjobs.com/External"
+        ],
+        "title": "NTT DATA Careers",
+        "platforms": [
+          "phenom",
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Namma Yatri",
+        "official_url": "https://nammayatri.in/careers",
+        "status": 404,
+        "final_url": "https://nammayatri.in/careers"
+      },
+      {
+        "company": "NatWest Group",
+        "official_url": "https://jobs.natwestgroup.com/",
+        "status": 200,
+        "final_url": "https://jobs.natwestgroup.com/",
+        "ats": null,
+        "title": "NatWest Group Careers",
+        "platforms": []
+      },
+      {
+        "company": "NoBroker",
+        "official_url": "https://www.nobroker.in/careers",
+        "status": 200,
+        "final_url": "https://www.nobroker.in/careers",
+        "ats": null,
+        "title": "Flats, Houses, Apartments for Rent, Buy, Sale Without Brokerage in India",
+        "platforms": []
+      },
+      {
+        "company": "Nomura",
+        "official_url": "https://www.nomura.com/careers/",
+        "status": 200,
+        "final_url": "https://www.nomura.com/careers/",
+        "ats": null,
+        "title": "Nomura: Early Careers",
+        "platforms": []
+      },
+      {
+        "company": "OfBusiness",
+        "official_url": "https://www.ofbcareers.com/",
+        "status": 200,
+        "final_url": "https://www.ofbcareers.com/",
+        "ats": null,
+        "title": "OfBusiness Careers | Explore High-Growth roles with us",
+        "platforms": []
+      },
+      {
+        "company": "Ola",
+        "official_url": "https://www.olacabs.com/careers",
+        "status": 200,
+        "final_url": "https://www.olacabs.com/careers",
+        "ats": null,
+        "title": "Careers",
+        "platforms": []
+      },
+      {
+        "company": "Ola Electric",
+        "official_url": "https://www.olaelectric.com/careers",
+        "status": 200,
+        "final_url": "https://www.olaelectric.com/careers",
+        "ats": null,
+        "title": "Career Opportunities at Ola Electric | Join Our Team",
+        "platforms": []
+      },
+      {
+        "company": "Omnissa",
+        "official_url": "https://careers.omnissa.com/",
+        "status": 502,
+        "final_url": "https://careers.omnissa.com/"
+      },
+      {
+        "company": "PayU",
+        "official_url": "https://corporate.payu.com/careers/",
+        "status": 200,
+        "final_url": "https://corporate.payu.com/careers/",
+        "ats": null,
+        "title": "Careers - Join our team and reshape the future - PayU GlobalPayU Global",
+        "platforms": []
+      },
+      {
+        "company": "Pegasystems",
+        "official_url": "https://www.pega.com/about/careers",
+        "status": 200,
+        "final_url": "https://www.pega.com/about/careers",
+        "ats": null,
+        "title": "Careers in Technology and Software | Pega",
+        "platforms": []
+      },
+      {
+        "company": "PepsiCo",
+        "official_url": "https://www.pepsicojobs.com/",
+        "status": 403,
+        "final_url": "https://www.pepsicojobs.com/"
+      },
+      {
+        "company": "Perfios",
+        "official_url": "https://perfios.ai/careers/",
+        "status": 200,
+        "final_url": "https://perfios.ai/careers/",
+        "ats": null,
+        "title": "Careers and Perfiosness - Perfios",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "PharmEasy",
+        "official_url": "https://pharmeasy.in/careers",
+        "error": "ReadTimeout"
+      },
+      {
+        "company": "Pine Labs",
+        "official_url": "https://www.pinelabs.com/careers",
+        "status": 200,
+        "final_url": "https://www.pinelabs.com/careers",
+        "ats": null,
+        "title": "Careers at Pine Labs \u2013 Join Our Fintech Innovation Team",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Planful",
+        "official_url": "https://planful.com/jobs/careers-list/",
+        "status": 200,
+        "final_url": "https://planful.com/jobs/careers-list/",
+        "ats": null,
+        "title": "Open Roles at Planful | Planful Careers",
+        "platforms": [
+          "greenhouse"
+        ]
+      },
+      {
+        "company": "Porter",
+        "official_url": "https://porter.in/careers",
+        "status": 403,
+        "final_url": "https://porter.in/careers"
+      },
+      {
+        "company": "Practo",
+        "official_url": "https://www.practo.com/company/careers",
+        "status": 403,
+        "final_url": "https://www.practo.com/company/careers"
+      },
+      {
+        "company": "Principal Financial Group",
+        "official_url": "https://careers.principal.com/in/jobs",
+        "status": 403,
+        "final_url": "https://careers.principal.com/in/jobs"
+      },
+      {
+        "company": "Providence India",
+        "official_url": "https://www.providence.in/careers",
+        "status": 404,
+        "final_url": "https://www.providence.in/careers"
+      },
+      {
+        "company": "Ralph Lauren",
+        "official_url": "https://careers.ralphlauren.com/",
+        "status": 502,
+        "final_url": "https://careers.ralphlauren.com/"
+      },
+      {
+        "company": "Rapido",
+        "official_url": "https://rapido.bike/Careers",
+        "status": 200,
+        "final_url": "https://rapido.bike/Careers",
+        "ats": null,
+        "title": "Rapido Recruitment & Career - Job Opportunities at Rapido",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Rebel Foods",
+        "official_url": "https://www.rebelfoods.com/join-our-team",
+        "status": 200,
+        "final_url": "https://www.rebelfoods.com/join-our-team",
+        "ats": null,
+        "title": "Join the Rebel team  | Rebel Foods",
+        "platforms": []
+      },
+      {
+        "company": "Regeneron",
+        "official_url": "https://careers.regeneron.com/en/jobs/",
+        "status": 200,
+        "final_url": "https://careers.regeneron.com/en/jobs/",
+        "ats": null,
+        "title": "Jobs | Regeneron Careers",
+        "platforms": [
+          "beamery"
+        ]
+      },
+      {
+        "company": "Reliance Jio",
+        "official_url": "https://careers.jio.com/",
+        "status": 200,
+        "final_url": "https://careers.jio.com/",
+        "ats": null,
+        "title": "Home | Reliance Jio Careers",
+        "platforms": []
+      },
+      {
+        "company": "Revolut",
+        "official_url": "https://www.revolut.com/careers/",
+        "status": 200,
+        "final_url": "https://www.revolut.com/careers/",
+        "ats": null,
+        "title": "Careers | Revolut United Kingdom",
+        "platforms": []
+      },
+      {
+        "company": "Rupeek",
+        "official_url": "https://rupeek.com/careers",
+        "status": 200,
+        "final_url": "https://rupeek.com/careers",
+        "ats": null,
+        "title": "Join our team | Rupeek | Careers",
+        "platforms": []
+      },
+      {
+        "company": "SAS",
+        "official_url": "https://www.sas.com/en_in/careers.html",
+        "status": 200,
+        "final_url": "https://www.sas.com/en_in/careers.html",
+        "ats": null,
+        "title": "Careers | SAS India",
+        "platforms": [
+          "icims",
+          "avature"
+        ]
+      },
+      {
+        "company": "SLB",
+        "official_url": "https://careers.slb.com/",
+        "status": 200,
+        "final_url": "https://careers.slb.com/",
+        "ats": null,
+        "title": "Careers | SLB Careers",
+        "platforms": []
+      },
+      {
+        "company": "Safe Security",
+        "official_url": "https://safe.security/careers/",
+        "status": 404,
+        "final_url": "https://safe.security/careers/"
+      },
+      {
+        "company": "Sanofi",
+        "official_url": "https://jobs.sanofi.com/en",
+        "status": 200,
+        "final_url": "https://jobs.sanofi.com/en",
+        "ats": null,
+        "title": "Working at Sanofi",
+        "platforms": [
+          "beamery"
+        ]
+      },
+      {
+        "company": "Scaler",
+        "official_url": "https://www.scaler.com/careers/",
+        "status": 200,
+        "final_url": "https://www.scaler.com/careers/",
+        "ats": null,
+        "title": "Careers | Scaler",
+        "platforms": []
+      },
+      {
+        "company": "Schneider Electric",
+        "official_url": "https://www.se.com/ww/en/about-us/careers/",
+        "status": 404,
+        "final_url": "https://www.se.com/ww/en/about-us/careers/"
+      },
+      {
+        "company": "Seclore",
+        "official_url": "https://www.seclore.com/careers/",
+        "status": 200,
+        "final_url": "https://www.seclore.com/about/careers/",
+        "ats": null,
+        "title": "",
+        "platforms": []
+      },
+      {
+        "company": "Securonix",
+        "official_url": "https://www.securonix.com/careers/",
+        "status": 200,
+        "final_url": "https://www.securonix.com/company/careers/",
+        "ats": null,
+        "title": "Careers at Securonix | Join a Leader in AI-Driven Cybersecurity",
+        "platforms": [
+          "bamboohr"
+        ]
+      },
+      {
+        "company": "ShareChat",
+        "official_url": "https://sharechat.com/careers",
+        "status": 200,
+        "final_url": "https://sharechat.com/careers",
+        "ats": null,
+        "title": "ShareChat Moj Careers - Engineering, Tech, Product, Sales, Content and Design jobs",
+        "platforms": []
+      },
+      {
+        "company": "Shiprocket",
+        "official_url": "https://careers.shiprocket.in/",
+        "status": 200,
+        "final_url": "https://careers.shiprocket.in/",
+        "ats": null,
+        "title": "Shiprocket Careers - Apply for a Job at Shiprocket",
+        "platforms": []
+      },
+      {
+        "company": "Siemens",
+        "official_url": "https://jobs.siemens.com/careers",
+        "status": 200,
+        "final_url": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+        "ats": null,
+        "title": "Careers Marketplace - Siemens",
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Skyroot Aerospace",
+        "official_url": "https://skyroot.in/careers.html",
+        "status": 404,
+        "final_url": "https://www.skyroot.in/careers.html"
+      },
+      {
+        "company": "Societe Generale",
+        "official_url": "https://careers.societegenerale.com/en",
+        "status": 200,
+        "final_url": "https://careers.societegenerale.com/en",
+        "ats": null,
+        "title": "Societe Generale Job Offers: Permanent Contracts & Internships",
+        "platforms": [
+          "taleo"
+        ]
+      },
+      {
+        "company": "Sonata Software",
+        "official_url": "https://www.sonata-software.com/careers",
+        "status": 200,
+        "final_url": "https://www.sonata-software.com/careers",
+        "ats": null,
+        "title": "Explore Exciting Career Opportunities at Sonata Software | Join Our Innovative Team",
+        "platforms": []
+      },
+      {
+        "company": "Sony",
+        "official_url": "https://www.sonyjobs.com/",
+        "status": 200,
+        "final_url": "https://www.sonyjobs.com/",
+        "ats": null,
+        "title": "Careers at Sony",
+        "platforms": []
+      },
+      {
+        "company": "Syneos Health",
+        "official_url": "https://www.syneoshealth.com/careers",
+        "status": 403,
+        "final_url": "https://www.syneoshealth.com/careers"
+      },
+      {
+        "company": "Tata 1mg",
+        "official_url": "https://www.1mg.com/jobs",
+        "status": 200,
+        "final_url": "https://www.1mg.com/jobs",
+        "ats": null,
+        "title": "Careers@Tata1mg",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Tata Digital",
+        "official_url": "https://www.tatadigital.com/careers",
+        "status": 200,
+        "final_url": "https://www.tataneu.com/careers",
+        "ats": null,
+        "title": "Tata Neu - Online Shopping for Grocery, Electronics, Fashion & More",
+        "platforms": []
+      },
+      {
+        "company": "Tata Elxsi",
+        "official_url": "https://www.tataelxsi.com/careers",
+        "status": 200,
+        "final_url": "https://www.tataelxsi.com/careers",
+        "ats": null,
+        "title": "Careers at Tata Elxsi - Join a Global Tech Leader",
+        "platforms": []
+      },
+      {
+        "company": "Tata Technologies",
+        "official_url": "https://www.tatatechnologies.com/in/careers/",
+        "status": 403,
+        "final_url": "https://www.tatatechnologies.com/in/careers/"
+      },
+      {
+        "company": "Tech Mahindra",
+        "official_url": "https://careers.techmahindra.com/",
+        "status": 200,
+        "final_url": "https://careers.techmahindra.com/",
+        "ats": null,
+        "title": "Careers & Job Opportunities with Tech Mahindra",
+        "platforms": []
+      },
+      {
+        "company": "Teradata",
+        "official_url": "https://careers.teradata.com/",
+        "status": 200,
+        "final_url": "https://careers.teradata.com/jobs",
+        "ats": null,
+        "title": "Search Careers at Teradata",
+        "platforms": [
+          "gr8people"
+        ]
+      },
+      {
+        "company": "Tesco Bengaluru",
+        "official_url": "https://www.tescobengaluru.com/careers/",
+        "status": 200,
+        "final_url": "https://www.tescobengaluru.com/careers/",
+        "ats": null,
+        "title": "Careers \u2013 Tesco Bengaluru",
+        "platforms": []
+      },
+      {
+        "company": "Tredence",
+        "official_url": "https://www.tredence.com/careers",
+        "status": 200,
+        "final_url": "https://www.tredence.com/careers/greatest-of-ai",
+        "ats": null,
+        "title": "Careers at Tredence | Build the Greatest AI (G.O.A.T) Team",
+        "platforms": []
+      },
+      {
+        "company": "UBS",
+        "official_url": "https://www.ubs.com/global/en/careers.html",
+        "status": 200,
+        "final_url": "https://www.ubs.com/global/en/careers.html",
+        "ats": null,
+        "title": "Careers | UBS Global",
+        "platforms": []
+      },
+      {
+        "company": "UST",
+        "official_url": "https://www.ust.com/en/careers",
+        "status": 502,
+        "final_url": "https://www.ust.com/en/careers"
+      },
+      {
+        "company": "Udaan",
+        "official_url": "https://udaan.com/careers",
+        "status": 502,
+        "final_url": "https://careers.udaan.com"
+      },
+      {
+        "company": "Unacademy",
+        "official_url": "https://unacademy.com/careers",
+        "status": 200,
+        "final_url": "https://unacademy.com/careers",
+        "ats": null,
+        "title": "Careers at Unacademy \u2013 Join India's EdTech Team",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Urban Company",
+        "official_url": "https://careers.urbancompany.com/",
+        "status": 200,
+        "final_url": "https://careers.urbancompany.com/",
+        "ats": null,
+        "title": "Urban Company",
+        "platforms": []
+      },
+      {
+        "company": "Viatris",
+        "official_url": "https://careers.viatris.com/",
+        "status": 502,
+        "final_url": "https://careers.viatris.com/"
+      },
+      {
+        "company": "Victoria's Secret",
+        "official_url": "https://careers.victoriassecret.com/",
+        "status": 200,
+        "final_url": "https://careers.victoriassecret.com/en/",
+        "ats": null,
+        "title": "Victoria's Secret Careers Homepage",
+        "platforms": [
+          "avature",
+          "taleo"
+        ]
+      },
+      {
+        "company": "Vimeo",
+        "official_url": "https://vimeo.com/careers",
+        "status": 200,
+        "final_url": "https://vimeo.com/careers",
+        "ats": null,
+        "title": "Careers at Vimeo",
+        "platforms": []
+      },
+      {
+        "company": "Vodafone",
+        "official_url": "https://careers.vodafone.com/",
+        "status": 200,
+        "final_url": "https://careers.vodafone.com/",
+        "ats": null,
+        "title": "Vodafone Careers \u00b7 Together we can",
+        "platforms": []
+      },
+      {
+        "company": "WTW",
+        "official_url": "https://careers.wtwco.com/",
+        "status": 200,
+        "final_url": "https://careers.wtwco.com/",
+        "ats": null,
+        "title": "Homepage",
+        "platforms": [
+          "greenhouse"
+        ]
+      },
+      {
+        "company": "Wayfair",
+        "official_url": "https://www.wayfair.com/careers",
+        "status": 200,
+        "final_url": "https://www.aboutwayfair.com/careers",
+        "ats": null,
+        "title": "About Wayfair | Careers",
+        "platforms": []
+      },
+      {
+        "company": "WebEngage",
+        "official_url": "https://webengage.com/careers/",
+        "status": 404,
+        "final_url": "https://webengage.com/careers/"
+      },
+      {
+        "company": "Yellow.ai",
+        "official_url": "https://yellow.ai/careers/",
+        "status": 404,
+        "final_url": "https://yellow.ai/careers/"
+      },
+      {
+        "company": "Yubi",
+        "official_url": "https://www.go-yubi.com/careers",
+        "status": 403,
+        "final_url": "https://www.go-yubi.com/careers"
+      },
+      {
+        "company": "Yulu",
+        "official_url": "https://www.yulu.bike/careers",
+        "status": 200,
+        "final_url": "https://www.yulu.bike/careers",
+        "ats": null,
+        "title": "Yulu Website",
+        "platforms": []
+      },
+      {
+        "company": "Zepto",
+        "official_url": "https://www.zepto.com/s/careers",
+        "status": 202,
+        "final_url": "https://www.zepto.com/s/careers"
+      },
+      {
+        "company": "Zetwerk",
+        "official_url": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+        "status": 200,
+        "final_url": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+        "ats": null,
+        "title": "Careers at Zetwerk - Apply Today!",
+        "platforms": []
+      },
+      {
+        "company": "Zoho",
+        "official_url": "https://www.zoho.com/careers/",
+        "status": 200,
+        "final_url": "https://www.zoho.com/careers/",
+        "ats": null,
+        "title": "Zoho Corporation | Careers",
+        "platforms": [
+          "zoho"
+        ]
+      },
+      {
+        "company": "Zomato",
+        "official_url": "https://www.zomato.com/careers",
+        "status": 200,
+        "final_url": "https://www.eternal.com/careers/",
+        "ats": null,
+        "title": "Careers - Hiring at Eternal",
+        "platforms": []
+      },
+      {
+        "company": "Zoom",
+        "official_url": "https://careers.zoom.us/home",
+        "status": 200,
+        "final_url": "https://www.careers.zoom.us/",
+        "ats": null,
+        "title": "Please upload the image, and I\u2019ll provide concise alt text under 125 characters.",
+        "platforms": []
+      },
+      {
+        "company": "ASUS",
+        "official_url": "https://www.asus.com/about-asus/careers/",
+        "status": 200,
+        "final_url": "https://www.asus.com/content/about-asus/",
+        "ats": null,
+        "title": "About ASUS Home\uff5cASUS Global",
+        "platforms": []
+      },
+      {
+        "company": "Acer",
+        "official_url": "https://www.acer.com/corporate/en/careers",
+        "status": 404,
+        "final_url": "https://www.acer.com/corporate/en/careers"
+      },
+      {
+        "company": "Adidas",
+        "official_url": "https://careers.adidas-group.com/",
+        "status": 200,
+        "final_url": "https://careers.adidas-group.com/",
+        "ats": null,
+        "title": "adidas Careers \u2013 Through sport, we have the power to change lives.",
+        "platforms": []
+      },
+      {
+        "company": "Antropi Robotics",
+        "official_url": "https://www.antropi.world/careers",
+        "status": 200,
+        "final_url": "https://www.antropi.world/careers",
+        "ats": null,
+        "title": "Antropi Robotics",
+        "platforms": []
+      },
+      {
+        "company": "Apollo",
+        "official_url": "https://www.apollofirst.xyz/careers2",
+        "status": 200,
+        "final_url": "https://www.apollofirst.xyz/careers2",
+        "ats": null,
+        "title": "Apollo - Careers",
+        "platforms": []
+      },
+      {
+        "company": "Apollo Hospitals",
+        "official_url": "https://www.apollohospitals.com/careers",
+        "status": 403,
+        "final_url": "https://www.apollohospitals.com/careers"
+      },
+      {
+        "company": "Bounce",
+        "official_url": "https://bounceinfinity.com/pages/careers",
+        "status": 404,
+        "final_url": "https://bounceinfinity.com/pages/careers"
+      },
+      {
+        "company": "Clear",
+        "official_url": "https://www.clear.in/s/careers",
+        "status": 200,
+        "final_url": "https://www.clear.in/s/careers",
+        "ats": null,
+        "title": "Careers at Cleartax",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Credit Agricole",
+        "official_url": "https://jobs.ca-cib.com/",
+        "status": 200,
+        "final_url": "https://jobs.ca-cib.com/accueil.aspx?LCID=1036",
+        "ats": null,
+        "title": "Cr\u00e9dit Agricole CIB - Site d'offres d'emploi",
+        "platforms": []
+      },
+      {
+        "company": "Decentro",
+        "official_url": "https://decentro.tech/careers",
+        "status": 200,
+        "final_url": "https://decentro.tech/careers",
+        "ats": null,
+        "title": "We're hiring | Fintech Jobs at API Banking Platform - Decentro",
+        "platforms": []
+      },
+      {
+        "company": "Emirates Group",
+        "official_url": "https://www.emiratesgroupcareers.com/",
+        "status": 200,
+        "final_url": "https://www.emiratesgroupcareers.com/",
+        "ats": null,
+        "title": "Home | Emirates Group Careers",
+        "platforms": [
+          "avature",
+          "taleo"
+        ]
+      },
+      {
+        "company": "Flux Auto",
+        "official_url": "https://fluxauto.ai/careers.html",
+        "status": 200,
+        "final_url": "https://fluxauto.ai/careers.html",
+        "ats": null,
+        "title": "Careers - Build Physical AI with Flux Auto",
+        "platforms": []
+      },
+      {
+        "company": "Grant Thornton",
+        "official_url": "https://www.grantthornton.in/careers/",
+        "status": 200,
+        "final_url": "https://www.grantthornton.in/careers/",
+        "ats": null,
+        "title": "Careers | Grant Thornton Bharat",
+        "platforms": []
+      },
+      {
+        "company": "Ivy Homes",
+        "official_url": "https://ivy.homes/career",
+        "status": 200,
+        "final_url": "https://ivy.homes/career",
+        "ats": null,
+        "title": "Join Ivy homes",
+        "platforms": []
+      },
+      {
+        "company": "Jumbotail",
+        "official_url": "https://jumbotail.com/careers/",
+        "status": 200,
+        "final_url": "https://jumbotail.com/careers/",
+        "ats": null,
+        "title": "Careers \u2013 Jumbotail",
+        "platforms": []
+      },
+      {
+        "company": "Larsen & Toubro",
+        "official_url": "https://www.larsentoubro.com/corporate/careers/",
+        "status": 200,
+        "final_url": "https://www.larsentoubro.com/corporate/careers",
+        "ats": null,
+        "title": "Careers | L&T Corporate",
+        "platforms": []
+      },
+      {
+        "company": "Mitsubishi Electric",
+        "official_url": "https://www.mitsubishielectric.com/en/careers/",
+        "status": 200,
+        "final_url": "https://www.mitsubishielectric.com/en/careers/",
+        "ats": null,
+        "title": "Careers | MITSUBISHI ELECTRIC Global website",
+        "platforms": []
+      },
+      {
+        "company": "Mu Sigma",
+        "official_url": "https://www.mu-sigma.com/careers",
+        "status": 200,
+        "final_url": "https://www.mu-sigma.com/career/",
+        "ats": null,
+        "title": "Explore Exciting Career Opportunities | Join Mu Sigma",
+        "platforms": []
+      },
+      {
+        "company": "OCBC",
+        "official_url": "https://www.ocbc.com/group/careers",
+        "status": 200,
+        "final_url": "https://www.ocbc.com/group/careers/",
+        "ats": null,
+        "title": "Careers at OCBC",
+        "platforms": [
+          "taleo"
+        ]
+      },
+      {
+        "company": "Orange Health Labs",
+        "official_url": "https://www.orangehealth.in/jobs",
+        "status": 200,
+        "final_url": "https://www.orangehealth.in/jobs",
+        "ats": null,
+        "title": "",
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Otis",
+        "official_url": "https://careers.otis.com/",
+        "status": 502,
+        "final_url": "https://careers.otis.com/"
+      },
+      {
+        "company": "Panasonic",
+        "official_url": "https://careers.na.panasonic.com/",
+        "status": 403,
+        "final_url": "https://careers.na.panasonic.com/"
+      },
+      {
+        "company": "Peoplebox.ai",
+        "official_url": "https://www.peoplebox.ai/careers/",
+        "status": 200,
+        "final_url": "https://www.peoplebox.ai/careers/",
+        "ats": null,
+        "title": "Careers At Peoplebox | Job Openings",
+        "platforms": []
+      },
+      {
+        "company": "Portea",
+        "official_url": "https://www.portea.com/careers/",
+        "status": 200,
+        "final_url": "https://www.portea.com/careers/",
+        "ats": null,
+        "title": "Portea Medical - Careers",
+        "platforms": []
+      },
+      {
+        "company": "SALT",
+        "official_url": "https://www.salt.pe/careers",
+        "status": 200,
+        "final_url": "https://www.salt.pe/careers",
+        "ats": null,
+        "title": "Careers at Salt - International Payments And Compliances",
+        "platforms": []
+      },
+      {
+        "company": "SMBC",
+        "official_url": "https://www.smbcgroup.com/careers/",
+        "status": 404,
+        "final_url": "https://www.smbcgroup.com/careers/"
+      },
+      {
+        "company": "Sarla Aviation",
+        "official_url": "https://www.sarla-aviation.com/open-roles/",
+        "status": 200,
+        "final_url": "https://www.sarla-aviation.com/open-roles/",
+        "ats": null,
+        "title": "SARLA AVIATION",
+        "platforms": []
+      },
+      {
+        "company": "Simplilearn",
+        "official_url": "https://www.simplilearn.com/careers",
+        "status": 200,
+        "final_url": "https://www.simplilearn.com/careers",
+        "ats": null,
+        "title": "Career at Simplilearn",
+        "platforms": []
+      },
+      {
+        "company": "Tilt",
+        "official_url": "https://www.tilt.bike/careers",
+        "status": 200,
+        "final_url": "https://www.tilt.bike/careers",
+        "ats": null,
+        "title": "Careers at Tilt",
+        "platforms": []
+      },
+      {
+        "company": "Toshiba",
+        "official_url": "https://www.global.toshiba/ww/recruit.html",
+        "status": 200,
+        "final_url": "https://www.global.toshiba/ww/recruit/corporate.html",
+        "ats": null,
+        "title": "Careers | Toshiba",
+        "platforms": []
+      },
+      {
+        "company": "Traveloka",
+        "official_url": "https://careers.traveloka.com/",
+        "status": 200,
+        "final_url": "https://careers.traveloka.com/",
+        "ats": null,
+        "title": "Traveloka Careers",
+        "platforms": []
+      },
+      {
+        "company": "Valeo",
+        "official_url": "https://www.valeo.com/en/career/",
+        "status": 404,
+        "final_url": "https://www.valeo.com/en/career/"
+      },
+      {
+        "company": "Vedantu",
+        "official_url": "https://www.vedantu.com/careers",
+        "status": 200,
+        "final_url": "https://courses.vedantu.com/career-page/",
+        "ats": null,
+        "title": "",
+        "platforms": []
+      },
+      {
+        "company": "smallcase",
+        "official_url": "https://app.pyjamahr.com/careers?company=smallcase&company_uuid=2615584222",
+        "status": 200,
+        "final_url": "https://app.pyjamahr.com/careers?company=smallcase&company_uuid=2615584222",
+        "ats": null,
+        "title": "smallcase",
+        "platforms": [
+          "pyjama"
+        ]
+      },
+      {
+        "company": "upGrad",
+        "official_url": "https://www.upgrad.com/about/careers/",
+        "status": 200,
+        "final_url": "https://www.upgrad.com/gb/about/careers/",
+        "ats": null,
+        "title": "About upGrad",
+        "platforms": []
+      },
+      {
+        "company": "xPay",
+        "official_url": "https://www.xpaycheckout.com/careers",
+        "status": 200,
+        "final_url": "https://www.xpaycheckout.com/careers",
+        "ats": null,
+        "title": "xPay | Best International Payment Gateway | YC W24",
+        "platforms": []
+      }
+    ]
+  },
+  "secondary_page_audit": {
+    "page_attempts": 177,
+    "results": [
+      {
+        "company": "Apple",
+        "provenance_url": "https://jobs.apple.com/en-in/search",
+        "url": "https://www.apple.com/careers/in",
+        "status": 200,
+        "final_url": "https://www.apple.com/careers/in/",
+        "title": "Apple Roles and Opportunities - Careers at Apple",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Apple",
+        "provenance_url": "https://jobs.apple.com/en-in/search",
+        "url": "https://www.apple.com/careers/in/index.html",
+        "status": 200,
+        "final_url": "https://www.apple.com/careers/in/index.html",
+        "title": "Apple Roles and Opportunities - Careers at Apple",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Apple",
+        "provenance_url": "https://jobs.apple.com/en-in/search",
+        "url": "https://www.apple.com/careers/in/work-at-apple.html",
+        "status": 200,
+        "final_url": "https://www.apple.com/careers/in/work-at-apple.html",
+        "title": "Work at Apple: Teams and Opportunities - Careers at Apple",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Capgemini",
+        "provenance_url": "https://www.capgemini.com/in-en/careers/join-capgemini/job-search/",
+        "url": "https://www.capgemini.com/in-en/careers/join-capgemini/job-search/",
+        "status": 200,
+        "final_url": "https://www.capgemini.com/in-en/careers/join-capgemini/job-search/",
+        "title": "Join us for Bright Careers | Capgemini India",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Cashfree Payments",
+        "provenance_url": "https://www.cashfree.com/careers/",
+        "url": "https://careers.kula.ai/cashfree",
+        "status": 200,
+        "final_url": "https://careers.kula.ai/cashfree",
+        "title": "Cashfree Payments India Private Limited Careers | Open Jobs",
+        "ats": null,
+        "platforms": [
+          "kula"
+        ]
+      },
+      {
+        "company": "Darwinbox",
+        "provenance_url": "https://darwinbox.com/careers",
+        "url": "https://dbx.darwinbox.in/ms/candidatev2/main/careers/allJobs",
+        "status": 200,
+        "final_url": "https://dbx.darwinbox.in/ms/candidatev2/main/careers/allJobs",
+        "title": "Darwinbox Digital Solutions Pvt Ltd",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Flipkart",
+        "provenance_url": "https://www.flipkartcareers.com/#!/joblist",
+        "url": "https://flipkart.turbohire.co/careerpage/4d757ba0-3d57-448a-b82c-238ed87ac90f",
+        "status": 200,
+        "final_url": "https://flipkart.turbohire.co/careerpage/4d757ba0-3d57-448a-b82c-238ed87ac90f",
+        "title": "Flipkart Internet Private Limited",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Hasura",
+        "provenance_url": "https://hasura.io/careers",
+        "url": "https://jobs.gem.com/promptql",
+        "status": 200,
+        "final_url": "https://jobs.gem.com/promptql",
+        "title": "PromptQL Careers",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Intuit",
+        "provenance_url": "https://www.intuit.com/careers/",
+        "url": "https://jobs.intuit.com/",
+        "status": 200,
+        "final_url": "https://jobs.intuit.com/",
+        "title": "Working at Intuit",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Intuit",
+        "provenance_url": "https://www.intuit.com/careers/",
+        "url": "https://jobs.intuit.com/category/administration-jobs/27595/68333/1",
+        "status": 200,
+        "final_url": "https://jobs.intuit.com/category/administration-jobs/27595/68333/1",
+        "title": "Search Administration Jobs at Intuit",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Intuit",
+        "provenance_url": "https://www.intuit.com/careers/",
+        "url": "https://jobs.intuit.com/category/communications-jobs/27595/8698672/1",
+        "status": 200,
+        "final_url": "https://jobs.intuit.com/category/communications-jobs/27595/8698672/1",
+        "title": "Search Communications Jobs at Intuit",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Jupiter",
+        "provenance_url": "https://jupiter.money/careers/",
+        "url": "https://jupiter.keka.com/careers",
+        "status": 200,
+        "final_url": "https://jupiter.keka.com/careers",
+        "title": "Careers at Jupiter Money",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Myntra",
+        "provenance_url": "https://careers.myntra.com/",
+        "url": "https://jobs.myntra.com/home",
+        "status": 200,
+        "final_url": "https://jobs.myntra.com/home",
+        "title": "Career Portal",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Postman",
+        "provenance_url": "https://www.postman.com/company/careers/",
+        "url": "https://www.postman.com/company/careers/open-positions/",
+        "status": 200,
+        "final_url": "https://www.postman.com/company/careers/open-positions/",
+        "title": "Open Positions at Postman | Join Our Team",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Slice",
+        "provenance_url": "https://www.sliceit.com/careers",
+        "url": "https://slice.bank.in/careers/open-positions",
+        "status": 200,
+        "final_url": "https://slice.bank.in/careers/open-positions",
+        "title": "Open positions | Careers | slice",
+        "ats": null,
+        "platforms": [
+          "kula"
+        ]
+      },
+      {
+        "company": "TCS",
+        "provenance_url": "https://www.tcs.com/careers/india",
+        "url": "https://www.tcs.com/careers/india/research-and-innovation",
+        "status": 200,
+        "final_url": "https://www.tcs.com/careers/india/research-and-innovation",
+        "title": "Careers | Research and Innovation",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "TCS",
+        "provenance_url": "https://www.tcs.com/careers/india",
+        "url": "https://ibegin.tcsapps.com/candidate/",
+        "status": 200,
+        "final_url": "https://ibegin.tcsapps.com/candidate/next/",
+        "title": "iBegin",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Walmart Global Tech",
+        "provenance_url": "https://careers.walmart.com/technology",
+        "url": "https://careers.walmart.com/content/careers/us/en/results",
+        "status": 200,
+        "final_url": "https://careers.walmart.com/us/en/results",
+        "title": "Results",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Walmart Global Tech",
+        "provenance_url": "https://careers.walmart.com/technology",
+        "url": "https://careers.walmart.com/content/careers/us/en/home/careers-areas/technology/software-engineering-and-architecture",
+        "status": 200,
+        "final_url": "https://careers.walmart.com/us/en/home/careers-areas/technology/software-engineering-and-architecture",
+        "title": "Software Engineering And Architecture",
+        "ats": null,
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "Walmart Global Tech",
+        "provenance_url": "https://careers.walmart.com/technology",
+        "url": "https://careers.walmart.com/content/careers/us/en/home/careers-areas/technology/information-security",
+        "status": 200,
+        "final_url": "https://careers.walmart.com/us/en/home/careers-areas/technology/information-security",
+        "title": "Information Security",
+        "ats": null,
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "Zeta",
+        "provenance_url": "https://www.zeta.tech/in/careers",
+        "url": "https://zeta.tech/in/careers/life/",
+        "status": 403,
+        "final_url": "https://www.zeta.tech/in/careers/life/"
+      },
+      {
+        "company": "ADP",
+        "provenance_url": "https://jobs.adp.com/",
+        "url": "https://video-cdn.happydance.love/adpcareers/home-page-mast-video.mp4",
+        "status": 200,
+        "final_url": "https://video-cdn.happydance.love/adpcareers/home-page-mast-video.mp4",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Amagi",
+        "provenance_url": "https://www.amagi.com/careers",
+        "url": "https://www.amagi.com/careers/open-roles",
+        "status": 200,
+        "final_url": "https://www.amagi.com/careers/open-roles",
+        "title": "Open Roles",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Angel One",
+        "provenance_url": "https://www.angelone.in/careers",
+        "url": "https://www.angelone.in/careers",
+        "status": 200,
+        "final_url": "https://www.angelone.in/careers",
+        "title": "Angel One Careers | Join a Leading Fintech Company in India",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "BNP Paribas",
+        "provenance_url": "https://group.bnpparibas/en/careers",
+        "url": "https://group.bnpparibas/en/careers",
+        "status": 200,
+        "final_url": "https://group.bnpparibas/en/careers",
+        "title": "Jobs and careers : all our job offers - BNP Paribas",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "BNP Paribas",
+        "provenance_url": "https://group.bnpparibas/en/careers",
+        "url": "https://group.bnpparibas/en/group/our-governance/group-positions-and-sector-policies",
+        "status": 200,
+        "final_url": "https://group.bnpparibas/en/group/our-governance/group-positions-and-sector-policies",
+        "title": "Group positions and sector policies | BNP Paribas",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "BNP Paribas",
+        "provenance_url": "https://group.bnpparibas/en/careers",
+        "url": "https://bwelcome.hr.bnpparibas/en_US/externalcareers/RecommendationMethods",
+        "status": 200,
+        "final_url": "https://bwelcome.hr.bnpparibas/en_US/externalcareers/RecommendationMethods",
+        "title": "Upload CV | BNP Paribas",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Bain & Company",
+        "provenance_url": "https://www.bain.com/careers/",
+        "url": "https://www.bain.com/careers/work-with-us/our-work-areas/analytics-data-research/",
+        "status": 200,
+        "final_url": "https://www.bain.com/careers/work-with-us/our-work-areas/analytics-data-research/",
+        "title": "Data Science, Analytics & Research Jobs | Bain & Company",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Bank of America",
+        "provenance_url": "https://careers.bankofamerica.com/en-us",
+        "url": "https://bankcampuscareers.tal.net/vx/lang-en-GB/mobile-0/brand-4/xf-6f0048376f93/candidate/jobboard/vacancy/2/adv/",
+        "status": 200,
+        "final_url": "https://bankcampuscareers.tal.net/vx/lang-en-GB/mobile-0/brand-4/xf-6f0048376f93/candidate/jobboard/vacancy/2/adv/",
+        "title": "Campus Events - Bank of America",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Bank of America",
+        "provenance_url": "https://careers.bankofamerica.com/en-us",
+        "url": "https://careers.bankofamerica.com/en-us/students/job-search.html",
+        "status": 200,
+        "final_url": "https://careers.bankofamerica.com/en-us/students/job-search",
+        "title": "Bank of America Jobs: Search & Apply for Bank of America Careers",
+        "ats": [
+          "workday",
+          "ghr|lateral-us",
+          "https://ghr.wd1.myworkdayjobs.com/en-us/lateral-us/login"
+        ],
+        "platforms": [
+          "avature",
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Bank of America",
+        "provenance_url": "https://careers.bankofamerica.com/en-us",
+        "url": "https://careers.bankofamerica.com/en-us/job-search.html",
+        "status": 200,
+        "final_url": "https://careers.bankofamerica.com/en-us/job-search",
+        "title": "Bank of America Jobs: Search & Apply for Bank of America Careers",
+        "ats": [
+          "workday",
+          "ghr|lateral-us",
+          "https://ghr.wd1.myworkdayjobs.com/en-us/lateral-us/login"
+        ],
+        "platforms": [
+          "avature",
+          "myworkday"
+        ]
+      },
+      {
+        "company": "BigBasket",
+        "provenance_url": "https://www.bigbasket.com/careers/",
+        "url": "https://bigbasket.darwinbox.in/ms/candidate/careers",
+        "status": 200,
+        "final_url": "https://bigbasket.darwinbox.in/ms/candidate/careers",
+        "title": "bigbasket",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Boehringer Ingelheim",
+        "provenance_url": "https://jobs.boehringer-ingelheim.com/",
+        "url": "https://www.boehringer-ingelheim.cn/careers/",
+        "status": 200,
+        "final_url": "https://www.boehringer-ingelheim.cn/careers",
+        "title": "\u5168\u7403\u804c\u4f4d\u9875 | Boehringer Ingelheim CN",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Boehringer Ingelheim",
+        "provenance_url": "https://jobs.boehringer-ingelheim.com/",
+        "url": "https://www.boehringer-ingelheim.com/careers/",
+        "status": 200,
+        "final_url": "https://www.boehringer-ingelheim.com/careers/",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Boehringer Ingelheim",
+        "provenance_url": "https://jobs.boehringer-ingelheim.com/",
+        "url": "https://www.boehringer-ingelheim.com/jp/careers/",
+        "status": 200,
+        "final_url": "https://www.boehringer-ingelheim.com/jp/careers/",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "CGI",
+        "provenance_url": "https://www.cgi.com/en/careers-search",
+        "url": "https://www.cgi.com/en/careers",
+        "status": 200,
+        "final_url": "https://www.cgi.com/en/careers",
+        "title": "Careers | CGI.com",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "CGI",
+        "provenance_url": "https://www.cgi.com/en/careers-search",
+        "url": "https://www.cgi.com.au/en-au/careers",
+        "status": 200,
+        "final_url": "https://www.cgi.com/au/en-au/careers",
+        "title": "Careers at CGI | CGI Australia",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "CGI",
+        "provenance_url": "https://www.cgi.com/en/careers-search",
+        "url": "https://www.cgi.com/belgium/en/belgium/careers",
+        "status": 200,
+        "final_url": "https://www.cgi.com/belgium/en/careers",
+        "title": "Together, as owners, let\u2019s turn meaningful insights into action! | CGI Belgium",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "CVS Health",
+        "provenance_url": "https://jobs.cvshealth.com/",
+        "url": "https://jobs.cvshealth.com/us/en/search-results",
+        "status": 200,
+        "final_url": "https://jobs.cvshealth.com/us/en/search-results",
+        "title": "Search CVS Health Jobs | Find Your Next Career Opportunity",
+        "ats": [
+          "workday",
+          "cvshealth|CVS_Health_Careers",
+          "https://cvshealth.wd1.myworkdayjobs.com/CVS_Health_Careers/job/IRL---Dublin/Business-Manager_R0764895/apply"
+        ],
+        "platforms": [
+          "phenom",
+          "myworkday"
+        ]
+      },
+      {
+        "company": "CVS Health",
+        "provenance_url": "https://jobs.cvshealth.com/",
+        "url": "https://cdn.phenompeople.com/CareerConnectResources/CVSCHLUS/documents/2025-CVS-EEO-Statement_wet-signature-1757513868342.pdf",
+        "status": 200,
+        "final_url": "https://cdn.phenompeople.com/CareerConnectResources/CVSCHLUS/documents/2025-CVS-EEO-Statement_wet-signature-1757513868342.pdf",
+        "title": "",
+        "ats": null,
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "CVS Health",
+        "provenance_url": "https://jobs.cvshealth.com/",
+        "url": "https://cdn.phenompeople.com/CareerConnectResources/CVSCHLUS/documents/EEOC_KnowYourRights_screen_reader_10_20-1715835527320-1750776283673.pdf",
+        "status": 200,
+        "final_url": "https://cdn.phenompeople.com/CareerConnectResources/CVSCHLUS/documents/EEOC_KnowYourRights_screen_reader_10_20-1715835527320-1750776283673.pdf",
+        "title": "",
+        "ats": null,
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "CarDekho",
+        "provenance_url": "https://careers.cardekho.com/",
+        "url": "https://cardekho.darwinbox.in/ms/candidate/606876f7e2c79/careers",
+        "status": 200,
+        "final_url": "https://cardekho.darwinbox.in/ms/candidate/606876f7e2c79/careers",
+        "title": "Cardekho",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Cargill",
+        "provenance_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+        "url": "https://jobs.cargill.com.cn/",
+        "status": 200,
+        "final_url": "https://jobs.cargill.com.cn/",
+        "title": "Search Jobs and Careers at Cargill | Working at Cargill",
+        "ats": null,
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Cargill",
+        "provenance_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+        "url": "https://jobs.cargill.ru",
+        "status": 200,
+        "final_url": "https://jobs.cargill.ru/",
+        "title": "\u0420\u0430\u0431\u043e\u0442\u0430 \u0432 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u0438 Cargill",
+        "ats": null,
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Cargill",
+        "provenance_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+        "url": "https://careers.cargill.com/research-and-development",
+        "status": 200,
+        "final_url": "https://careers.cargill.com/en/research-and-development",
+        "title": "Research and Development",
+        "ats": null,
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Cars24",
+        "provenance_url": "https://www.cars24.com/careers/",
+        "url": "https://www.loans24.co.in/loan-against-car/how-to-apply/",
+        "status": 200,
+        "final_url": "https://www.loans24.co.in/loan-against-car/how-to-apply/",
+        "title": "How to apply Loan against your Car | Loans24",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Cars24",
+        "provenance_url": "https://www.cars24.com/careers/",
+        "url": "https://www.loans24.co.in/personal-loan/how-to-apply/",
+        "status": 200,
+        "final_url": "https://www.loans24.co.in/personal-loan/how-to-apply/",
+        "title": "How to apply for Personal Loan | LOANS24",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Cars24",
+        "provenance_url": "https://www.cars24.com/careers/",
+        "url": "https://careers.cars24.com/",
+        "status": 200,
+        "final_url": "https://careers.cars24.com/",
+        "title": "Cars24 Careers",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "CleverTap",
+        "provenance_url": "https://clevertap.com/careers/",
+        "url": "https://clevertap.com/current-openings/",
+        "status": 200,
+        "final_url": "https://clevertap.com/current-openings/",
+        "title": "Current Openings - CleverTap",
+        "ats": null,
+        "platforms": [
+          "zoho",
+          "kula"
+        ]
+      },
+      {
+        "company": "CleverTap",
+        "provenance_url": "https://clevertap.com/careers/",
+        "url": "https://careers.kula.ai/clevertap",
+        "status": 200,
+        "final_url": "https://careers.kula.ai/clevertap",
+        "title": "CleverTap Careers | Open Jobs",
+        "ats": null,
+        "platforms": [
+          "kula"
+        ]
+      },
+      {
+        "company": "CloudBees",
+        "provenance_url": "https://www.cloudbees.com/careers",
+        "url": "https://www.cloudbees.com/careers",
+        "status": 200,
+        "final_url": "https://www.cloudbees.com/careers",
+        "title": "Careers at CloudBees",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Collins Aerospace",
+        "provenance_url": "https://careers.rtx.com/global/en/collins-aerospace",
+        "url": "https://careers.rtx.com/global/en/collins-aerospace-search-results-general",
+        "status": 403,
+        "final_url": "https://careers.rtx.com/global/en/collins-aerospace-search-results-general"
+      },
+      {
+        "company": "Collins Aerospace",
+        "provenance_url": "https://careers.rtx.com/global/en/collins-aerospace",
+        "url": "https://www.rtx.com/collinsaerospace/careers/university-and-campus-programs",
+        "status": 200,
+        "final_url": "https://www.rtx.com/collinsaerospace/careers/university-and-campus-programs",
+        "title": "University and Campus Programs | Collins Aerospace",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Collins Aerospace",
+        "provenance_url": "https://careers.rtx.com/global/en/collins-aerospace",
+        "url": "https://www.rtx.com/collinsaerospace/careers/engineering",
+        "status": 200,
+        "final_url": "https://www.rtx.com/collinsaerospace/careers/engineering",
+        "title": "Engineering Careers | Collins Aerospace",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "ColorTokens",
+        "provenance_url": "https://colortokens.com/careers/",
+        "url": "https://colortokens.com/careers/",
+        "status": 200,
+        "final_url": "https://colortokens.com/careers/",
+        "title": "Cybersecurity Careers | ColorTokens Inc",
+        "ats": null,
+        "platforms": [
+          "jibe",
+          "recruiterbox",
+          "kula"
+        ]
+      },
+      {
+        "company": "Cornerstone OnDemand",
+        "provenance_url": "https://www.cornerstoneondemand.com/careers/",
+        "url": "https://cornerstone.csod.com/ux/ats/careersite/2/home",
+        "status": 200,
+        "final_url": "https://cornerstone.csod.com/ux/ats/careersite/2/home",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Deutsche Boerse Group",
+        "provenance_url": "https://careers.deutsche-boerse.com/",
+        "url": "https://career5.successfactors.eu/career",
+        "status": 200,
+        "final_url": "https://career5.successfactors.eu/career",
+        "title": "",
+        "ats": null,
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Deutsche Boerse Group",
+        "provenance_url": "https://careers.deutsche-boerse.com/",
+        "url": "https://careers.deutsche-boerse.com/search",
+        "status": 200,
+        "final_url": "https://careers.deutsche-boerse.com/search",
+        "title": "Search",
+        "ats": null,
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Deutsche Boerse Group",
+        "provenance_url": "https://careers.deutsche-boerse.com/",
+        "url": "https://www.deutsche-boerse.com/dbg-en/group-careers",
+        "status": 200,
+        "final_url": "https://www.deutsche-boerse.com/dbg-en/group-careers",
+        "title": "Career",
+        "ats": [
+          "workday",
+          "issgovernance|ISScareers",
+          "https://issgovernance.wd1.myworkdayjobs.com/ISScareers"
+        ],
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Deutsche Telekom",
+        "provenance_url": "https://www.telekom.com/en/careers",
+        "url": "https://careers.telekom.com/en",
+        "status": 403,
+        "final_url": "https://careers.telekom.com/en"
+      },
+      {
+        "company": "Dynatrace",
+        "provenance_url": "https://careers.dynatrace.com/",
+        "url": "https://bcdn.dm.dynatrace.com/assets-bober/transforms/careers-home/careers-page-home/_200x150_crop_center-center_82_line/Being-at-Dynatrace-LGBTQIA.jpg",
+        "status": 200,
+        "final_url": "https://bcdn.dm.dynatrace.com/assets-bober/transforms/careers-home/careers-page-home/_200x150_crop_center-center_82_line/Being-at-Dynatrace-LGBTQIA.jpg",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Dynatrace",
+        "provenance_url": "https://careers.dynatrace.com/",
+        "url": "https://bcdn.dm.dynatrace.com/assets-bober/transforms/careers-home/careers-page-home/_200x238_crop_center-center_82_line/Being-at-Dynatrace-Culture-4.jpg",
+        "status": 200,
+        "final_url": "https://bcdn.dm.dynatrace.com/assets-bober/transforms/careers-home/careers-page-home/_200x238_crop_center-center_82_line/Being-at-Dynatrace-Culture-4.jpg",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Dynatrace",
+        "provenance_url": "https://careers.dynatrace.com/",
+        "url": "https://bcdn.dm.dynatrace.com/assets-bober/transforms/careers-home/careers-page-home/_200x150_crop_center-center_82_line/Dynatrace-Wellness-Day.png",
+        "status": 200,
+        "final_url": "https://bcdn.dm.dynatrace.com/assets-bober/transforms/careers-home/careers-page-home/_200x150_crop_center-center_82_line/Dynatrace-Wellness-Day.png",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "EPAM",
+        "provenance_url": "https://www.epam.com/careers/job-listings",
+        "url": "https://www.epam.com/careers",
+        "status": 200,
+        "final_url": "https://www.epam.com/careers",
+        "title": "Explore Professional Growth Opportunities | EPAM Careers",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "EPAM",
+        "provenance_url": "https://www.epam.com/careers/job-listings",
+        "url": "https://www.epam.com/careers/locations",
+        "status": 200,
+        "final_url": "https://www.epam.com/careers/locations",
+        "title": "Hiring Locations | EPAM Careers",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "EPAM",
+        "provenance_url": "https://www.epam.com/careers/job-listings",
+        "url": "https://www.epam.com/careers/external-referral-program",
+        "status": 200,
+        "final_url": "https://refer.epam.com/",
+        "title": "Welcome to Invite App",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Electronic Arts India",
+        "provenance_url": "https://www.ea.com/careers",
+        "url": "https://jobs.ea.com",
+        "status": 200,
+        "final_url": "https://jobs.ea.com/en_US/careers",
+        "title": "Job Search | Electronic Arts",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Electronic Arts India",
+        "provenance_url": "https://www.ea.com/careers",
+        "url": "https://jobs.ea.com/careers/Home/",
+        "status": 200,
+        "final_url": "https://jobs.ea.com/en_US/careers/Home/",
+        "title": "Job Search | Electronic Arts",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Fidelity Investments",
+        "provenance_url": "https://jobs.fidelity.com/en/",
+        "url": "https://www.tiktok.com/@fidelityjobs",
+        "status": 200,
+        "final_url": "https://www.tiktok.com/@fidelityjobs",
+        "title": "TikTok - Make Your Day",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Globant",
+        "provenance_url": "https://career.globant.com/",
+        "url": "https://career.globant.com/recent-job-searches",
+        "status": 200,
+        "final_url": "https://career.globant.com/recent-job-searches",
+        "title": "Join our team | Globant Careers",
+        "ats": null,
+        "platforms": [
+          "successfactors"
+        ]
+      },
+      {
+        "company": "Growfin",
+        "provenance_url": "https://www.growfin.ai/careers",
+        "url": "https://careers.kula.ai/growfin",
+        "status": 200,
+        "final_url": "https://careers.kula.ai/growfin",
+        "title": "Careers | Growfin",
+        "ats": null,
+        "platforms": [
+          "kula"
+        ]
+      },
+      {
+        "company": "Happiest Minds",
+        "provenance_url": "https://www.happiestminds.com/careers/",
+        "url": "https://careers.happiestminds.com/",
+        "status": 200,
+        "final_url": "https://careers.happiestminds.com/",
+        "title": "Home - Careers",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Infineon Technologies",
+        "provenance_url": "https://www.infineon.com/cms/en/careers/",
+        "url": "https://www.infineon.com/product-table/inductive-position-sensing",
+        "status": 200,
+        "final_url": "https://www.infineon.com/product-table/inductive-position-sensing",
+        "title": "Inductive position sensor Products | Infineon Technologies",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Infineon Technologies",
+        "provenance_url": "https://www.infineon.com/cms/en/careers/",
+        "url": "https://www.infineon.com/products/sensor/inductive-position-sensors",
+        "status": 200,
+        "final_url": "https://www.infineon.com/products/sensor/inductive-position-sensors",
+        "title": "Inductive position sensors | Infineon Technologies",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Infineon Technologies",
+        "provenance_url": "https://www.infineon.com/cms/en/careers/",
+        "url": "https://www.infineon.com/product-table/magnetic-position-sensors",
+        "status": 200,
+        "final_url": "https://www.infineon.com/product-table/magnetic-position-sensors",
+        "title": "Magnetic position sensor Products | Infineon Technologies",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Keka",
+        "provenance_url": "https://www.keka.com/careers",
+        "url": "https://hr.www.keka.com/careers",
+        "status": 502,
+        "final_url": "https://hr.www.keka.com/careers"
+      },
+      {
+        "company": "Kenvue",
+        "provenance_url": "https://www.kenvue.com/careers",
+        "url": "https://www.kenvue.com/careers",
+        "status": 200,
+        "final_url": "https://www.kenvue.com/careers",
+        "title": "Kenvue careers | Kenvue - A new view of care",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Kenvue",
+        "provenance_url": "https://www.kenvue.com/careers",
+        "url": "https://jobs.kenvue.com/",
+        "status": 200,
+        "final_url": "https://jobs.kenvue.com/",
+        "title": "Careers at Kenvue",
+        "ats": [
+          "workday",
+          "kenvue|kenvue",
+          "https://kenvue.wd5.myworkdayjobs.com/kenvue/login"
+        ],
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Kenvue",
+        "provenance_url": "https://www.kenvue.com/careers",
+        "url": "https://jobs.kenvue.com/students-and-graduates",
+        "status": 200,
+        "final_url": "https://jobs.kenvue.com/students-and-graduates",
+        "title": "Careers at Kenvue | Student & Graduate Careers at Kenvue",
+        "ats": [
+          "workday",
+          "kenvue|kenvue",
+          "https://kenvue.wd5.myworkdayjobs.com/kenvue/login"
+        ],
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Khatabook",
+        "provenance_url": "https://khatabook.com/careers",
+        "url": "https://khatabook.com/hiring/",
+        "status": 200,
+        "final_url": "https://khatabook.com/hiring/",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Kimberly-Clark",
+        "provenance_url": "https://careers.kimberly-clark.com/",
+        "url": "https://careers.kimberly-clark.com/en/career-areas/research-and-development",
+        "status": 200,
+        "final_url": "https://careers.kimberly-clark.com/en/career-areas/research-and-development",
+        "title": "Research and Development | Kimberly-Clark Careers",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Kimberly-Clark",
+        "provenance_url": "https://careers.kimberly-clark.com/",
+        "url": "https://careers.kimberly-clark.com/en/job-search",
+        "status": 200,
+        "final_url": "https://careers.kimberly-clark.com/en/job-search",
+        "title": "Find Jobs at Kimberly-Clark | Kimberly-Clark Careers",
+        "ats": [
+          "workday",
+          "kimberlyclark|global",
+          "https://kimberlyclark.wd1.myworkdayjobs.com/global"
+        ],
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Klarna",
+        "provenance_url": "https://www.klarna.com/careers/",
+        "url": "https://jobs.deel.com/job-boards/klarna",
+        "status": 200,
+        "final_url": "https://jobs.deel.com/klarna",
+        "title": "Make your next move matter",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "L&T Technology Services",
+        "provenance_url": "https://www.ltts.com/careers",
+        "url": "https://ltts.com/careers/americas",
+        "status": 200,
+        "final_url": "https://www.ltts.com:443/careers/americas",
+        "title": "Careers Americas | L&T Technology Services",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "LeadSquared",
+        "provenance_url": "https://www.leadsquared.com/careers/",
+        "url": "https://leadsquaredhrms.darwinbox.in/ms/candidatev2/main/careers/home",
+        "status": 200,
+        "final_url": "https://leadsquaredhrms.darwinbox.in/ms/candidatev2/main/careers/home",
+        "title": "LeadSquared",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Lenovo",
+        "provenance_url": "https://jobs.lenovo.com/",
+        "url": "https://jobs.lenovo.com/careers/SearchJobs",
+        "status": 200,
+        "final_url": "https://jobs.lenovo.com/en_US/careers/SearchJobs",
+        "title": "Job Search | Lenovo",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Lenovo",
+        "provenance_url": "https://jobs.lenovo.com/",
+        "url": "https://jobs.lenovo.com/careers/SearchJobs/",
+        "status": 200,
+        "final_url": "https://jobs.lenovo.com/en_US/careers/SearchJobs/",
+        "title": "Job Search | Lenovo",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Lenovo",
+        "provenance_url": "https://jobs.lenovo.com/",
+        "url": "https://jobs.lenovo.com/en_US/careers/SearchJobs",
+        "status": 200,
+        "final_url": "https://jobs.lenovo.com/en_US/careers/SearchJobs",
+        "title": "Job Search | Lenovo",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Lululemon",
+        "provenance_url": "https://careers.lululemon.com/",
+        "url": "https://careers.lululemon.com/en_US/careers/SearchJobs",
+        "status": 200,
+        "final_url": "https://careers.lululemon.com/en_US/careers/SearchJobs",
+        "title": "Job Search | Lululemon",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Lululemon",
+        "provenance_url": "https://careers.lululemon.com/",
+        "url": "https://lululemonincchina.avature.cn/careers",
+        "status": 200,
+        "final_url": "https://lululemonincchina.avature.cn/en_US/careers",
+        "title": "Job Search | lululemon",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Lululemon",
+        "provenance_url": "https://careers.lululemon.com/",
+        "url": "https://careers.lululemon.com/en_US/careers/SearchCareer/",
+        "status": 200,
+        "final_url": "https://careers.lululemon.com/en_US/careers/SearchCareer/",
+        "title": "Job Search | Lululemon",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "MSCI",
+        "provenance_url": "https://careers.msci.com/",
+        "url": "https://ukcareers-msci.icims.com",
+        "status": 200,
+        "final_url": "https://ukcareers-msci.icims.com/",
+        "title": "MSCI Careers | Search Jobs",
+        "ats": null,
+        "platforms": [
+          "icims",
+          "jibe"
+        ]
+      },
+      {
+        "company": "MSCI",
+        "provenance_url": "https://careers.msci.com/",
+        "url": "https://uscareers-msci.icims.com/",
+        "status": 200,
+        "final_url": "https://uscareers-msci.icims.com/",
+        "title": "MSCI Careers | Search Jobs",
+        "ats": null,
+        "platforms": [
+          "icims",
+          "jibe"
+        ]
+      },
+      {
+        "company": "MSCI",
+        "provenance_url": "https://careers.msci.com/",
+        "url": "https://rsacareers-msci.icims.com",
+        "status": 200,
+        "final_url": "https://rsacareers-msci.icims.com/",
+        "title": "MSCI Careers | Search Jobs",
+        "ats": null,
+        "platforms": [
+          "icims",
+          "jibe"
+        ]
+      },
+      {
+        "company": "Maersk",
+        "provenance_url": "https://www.maersk.com/careers",
+        "url": "https://x.com/intent/post",
+        "status": 200,
+        "final_url": "https://x.com/intent/post",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "McDonald's",
+        "provenance_url": "https://careers.mcdonalds.com/",
+        "url": "https://jobs.mchire.com",
+        "status": 200,
+        "final_url": "https://jobs.mchire.com/",
+        "title": "McDonald's Restaurant Careers in the US",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "McDonald's",
+        "provenance_url": "https://careers.mcdonalds.com/",
+        "url": "https://www.mcdonalds.com/us/en-us/us-franchising",
+        "status": 200,
+        "final_url": "https://www.mcdonalds.com/us/en-us/us-franchising.html",
+        "title": "McDonald's U.S. Franchising",
+        "ats": null,
+        "platforms": [
+          "jibe"
+        ]
+      },
+      {
+        "company": "McDonald's",
+        "provenance_url": "https://careers.mcdonalds.com/",
+        "url": "https://corporate.mcdonalds.com/corpmcd/our-purpose-and-impact/jobs-inclusion-and-empowerment/diversity-and-inclusion.html",
+        "status": 200,
+        "final_url": "https://corporate.mcdonalds.com/corpmcd/our-purpose-and-impact/jobs-inclusion-and-empowerment/commitment-to-inclusion.html",
+        "title": "Our Commitment to Inclusion",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "McKinsey & Company",
+        "provenance_url": "https://www.mckinsey.com/careers/search-jobs",
+        "url": "https://www.mckinsey.com/careers/search-jobs",
+        "status": 200,
+        "final_url": "https://www.mckinsey.com/careers/search-jobs",
+        "title": "McKinsey Job Search | Consulting and Internal Roles | Careers | McKinsey & Company",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "MetLife",
+        "provenance_url": "https://www.metlifecareers.com/",
+        "url": "https://www.metlifecareers.com/en_US/ml/SearchJobs",
+        "status": 200,
+        "final_url": "https://www.metlifecareers.com/en_US/ml/SearchJobs",
+        "title": "Open Positions",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Microchip Technology",
+        "provenance_url": "https://careers.microchip.com/",
+        "url": "https://www.microchip.com/en-us/products/clock-and-timing/systems/secure-position-navigation-time",
+        "status": 200,
+        "final_url": "https://www.microchip.com/en-us/products/clock-and-timing/systems/secure-position-navigation-time",
+        "title": "Secure Position, Navigation and Time | Microchip Technology",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Microchip Technology",
+        "provenance_url": "https://careers.microchip.com/",
+        "url": "https://www.microchip.com/en-us/products/sensors-touch/inductive-position-sensors",
+        "status": 200,
+        "final_url": "https://www.microchip.com/en-us/products/sensors-touch/inductive-position-sensors",
+        "title": "Inductive Position Sensors | Microchip Technology",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Microchip Technology",
+        "provenance_url": "https://careers.microchip.com/",
+        "url": "https://wd5.myworkdaysite.com/en-US/recruiting/microchiphr/External",
+        "status": 200,
+        "final_url": "https://wd5.myworkdaysite.com/en-US/recruiting/microchiphr/External",
+        "title": "",
+        "ats": null,
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Millennium",
+        "provenance_url": "https://www.mlp.com/careers/",
+        "url": "https://mlp.eightfold.ai/careers",
+        "error": "ReadTimeout"
+      },
+      {
+        "company": "Millennium",
+        "provenance_url": "https://www.mlp.com/careers/",
+        "url": "https://app.eightfold.ai/careers",
+        "status": 200,
+        "final_url": "https://app.eightfold.ai/careers",
+        "title": "Careers at Eightfold",
+        "ats": null,
+        "platforms": [
+          "eightfold"
+        ]
+      },
+      {
+        "company": "MoEngage",
+        "provenance_url": "https://www.moengage.com/careers/",
+        "url": "https://moengage.hire.trakstar.com/",
+        "status": 200,
+        "final_url": "https://moengage.hire.trakstar.com/",
+        "title": "MoEngage Inc jobs |\n    MoEngage Inc openings |\n    MoEngage Inc careers",
+        "ats": null,
+        "platforms": [
+          "recruiterbox",
+          "trakstar"
+        ]
+      },
+      {
+        "company": "Mondelez International",
+        "provenance_url": "https://careers.mondelezinternational.com/",
+        "url": "https://www.mondelezinternational.com:443/snacking-made-right/our-positions/",
+        "status": 200,
+        "final_url": "https://www.mondelezinternational.com:443/snacking-made-right/our-positions/",
+        "title": "Our Positions | Mondel\u00c4\u0093z International, Inc.",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Mondelez International",
+        "provenance_url": "https://careers.mondelezinternational.com/",
+        "url": "https://www.mondelezinternational.com:443/careers/career-areas/research-development/",
+        "status": 200,
+        "final_url": "https://www.mondelezinternational.com:443/careers/career-areas/research-development/",
+        "title": "R&D Careers | Mondel\u00c4\u0093z International, Inc.",
+        "ats": null,
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "Moneyview",
+        "provenance_url": "https://moneyview.in/careers",
+        "url": "https://moneyview.darwinbox.in/ms/candidate/careers",
+        "status": 200,
+        "final_url": "https://moneyview.darwinbox.in/ms/candidate/careers",
+        "title": "Moneyview",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Mphasis",
+        "provenance_url": "https://careers.mphasis.com/",
+        "url": "https://careers.mphasis.com/home/hot-jobs/location-search/usa.html",
+        "status": 200,
+        "final_url": "https://careers.mphasis.com/home/hot-jobs/location-search/usa.html",
+        "title": "Jobs at Mphasis in USA | Explore IT Careers in America, Mexico",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Mphasis",
+        "provenance_url": "https://careers.mphasis.com/",
+        "url": "https://careers.mphasis.com/home/hot-jobs/location-search/india.html",
+        "status": 200,
+        "final_url": "https://careers.mphasis.com/home/hot-jobs/location-search/india.html",
+        "title": "Technology and IT Careers at Mphasis in India",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Mphasis",
+        "provenance_url": "https://careers.mphasis.com/",
+        "url": "https://careers.mphasis.com/home/hot-jobs/location-search/asia-pacific.html",
+        "status": 200,
+        "final_url": "https://careers.mphasis.com/home/hot-jobs/location-search/asia-pacific.html",
+        "title": "Technology and IT Careers at Mphasis in Singapore, Shanghai, Taiwan, Indonesia, Mauritius, Japan",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "NTT DATA",
+        "provenance_url": "https://careers.nttdata.com/global/en",
+        "url": "https://nttglobaldatacenters.wd501.myworkdayjobs.com/External",
+        "status": 200,
+        "final_url": "https://nttglobaldatacenters.wd501.myworkdayjobs.com/External",
+        "title": "",
+        "ats": [
+          "workday",
+          "nttglobaldatacenters|External",
+          "https://nttglobaldatacenters.wd501.myworkdayjobs.com/External"
+        ],
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "NTT DATA",
+        "provenance_url": "https://careers.nttdata.com/global/en",
+        "url": "https://cdn.phenompeople.com/CareerConnectResources/NTT1GLOBAL/documents/ourrecruitmentprocess1-1744297064455.pdf",
+        "status": 200,
+        "final_url": "https://cdn.phenompeople.com/CareerConnectResources/NTT1GLOBAL/documents/ourrecruitmentprocess1-1744297064455.pdf",
+        "title": "",
+        "ats": null,
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "NTT DATA",
+        "provenance_url": "https://careers.nttdata.com/global/en",
+        "url": "https://careers.services.global.ntt/global/en/emailpersonalinfo",
+        "status": 200,
+        "final_url": "https://careers.nttdata.com/global/en/emailpersonalinfo",
+        "title": "Email Personal info | NTT Data Careers",
+        "ats": null,
+        "platforms": [
+          "phenom"
+        ]
+      },
+      {
+        "company": "NatWest Group",
+        "provenance_url": "https://jobs.natwestgroup.com/",
+        "url": "https://jobs.natwestgroup.com/search/jobs",
+        "status": 200,
+        "final_url": "https://jobs.natwestgroup.com/search/jobs",
+        "title": "Jobs | NatWest Group Careers",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Nomura",
+        "provenance_url": "https://www.nomura.com/careers/",
+        "url": "https://www.nomuraholdings.com/en/careers.html",
+        "status": 403,
+        "final_url": "https://www.nomuraholdings.com/en/careers.html"
+      },
+      {
+        "company": "Ola",
+        "provenance_url": "https://www.olacabs.com/careers",
+        "url": "https://ola-desktop-magento-80a.corp.olacabs.com/careers",
+        "status": 502,
+        "final_url": "https://ola-desktop-magento-80a.corp.olacabs.com/careers"
+      },
+      {
+        "company": "Ola",
+        "provenance_url": "https://www.olacabs.com/careers",
+        "url": "https://olacareers.turbohire.co/careerpage/e0c1eb37-eb7a-4ca4-bcc5-d59ce4ce9212",
+        "status": 200,
+        "final_url": "https://olacareers.turbohire.co/careerpage/e0c1eb37-eb7a-4ca4-bcc5-d59ce4ce9212",
+        "title": "ANI Technologies Pvt Ltd",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Ola Electric",
+        "provenance_url": "https://www.olaelectric.com/careers",
+        "url": "https://olacareers.turbohire.co/dashboardv2",
+        "status": 200,
+        "final_url": "https://olacareers.turbohire.co/dashboardv2",
+        "title": "ANI Technologies Pvt Ltd",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Ola Electric",
+        "provenance_url": "https://www.olaelectric.com/careers",
+        "url": "https://cdn.olaelectric.com/sites/evdp/pages/career/videos/ola-turns-13.mp4",
+        "status": 200,
+        "final_url": "https://cdn.olaelectric.com/sites/evdp/pages/career/videos/ola-turns-13.mp4",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Pegasystems",
+        "provenance_url": "https://www.pega.com/about/careers",
+        "url": "https://www.pega.com/about/careers/search",
+        "status": 200,
+        "final_url": "https://www.pega.com/about/careers/job-listings",
+        "title": "Job Listings | Pega",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Perfios",
+        "provenance_url": "https://perfios.ai/careers/",
+        "url": "https://perfios.darwinbox.in/ms/candidate/careers/",
+        "status": 200,
+        "final_url": "https://perfios.darwinbox.in/ms/candidate/careers/",
+        "title": "Perfios",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Perfios",
+        "provenance_url": "https://perfios.ai/careers/",
+        "url": "https://perfios.darwinbox.in/ms/candidate/careers",
+        "status": 200,
+        "final_url": "https://perfios.darwinbox.in/ms/candidate/careers",
+        "title": "Perfios",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Rapido",
+        "provenance_url": "https://rapido.bike/Careers",
+        "url": "https://rapido.darwinbox.in/ms/candidate/careers",
+        "status": 200,
+        "final_url": "https://rapido.darwinbox.in/ms/candidate/careers",
+        "title": "Rapido",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Regeneron",
+        "provenance_url": "https://careers.regeneron.com/en/jobs/",
+        "url": "https://careers.regeneron.com/en/our-teams/research-preclinical-development-rpd/",
+        "status": 200,
+        "final_url": "https://careers.regeneron.com/en/our-teams/research-preclinical-development-rpd/",
+        "title": "Research & Preclinical Development (R&pD) | Regeneron Careers",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Reliance Jio",
+        "provenance_url": "https://careers.jio.com/",
+        "url": "https://apps.apple.com/in/app/jio-careers/id1405653324",
+        "status": 200,
+        "final_url": "https://apps.apple.com/in/app/jio-careers/id1405653324",
+        "title": "\u00e2\u0080\u008eJio Careers App - App Store",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Sanofi",
+        "provenance_url": "https://jobs.sanofi.com/en",
+        "url": "https://jobs.sanofi.com/research-and-development ",
+        "status": 200,
+        "final_url": "https://jobs.sanofi.com/en",
+        "title": "Working at Sanofi",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Sanofi",
+        "provenance_url": "https://jobs.sanofi.com/en",
+        "url": "https://talentcareers.sanofi.com/flows/candidateportal",
+        "status": 403,
+        "final_url": "https://talentcareers.sanofi.com/flows/candidateportal"
+      },
+      {
+        "company": "Sanofi",
+        "provenance_url": "https://jobs.sanofi.com/en",
+        "url": "https://jobs.sanofi.com/en/search-jobs",
+        "status": 200,
+        "final_url": "https://jobs.sanofi.com/en/search-jobs",
+        "title": "Search Jobs | Sanofi Careers",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Siemens",
+        "provenance_url": "https://jobs.siemens.com/careers",
+        "url": "https://jobs.siemens.com/en_US/externaljobs/SearchJobs",
+        "status": 200,
+        "final_url": "https://jobs.siemens.com/en_US/externaljobs/SearchJobs",
+        "title": "Job Search | Careers Marketplace - Siemens",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Societe Generale",
+        "provenance_url": "https://careers.societegenerale.com/en",
+        "url": "https://socgen.taleo.net/careersection/sgcareers/profile.ftl",
+        "status": 200,
+        "final_url": "https://socgen.taleo.net/careersection/sgcareers/profile.ftl",
+        "title": "htmlredirection",
+        "ats": null,
+        "platforms": [
+          "taleo"
+        ]
+      },
+      {
+        "company": "Societe Generale",
+        "provenance_url": "https://careers.societegenerale.com/en",
+        "url": "https://careers.societegenerale.com/en/search",
+        "status": 200,
+        "final_url": "https://careers.societegenerale.com/en/search",
+        "title": "Find a job at Societe Generale | Careers Soci\u00e9t\u00e9 G\u00e9n\u00e9rale",
+        "ats": null,
+        "platforms": [
+          "taleo",
+          "kula"
+        ]
+      },
+      {
+        "company": "Societe Generale",
+        "provenance_url": "https://careers.societegenerale.com/en",
+        "url": "https://immersion-societegenerale.com/viewer/index.php",
+        "status": 200,
+        "final_url": "https://immersion-societegenerale.com/viewer/index.php",
+        "title": "",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Sonata Software",
+        "provenance_url": "https://www.sonata-software.com/careers",
+        "url": "https://www.sonata-software.com/our-employee-value-proposition",
+        "status": 200,
+        "final_url": "https://www.sonata-software.com/our-employee-value-proposition",
+        "title": "Our EVP -career | Sonata Software",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Sony",
+        "provenance_url": "https://www.sonyjobs.com/",
+        "url": "https://www.sony.com/etc/SCA/dam/sony/corp-site/sca-careers/IER_RightToWorkPoster-Eng_Es.pdf",
+        "status": 403,
+        "final_url": "https://www.sony.com/etc/SCA/dam/sony/corp-site/sca-careers/IER_RightToWorkPoster-Eng_Es.pdf"
+      },
+      {
+        "company": "Sony",
+        "provenance_url": "https://www.sonyjobs.com/",
+        "url": "https://www.sony.com/etc/SCA/dam/sony/corp-site/sca-careers/EVerifyParticipationPoster.pdf",
+        "status": 403,
+        "final_url": "https://www.sony.com/etc/SCA/dam/sony/corp-site/sca-careers/EVerifyParticipationPoster.pdf"
+      },
+      {
+        "company": "Tata 1mg",
+        "provenance_url": "https://www.1mg.com/jobs",
+        "url": "https://1mg.darwinbox.in/jobs",
+        "status": 200,
+        "final_url": "https://1mg.darwinbox.in/ms/candidatev2/main/careers/home",
+        "title": "TATA 1MG Technologies Private Limited",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Tata Elxsi",
+        "provenance_url": "https://www.tataelxsi.com/careers",
+        "url": "https://www.tataelxsi.com/careers/job-openings",
+        "status": 200,
+        "final_url": "https://www.tataelxsi.com/careers/job-openings",
+        "title": "Job Openings at Tata Elxsi - Apply Today",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Tata Elxsi",
+        "provenance_url": "https://www.tataelxsi.com/careers",
+        "url": "https://www.tataelxsi.com/careers",
+        "status": 200,
+        "final_url": "https://www.tataelxsi.com/careers",
+        "title": "Careers at Tata Elxsi - Join a Global Tech Leader",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Tata Elxsi",
+        "provenance_url": "https://www.tataelxsi.com/careers",
+        "url": "https://www.tataelxsi.com/careers/elxsian-employee-value-proposition",
+        "status": 200,
+        "final_url": "https://www.tataelxsi.com/careers/elxsian-employee-value-proposition",
+        "title": "Life at Tata Elxsi - Elxsian Value Proposition",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Tech Mahindra",
+        "provenance_url": "https://careers.techmahindra.com/",
+        "url": "https://www.techmahindra.com/careers/why-techm/",
+        "status": 200,
+        "final_url": "https://www.techmahindra.com/careers/techm-way/",
+        "title": "Careers at The TechM Way",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Tech Mahindra",
+        "provenance_url": "https://careers.techmahindra.com/",
+        "url": "https://www.techmahindra.com/careers/techm-way/",
+        "status": 200,
+        "final_url": "https://www.techmahindra.com/careers/techm-way/",
+        "title": "Careers at The TechM Way",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Tech Mahindra",
+        "provenance_url": "https://careers.techmahindra.com/",
+        "url": "https://www.techmahindra.com/careers/diversity-inclusion/",
+        "status": 200,
+        "final_url": "https://www.techmahindra.com/careers/diversity-inclusion/",
+        "title": "Diversity and Inclusion | Tech Mahindra",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Tesco Bengaluru",
+        "provenance_url": "https://www.tescobengaluru.com/careers/",
+        "url": "https://careers.tesco.com/en_GB/careers/SearchJobs/",
+        "status": 200,
+        "final_url": "https://careers.tesco.com/en_GB/careers/SearchJobs/",
+        "title": "Job Search | Tesco Careers",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Tesco Bengaluru",
+        "provenance_url": "https://www.tescobengaluru.com/careers/",
+        "url": "https://www.tesco-careers.com/",
+        "status": 200,
+        "final_url": "https://www.tesco.com/careers/en-GB",
+        "title": "Tesco Careers \u2013 Build a career at Tesco | Tesco Careers",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Tredence",
+        "provenance_url": "https://www.tredence.com/careers",
+        "url": "https://tredence.ripplehire.com/candidate/",
+        "status": 200,
+        "final_url": "https://tredence.ripplehire.com/candidate/",
+        "title": "Tredence Careers | Latest jobs at Tredence - Ripplehire.com",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "UBS",
+        "provenance_url": "https://www.ubs.com/global/en/careers.html",
+        "url": "https://www.ubs.com/global/en/careers/search-jobs.html",
+        "status": 200,
+        "final_url": "https://www.ubs.com/global/en/careers/search-jobs.html",
+        "title": "Search jobs  | UBS Global",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Unacademy",
+        "provenance_url": "https://unacademy.com/careers",
+        "url": "https://unacademy.darwinbox.in/ms/candidate/careers",
+        "status": 200,
+        "final_url": "https://unacademy.darwinbox.in/ms/candidate/careers",
+        "title": "Unacademy Group",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Victoria's Secret",
+        "provenance_url": "https://careers.victoriassecret.com/",
+        "url": "https://careers.victoriassecret.com/en/job-search-results/",
+        "status": 200,
+        "final_url": "https://careers.victoriassecret.com/en/job-search-results/",
+        "title": "Victoria\u2019s Secret - Job Search Results",
+        "ats": null,
+        "platforms": [
+          "taleo"
+        ]
+      },
+      {
+        "company": "Victoria's Secret",
+        "provenance_url": "https://careers.victoriassecret.com/",
+        "url": "https://vsco.taleo.net/careersection/vss_in/jobsearch.ftl",
+        "status": 200,
+        "final_url": "https://vsco.taleo.net/careersection/vss_in/jobsearch.ftl",
+        "title": "Victoria's Secret & Co",
+        "ats": null,
+        "platforms": [
+          "taleo"
+        ]
+      },
+      {
+        "company": "Victoria's Secret",
+        "provenance_url": "https://careers.victoriassecret.com/",
+        "url": "https://vsco.taleo.net/careersection/vss_ob/myprocesses.ftl",
+        "status": 200,
+        "final_url": "https://vsco.taleo.net/careersection/vss_ob/myprocesses.ftl",
+        "title": "Privacy Notice",
+        "ats": null,
+        "platforms": [
+          "taleo"
+        ]
+      },
+      {
+        "company": "Vodafone",
+        "provenance_url": "https://careers.vodafone.com/",
+        "url": "https://jobs.vodafone.com/careers",
+        "status": 200,
+        "final_url": "https://jobs.vodafone.com/careers",
+        "title": "Careers at Vodafone",
+        "ats": null,
+        "platforms": [
+          "eightfold"
+        ]
+      },
+      {
+        "company": "Vodafone",
+        "provenance_url": "https://careers.vodafone.com/",
+        "url": "https://www.vodafonethree.com/careers",
+        "status": 200,
+        "final_url": "https://www.vodafonethree.com/careers/",
+        "title": "Careers - Building the UK's Best Network | VodafoneThree",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Vodafone",
+        "provenance_url": "https://careers.vodafone.com/",
+        "url": "https://vodacom.com/careers.php",
+        "status": 200,
+        "final_url": "https://vodacom.com/careers.php",
+        "title": "Careers | Careers | Vodacom Group",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Wayfair",
+        "provenance_url": "https://www.wayfair.com/careers",
+        "url": "https://www.wayfair.com/careers/jobs",
+        "status": 200,
+        "final_url": "https://www.wayfair.com/careers/jobs",
+        "title": "Wayfair Careers | Apply Now",
+        "ats": null,
+        "platforms": [
+          "avature"
+        ]
+      },
+      {
+        "company": "Zetwerk",
+        "provenance_url": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+        "url": "https://zetwerk.sensehq.com/careers/",
+        "status": 200,
+        "final_url": "https://zetwerk.sensehq.com/careers",
+        "title": "Job openings at <!-- -->Zetwerk Manufacturing Businesses Ltd<!-- -->",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Adidas",
+        "provenance_url": "https://careers.adidas-group.com/",
+        "url": "https://careers.adidas-group.com/teams/makers/research-development",
+        "status": 200,
+        "final_url": "https://careers.adidas-group.com/teams/makers/research-development",
+        "title": "adidas Careers \u2013 Through sport, we have the power to change lives. Research & Development",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Adidas",
+        "provenance_url": "https://careers.adidas-group.com/",
+        "url": "https://bit.ly/3FkV4Qf ",
+        "status": 200,
+        "final_url": "https://www.instagram.com/adidascareers/",
+        "title": "adidasCareers (@adidascareers) \u2022 Instagram photos and videos",
+        "ats": null,
+        "platforms": [
+          "myworkday"
+        ]
+      },
+      {
+        "company": "Adidas",
+        "provenance_url": "https://careers.adidas-group.com/",
+        "url": "https://interviewtutorial.careers.adidas-group.com/",
+        "status": 200,
+        "final_url": "https://interviewtutorial.careers.adidas-group.com/",
+        "title": "Interview Preparation Tutorial",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Clear",
+        "provenance_url": "https://www.clear.in/s/careers",
+        "url": "https://clear.darwinbox.in/ms/candidate/careers",
+        "status": 200,
+        "final_url": "https://clear.darwinbox.in/ms/candidate/careers",
+        "title": "Clear",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Clear",
+        "provenance_url": "https://www.clear.in/s/careers",
+        "url": "https://cleartax.in/s/careers",
+        "status": 200,
+        "final_url": "https://www.clear.in/s/careers",
+        "title": "Careers at Cleartax",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Credit Agricole",
+        "provenance_url": "https://jobs.ca-cib.com/",
+        "url": "https://www.groupecreditagricole.jobs/Credit-Agricole-S.A.-job-offers",
+        "error": "ReadTimeout"
+      },
+      {
+        "company": "Decentro",
+        "provenance_url": "https://decentro.tech/careers",
+        "url": "https://angel.co/decentro/jobs",
+        "status": 403,
+        "final_url": "https://wellfound.com/company/decentro/jobs"
+      },
+      {
+        "company": "Emirates Group",
+        "provenance_url": "https://www.emiratesgroupcareers.com/",
+        "url": "https://www.emiratesgroupcareers.com/search-and-apply/",
+        "status": 200,
+        "final_url": "https://www.emiratesgroupcareers.com/search-and-apply/",
+        "title": "Search And Apply | Emirates Group Careers",
+        "ats": null,
+        "platforms": [
+          "avature",
+          "taleo"
+        ]
+      },
+      {
+        "company": "Grant Thornton",
+        "provenance_url": "https://www.grantthornton.in/careers/",
+        "url": "https://gtprod.talentrecruit.com/career-page",
+        "status": 403,
+        "final_url": "https://gtprod.talentrecruit.com/career-page"
+      },
+      {
+        "company": "Ivy Homes",
+        "provenance_url": "https://ivy.homes/career",
+        "url": "https://ivy.homes/career",
+        "status": 200,
+        "final_url": "https://ivy.homes/career",
+        "title": "Join Ivy homes",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Larsen & Toubro",
+        "provenance_url": "https://www.larsentoubro.com/corporate/careers/",
+        "url": "https://larsentoubrocareers.peoplestrong.com/",
+        "status": 200,
+        "final_url": "https://larsentoubrocareers.peoplestrong.com/",
+        "title": "Candidate Portal",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Mitsubishi Electric",
+        "provenance_url": "https://www.mitsubishielectric.com/en/careers/",
+        "url": "https://us.mitsubishielectric.com/en/about/local/careers/",
+        "status": 200,
+        "final_url": "https://us.mitsubishielectric.com/en/about/local/careers/",
+        "title": "Careers | MITSUBISHI ELECTRIC UNITED STATES",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Mitsubishi Electric",
+        "provenance_url": "https://www.mitsubishielectric.com/en/careers/",
+        "url": "https://tw.mitsubishielectric.com/zh/about/local/careers/",
+        "status": 200,
+        "final_url": "https://tw.mitsubishielectric.com/zh/about/local/careers/",
+        "title": "\u4eba\u624d\u62db\u52df | \u53f0\u7063\u4e09\u83f1\u96fb\u6a5f",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Mitsubishi Electric",
+        "provenance_url": "https://www.mitsubishielectric.com/en/careers/",
+        "url": "https://in.mitsubishielectric.com/en/about/local/careers/",
+        "status": 200,
+        "final_url": "https://in.mitsubishielectric.com/en/about/local/careers/",
+        "title": "Careers | MITSUBISHI ELECTRIC INDIA",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "OCBC",
+        "provenance_url": "https://www.ocbc.com/group/careers",
+        "url": "https://ocbc.taleo.net/careersection/ocbc_external/jobsearch.ftl",
+        "status": 502,
+        "final_url": "https://ocbc.taleo.net/careersection/ocbc_external/jobsearch.ftl"
+      },
+      {
+        "company": "Orange Health Labs",
+        "provenance_url": "https://www.orangehealth.in/jobs",
+        "url": "https://orangehealth.darwinbox.in/ms/candidatev2/main/careers/allJobs",
+        "status": 200,
+        "final_url": "https://orangehealth.darwinbox.in/ms/candidatev2/main/careers/allJobs",
+        "title": "Orange Health Labs",
+        "ats": null,
+        "platforms": [
+          "darwinbox"
+        ]
+      },
+      {
+        "company": "Peoplebox.ai",
+        "provenance_url": "https://www.peoplebox.ai/careers/",
+        "url": "https://www.peoplebox.ai/careers/",
+        "status": 200,
+        "final_url": "https://www.peoplebox.ai/careers/",
+        "title": "Careers At Peoplebox | Job Openings",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "SALT",
+        "provenance_url": "https://www.salt.pe/careers",
+        "url": "https://app.dover.io/dover/careers/0c9aa34c-4593-4046-a73e-fe900a3c0c5a",
+        "status": 200,
+        "final_url": "https://app.dover.com/dover/careers/0c9aa34c-4593-4046-a73e-fe900a3c0c5a",
+        "title": "Dover",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "Simplilearn",
+        "provenance_url": "https://www.simplilearn.com/careers",
+        "url": "https://www.simplilearn.com/job-openings/",
+        "status": 200,
+        "final_url": "https://www.simplilearn.com/job-openings",
+        "title": "Job Openings",
+        "ats": null,
+        "platforms": []
+      },
+      {
+        "company": "smallcase",
+        "provenance_url": "https://app.pyjamahr.com/careers?company=smallcase&company_uuid=2615584222",
+        "url": "https://pyjamahr.com/",
+        "status": 200,
+        "final_url": "https://pyjamahr.com/",
+        "title": "PyjamaHR: World's Best ATS and Recruitment Software",
+        "ats": null,
+        "platforms": [
+          "pyjama"
+        ]
+      }
+    ]
+  },
+  "verified_repairs": [
+    {
+      "company": "Cashfree Payments",
+      "careers_url": "https://careers.kula.ai/cashfree",
+      "ats_provider": "kula",
+      "ats_identifier": "cashfree",
+      "status": {
+        "name": "Cashfree Payments",
+        "careers_url": "https://careers.kula.ai/cashfree",
+        "ats_provider": "kula",
+        "ats_identifier": "cashfree",
+        "priority": 5,
+        "last_checked_at": "2026-10-05T18:08:31.598573+00:00",
+        "last_success_at": "2026-10-05T18:08:38.362358+00:00",
+        "error_count": 0,
+        "jobs_found": 32,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 32,
+      "sample_jobs": [
+        {
+          "title": "Security Engineer-2",
+          "location": "Cashfree Payments \u00b7 Bellandur, Karnataka, India \u00b7 Bellandur \u00b7 India",
+          "description_length": 3306,
+          "posted_at": "2026-08-11T06:02:43+00:00",
+          "job_url": "https://careers.kula.ai/cashfree/4467"
+        },
+        {
+          "title": "Software Development Engineer 1",
+          "location": "Cashfree Payments \u00b7 Bellandur, Karnataka, India \u00b7 Bellandur \u00b7 India",
+          "description_length": 1128,
+          "posted_at": "2026-06-10T06:46:30+00:00",
+          "job_url": "https://careers.kula.ai/cashfree/5565"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "CleverTap",
+      "careers_url": "https://careers.kula.ai/clevertap",
+      "ats_provider": "kula",
+      "ats_identifier": "clevertap",
+      "status": {
+        "name": "CleverTap",
+        "careers_url": "https://careers.kula.ai/clevertap",
+        "ats_provider": "kula",
+        "ats_identifier": "clevertap",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:08:31.600248+00:00",
+        "last_success_at": "2026-10-05T18:08:38.513423+00:00",
+        "error_count": 0,
+        "jobs_found": 13,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 13,
+      "sample_jobs": [
+        {
+          "title": "DevOps Engineer",
+          "location": "Mumbai \u00b7 Mumbai, Maharashtra, India \u00b7 India",
+          "description_length": 3839,
+          "posted_at": "2025-08-26T11:21:53+00:00",
+          "job_url": "https://careers.kula.ai/clevertap/12616"
+        },
+        {
+          "title": "Technical Onboarding Manager (Hanoi)",
+          "location": "Hanoi \u00b7 Hanoi, Vietnam \u00b7 Vietnam",
+          "description_length": 5819,
+          "posted_at": "2026-02-25T09:31:22+00:00",
+          "job_url": "https://careers.kula.ai/clevertap/27358"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Slice",
+      "careers_url": "https://careers.kula.ai/slice",
+      "ats_provider": "kula",
+      "ats_identifier": "slice",
+      "status": {
+        "name": "Slice",
+        "careers_url": "https://careers.kula.ai/slice",
+        "ats_provider": "kula",
+        "ats_identifier": "slice",
+        "priority": 5,
+        "last_checked_at": "2026-10-05T18:08:31.601331+00:00",
+        "last_success_at": "2026-10-05T18:08:38.873209+00:00",
+        "error_count": 0,
+        "jobs_found": 36,
+        "candidate_jobs": 4,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 36,
+      "sample_jobs": [
+        {
+          "title": "SDE 2 - Backend",
+          "location": "Karnataka_SSFB_Ashford \u00b7 Bengaluru, Karnataka, India \u00b7 Bengaluru \u00b7 India",
+          "description_length": 4396,
+          "posted_at": "2026-07-09T10:56:21+00:00",
+          "job_url": "https://careers.kula.ai/slice/50594"
+        },
+        {
+          "title": "SDE 2 - Data Platform",
+          "location": "Karnataka_SSFB_Ashford \u00b7 Bengaluru, Karnataka, India \u00b7 Bengaluru \u00b7 India",
+          "description_length": 3988,
+          "posted_at": "2026-07-09T10:56:21+00:00",
+          "job_url": "https://careers.kula.ai/slice/50595"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Juspay",
+      "careers_url": "https://juspay.io/careers",
+      "ats_provider": "juspay",
+      "ats_identifier": "juspay",
+      "status": {
+        "name": "Juspay",
+        "careers_url": "https://juspay.io/careers",
+        "ats_provider": "juspay",
+        "ats_identifier": "juspay",
+        "priority": 5,
+        "last_checked_at": "2026-10-05T18:08:31.565011+00:00",
+        "last_success_at": "2026-10-05T18:08:39.981168+00:00",
+        "error_count": 0,
+        "jobs_found": 5,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 5,
+      "sample_jobs": [
+        {
+          "title": "Software Development Engineer Backend",
+          "location": "Bangalore",
+          "description_length": 3283,
+          "posted_at": null,
+          "job_url": "https://juspay.io/careers/DEV-BE01"
+        },
+        {
+          "title": "Events Marketing Manager",
+          "location": "Bangalore",
+          "description_length": 3836,
+          "posted_at": null,
+          "job_url": "https://juspay.io/careers/EMM01"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Growfin",
+      "careers_url": "https://careers.kula.ai/growfin",
+      "ats_provider": "kula",
+      "ats_identifier": "growfin",
+      "status": {
+        "name": "Growfin",
+        "careers_url": "https://careers.kula.ai/growfin",
+        "ats_provider": "kula",
+        "ats_identifier": "growfin",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:08:31.602195+00:00",
+        "last_success_at": "2026-10-05T18:08:46.740838+00:00",
+        "error_count": 0,
+        "jobs_found": 1,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 1,
+      "sample_jobs": [
+        {
+          "title": "Implementation Consultant",
+          "location": "Growfin.ai \u00b7 Chennai, Tamil Nadu, India \u00b7 Chennai \u00b7 India",
+          "description_length": 2621,
+          "posted_at": "2026-04-21T12:34:19+00:00",
+          "job_url": "https://careers.kula.ai/growfin/12532"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Securonix",
+      "careers_url": "https://securonix.bamboohr.com/careers",
+      "ats_provider": "bamboohr",
+      "ats_identifier": "securonix",
+      "status": {
+        "name": "Securonix",
+        "careers_url": "https://securonix.bamboohr.com/careers",
+        "ats_provider": "bamboohr",
+        "ats_identifier": "securonix",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:08:31.602217+00:00",
+        "last_success_at": "2026-10-05T18:08:52.913679+00:00",
+        "error_count": 0,
+        "jobs_found": 28,
+        "candidate_jobs": 9,
+        "eligible_jobs": 1,
+        "warning": null
+      },
+      "error": null,
+      "listings": 28,
+      "sample_jobs": [
+        {
+          "title": "Senior Support Specialist (Security & Network)",
+          "location": "Bangalore",
+          "description_length": 7883,
+          "posted_at": "2026-01-13T00:00:00+00:00",
+          "job_url": "https://securonix.bamboohr.com/careers/1803"
+        },
+        {
+          "title": "Principal DevOps Engineer",
+          "location": "Bangalore",
+          "description_length": 7317,
+          "posted_at": "2026-07-30T00:00:00+00:00",
+          "job_url": "https://securonix.bamboohr.com/careers/1874"
+        }
+      ],
+      "eligible": [
+        {
+          "title": "Support Engineer - Risk & Compliance Analyst",
+          "location": "Bangalore",
+          "posted_at": "2026-10-05T00:00:00+00:00",
+          "url": "https://securonix.bamboohr.com/careers/1955"
+        }
+      ]
+    },
+    {
+      "company": "MoEngage",
+      "careers_url": "https://moengage.hire.trakstar.com/jobfeeds/moengage",
+      "ats_provider": "xml",
+      "ats_identifier": "https://moengage.hire.trakstar.com/jobfeeds/moengage",
+      "status": {
+        "name": "MoEngage",
+        "careers_url": "https://moengage.hire.trakstar.com/jobfeeds/moengage",
+        "ats_provider": "xml",
+        "ats_identifier": "https://moengage.hire.trakstar.com/jobfeeds/moengage",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:08:31.602234+00:00",
+        "last_success_at": "2026-10-05T18:08:55.818521+00:00",
+        "error_count": 0,
+        "jobs_found": 29,
+        "candidate_jobs": 3,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 29,
+      "sample_jobs": [
+        {
+          "title": "Customer Success Intern \u2014 META",
+          "location": "Bengaluru \u00b7 Karnataka \u00b7 India",
+          "description_length": 3625,
+          "posted_at": "2026-10-05T00:00:00+00:00",
+          "job_url": "https://moengage.hire.trakstar.com/jobs/fk0zlsu"
+        },
+        {
+          "title": "Associate - Customer Success Manager",
+          "location": "Bengaluru \u00b7 Karnataka \u00b7 India",
+          "description_length": 5107,
+          "posted_at": "2026-10-04T00:00:00+00:00",
+          "job_url": "https://moengage.hire.trakstar.com/jobs/fk0zl65"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "smallcase",
+      "careers_url": "https://jobs.pyjamahr.com/smallcase",
+      "ats_provider": "pyjamahr",
+      "ats_identifier": "2615584222",
+      "status": {
+        "name": "smallcase",
+        "careers_url": "https://jobs.pyjamahr.com/smallcase",
+        "ats_provider": "pyjamahr",
+        "ats_identifier": "2615584222",
+        "priority": 3,
+        "last_checked_at": "2026-10-05T18:08:31.602228+00:00",
+        "last_success_at": "2026-10-05T18:09:02.145316+00:00",
+        "error_count": 0,
+        "jobs_found": 3,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 3,
+      "sample_jobs": [
+        {
+          "title": "Business Growth Manager",
+          "location": "Bengaluru, Karnataka, India",
+          "description_length": 6525,
+          "posted_at": null,
+          "job_url": "https://jobs.pyjamahr.com/smallcase/business-growth-manager"
+        },
+        {
+          "title": "Performance Marketing Manager",
+          "location": "Bengaluru, Karnataka, India",
+          "description_length": 3690,
+          "posted_at": null,
+          "job_url": "https://jobs.pyjamahr.com/smallcase/senior-digital-marketing-specialist"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Boehringer Ingelheim",
+      "careers_url": "https://jobs.boehringer-ingelheim.com/",
+      "ats_provider": "xml",
+      "ats_identifier": "https://jobs.boehringer-ingelheim.com/googlefeed.xml",
+      "status": {
+        "name": "Boehringer Ingelheim",
+        "careers_url": "https://jobs.boehringer-ingelheim.com/",
+        "ats_provider": "xml",
+        "ats_identifier": "https://jobs.boehringer-ingelheim.com/googlefeed.xml",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:08:31.602270+00:00",
+        "last_success_at": "2026-10-05T18:09:13.129203+00:00",
+        "error_count": 0,
+        "jobs_found": 751,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 751,
+      "sample_jobs": [],
+      "eligible": []
+    },
+    {
+      "company": "Kimberly-Clark",
+      "careers_url": "https://kimberlyclark.wd1.myworkdayjobs.com/global",
+      "ats_provider": "workday",
+      "ats_identifier": "kimberlyclark|global|India",
+      "status": {
+        "name": "Kimberly-Clark",
+        "careers_url": "https://kimberlyclark.wd1.myworkdayjobs.com/global",
+        "ats_provider": "workday",
+        "ats_identifier": "kimberlyclark|global|India",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:10:59.185548+00:00",
+        "last_success_at": "2026-10-05T18:11:33.700933+00:00",
+        "error_count": 0,
+        "jobs_found": 17,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 17,
+      "sample_jobs": [
+        {
+          "title": "Assistant Manager \u2013 Mill Finance - Sricity Mill",
+          "location": "Sricity Mill",
+          "description_length": 5463,
+          "posted_at": null,
+          "job_url": "https://kimberlyclark.wd1.myworkdayjobs.com/global/job/Sricity-Mill/Assistant-Manager---Mill-Finance---Sricity-Mill_882071-3"
+        },
+        {
+          "title": "Global Supplier Governance & Performance Senior Analyst",
+          "location": "Pune Kharadi Hub",
+          "description_length": 6892,
+          "posted_at": null,
+          "job_url": "https://kimberlyclark.wd1.myworkdayjobs.com/global/job/Pune-Kharadi-Hub/Global-Supplier-Governance---Performance-Senior-Analyst_887246-1"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Kenvue",
+      "careers_url": "https://kenvue.wd5.myworkdayjobs.com/kenvue",
+      "ats_provider": "workday",
+      "ats_identifier": "kenvue|kenvue|India",
+      "status": {
+        "name": "Kenvue",
+        "careers_url": "https://kenvue.wd5.myworkdayjobs.com/kenvue",
+        "ats_provider": "workday",
+        "ats_identifier": "kenvue|kenvue|India",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:10:59.184622+00:00",
+        "last_success_at": "2026-10-05T18:11:17.077786+00:00",
+        "error_count": 0,
+        "jobs_found": 15,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 15,
+      "sample_jobs": [
+        {
+          "title": "Invoice to Cash - Team Lead",
+          "location": "Asia Pacific, India, Karnataka, Bangalore",
+          "description_length": 6460,
+          "posted_at": null,
+          "job_url": "https://kenvue.wd5.myworkdayjobs.com/kenvue/job/Asia-Pacific-India-Karnataka-Bangalore/Invoice-to-Cash---Team-Lead_2607048779W"
+        },
+        {
+          "title": "Senior Sales Officer - Mumbai",
+          "location": "Asia Pacific, India, Maharashtra, Greater Mumbai",
+          "description_length": 2013,
+          "posted_at": null,
+          "job_url": "https://kenvue.wd5.myworkdayjobs.com/kenvue/job/Asia-Pacific-India-Maharashtra-Greater-Mumbai/Senior-Sales-Officer---Mumbai_2607048992W"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Fidelity Investments",
+      "careers_url": "https://fmr.wd1.myworkdayjobs.com/FidelityCareers",
+      "ats_provider": "workday",
+      "ats_identifier": "fmr|FidelityCareers|India",
+      "status": {
+        "name": "Fidelity Investments",
+        "careers_url": "https://fmr.wd1.myworkdayjobs.com/FidelityCareers",
+        "ats_provider": "workday",
+        "ats_identifier": "fmr|FidelityCareers|India",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:10:59.183407+00:00",
+        "last_success_at": "2026-10-05T18:11:28.615543+00:00",
+        "error_count": 0,
+        "jobs_found": 11,
+        "candidate_jobs": 4,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 11,
+      "sample_jobs": [
+        {
+          "title": "Director, Architecture",
+          "location": "Bangalore, Karnataka",
+          "description_length": 6826,
+          "posted_at": null,
+          "job_url": "https://fmr.wd1.myworkdayjobs.com/FidelityCareers/job/Bangalore-Karnataka/Director--Architecture_2132624-1"
+        },
+        {
+          "title": "Principal Software Engineer",
+          "location": "Block 1 DT, Chennai India",
+          "description_length": 9412,
+          "posted_at": null,
+          "job_url": "https://fmr.wd1.myworkdayjobs.com/FidelityCareers/job/Block-1-DT-Chennai-India/Principal-Software-Engineer_2134154-1"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Fractal Analytics",
+      "careers_url": "https://fractal.wd1.myworkdayjobs.com/Careers",
+      "ats_provider": "workday",
+      "ats_identifier": "fractal|Careers",
+      "status": {
+        "name": "Fractal Analytics",
+        "careers_url": "https://fractal.wd1.myworkdayjobs.com/Careers",
+        "ats_provider": "workday",
+        "ats_identifier": "fractal|Careers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:10:59.150680+00:00",
+        "last_success_at": "2026-10-05T18:11:28.654846+00:00",
+        "error_count": 0,
+        "jobs_found": 113,
+        "candidate_jobs": 3,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 113,
+      "sample_jobs": [
+        {
+          "title": "Sr. Data Scientist \u2013 Agentic AI",
+          "location": "Bengaluru",
+          "description_length": 4075,
+          "posted_at": null,
+          "job_url": "https://fractal.wd1.myworkdayjobs.com/Careers/job/Bengaluru/Sr-Data-Scientist---GenAI---Agentic-Systems_SR-42058"
+        },
+        {
+          "title": "Full Stack Developer- WD",
+          "location": "Bengaluru",
+          "description_length": 4610,
+          "posted_at": null,
+          "job_url": "https://fractal.wd1.myworkdayjobs.com/Careers/job/Bengaluru/Full-Stack-Developer--WD_SR-45696-1"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Microchip Technology",
+      "careers_url": "https://microchiphr.wd5.myworkdayjobs.com/External",
+      "ats_provider": "workday",
+      "ats_identifier": "microchiphr|External|India",
+      "status": {
+        "name": "Microchip Technology",
+        "careers_url": "https://microchiphr.wd5.myworkdayjobs.com/External",
+        "ats_provider": "workday",
+        "ats_identifier": "microchiphr|External|India",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:10:59.182064+00:00",
+        "last_success_at": "2026-10-05T18:11:34.980288+00:00",
+        "error_count": 0,
+        "jobs_found": 88,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 88,
+      "sample_jobs": [
+        {
+          "title": "Senior Specialist-Training",
+          "location": "India - Hyderabad \u00b7 Philippines - PTC \u00b7 India - Chennai \u00b7 3 Locations",
+          "description_length": 3649,
+          "posted_at": null,
+          "job_url": "https://microchiphr.wd5.myworkdayjobs.com/External/job/India---Hyderabad/Senior-Specialist-Training_R2696-26"
+        },
+        {
+          "title": "Technical Staff Engineer-Design",
+          "location": "India - Bangalore",
+          "description_length": 4708,
+          "posted_at": null,
+          "job_url": "https://microchiphr.wd5.myworkdayjobs.com/External/job/India---Bangalore/Technical-Staff-Engineer-Design_R4199-26"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Amagi",
+      "careers_url": "https://amagi.mynexthire.com/employer/jobs/careers",
+      "ats_provider": "mynexthire",
+      "ats_identifier": "amagi",
+      "status": {
+        "name": "Amagi",
+        "careers_url": "https://amagi.mynexthire.com/employer/jobs/careers",
+        "ats_provider": "mynexthire",
+        "ats_identifier": "amagi",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:13:43.363459+00:00",
+        "last_success_at": "2026-10-05T18:13:50.104369+00:00",
+        "error_count": 0,
+        "jobs_found": 15,
+        "candidate_jobs": 5,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 15,
+      "sample_jobs": [
+        {
+          "title": "Engagement Manager",
+          "location": "USA",
+          "description_length": 5141,
+          "posted_at": "2026-09-29T18:41:30.141000+00:00",
+          "job_url": "https://amagi.mynexthire.com/employer/jobs/careers#?src%3Dcareers%26p%3DeyJwYWdlVHlwZSI6ImpkIiwiY3ZTb3VyY2UiOiJjYXJlZXJzIiwicmVxSWQiOjQzOSwicmVxdWVzdGVyIjp7ImlkIjoiIiwiY29kZSI6IiIsIm5hbWUiOiIifSwicGFnZSI6ImNhcmVlcnMiLCJidWZpbHRlciI6LTEsImN1c3RvbUZpZWxkcyI6e319"
+        },
+        {
+          "title": "Technical Project Lead",
+          "location": "Bangalore",
+          "description_length": 5175,
+          "posted_at": "2026-09-07T09:49:27.402000+00:00",
+          "job_url": "https://amagi.mynexthire.com/employer/jobs/careers#?src%3Dcareers%26p%3DeyJwYWdlVHlwZSI6ImpkIiwiY3ZTb3VyY2UiOiJjYXJlZXJzIiwicmVxSWQiOjQzNiwicmVxdWVzdGVyIjp7ImlkIjoiIiwiY29kZSI6IiIsIm5hbWUiOiIifSwicGFnZSI6ImNhcmVlcnMiLCJidWZpbHRlciI6LTEsImN1c3RvbUZpZWxkcyI6e319"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Checkout.com",
+      "careers_url": "https://jobs.ashbyhq.com/checkout.com",
+      "ats_provider": "ashby",
+      "ats_identifier": "checkout.com",
+      "status": {
+        "name": "Checkout.com",
+        "careers_url": "https://jobs.ashbyhq.com/checkout.com",
+        "ats_provider": "ashby",
+        "ats_identifier": "checkout.com",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:13:43.400944+00:00",
+        "last_success_at": "2026-10-05T18:13:51.220766+00:00",
+        "error_count": 0,
+        "jobs_found": 181,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 181,
+      "sample_jobs": [
+        {
+          "title": "Senior Manager, Regional Marketing - MENA",
+          "location": "Dubai",
+          "description_length": 8847,
+          "posted_at": "2026-09-23T07:27:37.732000+00:00",
+          "job_url": "https://jobs.ashbyhq.com/checkout.com/b563a46e-e4b9-4fd1-a7bb-6211f1564523"
+        },
+        {
+          "title": "Software Engineer I",
+          "location": "Paris",
+          "description_length": 5018,
+          "posted_at": "2026-08-27T14:38:39.121000+00:00",
+          "job_url": "https://jobs.ashbyhq.com/checkout.com/946474ab-a422-4585-b72a-b300ca4c404c"
+        }
+      ],
+      "eligible": []
+    },
+    {
+      "company": "Mimecast",
+      "careers_url": "https://mimecast.wd5.myworkdayjobs.com/Mimecast-Careers",
+      "ats_provider": "workday",
+      "ats_identifier": "mimecast|Mimecast-Careers|India",
+      "status": {
+        "name": "Mimecast",
+        "careers_url": "https://mimecast.wd5.myworkdayjobs.com/Mimecast-Careers",
+        "ats_provider": "workday",
+        "ats_identifier": "mimecast|Mimecast-Careers|India",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T18:13:43.402920+00:00",
+        "last_success_at": "2026-10-05T18:14:04.998477+00:00",
+        "error_count": 0,
+        "jobs_found": 9,
+        "candidate_jobs": 5,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 9,
+      "sample_jobs": [
+        {
+          "title": "Information Security Analyst I",
+          "location": "India - Bengaluru",
+          "description_length": 4159,
+          "posted_at": null,
+          "job_url": "https://mimecast.wd5.myworkdayjobs.com/Mimecast-Careers/job/India---Bengaluru/Threat-Response-Analyst-I-3_R6420"
+        },
+        {
+          "title": "Senior Software Engineer",
+          "location": "India - Bengaluru",
+          "description_length": 9355,
+          "posted_at": null,
+          "job_url": "https://mimecast.wd5.myworkdayjobs.com/Mimecast-Careers/job/India---Bengaluru/Senior-Software-Engineer_R6624-1"
+        }
+      ],
+      "eligible": []
+    }
+  ],
+  "policy": "Public employer sources only. Missing publication dates stay unknown. Empty or wrong-employer boards are not repairs. Production verification remains required."
+}

@@ -264,3 +264,12 @@ Public references:
 Exact probe attempts, collection checks and excluded name collisions are recorded
 in `companies/ashby-follow-up-2026-10-05.json`. Probing a board-name candidate is
 only a discovery attempt, not evidence of employer identity or complete coverage.
+
+
+### Public career widgets and Workday facets (2026-10-05)
+
+The follow-up audit inspected all 258 remaining Limited coverage sources and their linked public career pages. Seventeen nonempty employer sources passed collection checks before registry updates: Juspay, Cashfree Payments, CleverTap, Slice, Growfin, Securonix, smallcase, MoEngage, Boehringer Ingelheim, Fractal Analytics, Microchip Technology, Fidelity Investments, Kenvue, Kimberly-Clark, Amagi, Checkout.com, and Mimecast. See `companies/career-widget-review-2026-10-05.json` for the audit and collection evidence. This is pre-publication evidence; registry sync must verify the production result.
+
+New collectors read public Juspay Astro job data, Kula React Flight job data, BambooHR career listing/detail JSON, and PyjamaHR public career APIs. They validate source identity, reject private/confidential listings, and fail on incomplete listing counts. Parsers decode data without executing employer JavaScript. PyjamaHR record creation dates and RSS refresh dates are not substituted for publication dates.
+
+Workday India filtering now recognizes nested country facets and exact employer country descriptors, retaining the existing location fallback. Fractal uses its bounded global feed because its public location facets do not expose India. MoEngage RSS city/state/country fields are retained and same-host HTTP job links are upgraded to HTTPS. Regional EU Lever hosts are supported, but retired or empty feeds are not mapped to clear warnings. Target city, experience, and publication-date eligibility rules remain unchanged.
