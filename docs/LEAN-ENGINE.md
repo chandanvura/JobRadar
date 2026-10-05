@@ -12,7 +12,7 @@
 | Personal matching | Improve | Separate relevance from freshness and legacy global priority; exact normalized skill matching. |
 | Feed sorting | Improve | Calculate each score once per data/preferences/tracking change; aggregate feedback once by category. |
 | Feed duplicates | Improve | Presentation grouping preserves original database and tracking identities. |
-| Navigation | Simplify | Five primary destinations; roles, career tools and operations expand on demand. |
+| Navigation | Simplify | Six primary destinations; roles, career tools and operations expand on demand. |
 | Resume and settings | Simplify | Load code on demand; retain private browser data and truthful tailoring. |
 | ATS search shortcuts | Improve | Bounded OR queries for related titles; preserve specialized graduate/intern searches. |
 | Redis/embeddings/new backend/extra database | Do not add | No measured need; no new runtime dependencies. |
@@ -31,7 +31,8 @@ All components are 0–100:
 
 - title fit: 25%; exact title, explicit family alias or exact token overlap;
 - extracted skill coverage: 40%; normalized aliases with exact equality;
-- experience range fit: 25%; unknown requirements receive conservative credit;
+- experience range fit: 25%; ranges above preference and higher minimums lose
+  points gradually; unknown requirements receive conservative credit;
 - preferred location: 10%.
 
 No freshness, source, alert eligibility or legacy `relevance_score` enters this

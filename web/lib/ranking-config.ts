@@ -5,6 +5,8 @@ export const RANKING_CONFIG = {
   decayHours: 24,
   unknownDateDiscount: .5,
   feedbackLimit: 5,
+  experienceExcessPenalty: 15,
+  experienceMinimumPenalty: 5,
   sourceQuality: {greenhouse:100, lever:100, ashby:100, workday:100, smartrecruiters:100, jobvite:100} as Record<string, number>,
   defaultSourceQuality: 70,
   leadershipTitlePenalty: 15,

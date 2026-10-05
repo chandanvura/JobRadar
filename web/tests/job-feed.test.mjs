@@ -56,3 +56,12 @@ test('ranking 100 representative fixtures keeps unsuitable and stale jobs below 
  assert.equal(fixtures.slice(0,20).filter(j=>Number(j.external_job_id)<20).length,20);
  // Synthetic regression evidence only; not a labeled real-world precision metric.
 });
+
+test('partly overlapping experience is down-ranked and contradictory seniority is visible',()=>{
+ const junior=personalMatch(job({experience_min:0,experience_max:2}),prefs);
+ const stretch=personalMatch(job({experience_min:2,experience_max:4}),prefs);
+ const senior=personalMatch(job({experience_min:3,experience_max:7}),prefs);
+ assert.ok(junior.score>stretch.score && stretch.score>senior.score);
+ assert.ok(stretch.reasons.includes('experience partly overlaps — verify'));
+ assert.equal(personalMatch(job({title:'Senior DevOps Engineer'}),prefs).reasons[0],'seniority and experience conflict — verify');
+});

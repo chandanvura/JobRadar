@@ -40,14 +40,13 @@ export function personalMatch(job: MatchJob, p: MatchPreferences) {
   const skillFit = !p.skills.length || !jobSkills.length ? 50 : matchedSkills.length / jobSkills.length * 100;
   const exp = experienceCompatible(job, p);
   const gap = Math.max(0, (job.experience_min ?? 0) - p.experienceMax, p.experienceMin - (job.experience_max ?? Infinity));
-  const experienceFit = exp === null ? 40 : exp ? 100 : Math.max(0, 40 - gap * 20);
+  const experienceFit = exp === null ? 40 : exp ? Math.max(40, 100 - Math.max(0, (job.experience_max ?? p.experienceMax) - p.experienceMax) * config.experienceExcessPenalty - Math.max(0, (job.experience_min ?? 0) - p.experienceMin) * config.experienceMinimumPenalty) : Math.max(0, 40 - gap * 20);
   const locationFit = !p.locations?.length ? 75 : !job.normalized_location ? 40 : p.locations.some(city => job.normalized_location!.toLowerCase().includes(city.toLowerCase())) ? 100 : 0;
   const components = {title: titleFit, skills: skillFit, experience: experienceFit, location: locationFit};
   const score = Math.round(clamp(titleFit * config.match.title + skillFit * config.match.skills + experienceFit * config.match.experience + locationFit * config.match.location));
-  const reasons = [exactTitle ? 'preferred title' : family ? 'preferred role family' : titleHits.length ? 'title terms overlap' : 'title to review',
-    jobSkills.length && p.skills.length ? `${matchedSkills.length}/${jobSkills.length} extracted skills match` : 'skills not specified',
-    exp === null ? 'experience to verify' : exp ? 'experience overlaps' : 'experience outside preference',
-    ...(/\bsenior\b/i.test(job.title) && job.experience_min !== null && job.experience_min <= 3 ? ['seniority and experience conflict — verify'] : []),
+  const reasons = [/\bsenior\b/i.test(job.title) && job.experience_min !== null && job.experience_min <= 3 ? 'seniority and experience conflict — verify' : !p.titles.length ? 'role preference not specified' : exactTitle ? 'preferred title' : family ? 'preferred role family' : titleHits.length ? 'title terms overlap' : 'title to review',
+    !p.skills.length ? 'profile skills not specified' : jobSkills.length ? `${matchedSkills.length}/${jobSkills.length} extracted skills match` : 'job skills not specified',
+    exp === null ? 'experience to verify' : exp ? (job.experience_max !== null && job.experience_max > p.experienceMax ? 'experience partly overlaps — verify' : 'experience overlaps') : 'experience outside preference',
     ...(p.locations?.length ? [locationFit === 100 ? 'preferred location' : 'location to verify'] : [])];
   return {score, reasons, components, matchedSkills, missingSkills, titleMatch: exactTitle || family || titleHits.length > 0, skillMatch: matchedSkills.length > 0, experienceMatch: exp};
 }
