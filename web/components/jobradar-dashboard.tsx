@@ -55,6 +55,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { feedbackByFamily, opportunityPriority, personalMatch } from "@/lib/job-match";
 import { diversifyFeed, groupDuplicateJobs } from "@/lib/job-feed";
+import { fresherRole, technicalInternshipRole } from "@/lib/job-sections";
 
 type ApiJob = {
   description?: string;
@@ -173,6 +174,7 @@ const nav = [
   ["Software Engineering", Code2],
   ["Java / Backend", Code2],
   ["Internships", GraduationCap],
+  ["Fresher Roles", GraduationCap],
   ["Job Boards", ExternalLink],
   ["Saved", Bookmark],
   ["Applications", BriefcaseBusiness],
@@ -184,6 +186,8 @@ const nav = [
   ["Settings", Settings],
 ] as const;
 const primaryNav = new Set([
+  "Internships",
+  "Fresher Roles",
   "Dashboard",
   "Recommended",
   "All Jobs",
@@ -193,7 +197,6 @@ const primaryNav = new Set([
 ]);
 const exploreNav = new Set([
   "Latest Jobs",
-  "Internships",
   "Ultra Fresh",
   "DevOps & Cloud",
   "Software Engineering",
@@ -202,6 +205,7 @@ const exploreNav = new Set([
 const toolsNav = new Set(["Outreach", "Companies", "Job Boards", "Resume Studio"]);
 const operationsNav = new Set(["Scraper Health", "Notifications", "Settings"]);
 const jobViews = new Set([
+  "Fresher Roles",
   "Dashboard",
   "Recommended",
   "Ultra Fresh",
@@ -580,6 +584,8 @@ function DashboardContent() {
         match = ranking.get(trackingKey(j))!.match;
       if (query && !q.includes(query.toLowerCase())) return false;
       if (active === "Internships" && !isInternship(j)) return false;
+      if (active === "Internships" && !technicalInternshipRole(j)) return false;
+      if (active === "Fresher Roles" && !fresherRole(j)) return false;
       if (active === "Needs Review" && (isInternship(j) || /\b(?:senior|staff|principal|lead|manager|experienced)\b/i.test(j.title) || !["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason))) return false;
       if (
         active !== "Internships" &&
@@ -608,7 +614,7 @@ function DashboardContent() {
           !match.skillMatch
         )
           return false;
-        if (active !== "All Jobs" && match.experienceMatch === false) return false;
+        if (!["All Jobs", "Internships"].includes(active) && match.experienceMatch === false) return false;
         if (match.experienceMatch === null && !reviewView && !["All Jobs", "Latest Jobs", "DevOps & Cloud", "Software Engineering", "Java / Backend"].includes(active)) return false;
       }
       if (
@@ -746,7 +752,7 @@ function DashboardContent() {
           (!preferences.skills.length || personalMatch(j, preferences).skillMatch))),
     ).slice(0, 20),
     internships = currentJobs.filter(
-      (j) => j.is_active && isInternship(j),
+      (j) => j.is_active && technicalInternshipRole(j),
     ),
     ultra = eligible.filter((j) => {
       const age = freshnessAge(j);
@@ -1097,7 +1103,12 @@ function DashboardContent() {
                 />
               )}
               {active === "Internships" && (
-                <InternshipDiscovery preferences={preferences} />
+                <InternshipDiscovery preferences={preferences} lastScan={data?.latest_run?.finished_at} count={filtered.length} freshCount={filtered.filter(job => postingStillCurrent(job)).length} />
+              )}
+              {active === "Fresher Roles" && (
+                <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
+                  Full-time roles explicitly accepting zero experience, or graduate/trainee titles when no minimum is stated. Internships and apprenticeships have their own section. Entry-level title labels are inferred from the title; verify the employer requirements. Roles requiring 1–3 years remain in All Jobs.
+                </section>
               )}
               {active === "Latest Jobs" && (
                 <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
@@ -1997,9 +2008,9 @@ function Empty() {
   );
 }
 
-function InternshipDiscovery({ preferences }: { preferences: SearchPreferences }) {
+function InternshipDiscovery({ preferences, lastScan, count, freshCount }: { preferences: SearchPreferences; lastScan?: string; count: number; freshCount: number }) {
   const preferred = preferences.titles.length
-    ? preferences.titles.map((title) => `${title} Intern`)
+    ? preferences.titles.map((title) => /\b(?:intern|internship|apprentice)\b/i.test(title) ? title : `${title} Intern`)
     : ["Software Engineer Intern", "DevOps Intern", "Java Intern", "Cloud Intern", "Data Engineer Intern", "SRE Intern", "Security Intern"];
   const query = encodeURIComponent(preferred.join(" OR "));
   const cities = [
@@ -2014,6 +2025,8 @@ function InternshipDiscovery({ preferences }: { preferences: SearchPreferences }
   return (
     <section className="mb-5 rounded-3xl border border-info/40 bg-info-soft p-5">
       <div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-700 text-white"><GraduationCap size={20} /></div><div><h3 className="font-black text-info">Internship & apprenticeship discovery</h3><p className="mt-1 text-sm leading-6 text-info/75">Kept separate from full-time jobs. JobRadar indexes official employer sources and offers user-initiated LinkedIn, Naukri and official ATS searches; it never scrapes those job boards.</p></div></div>
+      <p className="mt-3 text-sm font-semibold">{count} matching listings · {freshCount} with a current employer date · last completed scan: {lastScan ? new Date(lastScan).toLocaleString("en-IN", {timeZone: "Asia/Kolkata"}) + " IST" : "not available"}.</p>
+      <p className="mt-2 text-xs text-info/70">Employer sources are checked approximately every four hours. Refresh reloads the latest scan; it does not start a new scan. Older or unknown-date listings stay visible for review and are not presented as newly posted. Full-time experience preferences do not hide internships.</p>
       <div className="mt-4 grid gap-2 md:grid-cols-2">{links.map((link) => <a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-info/40 bg-card p-3 text-sm font-bold text-info hover:border-info/40">{link.name} <ExternalLink size={15} /></a>)}</div>
       <p className="mt-3 text-xs text-info/70">Use the Companies area to open a company-specific public recruiter search. Verify employment before sending a short, personalized referral request; JobRadar collects no personal data.</p>
     </section>

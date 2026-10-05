@@ -22,6 +22,12 @@ if(process.argv.includes("--patch-build")){
   // matches the only supported behavior, so generated legacy_env must go.
   delete output.legacy_env;
   output.name="jobradar";
+  const domain=(process.env.JOBRADAR_CUSTOM_DOMAIN || "").trim().toLowerCase();
+  if(domain){
+    if(domain.length>253 || !/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(domain)) throw new Error("JOBRADAR_CUSTOM_DOMAIN must be a hostname without scheme, path or wildcard");
+    output.routes=[...(output.routes || []).filter(route => route.pattern!==domain),{pattern:domain,custom_domain:true}];
+    output.workers_dev=true;
+  }
   output.d1_databases=migrationConfig.d1_databases;
   output.observability={enabled:true};
   output.assets={...output.assets,binding:"ASSETS"};

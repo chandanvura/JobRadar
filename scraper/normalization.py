@@ -40,6 +40,7 @@ def normalize_location(value: str):
 def classify_title(title: str):
     clean=re.sub(r"[^a-z0-9+]+"," ",title.lower()).strip()
     if re.search(r"\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b",clean,re.I):
+        if re.search(r"\b(?:non technical|nontechnical|talent acquisition|human resources|tax|marketing)\b",clean,re.I): return clean,"Other"
         for category,pattern in INTERNSHIP_ROLE_PATTERNS.items():
             if re.search(pattern,clean,re.I): return clean,category
     for category,pattern in ROLE_PATTERNS.items():

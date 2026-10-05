@@ -73,3 +73,19 @@ test('production config patch retains static directory and supplies the fallback
     assert.deepEqual(config.assets,{directory:'../client',binding:'ASSETS'});
   } finally {await rm(dir,{recursive:true,force:true});}
 });
+
+test('optional custom domain preserves existing routes and workers.dev; rejects URLs',async()=>{
+ const {mkdtemp,mkdir,writeFile,readFile,rm}=await import('node:fs/promises');const {tmpdir}=await import('node:os');
+ const {execFile}=await import('node:child_process');const {promisify}=await import('node:util');
+ const dir=await mkdtemp(`${tmpdir()}/jobradar-domain-`);
+ const script=new URL('../scripts/prepare-cloudflare.mjs',import.meta.url).pathname;
+ const env={...process.env,CLOUDFLARE_D1_DATABASE_ID:'00000000-0000-4000-8000-000000000000'};
+ try{
+  await mkdir(`${dir}/dist/server`,{recursive:true});
+  await writeFile(`${dir}/dist/server/wrangler.json`,JSON.stringify({assets:{directory:'../client'},routes:[{pattern:'existing.example.com',custom_domain:true}]}));
+  await promisify(execFile)(process.execPath,[script,'--patch-build'],{cwd:dir,env:{...env,JOBRADAR_CUSTOM_DOMAIN:'jobs.example.com'}});
+  const config=JSON.parse(await readFile(`${dir}/dist/server/wrangler.json`));
+  assert.equal(config.workers_dev,true);assert.equal(config.routes.length,2);assert.deepEqual(config.routes[1],{pattern:'jobs.example.com',custom_domain:true});
+  await assert.rejects(promisify(execFile)(process.execPath,[script,'--patch-build'],{cwd:dir,env:{...env,JOBRADAR_CUSTOM_DOMAIN:'https://example.com/path'}}));
+ }finally{await rm(dir,{recursive:true,force:true});}
+});

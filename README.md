@@ -218,3 +218,16 @@ Duplicate cards group conservatively without merging database or private
 application records. Career tools collapse and resume/settings load on demand.
 See [the lean-engine audit and algorithm notes](docs/LEAN-ENGINE.md) for weights,
 changed modules, security decisions, fixtures and verification limits.
+
+## Internships, fresher roles and custom domains
+
+**Internships** is a primary section for technical internships/apprenticeships;
+full-time experience preferences do not suppress it. **Fresher Roles** separately
+shows full-time jobs accepting zero experience or explicit graduate/trainee roles
+without a stated minimum. Jobs requiring 1–3 years stay in the broader job feed.
+Internships show the completed scan time and current-date listing count; refreshing
+the page reloads stored data and does not initiate a four-hour employer scan.
+
+A custom hostname can be enabled later using the optional GitHub Actions variable
+`JOBRADAR_CUSTOM_DOMAIN`. No hostname is attached until you supply one and configure
+its zone. See [custom-domain setup and private-data migration](docs/CUSTOM-DOMAIN.md).

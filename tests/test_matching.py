@@ -387,3 +387,7 @@ def test_skill_aliases_and_plural_graduate_requirements():
     assert job.is_eligible
     assert {"Kubernetes","AWS","Spring Boot","PostgreSQL","GitHub Actions"}.issubset(job.skills)
     assert extract_experience("Freshers welcome")[:2] == (0.0,1.0)
+
+def test_nontechnical_apprenticeships_are_not_software_roles():
+    assert classify_title("Talent Acquisition Coordinator Trainee_Non-Technical Graduate Apprentice - India UHR")[1] == "Other"
+    assert classify_title("Graduate Software Engineer Apprentice")[1] == "Software Engineering"
