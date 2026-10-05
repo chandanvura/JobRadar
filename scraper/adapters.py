@@ -524,7 +524,7 @@ def discover_ats(soup,base_url):
                     return "greenhouse",token,absolute
                 continue
             if hostname.endswith(".myworkdayjobs.com"):
-                parts=[part for part in parsed.path.split("/") if part and not re.fullmatch(r"[a-z]{2}(?:-[A-Z]{2})?",part)]
+                parts=[part for part in parsed.path.split("/") if part and not re.fullmatch(r"[a-z]{2}(?:-[a-z]{2})?",part,re.I)]
                 if parts:
                     tenant=parsed.hostname.split(".")[0]
                     return "workday",f"{tenant}|{parts[0]}",absolute
@@ -587,5 +587,7 @@ class CustomCareerAdapter(JobSource):
         return jobs,len(jobs)
 
 from .public_platforms import PhenomCareerAdapter, WorkableCareerAdapter
+from .eightfold import EightfoldCareerAdapter
+from .talentbrew import TalentBrewCareerAdapter
 
-ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter(),"phenom":PhenomCareerAdapter(),"workable":WorkableCareerAdapter()}
+ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter(),"phenom":PhenomCareerAdapter(),"workable":WorkableCareerAdapter(),"eightfold":EightfoldCareerAdapter(),"talentbrew":TalentBrewCareerAdapter()}

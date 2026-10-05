@@ -6,6 +6,12 @@ from typing import Optional
 class Company:
     name: str; careers_url: str; ats_provider: str; ats_identifier: str; priority: int = 3; enabled: bool = True
 
+class JobBatch(list):
+    """Collected records with an explicit diagnostic for incomplete public details."""
+    def __init__(self, jobs, coverage_warning=None):
+        super().__init__(jobs)
+        self.coverage_warning = coverage_warning
+
 @dataclass
 class Job:
     external_job_id: str; title: str; company: str; location: str; description: str; ats_provider: str

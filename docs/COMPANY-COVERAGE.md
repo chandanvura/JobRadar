@@ -172,3 +172,38 @@ Existing city, role, experience and freshness filters remain in effect.
 
 Exact source links, collection results and excluded alternatives:
 [`platform-source-review-2026-10-05.json`](../companies/platform-source-review-2026-10-05.json).
+
+## Complete custom-source audit — 2026-10-05
+
+All 370 remaining custom sources received an official-page probe, a public
+Greenhouse board-identity probe and a public SmartRecruiters probe. Secondary
+employer pages, public career scripts and alternative feeds were examined for
+unresolved companies. A board name alone is insufficient: Slice's pizza company,
+Thornbury Community Services, Porter Works, CLEAR and Superior Alarm Systems
+are unrelated to the corresponding registry employers and were excluded.
+Abandoned alternative boards are not substituted merely to lower warnings.
+
+The current Eightfold PCSX career UI uses `/api/pcsx/search` and
+`/api/pcsx/position_details`; its older public jobs interface rejects PCSX sites.
+The collector verifies the public page's employer domain, paginates India search
+results in timestamp order, validates position IDs and reads full descriptions
+and all employer-published locations. Posting timestamps were corroborated
+against public JobPosting dates. Creation timestamps never establish freshness.
+Country-only Microsoft internships are not assumed to be in either target city.
+
+TalentBrew collection follows official HTML pagination on the employer's host,
+validates the organization ID and handles title links, duplicate View Role links
+and sibling location elements. Relevant jobs receive full public JobPosting data
+or an explicitly marked full employer description. Only employer posting dates
+are used; missing dates remain unknown. India searches avoid the global Workday
+cap where a complete country-filtered employer search is available. Both new
+collectors fail visibly above 2000 collected search results or on repeated pages.
+
+Sources can now report partial public detail coverage while retaining valid
+collected jobs. Missing Phenom descriptions are skipped and keep a Limited
+coverage warning. This allows NTT DATA's valid descriptions to be collected
+without inventing the missing qualifications or hiding incomplete coverage.
+Workday discovery also recognizes lowercase locale paths correctly.
+
+Exact attempted sources, identity checks and verified collection results:
+[`custom-source-audit-2026-10-05.json`](../companies/custom-source-audit-2026-10-05.json).

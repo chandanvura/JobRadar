@@ -64,6 +64,7 @@ class PhenomCareerAdapter:
             else:
                 raise ValueError('Phenom India search exceeded the bounded scan')
             semaphore=asyncio.Semaphore(6)
+            missing_details=[]
             async def convert(item):
                 if not likely_target(item.get('title',''),phenom_location(item)): return None
                 if item.get('visibilityType','').lower() in {'private','internal'}: return None
@@ -82,14 +83,18 @@ class PhenomCareerAdapter:
                 if job.get('visibilityType','').lower() in {'private','internal'}: return None
                 description=clean(job.get('description',''))
                 if not description:
-                    raise ValueError('Phenom detail is missing the full employer description')
+                    missing_details.append(sequence)
+                    return None
                 # Creation/ingestion, refresh and expiry times do not establish posting age.
                 posting=job.get('postedDate') or job.get('atsPostedDate') or item.get('postedDate')
                 return make_job(str(job.get('jobId') or sequence),job.get('title') or item['title'],
                                 company.name,phenom_location(job),description,'phenom','company_career',
                                 url,url,company.careers_url,posting=posting)
             converted=await asyncio.gather(*(convert(item) for item in jobs))
-        return [job for job in converted if job],len(jobs)
+        from .models import JobBatch
+        warning=(f'Limited coverage: {len(missing_details)} relevant public job details lack an employer description'
+                 if missing_details else None)
+        return JobBatch([job for job in converted if job],warning),len(jobs)
 
 
 class WorkableCareerAdapter:
