@@ -62,7 +62,7 @@ from the public detail API's `first_published`, with employer JSON-LD fallback.
 Unrelated hosts cannot be mistaken for an official ATS by putting its hostname
 in a URL path.
 
-The registry workflow verifies changed sources only (maximum 25), publishes
+The registry workflow verifies changed sources only (maximum 50), publishes
 real company metrics and target-city candidate jobs, and shares the ordinary
 scan lock. It does not create a misleading partial full-scan record or change
 other companies' job activity. Failures keep previous metrics and show a pending
@@ -72,3 +72,44 @@ This improves collection without paid services. Remaining blocked, timed-out or
 non-structured sources keep their official career links and Limited coverage
 warnings. Workday's existing 1000-listing cap remains; a successful source check
 does not mean every global vacancy has been collected.
+
+
+## Alternative public feeds — 2026-10-05
+
+Internet research and live employer endpoint checks identified 28 additional
+repairs. Eleven use official RSS/XML job feeds: Wipro, EY, HCLTech, Alstom, ANZ,
+BT Group, ExxonMobil, John Deere, American Airlines, Seagate Technology and ZF
+Group. Seven use the public Oracle candidate-site interface: JPMorgan Chase,
+Icertis, Texas Instruments, KPMG, Nokia, Cummins and Westpac. Ten use verified
+Greenhouse, Workday or SmartRecruiters boards found on secondary employer pages:
+Druva, Veeam, Western Digital, Fiserv, Blackbaud, GE HealthCare, Reltio, Roche,
+SingleStore and o9 Solutions.
+
+The XML collector reads descriptions and locations from the live employer feed,
+then fetches cached detail pages only for relevant Bengaluru/Hyderabad roles.
+Posting dates come from employer JSON-LD, schema.org microdata or explicitly
+labelled posting-start dates. US and UK numeric date formats are interpreted
+only with the page's locale. Expiration dates, posting-end dates and RSS refresh
+dates cannot make an older role appear newly posted. Missing dates stay unknown.
+Feed records that publish only a country cannot be assumed to be in either city.
+
+Oracle lists are paginated in newest-posted order, capped at 1000 collected
+listings per source, and include primary and secondary locations. Relevant jobs
+receive full public descriptions, qualifications and employer posting timestamps
+from the detail endpoint. Provider identifiers include the tenant hostname to
+keep sites called CX_1 distinct. Malformed or repeated pages fail visibly. These
+interfaces power public candidate sites but Oracle labels them internal-use;
+this is a shape-checked public-site collector, not a supported integration API.
+
+Source-update ingestion now batches candidate jobs in groups of 200. It retains
+the shared scan lock and does not write a partial full-scan record. The bounded
+focused refresh supports at most 50 changed sources. Job filters, employer-date
+requirements and ordinary scheduled reconciliation remain in effect.
+
+Evidence and exact employer endpoints:
+[`alternative-feed-review-2026-10-05.json`](../companies/alternative-feed-review-2026-10-05.json).
+
+Primary technical references:
+- https://userapps.support.sap.com/sap/support/knowledge/E/2428902
+- https://docs.oracle.com/en/cloud/saas/human-resources/farws/op-recruitingcejobrequisitions-get.html
+- https://docs.oracle.com/en/cloud/saas/human-resources/farws/op-recruitingcejobrequisitiondetails-get.html

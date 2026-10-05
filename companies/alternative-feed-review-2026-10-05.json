@@ -1,0 +1,247 @@
+{
+  "reviewed_at": "2026-10-05",
+  "methods": [
+    "Official public XML feeds",
+    "Oracle public candidate listing and detail endpoints",
+    "ATS discovery on secondary official career pages"
+  ],
+  "secondary_pages_reviewed": 79,
+  "repairs": [
+    {
+      "name": "ANZ",
+      "provider": "xml",
+      "identifier": "https://careers.anz.com/googlefeed.xml",
+      "careers_url": "https://careers.anz.com/",
+      "listings": 229,
+      "evidence_url": "https://careers.anz.com/googlefeed.xml"
+    },
+    {
+      "name": "Alstom",
+      "provider": "xml",
+      "identifier": "https://jobsearch.alstom.com/googlefeed.xml",
+      "careers_url": "https://jobsearch.alstom.com/",
+      "listings": 2129,
+      "evidence_url": "https://jobsearch.alstom.com/googlefeed.xml"
+    },
+    {
+      "name": "American Airlines",
+      "provider": "xml",
+      "identifier": "https://jobs.aa.com/googlefeed.xml",
+      "careers_url": "https://jobs.aa.com/",
+      "listings": 103,
+      "evidence_url": "https://jobs.aa.com/googlefeed.xml"
+    },
+    {
+      "name": "BT Group",
+      "provider": "xml",
+      "identifier": "https://jobs.bt.com/googlefeed.xml",
+      "careers_url": "https://jobs.bt.com/",
+      "listings": 191,
+      "evidence_url": "https://jobs.bt.com/googlefeed.xml"
+    },
+    {
+      "name": "Blackbaud",
+      "provider": "workday",
+      "identifier": "blackbaud|ExternalCareers",
+      "careers_url": "https://blackbaud.wd1.myworkdayjobs.com/ExternalCareers",
+      "listings": 81,
+      "evidence_url": "https://blackbaud.wd1.myworkdayjobs.com/ExternalCareers"
+    },
+    {
+      "name": "Cummins",
+      "provider": "oracle",
+      "identifier": "fa-espx-saasfaprod1.fa.ocs.oraclecloud.com|CX_1",
+      "careers_url": "https://fa-espx-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1",
+      "listings": 1164,
+      "evidence_url": "https://fa-espx-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1"
+    },
+    {
+      "name": "Druva",
+      "provider": "greenhouse",
+      "identifier": "druva",
+      "careers_url": "https://www.druva.com/about/careers",
+      "listings": 34,
+      "evidence_url": "https://www.druva.com/about/careers"
+    },
+    {
+      "name": "EY",
+      "provider": "xml",
+      "identifier": "https://careers.ey.com/googlefeed.xml",
+      "careers_url": "https://careers.ey.com/",
+      "listings": 8137,
+      "evidence_url": "https://careers.ey.com/googlefeed.xml"
+    },
+    {
+      "name": "ExxonMobil",
+      "provider": "xml",
+      "identifier": "https://jobs.exxonmobil.com/googlefeed.xml",
+      "careers_url": "https://jobs.exxonmobil.com/",
+      "listings": 541,
+      "evidence_url": "https://jobs.exxonmobil.com/googlefeed.xml"
+    },
+    {
+      "name": "Fiserv",
+      "provider": "workday",
+      "identifier": "fiserv|EXT",
+      "careers_url": "https://fiserv.wd5.myworkdayjobs.com/EXT",
+      "listings": 276,
+      "evidence_url": "https://fiserv.wd5.myworkdayjobs.com/EXT"
+    },
+    {
+      "name": "GE HealthCare",
+      "provider": "workday",
+      "identifier": "gehc|GEHC_ExternalSite",
+      "careers_url": "https://gehc.wd5.myworkdayjobs.com/GEHC_ExternalSite",
+      "listings": 961,
+      "evidence_url": "https://gehc.wd5.myworkdayjobs.com/GEHC_ExternalSite"
+    },
+    {
+      "name": "HCLTech",
+      "provider": "xml",
+      "identifier": "https://careers.hcltech.com/googlefeed.xml",
+      "careers_url": "https://www.hcltech.com/careers",
+      "listings": 9435,
+      "evidence_url": "https://careers.hcltech.com/googlefeed.xml"
+    },
+    {
+      "name": "Icertis",
+      "provider": "oracle",
+      "identifier": "iaaviz.fa.ocs.oraclecloud.com|Jobs-at-Icertis",
+      "careers_url": "https://iaaviz.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Jobs-at-Icertis",
+      "listings": 63,
+      "evidence_url": "https://iaaviz.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Jobs-at-Icertis"
+    },
+    {
+      "name": "JPMorgan Chase",
+      "provider": "oracle",
+      "identifier": "jpmc.fa.oraclecloud.com|CX_1001",
+      "careers_url": "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001",
+      "listings": 7331,
+      "evidence_url": "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001"
+    },
+    {
+      "name": "John Deere",
+      "provider": "xml",
+      "identifier": "https://jobs.deere.com/googlefeed.xml",
+      "careers_url": "https://jobs.deere.com/",
+      "listings": 337,
+      "evidence_url": "https://jobs.deere.com/googlefeed.xml"
+    },
+    {
+      "name": "KPMG",
+      "provider": "oracle",
+      "identifier": "ejgk.fa.em2.oraclecloud.com|CX_3",
+      "careers_url": "https://ejgk.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_3",
+      "listings": 584,
+      "evidence_url": "https://ejgk.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_3"
+    },
+    {
+      "name": "Nokia",
+      "provider": "oracle",
+      "identifier": "fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com|CX_1",
+      "careers_url": "https://fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1",
+      "listings": 579,
+      "evidence_url": "https://fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1"
+    },
+    {
+      "name": "Reltio",
+      "provider": "greenhouse",
+      "identifier": "reltio",
+      "careers_url": "https://www.reltio.com/careers/",
+      "listings": 32,
+      "evidence_url": "https://boards.greenhouse.io/embed/job_board/js?for=reltio"
+    },
+    {
+      "name": "Roche",
+      "provider": "workday",
+      "identifier": "roche|roche-ext",
+      "careers_url": "https://roche.wd3.myworkdayjobs.com/roche-ext",
+      "listings": 1177,
+      "evidence_url": "https://roche.wd3.myworkdayjobs.com/roche-ext"
+    },
+    {
+      "name": "Seagate Technology",
+      "provider": "xml",
+      "identifier": "https://seagatecareers.com/googlefeed.xml",
+      "careers_url": "https://seagatecareers.com/",
+      "listings": 260,
+      "evidence_url": "https://seagatecareers.com/googlefeed.xml"
+    },
+    {
+      "name": "SingleStore",
+      "provider": "greenhouse",
+      "identifier": "singlestore",
+      "careers_url": "https://www.singlestore.com/careers/",
+      "listings": 41,
+      "evidence_url": "https://job-boards.greenhouse.io/singlestore/jobs/7839324"
+    },
+    {
+      "name": "Texas Instruments",
+      "provider": "oracle",
+      "identifier": "edbz.fa.us2.oraclecloud.com|CX",
+      "careers_url": "https://edbz.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX",
+      "listings": 821,
+      "evidence_url": "https://edbz.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX"
+    },
+    {
+      "name": "Veeam",
+      "provider": "greenhouse",
+      "identifier": "veeamsoftware",
+      "careers_url": "https://careers.veeam.com/",
+      "listings": 235,
+      "evidence_url": "https://careers.veeam.com/"
+    },
+    {
+      "name": "Western Digital",
+      "provider": "smartrecruiters",
+      "identifier": "WesternDigital",
+      "careers_url": "https://jobs.westerndigital.com/",
+      "listings": 322,
+      "evidence_url": "https://jobs.westerndigital.com/"
+    },
+    {
+      "name": "Westpac",
+      "provider": "oracle",
+      "identifier": "ebuu.fa.ap1.oraclecloud.com|CX",
+      "careers_url": "https://ebuu.fa.ap1.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX",
+      "listings": 113,
+      "evidence_url": "https://ebuu.fa.ap1.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX"
+    },
+    {
+      "name": "Wipro",
+      "provider": "xml",
+      "identifier": "https://careers.wipro.com/googlefeed.xml",
+      "careers_url": "https://careers.wipro.com/",
+      "listings": 5786,
+      "evidence_url": "https://careers.wipro.com/googlefeed.xml"
+    },
+    {
+      "name": "ZF Group",
+      "provider": "xml",
+      "identifier": "https://jobs.zf.com/googlefeed.xml",
+      "careers_url": "https://jobs.zf.com/",
+      "listings": 778,
+      "evidence_url": "https://jobs.zf.com/googlefeed.xml"
+    },
+    {
+      "name": "o9 Solutions",
+      "provider": "workday",
+      "identifier": "o9solutions|o9SolutionsExternal",
+      "careers_url": "https://o9solutions.wd5.myworkdayjobs.com/o9SolutionsExternal",
+      "listings": 88,
+      "evidence_url": "https://o9solutions.wd5.myworkdayjobs.com/o9SolutionsExternal"
+    }
+  ],
+  "references": [
+    "https://userapps.support.sap.com/sap/support/knowledge/E/2428902",
+    "https://docs.oracle.com/en/cloud/saas/human-resources/farws/op-recruitingcejobrequisitions-get.html",
+    "https://docs.oracle.com/en/cloud/saas/human-resources/farws/op-recruitingcejobrequisitiondetails-get.html"
+  ],
+  "limitations": [
+    "Oracle endpoints are the undocumented-for-integration internal interface of public candidate sites; schema failures remain visible.",
+    "Oracle listing collection is bounded to the newest 1000 listings per source.",
+    "XML expiry dates and RSS refresh dates are never treated as initial posting dates.",
+    "Some XML feeds publish only country-level locations; these jobs cannot be assumed to be in target cities.",
+    "Endpoint totals are not eligible-job counts; focused publication verifies actual collection."
+  ]
+}

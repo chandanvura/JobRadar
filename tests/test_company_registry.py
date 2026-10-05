@@ -80,3 +80,26 @@ def test_focused_repair_refresh_publishes_only_real_results(monkeypatch):
 def test_registry_does_not_repeat_repairs_for_default_https_port():
     row = Company("FamPay", "https://www.famapp.in:443/careers/", "custom", "fampay")
     assert not changed_sources([row], {"companies": [{"name": "FamPay", "careers_url": "https://www.famapp.in/careers/", "ats_provider": "custom"}]})
+
+
+def test_large_source_refresh_uses_bounded_job_batches(monkeypatch):
+    row = Company('Example', 'https://jobs.lever.co/example', 'lever', 'example')
+    calls = []
+    responses = [dict(companies=[dict(name='Example', careers_url='https://example.test', ats_provider='custom')]),
+                 dict(accepted=200, rejected=0), dict(accepted=1, rejected=0),
+                 dict(companies=[dict(name='Example', careers_url=row.careers_url, ats_provider='lever')])]
+    async def refresh(*args):
+        return [dict(external_job_id=str(i)) for i in range(201)], [dict(name='Example', careers_url=row.careers_url, ats_provider='lever')]
+    def read(request, timeout):
+        calls.append(request)
+        return BytesIO(json.dumps(responses[len(calls)-1]).encode())
+    monkeypatch.setattr(sync_company_registry, 'urlopen', read)
+    monkeypatch.setattr(sync_company_registry, 'load_companies', lambda: [row])
+    monkeypatch.setattr(sync_company_registry, 'refresh_repairs', refresh)
+    monkeypatch.setenv('JOBRADAR_VERIFY_SOURCE_UPDATES', 'true')
+    monkeypatch.setenv('JOBRADAR_INGEST_SECRET', 'test-only')
+    sync_company_registry.main()
+    first, second = [json.loads(request.data) for request in calls[1:3]]
+    assert len(first['jobs']) == 200 and len(second['jobs']) == 1
+    assert first['companies'] and not second['companies']
+    assert 'run' not in first and 'run' not in second

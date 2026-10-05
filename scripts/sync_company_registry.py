@@ -45,8 +45,8 @@ def changed_sources(companies, catalog):
 async def refresh_repairs(companies, updates):
     """Check only changed sources; do not create a partial full-scan record."""
     names = {row["name"] for row in updates}
-    if len(names) > 25:
-        raise ValueError("More than 25 source repairs; use the ordinary scheduled scan")
+    if len(names) > 50:
+        raise ValueError("More than 50 source repairs; use the ordinary scheduled scan")
     semaphore = asyncio.Semaphore(3)
     results = await asyncio.gather(*(scrape(company, semaphore, asyncio.Semaphore(1))
                                   for company in companies if company.name in names))
@@ -84,14 +84,19 @@ def main():
     if not pending:
         print("All enabled company sources match the live catalog")
         return
-    request = Request(origin + "/api/ingest", data=json.dumps({"companies": pending, **({"jobs": jobs} if jobs else {})}).encode(),
-                      headers={**headers, "Content-Type": "application/json",
-                               "Authorization": "Bearer " + os.environ["JOBRADAR_INGEST_SECRET"]},
-                      method="POST")
-    with urlopen(request, timeout=60) as response:  # nosec B310
-        result = json.load(response)
-    if result.get("accepted") != len(jobs) or result.get("rejected") != 0:
-        raise RuntimeError("Company registration failed")
+    # Bounded batches keep large XML catalogs below the API body/write limits.
+    batches = [jobs[index:index + 200] for index in range(0, len(jobs), 200)] or [[]]
+    for index, batch in enumerate(batches):
+        payload = {"companies": pending if index == 0 else []}
+        if batch: payload["jobs"] = batch
+        request = Request(origin + "/api/ingest", data=json.dumps(payload).encode(),
+                          headers={**headers, "Content-Type": "application/json",
+                                   "Authorization": "Bearer " + os.environ["JOBRADAR_INGEST_SECRET"]},
+                          method="POST")
+        with urlopen(request, timeout=60) as response:  # nosec B310
+            result = json.load(response)
+        if result.get("accepted") != len(batch) or result.get("rejected") != 0:
+            raise RuntimeError("Company source publication failed")
     with urlopen(dashboard_request, timeout=30) as response:  # nosec B310
         live = json.load(response)
     if missing_sources(companies, live) or changed_sources(companies, live):

@@ -113,9 +113,9 @@ Cisco,https://cisco.wd5.myworkdayjobs.com/Cisco_Careers,workday,cisco|Cisco_Care
 IBM,https://www.ibm.com/careers/search,custom,ibm,5,true
 Accenture,https://accenture.wd103.myworkdayjobs.com/AccentureCareers,workday,accenture|AccentureCareers,5,true
 Deloitte,https://southasiacareers.deloitte.com/,custom,deloitte,4,true
-EY,https://careers.ey.com/,custom,ey,4,true
+EY,https://careers.ey.com/,xml,https://careers.ey.com/googlefeed.xml,4,true
 PwC,https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers,workday,pwc|Global_Experienced_Careers,4,true
-JPMorgan Chase,https://careers.jpmorgan.com/global/en/search-results,custom,jpmorgan,4,true
+JPMorgan Chase,https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001,oracle,jpmc.fa.oraclecloud.com|CX_1001,4,true
 Goldman Sachs,https://higher.gs.com/,custom,goldmansachs,4,true
 Target,https://jobs.target.com/,custom,target,4,true
 Walmart Global Tech,https://careers.walmart.com/technology,custom,walmart,5,true
@@ -233,10 +233,10 @@ CGI,https://www.cgi.com/en/careers-search,custom,cgi,4,true
 Capgemini,https://www.capgemini.com/in-en/careers/join-capgemini/job-search/,custom,capgemini,5,true
 Infosys,https://career.infosys.com/joblist,custom,infosys,5,true
 TCS,https://www.tcs.com/careers/india,custom,tcs,5,true
-Wipro,https://careers.wipro.com/,custom,wipro,5,true
+Wipro,https://careers.wipro.com/,xml,https://careers.wipro.com/googlefeed.xml,5,true
 Tech Mahindra,https://careers.techmahindra.com/,custom,techmahindra,4,true
 Cognizant,https://careers.cognizant.com/global-en/jobs/,custom,cognizant,5,true
-HCLTech,https://www.hcltech.com/careers,custom,hcltech,5,true
+HCLTech,https://www.hcltech.com/careers,xml,https://careers.hcltech.com/googlefeed.xml,5,true
 NTT DATA,https://careers.nttdata.com/,custom,nttdata,4,true
 DXC Technology,https://dxctechnology.wd1.myworkdayjobs.com/DXCJobs,workday,dxctechnology|DXCJobs,4,true
 ADP,https://jobs.adp.com/,custom,adp,4,true
@@ -299,7 +299,7 @@ T-Systems India,https://jobs.smartrecruiters.com/T-SystemsICTIndiaPvtLtd1,smartr
 Apple,https://jobs.apple.com/en-in/search,custom,apple-india,5,true
 Meta,https://www.metacareers.com/jobs/,custom,meta-india,5,true
 Ericsson,https://www.ericsson.com/en/careers,custom,ericsson-india,4,true
-Nokia,https://www.nokia.com/about-us/careers/,custom,nokia-india,4,true
+Nokia,https://fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1,oracle,fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com|CX_1,4,true
 Siemens,https://jobs.siemens.com/careers,custom,siemens-india,4,true
 Siemens Healthineers,https://careers.siemens-healthineers.com/,custom,siemens-healthineers-india,4,true
 Honeywell,https://careers.honeywell.com/,custom,honeywell-india,4,true
@@ -309,7 +309,7 @@ Emerson,https://www.emerson.com/en-us/careers,custom,emerson-india,4,true
 Rockwell Automation,https://www.rockwellautomation.com/en-us/company/careers.html,custom,rockwell-automation-india,4,true
 Johnson Controls,https://jobs.johnsoncontrols.com/,custom,johnson-controls-india,4,true
 GE Aerospace,https://careers.geaerospace.com/global/en,custom,ge-aerospace-india,4,true
-GE HealthCare,https://careers.gehealthcare.com/global/en,custom,ge-healthcare-india,4,true
+GE HealthCare,https://gehc.wd5.myworkdayjobs.com/GEHC_ExternalSite,workday,gehc|GEHC_ExternalSite,4,true
 Boeing,https://jobs.boeing.com/,custom,boeing-india,4,true
 RTX,https://careers.rtx.com/global/en,custom,rtx-india,4,true
 Collins Aerospace,https://careers.rtx.com/global/en/collins-aerospace,custom,collins-aerospace-india,4,true
@@ -317,19 +317,19 @@ Lam Research,https://www.lamresearch.com/careers/,custom,lam-research-india,4,tr
 Applied Materials,https://careers.appliedmaterials.com/,custom,applied-materials-india,4,true
 ASML,https://www.asml.com/en/careers,custom,asml-india,4,true
 KLA,https://www.kla.com/careers,custom,kla-india,4,true
-Texas Instruments,https://careers.ti.com/,custom,texas-instruments-india,5,true
+Texas Instruments,https://edbz.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX,oracle,edbz.fa.us2.oraclecloud.com|CX,5,true
 Analog Devices,https://www.analog.com/en/careers.html,custom,analog-devices-india,4,true
 Marvell,https://www.marvell.com/company/careers.html,custom,marvell-india,4,true
 MediaTek,https://corp.mediatek.com/careers,custom,mediatek-india,4,true
 Arm,https://careers.arm.com/,custom,arm-india,5,true
 NXP Semiconductors,https://www.nxp.com/company/about-nxp/careers:CAREERS,custom,nxp-india,4,true
 Infineon Technologies,https://www.infineon.com/cms/en/careers/,custom,infineon-india,4,true
-Seagate Technology,https://seagatecareers.com/,custom,seagate-india,4,true
+Seagate Technology,https://seagatecareers.com/,xml,https://seagatecareers.com/googlefeed.xml,4,true
 Keysight Technologies,https://jobs.keysight.com/,custom,keysight-india,4,true
 NetApp,https://careers.netapp.com/,custom,netapp-india,5,true
 Commvault,https://careers.commvault.com/,custom,commvault-india,4,true
 Cohesity,https://www.cohesity.com/company/careers/,custom,cohesity-india,5,true
-Veeam,https://careers.veeam.com/,custom,veeam-india,4,true
+Veeam,https://careers.veeam.com/,greenhouse,veeamsoftware,4,true
 Amdocs,https://jobs.amdocs.com/careers,custom,amdocs-india,4,true
 Intuit,https://www.intuit.com/careers/,custom,intuit-india,5,true
 Citigroup,https://jobs.citi.com/,custom,citigroup-india,4,true
@@ -348,7 +348,7 @@ Nasdaq,https://www.nasdaq.com/about/careers,custom,nasdaq-india,4,true
 Deutsche Boerse Group,https://careers.deutsche-boerse.com/,custom,deutsche-boerse-india,4,true
 Intercontinental Exchange,https://careers.ice.com/,custom,ice-india,4,true
 MSCI,https://careers.msci.com/,custom,msci-india,4,true
-KPMG,https://kpmg.com/in/en/home/careers.html,custom,kpmg-india,4,true
+KPMG,https://ejgk.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_3,oracle,ejgk.fa.em2.oraclecloud.com|CX_3,4,true
 Grant Thornton,https://www.grantthornton.in/careers/,custom,grant-thornton-india,3,true
 McKinsey & Company,https://www.mckinsey.com/careers/search-jobs,custom,mckinsey-india,4,true
 Boston Consulting Group,https://careers.bcg.com/global/en,custom,bcg-india,4,true
@@ -360,7 +360,7 @@ Tredence,https://www.tredence.com/careers,custom,tredence-india,4,true
 Quantiphi,https://quantiphi.com/careers/,custom,quantiphi-india,4,true
 LatentView Analytics,https://www.latentview.com/careers/,custom,latentview-india,4,true
 Novartis,https://www.novartis.com/careers,custom,novartis-india,4,true
-Roche,https://careers.roche.com/global/en,custom,roche-india,4,true
+Roche,https://roche.wd3.myworkdayjobs.com/roche-ext,workday,roche|roche-ext,4,true
 AstraZeneca,https://careers.astrazeneca.com/,custom,astrazeneca-india,4,true
 GSK,https://jobs.gsk.com/en-gb/,custom,gsk-india,4,true
 Sanofi,https://jobs.sanofi.com/en,custom,sanofi-india,4,true
@@ -414,13 +414,13 @@ Larsen & Toubro,https://www.larsentoubro.com/corporate/careers/,custom,larsen-to
 Mercedes-Benz Research and Development India,https://www.mbrdi.co.in/careers,custom,mbrdi-india,5,true
 Volvo Group,https://www.volvogroup.com/en/careers.html,custom,volvo-group-india,4,true
 Volvo Cars,https://www.volvocars.com/intl/careers/,custom,volvo-cars-india,4,true
-ZF Group,https://jobs.zf.com/,custom,zf-group-india,4,true
+ZF Group,https://jobs.zf.com/,xml,https://jobs.zf.com/googlefeed.xml,4,true
 Valeo,https://www.valeo.com/en/career/,custom,valeo-india,3,true
 Caterpillar,https://careers.caterpillar.com/,custom,caterpillar-india,4,true
-John Deere,https://jobs.deere.com/,custom,john-deere-india,4,true
-Cummins,https://cummins.jobs/,custom,cummins-india,4,true
+John Deere,https://jobs.deere.com/,xml,https://jobs.deere.com/googlefeed.xml,4,true
+Cummins,https://fa-espx-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1,oracle,fa-espx-saasfaprod1.fa.ocs.oraclecloud.com|CX_1,4,true
 Otis,https://careers.otis.com/,custom,otis-india,3,true
-Alstom,https://jobsearch.alstom.com/,custom,alstom-india,4,true
+Alstom,https://jobsearch.alstom.com/,xml,https://jobsearch.alstom.com/googlefeed.xml,4,true
 Hitachi Energy,https://www.hitachienergy.com/careers,custom,hitachi-energy-india,4,true
 Hitachi Vantara,https://careers.hitachi.com/,custom,hitachi-vantara-india,4,true
 Toshiba,https://www.global.toshiba/ww/recruit.html,custom,toshiba-india,3,true
@@ -431,19 +431,19 @@ Eaton,https://jobs.eaton.com/jobs,custom,eaton-india,4,true
 Baker Hughes,https://careers.bakerhughes.com/global/en,custom,baker-hughes-india,4,true
 SLB,https://careers.slb.com/,custom,slb-india,4,true
 Halliburton,https://jobs.halliburton.com/,custom,halliburton-india,3,true
-ExxonMobil,https://jobs.exxonmobil.com/,custom,exxonmobil-india,4,true
+ExxonMobil,https://jobs.exxonmobil.com/,xml,https://jobs.exxonmobil.com/googlefeed.xml,4,true
 Chevron,https://careers.chevron.com/,custom,chevron-india,4,true
 BP,https://www.bp.com/en/global/corporate/careers.html,custom,bp-india,4,true
 Maersk,https://www.maersk.com/careers,custom,maersk-india,4,true
 FedEx,https://careers.fedex.com/,custom,fedex-india,4,true
 UPS,https://www.jobs-ups.com/,custom,ups-india,3,true
 DHL,https://careers.dhl.com/global/en,custom,dhl-india,3,true
-American Airlines,https://jobs.aa.com/,custom,american-airlines-india,4,true
+American Airlines,https://jobs.aa.com/,xml,https://jobs.aa.com/googlefeed.xml,4,true
 Delta Air Lines,https://delta.avature.net/careers,custom,delta-air-lines-india,4,true
 United Airlines,https://careers.united.com/us/en,custom,united-airlines-india,4,true
 Emirates Group,https://www.emiratesgroupcareers.com/,custom,emirates-group-india,3,true
 Deutsche Telekom,https://www.telekom.com/en/careers,custom,deutsche-telekom-india,4,true
-BT Group,https://jobs.bt.com/,custom,bt-group-india,4,true
+BT Group,https://jobs.bt.com/,xml,https://jobs.bt.com/googlefeed.xml,4,true
 Vodafone,https://careers.vodafone.com/,custom,vodafone-india,4,true
 Verizon,https://mycareer.verizon.com/,custom,verizon-india,4,true
 AT&T,https://www.att.jobs/,custom,att-india,4,true
@@ -453,9 +453,9 @@ Colt Technology Services,https://www.colt.net/careers/,custom,colt-india,4,true
 Arcesium,https://www.arcesium.com/careers.html,custom,arcesium-india,5,true
 Millennium,https://www.mlp.com/careers/,custom,millennium-india,4,true
 NatWest Group,https://jobs.natwestgroup.com/,custom,natwest-india,4,true
-ANZ,https://careers.anz.com/,custom,anz-india,4,true
+ANZ,https://careers.anz.com/,xml,https://careers.anz.com/googlefeed.xml,4,true
 Commonwealth Bank,https://www.commbank.com.au/about-us/careers.html,custom,commonwealth-bank-india,4,true
-Westpac,https://www.westpac.com.au/about-westpac/careers/,custom,westpac-india,3,true
+Westpac,https://ebuu.fa.ap1.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX,oracle,ebuu.fa.ap1.oraclecloud.com|CX,3,true
 Macquarie Group,https://recruitment.macquarie.com/,custom,macquarie-india,4,true
 DBS Bank,https://www.dbs.com/careers/default.page,custom,dbs-bank-india,4,true
 OCBC,https://www.ocbc.com/group/careers,custom,ocbc-india,3,true
@@ -528,10 +528,10 @@ Netskope,https://www.netskope.com/company/careers/open-positions,greenhouse,nets
 ThoughtSpot,https://www.thoughtspot.com/careers,custom,thoughtspot-india,5,true
 Amagi,https://www.amagi.com/careers,custom,amagi-india,4,true
 Uniphore,https://uniphore.wd503.myworkdayjobs.com/Uniphore,workday,uniphore|Uniphore,4,true
-Druva,https://www.druva.com/about/careers,custom,druva-india,5,true
+Druva,https://www.druva.com/about/careers,greenhouse,druva,5,true
 Zeta,https://www.zeta.tech/in/careers,custom,zeta-india,5,true
 CoinDCX,https://careers.coindcx.com/,custom,coindcx-india,4,true
-Icertis,https://www.icertis.com/company/careers/,custom,icertis-india,4,true
+Icertis,https://iaaviz.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Jobs-at-Icertis,oracle,iaaviz.fa.ocs.oraclecloud.com|Jobs-at-Icertis,4,true
 Guidewire,https://careers.guidewire.com/,custom,guidewire-india,4,true
 DocuSign,https://careers.docusign.com/,custom,docusign-india,4,true
 Zoom,https://careers.zoom.us/home,custom,zoom-india,4,true
@@ -547,13 +547,13 @@ MathWorks,https://in.mathworks.com/company/jobs/opportunities.html,custom,mathwo
 Dassault Systemes,https://www.3ds.com/careers,custom,dassault-systemes-india,4,true
 Bentley Systems,https://bentleysystems.wd5.myworkdayjobs.com/bentley,workday,bentleysystems|bentley,4,true
 Microchip Technology,https://careers.microchip.com/,custom,microchip-india,4,true
-Western Digital,https://jobs.westerndigital.com/,custom,western-digital-india,4,true
+Western Digital,https://jobs.westerndigital.com/,smartrecruiters,WesternDigital,4,true
 Sophos,https://www.sophos.com/en-us/careers,custom,sophos-india,4,true
 CyberArk,https://www.cyberark.com/careers/,custom,cyberark-india,4,true
 Mimecast,https://careers.mimecast.com/,custom,mimecast-india,4,true
 Proofpoint,https://www.proofpoint.com/us/company/careers,custom,proofpoint-india,4,true
 Blackhawk Network,https://careers.blackhawknetwork.com/,custom,blackhawk-network-india,4,true
-Reltio,https://www.reltio.com/careers/,custom,reltio-india,4,true
+Reltio,https://www.reltio.com/careers/,greenhouse,reltio,4,true
 Perfios,https://perfios.ai/careers/,custom,perfios-india,4,true
 ACKO,https://www.acko.com/careers/,custom,acko-india,4,true
 Khatabook,https://khatabook.com/careers,custom,khatabook-india,4,true
@@ -564,7 +564,7 @@ Jumbotail,https://jumbotail.com/careers/,custom,jumbotail-india,3,true
 Capital One,https://www.capitalonecareers.com/india,custom,capital-one-india,5,true
 BNY,https://www.bny.com/corporate/global/en/about-us/careers/work-with-us.html,custom,bny-india,5,true
 FIS,https://careers.fisglobal.com/us/en,custom,fis-india,4,true
-Fiserv,https://careers.fiserv.com/,custom,fiserv-india,5,true
+Fiserv,https://fiserv.wd5.myworkdayjobs.com/EXT,workday,fiserv|EXT,5,true
 Vanguard,https://www.vanguardjobs.com/,custom,vanguard-india,4,true
 Discover,https://jobs.discover.com/,custom,discover-india,4,true
 PepsiCo,https://www.pepsicojobs.com/,custom,pepsico-india,4,true
@@ -606,7 +606,7 @@ Splunk,https://www.splunk.com/en_us/careers.html,custom,splunk-india,5,true
 Redis,https://redis.io/careers/,custom,redis-india,4,true
 Neo4j,https://neo4j.com/careers/,custom,neo4j-india,4,true
 Yugabyte,https://www.yugabyte.com/careers/,greenhouse,yugabyte,4,true
-SingleStore,https://www.singlestore.com/careers/,custom,singlestore-india,4,true
+SingleStore,https://www.singlestore.com/careers/,greenhouse,singlestore,4,true
 DataStax,https://www.datastax.com/company/careers,custom,datastax-india,4,true
 Airwallex,https://www.airwallex.com/careers,custom,airwallex-india,4,true
 Revolut,https://www.revolut.com/careers/,custom,revolut-india,4,true
@@ -622,11 +622,11 @@ Securonix,https://www.securonix.com/careers/,custom,securonix-india,4,true
 ColorTokens,https://colortokens.com/careers/,custom,colortokens-india,4,true
 Safe Security,https://safe.security/careers/,custom,safe-security-india,4,true
 Seclore,https://www.seclore.com/careers/,custom,seclore-india,4,true
-o9 Solutions,https://o9solutions.com/careers/,custom,o9-solutions-india,4,true
+o9 Solutions,https://o9solutions.wd5.myworkdayjobs.com/o9SolutionsExternal,workday,o9solutions|o9SolutionsExternal,4,true
 E2open,https://www.e2open.com/company/careers/,custom,e2open-india,4,true
 Celigo,https://www.celigo.com/company/careers/,greenhouse,celigo,4,true
 Avalara,https://careers.avalara.com/,custom,avalara-india,4,true
-Blackbaud,https://careers.blackbaud.com/,custom,blackbaud-india,4,true
+Blackbaud,https://blackbaud.wd1.myworkdayjobs.com/ExternalCareers,workday,blackbaud|ExternalCareers,4,true
 Ivanti,https://careers.ivanti.com/,custom,ivanti-india,4,true
 SolarWinds,https://jobs.solarwinds.com/,custom,solarwinds-india,4,true
 Toast,https://careers.toasttab.com/,custom,toast-india,4,true

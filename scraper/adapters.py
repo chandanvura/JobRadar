@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
-from urllib.parse import parse_qs, urljoin, urlparse
+from urllib.parse import parse_qs, urlencode, urljoin, urlparse
 from pathlib import Path
 from hashlib import sha256
 import asyncio, html, json, os, re, time
@@ -74,7 +74,7 @@ def location_text(*values):
         elif isinstance(value,list):
             for item in value: add(item)
         elif isinstance(value,dict):
-            for key in ("name","location","city","region","country","addressLocality"):
+            for key in ("name","Name","location","city","region","country","addressLocality"):
                 if key in value: add(value.get(key))
     for value in values: add(value)
     return " · ".join(dict.fromkeys(found))
@@ -283,6 +283,126 @@ class JobviteAdapter(JobSource):
             response.raise_for_status(); jobs=parse_jobvite_xml(response.text,c.name,c.careers_url)
             return jobs,len(jobs)
 
+def employer_posted_date(soup):
+    """Read employer posting dates; never substitute an expiry or fetch time."""
+    values=[]
+    for item in jsonld_objects(soup):
+        if item.get("datePosted"): values.append((item["datePosted"], ""))
+    for node in soup.select('[itemprop="datePosted"]'):
+        values.append((node.get("content") or node.get_text(" ",strip=True), ""))
+    for label in soup.select(".joblayouttoken-label"):
+        if label.get_text(" ",strip=True).lower().rstrip(": ") not in {"date","posting start date"}: continue
+        value=label.find_next_sibling("span")
+        if value: values.append((value.get_text(" ",strip=True),value.get("lang", "")))
+    for value,locale in values:
+        if iso_date(value): return value
+        for pattern in ("%a %b %d %H:%M:%S %Z %Y","%b %d, %Y","%B %d, %Y"):
+            try: return datetime.strptime(value,pattern).date().isoformat()
+            except (ValueError,TypeError): pass
+        patterns=("%m/%d/%y","%m/%d/%Y") if locale=="en-US" else ("%d/%m/%Y","%d/%m/%y") if locale=="en-GB" else ()
+        for pattern in patterns:
+            try: return datetime.strptime(value,pattern).date().isoformat()
+            except (ValueError,TypeError): pass
+    return None
+
+
+def parse_public_xml(xml,company,careers_url):
+    root=ET.fromstring(xml)
+    if root.tag.split("}")[-1].lower() not in {"rss","jobs","joblist"}:
+        raise ValueError("Expected a public RSS or XML job feed")
+    jobs=[]; items=root.findall(".//item") or root.findall(".//job")
+    for item in items:
+        fields={node.tag.split("}")[-1]:node.text or "" for node in item}
+        title=clean(fields.get("title")); url=fields.get("link") or fields.get("url")
+        if not title or not url: continue
+        parsed=urlparse(url)
+        if parsed.scheme!="https" or not parsed.hostname: continue
+        location=clean(fields.get("location"))
+        if location and title.endswith(f" ({location})"): title=title[:-(len(location)+3)]
+        description=clean(html.unescape(fields.get("description", "")))
+        posting=fields.get("datePosted") or fields.get("publish_date")
+        jobs.append(make_job(str(fields.get("id") or fields.get("guid") or url),title,company,location,description,
+                             "xml","company_career",url,url,careers_url,posting=posting))
+    return list({job.external_job_id:job for job in jobs}.values()),len(items)
+
+
+class PublicXMLAdapter(JobSource):
+    async def fetch_jobs(self,c):
+        parsed=urlparse(c.ats_identifier)
+        if parsed.scheme!="https" or not parsed.hostname: raise ValueError("Public XML feed requires an HTTPS URL")
+        # Listings remain live. Only employer detail pages reuse the detail cache.
+        async with client(timeout=45) as x:
+            response=await request(x,"GET",c.ats_identifier); response.raise_for_status()
+            jobs,count=parse_public_xml(response.content,c.name,c.careers_url)
+            targets=[job for job in jobs if likely_target(job.title,job.location)]
+            semaphore=asyncio.Semaphore(6)
+            async def dated(job):
+                if job.posted_at: return job
+                async with semaphore:
+                    try:
+                        detail=await cached_get(x,job.job_url)
+                        if detail.status_code==200:
+                            posting=employer_posted_date(BeautifulSoup(detail.text,"html.parser"))
+                            job.posted_at,job.posted_label,job.posted_precision,job.reported_age_hours=posting_fields(posting)
+                    except (httpx.HTTPError,ValueError): pass
+                return job
+            return list(await asyncio.gather(*(dated(job) for job in targets))),count
+
+
+def oracle_config(c):
+    parsed=urlparse(c.careers_url)
+    match=re.search(r"/sites/([\w-]+)",parsed.path)
+    configured=c.ats_identifier.split("|")
+    site=configured[-1] if c.ats_identifier else (match.group(1) if match else "")
+    if len(configured)>1 and configured[0].lower()!=(parsed.hostname or "").lower():
+        raise ValueError("Oracle identifier hostname differs from career site")
+    if parsed.scheme!="https" or not parsed.hostname or not re.fullmatch(r"[\w-]+",site):
+        raise ValueError("Oracle requires an official HTTPS career site and site identifier")
+    return f"https://{parsed.netloc}",site
+
+
+class OracleCareerAdapter(JobSource):
+    async def fetch_jobs(self,c):
+        origin,site=oracle_config(c); base=origin+"/hcmRestApi/resources/latest/"
+        async with client(timeout=30) as x:
+            postings={}; offset=0
+            while offset<1000:
+                params={"onlyData":"true","expand":"requisitionList.secondaryLocations",
+                        "finder":f"findReqs;siteNumber={site},limit=50,offset={offset},sortBy=POSTING_DATES_DESC"}
+                response=await request(x,"GET",base+"recruitingCEJobRequisitions",params=params); response.raise_for_status()
+                data=response.json()
+                if not isinstance(data.get("items"),list) or not data["items"]:
+                    raise ValueError("Oracle career listing schema changed")
+                result=data["items"][0]; batch=result.get("requisitionList")
+                if not isinstance(batch,list): raise ValueError("Oracle requisition list missing")
+                if not batch: break
+                fresh={str(item["Id"]):item for item in batch if item.get("Id")}
+                if not fresh.keys()-postings.keys(): raise ValueError("Oracle pagination repeated the same jobs")
+                postings.update(fresh); offset+=len(batch)
+                total=result.get("TotalJobsCount")
+                if isinstance(total,int) and offset>=total: break
+                if total is None and len(batch)<50: break
+            semaphore=asyncio.Semaphore(6)
+            async def convert(item):
+                location=location_text(item.get("PrimaryLocation"),item.get("secondaryLocations"))
+                if not likely_target(item.get("Title", ""),location): return None
+                identifier=str(item["Id"])
+                params={"onlyData":"true","expand":"all","finder":f'ById;Id="{identifier}",siteNumber={site}'}
+                detail_url=base+"recruitingCEJobRequisitionDetails?"+urlencode(params)
+                async with semaphore: detail=await cached_get(x,detail_url)
+                detail.raise_for_status(); records=detail.json().get("items")
+                if not records: raise ValueError("Oracle public job detail missing")
+                info=records[0]
+                description=" ".join(clean(info.get(key, "")) for key in ("ExternalDescriptionStr","ExternalQualificationsStr","ExternalResponsibilitiesStr"))
+                location=location_text(info.get("PrimaryLocation"),info.get("secondaryLocations"),item.get("PrimaryLocation"),item.get("secondaryLocations"))
+                url=f"{origin}/hcmUI/CandidateExperience/en/sites/{site}/job/{identifier}"
+                return make_job(identifier,info.get("Title") or item.get("Title", ""),c.name,location,description,
+                                "oracle","company_career",url,url,c.careers_url,
+                                posting=info.get("ExternalPostedStartDate") or item.get("PostedDate"))
+            converted=await asyncio.gather(*(convert(item) for item in postings.values()))
+            return [job for job in converted if job],len(postings)
+
+
 def jsonld_objects(soup):
     def postings(value):
         if isinstance(value, list):
@@ -299,7 +419,7 @@ def jsonld_objects(soup):
         except (json.JSONDecodeError,TypeError): continue
         yield from postings(value)
 
-ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com","jobvite.com","icims.com")
+ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com","jobvite.com","icims.com","oraclecloud.com")
 ATS_BOARD_HOSTS={"greenhouse":{"boards.greenhouse.io","job-boards.greenhouse.io"},
                  "lever":{"jobs.lever.co"},"ashby":{"jobs.ashbyhq.com"},
                  "smartrecruiters":{"jobs.smartrecruiters.com","careers.smartrecruiters.com"},
@@ -331,6 +451,21 @@ def discover_ats(soup,base_url):
             try: parsed=urlparse(absolute); hostname=(parsed.hostname or "").lower()
             except ValueError: continue
             if parsed.scheme not in {"https","http"}: continue
+            if hostname.endswith(".oraclecloud.com"):
+                site=re.search(r"/CandidateExperience/[a-z-]+/sites/([\w-]+)",parsed.path,re.I)
+                if site: return "oracle",f"{hostname}|{site.group(1)}",absolute
+                # Branded Oracle boards expose their public backend in career assets.
+                branded=re.search(r"/sites/([\w-]+)",urlparse(base_url).path)
+                number=parse_qs(parsed.query).get("siteNumber",[""])[0]
+                identifier=branded.group(1) if branded else number
+                if identifier and re.fullmatch(r"[\w-]+",identifier) and ("/hcmRestApi/CandidateExperience/" in parsed.path or "/hcmUI/CandExpStatic/" in parsed.path):
+                    return "oracle",f"{hostname}|{identifier}",f"https://{parsed.netloc}/hcmUI/CandidateExperience/en/sites/{identifier}"
+            if hostname=="boards-api.greenhouse.io":
+                board=re.search(r"/v1/boards/([\w.-]+)/jobs",parsed.path)
+                if board: return "greenhouse",board.group(1),absolute
+            if hostname=="my.greenhouse.io":
+                token=parse_qs(parsed.query).get("job_board",[""])[0]
+                if re.fullmatch(r"[\w.-]+",token): return "greenhouse",token,absolute
             if hostname in {"boards.greenhouse.io","job-boards.greenhouse.io"} and parsed.path.startswith("/embed/"):
                 token=parse_qs(parsed.query).get("for",[""])[0]
                 if re.fullmatch(r"[\w.-]+",token):
@@ -360,7 +495,7 @@ class CustomCareerAdapter(JobSource):
             detected=discover_ats(soup,str(listing.url))
             if detected:
                 provider,identifier,board_url=detected
-                source_url=board_url if provider=="workday" else c.careers_url
+                source_url=board_url if provider in {"workday","oracle"} else c.careers_url
                 indexed=Company(c.name,source_url,provider,identifier,c.priority,c.enabled)
                 return await ADAPTERS[provider].fetch_jobs(indexed)
             urls=[]; seen={str(listing.url)}; base_host=(urlparse(str(listing.url)).hostname or "").lower()
@@ -381,7 +516,7 @@ class CustomCareerAdapter(JobSource):
                 detected=discover_ats(BeautifulSoup(response.text,"html.parser"),str(response.url))
                 if detected:
                     provider,identifier,board_url=detected
-                    indexed=Company(c.name,board_url if provider=="workday" else c.careers_url,provider,identifier,c.priority,c.enabled)
+                    indexed=Company(c.name,board_url if provider in {"workday","oracle"} else c.careers_url,provider,identifier,c.priority,c.enabled)
                     return await ADAPTERS[provider].fetch_jobs(indexed)
             for url,response in zip([str(listing.url),*urls],responses):
                 if response is None or response.status_code!=200: continue
@@ -399,4 +534,4 @@ class CustomCareerAdapter(JobSource):
         jobs=list(unique.values())
         return jobs,len(jobs)
 
-ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter()}
+ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter()}

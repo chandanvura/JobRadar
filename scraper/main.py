@@ -78,7 +78,7 @@ async def scrape(company,sem,custom_sem):
                 jobs=[enrich(j,company.priority) for j in raw]
                 candidates=[j for j in jobs if j.city in TARGET_CITIES and j.role_category!="Other"]
                 eligible=[j for j in candidates if j.is_eligible]
-                warning="Limited coverage: no structured public job feed" if discovered==0 and company.ats_provider=="custom" else "No current openings returned" if discovered==0 else "No target-city roles currently" if not candidates else None
+                warning="Limited coverage: no structured public job feed" if discovered==0 and company.ats_provider=="custom" else "No current openings returned" if discovered==0 else "No roles with a published target-city location returned" if not candidates else None
                 return jobs,{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":now(),"error_count":0,"jobs_found":discovered,"candidate_jobs":len(candidates),"eligible_jobs":len(eligible),"warning":warning},None,discovered
             except Exception as exc:
                 print(f"WARN {company.name}: {type(exc).__name__}: {exc}",file=sys.stderr)
