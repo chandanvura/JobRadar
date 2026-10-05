@@ -54,7 +54,7 @@ def test_repaired_sources_preserve_counts_and_dates_until_real_rescan():
                 "last_checked_at": "2026-10-05T10:00:00Z", "last_success_at": "2026-10-05T10:00:00Z"}
     updates = changed_sources([company], {"companies": [previous]})
     assert len(updates) == 1
-    assert updates[0]["warning"] == "Source repaired; awaiting scheduled rescan"
+    assert updates[0]["warning"] == "Source updated; awaiting verification"
     for key in ("jobs_found", "candidate_jobs", "eligible_jobs", "last_checked_at", "last_success_at"):
         assert updates[0][key] == previous[key]
     assert not changed_sources([company], {"companies": updates})
@@ -66,7 +66,7 @@ def test_focused_repair_refresh_publishes_only_real_results(monkeypatch):
     import asyncio
     rows = [Company('Working', 'https://jobs.lever.co/working', 'lever', 'working'),
             Company('Blocked', 'https://jobs.lever.co/blocked', 'lever', 'blocked')]
-    updates = [{'name': row.name, 'jobs_found': 7, 'warning': 'Source repaired; awaiting scheduled rescan'} for row in rows]
+    updates = [{'name': row.name, 'jobs_found': 7, 'warning': 'Source updated; awaiting verification'} for row in rows]
     async def scan(company, *args):
         if company.name == 'Blocked': return [], {'name': 'Blocked'}, 'timeout', 0
         return [], {'name': 'Working', 'jobs_found': 42, 'warning': 'No target-city roles currently'}, None, 42
@@ -103,3 +103,14 @@ def test_large_source_refresh_uses_bounded_job_batches(monkeypatch):
     assert len(first['jobs']) == 200 and len(second['jobs']) == 1
     assert first['companies'] and not second['companies']
     assert 'run' not in first and 'run' not in second
+
+
+def test_unverified_source_update_keeps_existing_limited_coverage_visible():
+    from scripts.sync_company_registry import changed_sources
+    from scraper.models import Company
+    company=Company('Example','https://job-boards.greenhouse.io/example','greenhouse','example')
+    catalog={'companies':[{'name':'Example','careers_url':'https://example.com/careers','ats_provider':'custom',
+                           'jobs_found':0,'warning':'Limited coverage: no structured public job feed'}]}
+    result=changed_sources([company],catalog)
+    assert result[0]['warning']=='Limited coverage: source update awaiting verification'
+    assert result[0]['jobs_found']==0

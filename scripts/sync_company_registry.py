@@ -37,7 +37,9 @@ def changed_sources(companies, catalog):
                   "jobs_found", "candidate_jobs", "eligible_jobs")}
         update.update(name=c.name, careers_url=c.careers_url, ats_provider=c.ats_provider,
                       ats_identifier=c.ats_identifier, priority=c.priority,
-                      warning="Source repaired; awaiting scheduled rescan")
+                      warning=("Limited coverage: source update awaiting verification"
+                               if (row.get("warning") or "").startswith("Limited coverage")
+                               else "Source updated; awaiting verification"))
         updates.append(update)
     return updates
 

@@ -139,3 +139,35 @@ preserved. No paid APIs or browser infrastructure were added.
 
 Exact links, live-probe evidence and excluded alternatives:
 [`deep-source-review-2026-10-05.json`](../companies/deep-source-review-2026-10-05.json).
+
+## Public career platforms — 2026-10-05
+
+Another 47 employer sources passed real listing and relevant-detail checks:
+18 Greenhouse boards, 20 Phenom career sites, three Workable boards, three
+Workday boards and three employer XML feeds. The review includes ABB, OpenText,
+Blue Yonder, RTX, GSK, Philips, BlackRock, Novartis, Innovaccer and Lokal.
+
+Phenom collection uses the same public search widget as each employer's career
+site. It checks the employer identifier and keeps both search and detail URLs
+on that official host. India country variants are queried with complete
+pagination bounded at 2000 India records. Reported listing totals therefore
+cover India, not the global board. Relevant details must match the listing and
+include the full description. Private/internal records are excluded. Only an
+employer posting date can establish freshness; creation, refresh and expiry
+timestamps cannot.
+
+Workable uses its public published-job interface, follows opaque pagination
+tokens and reads full descriptions, requirements and benefits. Internal jobs
+and hidden secondary locations are excluded. Original `published` timestamps
+establish posting age. A repeated page, malformed response or exceeded bound
+fails visibly. These public website interfaces are not promised integration APIs.
+
+Pending source changes retain their existing Limited coverage warning until a
+real successful collection verifies the repair. Failed checks cannot reduce the
+warning count. DHL's intermittent errors, US-only alternatives, unverified
+division attribution and incomplete Eightfold pagination remain unresolved.
+No jobs, dates or coverage claims are generated to reach a numerical target.
+Existing city, role, experience and freshness filters remain in effect.
+
+Exact source links, collection results and excluded alternatives:
+[`platform-source-review-2026-10-05.json`](../companies/platform-source-review-2026-10-05.json).
