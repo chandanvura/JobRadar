@@ -55,7 +55,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { feedbackByFamily, opportunityPriority, personalMatch } from "@/lib/job-match";
 import { diversifyFeed, groupDuplicateJobs } from "@/lib/job-feed";
-import { fresherRole, technicalInternshipRole } from "@/lib/job-sections";
+import { fresherRole, internshipRole as isInternship, technicalInternshipRole } from "@/lib/job-sections";
 
 type ApiJob = {
   description?: string;
@@ -287,9 +287,6 @@ const parseSkills = (value: string) => {
   }
 };
 const trackingKey = (job: ApiJob) => trackingIdentity(job);
-const isInternship = (job: ApiJob) =>
-  job.employment_type === "Internship" ||
-  /\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b/i.test(job.title);
 const initialView = () =>
   typeof window === "undefined"
     ? "Dashboard"

@@ -52,7 +52,6 @@ test('internship product area is isolated and uses explicit board filters',async
  assert.match(source,/site:myworkdayjobs\.com OR site:greenhouse\.io OR site:lever\.co OR site:icims\.com/);
  assert.match(source,/site:jobs\.jobvite\.com/);
  assert.match(source,/Official ATS internships — \$\{city.name\}/);
- assert.match(source,/apprentice\|apprenticeship/);
 });
 
 test('unknown experience jobs have a separate review area and no alert eligibility',async()=>{
