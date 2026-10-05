@@ -1,0 +1,490 @@
+{
+  "reviewed_at": "2026-10-05",
+  "methods": [
+    "Search official career sites and employer ATS boards",
+    "Probe public listings without authentication",
+    "Verify real collection through existing job policy"
+  ],
+  "repairs": [
+    {
+      "name": "SAP",
+      "provider": "xml",
+      "identifier": "https://careers.sap.com/googlefeed.xml",
+      "careers_url": "https://careers.sap.com/",
+      "reference_url": "https://jobs.sap.com/en/"
+    },
+    {
+      "name": "Boston Scientific",
+      "provider": "xml",
+      "identifier": "https://jobs.bostonscientific.com/googlefeed.xml",
+      "careers_url": "https://jobs.bostonscientific.com/",
+      "reference_url": "https://jobs.bostonscientific.com/"
+    },
+    {
+      "name": "Swiss Re",
+      "provider": "xml",
+      "identifier": "https://careers.swissre.com/googlefeed.xml",
+      "careers_url": "https://careers.swissre.com/",
+      "reference_url": "https://careers.swissre.com/"
+    },
+    {
+      "name": "Halliburton",
+      "provider": "xml",
+      "identifier": "https://jobs.halliburton.com/googlefeed.xml",
+      "careers_url": "https://jobs.halliburton.com/",
+      "reference_url": "https://jobs.halliburton.com/"
+    },
+    {
+      "name": "Volvo Cars",
+      "provider": "xml",
+      "identifier": "https://jobs.volvocars.com/googlefeed.xml",
+      "careers_url": "https://jobs.volvocars.com/",
+      "reference_url": "https://jobs.volvocars.com/"
+    },
+    {
+      "name": "Volvo Group",
+      "provider": "xml",
+      "identifier": "https://jobs.volvogroup.com/googlefeed.xml",
+      "careers_url": "https://jobs.volvogroup.com/",
+      "reference_url": "https://jobs.volvogroup.com/"
+    },
+    {
+      "name": "Atlan",
+      "provider": "ashby",
+      "identifier": "atlan",
+      "careers_url": "https://jobs.ashbyhq.com/atlan",
+      "reference_url": "https://jobs.ashbyhq.com/atlan/9ba81415-2033-4b72-af4a-d9d2f288abaa"
+    },
+    {
+      "name": "Tekion",
+      "provider": "ashby",
+      "identifier": "Tekion",
+      "careers_url": "https://jobs.ashbyhq.com/Tekion",
+      "reference_url": "https://tekion.com/job-openings"
+    },
+    {
+      "name": "Confluent",
+      "provider": "ashby",
+      "identifier": "confluent",
+      "careers_url": "https://jobs.ashbyhq.com/confluent",
+      "reference_url": "https://jobs.ashbyhq.com/confluent/ccc79d18-b4a7-4be8-9a93-6714d72c5147/"
+    },
+    {
+      "name": "Amazon",
+      "provider": "amazon",
+      "identifier": "amazon-india",
+      "careers_url": "https://www.amazon.jobs/en/search",
+      "reference_url": "https://www.amazon.jobs/en/search"
+    },
+    {
+      "name": "PhonePe",
+      "provider": "smartrecruiters",
+      "identifier": "PHONEPELIMITED",
+      "careers_url": "https://careers.smartrecruiters.com/PHONEPELIMITED",
+      "reference_url": "https://www.phonepe.com/careers/job-openings/"
+    },
+    {
+      "name": "Meesho",
+      "provider": "lever",
+      "identifier": "meesho",
+      "careers_url": "https://jobs.lever.co/meesho",
+      "reference_url": "https://jobs.lever.co/meesho"
+    },
+    {
+      "name": "FamPay",
+      "provider": "lever",
+      "identifier": "fampay",
+      "careers_url": "https://jobs.lever.co/fampay",
+      "reference_url": "https://jobs.lever.co/fampay"
+    },
+    {
+      "name": "Whatfix",
+      "provider": "custom",
+      "identifier": "whatfix-india",
+      "careers_url": "https://whatfix101.hire.trakstar.com/",
+      "reference_url": "https://whatfix.com/careers/"
+    },
+    {
+      "name": "Mindtickle",
+      "provider": "lever",
+      "identifier": "mindtickle",
+      "careers_url": "https://jobs.lever.co/mindtickle",
+      "reference_url": "https://jobs.lever.co/mindtickle"
+    }
+  ],
+  "probes": [
+    {
+      "name": "OpenText",
+      "url": "https://careers.opentext.com/googlefeed.xml",
+      "status": 200,
+      "final": "https://careers.opentext.com/googlefeed.xml",
+      "bytes": 31,
+      "error": "ParseError"
+    },
+    {
+      "name": "LTIMindtree",
+      "url": "https://careers.ltimindtree.com/googlefeed.xml",
+      "status": 502,
+      "final": "https://careers.ltimindtree.com/googlefeed.xml",
+      "bytes": 150
+    },
+    {
+      "name": "Deutsche Boerse Group",
+      "url": "https://careers.deutsche-boerse.com/googlefeed.xml",
+      "status": 404,
+      "final": "https://careers.deutsche-boerse.com/googlefeed.xml",
+      "bytes": 11016
+    },
+    {
+      "name": "Adidas",
+      "url": "https://careers.adidas-group.com/googlefeed.xml",
+      "status": 404,
+      "final": "https://careers.adidas-group.com/googlefeed.xml",
+      "bytes": 40242
+    },
+    {
+      "name": "Swiss Re",
+      "url": "https://careers.swissre.com/googlefeed.xml",
+      "status": 200,
+      "final": "https://careers.swissre.com/googlefeed.xml",
+      "bytes": 3671945,
+      "count": 252
+    },
+    {
+      "name": "Halliburton",
+      "url": "https://jobs.halliburton.com/googlefeed.xml",
+      "status": 200,
+      "final": "https://jobs.halliburton.com/googlefeed.xml",
+      "bytes": 3129007,
+      "count": 455
+    },
+    {
+      "name": "SAP",
+      "url": "https://jobs.sap.com/googlefeed.xml",
+      "status": 404,
+      "final": "https://jobs.sap.com/googlefeed.xml",
+      "bytes": 10826
+    },
+    {
+      "name": "Ansys",
+      "url": "https://careers.ansys.com/googlefeed.xml",
+      "status": 502,
+      "final": "https://careers.ansys.com/googlefeed.xml",
+      "bytes": 150
+    },
+    {
+      "name": "Boston Scientific",
+      "url": "https://jobs.bostonscientific.com/googlefeed.xml",
+      "status": 200,
+      "final": "https://jobs.bostonscientific.com/googlefeed.xml",
+      "bytes": 7248065,
+      "count": 549
+    },
+    {
+      "name": "Colt Technology Services",
+      "url": "https://careers.colt.net/googlefeed.xml",
+      "status": 404,
+      "final": "https://careers.colt.net/googlefeed.xml",
+      "bytes": 74
+    },
+    {
+      "name": "SAP",
+      "url": "https://careers.sap.com/googlefeed.xml",
+      "status": 200,
+      "final": "https://careers.sap.com/googlefeed.xml",
+      "bytes": 14728105,
+      "count": 874
+    },
+    {
+      "name": "Volvo Group",
+      "url": "https://jobs.volvogroup.com/googlefeed.xml",
+      "status": 200,
+      "final": "https://jobs.volvogroup.com/googlefeed.xml",
+      "bytes": 5927067,
+      "count": 620
+    },
+    {
+      "name": "Amazon",
+      "url": "https://www.amazon.jobs/en/search.json?country=IND&result_limit=10&offset=0&sort=recent",
+      "status": 200,
+      "final": "https://www.amazon.jobs/en/search.json?country=IND&result_limit=10&offset=0&sort=recent",
+      "bytes": 72477,
+      "keys": [
+        "error",
+        "hits",
+        "facets",
+        "content",
+        "jobs",
+        "job_posting_search_request"
+      ],
+      "total": 2307,
+      "error": "KeyError"
+    },
+    {
+      "name": "Volvo Cars",
+      "url": "https://jobs.volvocars.com/googlefeed.xml",
+      "status": 200,
+      "final": "https://jobs.volvocars.com/googlefeed.xml",
+      "bytes": 392405,
+      "count": 39
+    },
+    {
+      "name": "PhonePe",
+      "url": "https://api.smartrecruiters.com/v1/companies/PHONEPELIMITED/postings?limit=100",
+      "status": 200,
+      "final": "https://api.smartrecruiters.com/v1/companies/PHONEPELIMITED/postings?limit=100",
+      "bytes": 135695,
+      "keys": [
+        "offset",
+        "limit",
+        "totalFound",
+        "content"
+      ],
+      "total": 91
+    },
+    {
+      "name": "Postman",
+      "url": "https://boards-api.greenhouse.io/v1/boards/postman/jobs?content=true",
+      "status": 404,
+      "bytes": 38
+    },
+    {
+      "name": "Atlan",
+      "url": "https://api.ashbyhq.com/posting-api/job-board/atlan",
+      "status": 200,
+      "bytes": 107506,
+      "count": 6
+    },
+    {
+      "name": "Confluent",
+      "url": "https://api.ashbyhq.com/posting-api/job-board/confluent",
+      "status": 200,
+      "bytes": 218388,
+      "count": 17
+    },
+    {
+      "name": "Tekion",
+      "url": "https://api.ashbyhq.com/posting-api/job-board/Tekion",
+      "status": 200,
+      "bytes": 1314980,
+      "count": 101
+    },
+    {
+      "name": "Whatfix",
+      "url": "https://whatfix101.hire.trakstar.com/",
+      "status": 200,
+      "bytes": 145740,
+      "error": "'str' object has no attribute 'find_all'"
+    },
+    {
+      "name": "Cohesity",
+      "url": "https://www.cohesity.com/careers/open-positions/",
+      "status": 200,
+      "bytes": 164973,
+      "error": "'str' object has no attribute 'find_all'"
+    },
+    {
+      "name": "Rippling",
+      "url": "https://ats.rippling.com/rippling/jobs",
+      "status": 403,
+      "bytes": 59
+    },
+    {
+      "name": "Postman",
+      "url": "https://www.postman.com/company/careers/open-positions/",
+      "status": 200,
+      "bytes": 241426,
+      "ats": null
+    },
+    {
+      "name": "Whatfix",
+      "url": "https://whatfix101.hire.trakstar.com/jobs/fk0zfub/",
+      "status": 200,
+      "bytes": 149449,
+      "ats": null
+    },
+    {
+      "name": "ThoughtSpot",
+      "url": "https://thoughtspot.wd5.myworkdayjobs.com/wday/cxs/thoughtspot/careers/jobs",
+      "status": 200,
+      "bytes": 66,
+      "count": 0
+    },
+    {
+      "name": "Meesho",
+      "url": "https://api.lever.co/v0/postings/meesho?mode=json",
+      "status": 200,
+      "bytes": 963147,
+      "count": 59
+    },
+    {
+      "name": "Chargebee",
+      "url": "https://jobs.chargebee.com/",
+      "status": 200,
+      "bytes": 47869,
+      "ats": null
+    },
+    {
+      "name": "Hasura",
+      "url": "https://hasura.io/careers/",
+      "status": 200,
+      "bytes": 82762,
+      "ats": null
+    },
+    {
+      "name": "FamPay",
+      "url": "https://api.lever.co/v0/postings/fampay?mode=json",
+      "status": 200,
+      "bytes": 309155,
+      "count": 17
+    }
+  ],
+  "additional_probes": [
+    {
+      "name": "Mindtickle",
+      "url": "https://api.lever.co/v0/postings/mindtickle?mode=json",
+      "status": 200,
+      "count": 17
+    },
+    {
+      "name": "Highspot",
+      "url": "https://api.lever.co/v0/postings/highspot?mode=json",
+      "status": 200,
+      "count": 0,
+      "decision": "Do not substitute an empty board; migration remains unresolved"
+    }
+  ],
+  "notes": [
+    "Amazon country=IND and city queries return real target-city listings, including secondary cities. Posting dates have day precision.",
+    "ThoughtSpot Workday and Highspot Lever boards returned no vacancies; no speculative repair.",
+    "Postman Greenhouse API returned 404 despite indexed pages; further migration research required.",
+    "XML expiry dates and job update times never replace original posting dates."
+  ],
+  "collection_checks": [
+    {
+      "name": "PhonePe",
+      "jobs_found": 91,
+      "candidate_jobs": 12,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "SAP",
+      "jobs_found": 874,
+      "candidate_jobs": 3,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "Amazon",
+      "jobs_found": 1671,
+      "candidate_jobs": 293,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "Tekion",
+      "jobs_found": 101,
+      "candidate_jobs": 23,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "Meesho",
+      "jobs_found": 59,
+      "candidate_jobs": 2,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "Volvo Group",
+      "jobs_found": 620,
+      "candidate_jobs": 7,
+      "eligible_jobs": 1,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "Confluent",
+      "jobs_found": 17,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": "No roles with a published target-city location returned"
+    },
+    {
+      "name": "Whatfix",
+      "jobs_found": 24,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": "No roles with a published target-city location returned"
+    },
+    {
+      "name": "Halliburton",
+      "jobs_found": 455,
+      "candidate_jobs": 7,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "Volvo Cars",
+      "jobs_found": 39,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": "No roles with a published target-city location returned"
+    },
+    {
+      "name": "Mindtickle",
+      "jobs_found": 17,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": "No roles with a published target-city location returned"
+    },
+    {
+      "name": "FamPay",
+      "jobs_found": 17,
+      "candidate_jobs": 4,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "Swiss Re",
+      "jobs_found": 251,
+      "candidate_jobs": 2,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": null
+    },
+    {
+      "name": "Boston Scientific",
+      "jobs_found": 549,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": "No roles with a published target-city location returned"
+    },
+    {
+      "name": "Atlan",
+      "jobs_found": 6,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "error_count": 0,
+      "warning": "No roles with a published target-city location returned"
+    }
+  ],
+  "technical_references": [
+    "https://github.com/lever/postings-api",
+    "https://developers.ashbyhq.com/docs/public-job-posting-api",
+    "https://userapps.support.sap.com/sap/support/knowledge/E/2428902"
+  ]
+}

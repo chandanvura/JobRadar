@@ -169,6 +169,56 @@ class AshbyAdapter(JobSource):
         jobs=[make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,location_text(j.get("location",""),j.get("secondaryLocations",[])),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in listed]
         return jobs,len(listed)
 
+def amazon_location(item):
+    locations=[item.get("location"),item.get("normalized_location")]
+    for value in item.get("locations") or []:
+        if isinstance(value,str):
+            try: value=json.loads(value)
+            except (ValueError,TypeError): continue
+        if isinstance(value,dict):
+            locations.extend([value.get("location"),value.get("normalizedLocation"),value.get("city")])
+    return location_text(*locations)
+
+class AmazonCareerAdapter(JobSource):
+    """Read the employer's public search feed, scoped to our target cities."""
+    async def fetch_jobs(self,c):
+        found={}
+        async with client(timeout=45) as x:
+            for city in ("Bengaluru","Hyderabad"):
+                offset=0; seen=set()
+                while offset<2000:
+                    response=await request(x,"GET","https://www.amazon.jobs/en/search.json",
+                        params={"country":"IND","city":city,"result_limit":100,"offset":offset,"sort":"recent"},
+                        headers={"Accept-Encoding":"gzip, deflate"})
+                    response.raise_for_status(); data=response.json()
+                    if data.get("error") or not isinstance(data.get("jobs"),list):
+                        raise ValueError("Amazon public search returned an unexpected schema")
+                    batch=data["jobs"]
+                    if not batch: break
+                    ids={str(j.get("id_icims") or j.get("id") or j.get("job_path")) for j in batch}
+                    if ids & seen: raise ValueError("Amazon public search pagination repeated jobs")
+                    seen.update(ids)
+                    for item in batch:
+                        external=str(item.get("id_icims") or item.get("id") or item.get("job_path"))
+                        found[external]=item
+                    offset+=len(batch)
+                    if offset>=int(data.get("hits",offset)) or len(batch)<100: break
+                else:
+                    raise ValueError("Amazon target-city search exceeded the bounded scan; narrow the query")
+        jobs=[]
+        for external,item in found.items():
+            location=amazon_location(item)
+            if not likely_target(item.get("title",""),location): continue
+            path=item.get("job_path") or ""
+            if not path.startswith("/en/jobs/"): continue
+            url=urljoin("https://www.amazon.jobs",path)
+            description=" ".join(clean(item.get(k,"")) for k in ("description","basic_qualifications","preferred_qualifications"))
+            posting=None
+            try: posting=datetime.strptime(clean(item.get("posted_date","")),"%B %d, %Y").date().isoformat()
+            except ValueError: pass
+            jobs.append(make_job(external,item.get("title",""),c.name,location,description,"amazon","company_career",url,url,c.careers_url,posting=posting))
+        return jobs,len(found)
+
 class SmartRecruitersAdapter(JobSource):
     async def fetch_jobs(self,c):
         base=f"https://api.smartrecruiters.com/v1/companies/{c.ats_identifier}/postings"
@@ -415,7 +465,9 @@ def jsonld_objects(soup):
                 for child in value.values():
                     if isinstance(child,(list,dict)): yield from postings(child)
     for script in soup.find_all("script",type="application/ld+json"):
-        try: value=json.loads(script.string or "")
+        # Some employer templates put literal newlines in description strings.
+        # JSON decoding remains data-only; tolerate those control characters.
+        try: value=json.loads(script.string or "",strict=False)
         except (json.JSONDecodeError,TypeError): continue
         yield from postings(value)
 
@@ -534,4 +586,4 @@ class CustomCareerAdapter(JobSource):
         jobs=list(unique.values())
         return jobs,len(jobs)
 
-ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter()}
+ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter()}

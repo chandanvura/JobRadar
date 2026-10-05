@@ -113,3 +113,29 @@ Primary technical references:
 - https://userapps.support.sap.com/sap/support/knowledge/E/2428902
 - https://docs.oracle.com/en/cloud/saas/human-resources/farws/op-recruitingcejobrequisitions-get.html
 - https://docs.oracle.com/en/cloud/saas/human-resources/farws/op-recruitingcejobrequisitiondetails-get.html
+
+## Further source research — 2026-10-05
+
+Fifteen more limited sources now use verified public employer links. SAP, Swiss
+Re, Boston Scientific, Halliburton, Volvo Cars and Volvo Group expose XML feeds.
+PhonePe uses SmartRecruiters; Tekion, Confluent and Atlan use Ashby; Meesho,
+FamPay and Mindtickle use Lever. Whatfix's public Trakstar board publishes
+JobPosting data; the JSON parser now tolerates literal line breaks in employer
+strings while retaining data-only decoding.
+
+Amazon has a dedicated public-search collector. It queries India separately for
+Bengaluru and Hyderabad, paginates at 100 records, deduplicates jobs across city
+queries and includes the employer's encoded secondary locations. Descriptions
+include basic and preferred qualifications. Only `posted_date` determines the
+posting day; `updated_time` is ignored. Malformed or repeated pages and searches
+exceeding 2000 listings per city fail visibly. The endpoint is the public career
+site's search interface, not a promised integration API.
+
+Each new source still passes the existing city, role, experience and freshness
+policies. HTTP success or a large listing count does not guarantee an eligible
+internship or fresher role. Empty or inaccessible alternative boards are not
+substituted merely to remove a warning. The existing 700-employer registry is
+preserved. No paid APIs or browser infrastructure were added.
+
+Exact links, live-probe evidence and excluded alternatives:
+[`deep-source-review-2026-10-05.json`](../companies/deep-source-review-2026-10-05.json).

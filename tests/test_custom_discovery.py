@@ -88,3 +88,12 @@ def test_greenhouse_public_detail_date_handles_javascript_only_pages(monkeypatch
     jobs, count = asyncio.run(adapters.GreenhouseAdapter().fetch_jobs(Company('Example', 'https://employer.test/careers', 'greenhouse', 'example')))
     assert count == 1
     assert jobs[0].posted_at == '2026-10-05T10:00:00+00:00'
+
+
+def test_employer_jsonld_with_literal_description_newlines():
+    from bs4 import BeautifulSoup
+    from scraper.adapters import jsonld_objects
+    markup='<script type="application/ld+json">{"@type":"JobPosting","title":"Software Engineer","description":"Build services\n0-2 years","datePosted":"2026-10-05"}</script>'
+    items=list(jsonld_objects(BeautifulSoup(markup,'html.parser')))
+    assert len(items)==1 and items[0]['description']=='Build services\n0-2 years'
+    assert items[0]['datePosted']=='2026-10-05'

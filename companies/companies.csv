@@ -104,11 +104,11 @@ Coinbase,https://www.coinbase.com/careers/positions,greenhouse,coinbase,3,true
 Docker,https://jobs.ashbyhq.com/docker,ashby,docker,4,true
 GitLab,https://about.gitlab.com/jobs/,greenhouse,gitlab,4,true
 Vercel,https://vercel.com/careers,greenhouse,vercel,3,true
-Amazon,https://www.amazon.jobs/search,custom,amazon,5,true
+Amazon,https://www.amazon.jobs/en/search,amazon,amazon-india,5,true
 Google,https://www.google.com/about/careers/applications/jobs/results/,custom,google,5,true
 Microsoft,https://jobs.careers.microsoft.com/global/en/search,custom,microsoft,5,true
 Oracle,https://careers.oracle.com/jobs/,custom,oracle,5,true
-SAP,https://jobs.sap.com/,custom,sap,5,true
+SAP,https://careers.sap.com/,xml,https://careers.sap.com/googlefeed.xml,5,true
 Cisco,https://cisco.wd5.myworkdayjobs.com/Cisco_Careers,workday,cisco|Cisco_Careers,5,true
 IBM,https://www.ibm.com/careers/search,custom,ibm,5,true
 Accenture,https://accenture.wd103.myworkdayjobs.com/AccentureCareers,workday,accenture|AccentureCareers,5,true
@@ -120,7 +120,7 @@ Goldman Sachs,https://higher.gs.com/,custom,goldmansachs,4,true
 Target,https://jobs.target.com/,custom,target,4,true
 Walmart Global Tech,https://careers.walmart.com/technology,custom,walmart,5,true
 Flipkart,https://www.flipkartcareers.com/#!/joblist,custom,flipkart,5,true
-PhonePe,https://www.phonepe.com/careers/job-openings/,custom,phonepe,5,true
+PhonePe,https://careers.smartrecruiters.com/PHONEPELIMITED,smartrecruiters,PHONEPELIMITED,5,true
 Swiggy,https://careers.swiggy.com/,custom,swiggy,5,true
 Zomato,https://www.zomato.com/careers,custom,zomato,4,true
 Freshworks,https://careers.smartrecruiters.com/freshworks,smartrecruiters,freshworks,5,true
@@ -170,9 +170,9 @@ d-Matrix,https://jobs.ashbyhq.com/d-Matrix,ashby,d-Matrix,4,true
 Atlassian,https://www.atlassian.com/company/careers/all-jobs,custom,atlassian,5,true
 Uber,https://www.uber.com/global/en/careers/list/,custom,uber,5,true
 Airbnb,https://careers.airbnb.com/positions/,custom,airbnb-careers,4,true
-Meesho,https://www.meesho.io/jobs,custom,meesho,5,true
+Meesho,https://jobs.lever.co/meesho,lever,meesho,5,true
 BrowserStack,https://www.browserstack.com/careers,custom,browserstack,5,true
-Tekion,https://tekion.com/careers,custom,tekion,5,true
+Tekion,https://jobs.ashbyhq.com/Tekion,ashby,Tekion,5,true
 ShareChat,https://sharechat.com/careers,custom,sharechat,4,true
 InMobi,https://www.inmobi.com/company/careers,custom,inmobi,4,true
 Ola Electric,https://www.olaelectric.com/careers,custom,olaelectric,4,true
@@ -214,7 +214,7 @@ Red Hat,https://www.redhat.com/en/jobs,custom,redhat,5,true
 SUSE,https://jobs.suse.com/,custom,suse,4,true
 Canonical,https://canonical.com/careers/all,custom,canonical,5,true
 Cloudera,https://www.cloudera.com/careers.html,custom,cloudera,5,true
-Confluent,https://www.confluent.io/careers/,custom,confluent,5,true
+Confluent,https://jobs.ashbyhq.com/confluent,ashby,confluent,5,true
 HashiCorp,https://www.hashicorp.com/en/careers/open-positions,custom,hashicorp,5,true
 GitHub,https://www.github.careers/careers-home/jobs,custom,github-careers,5,true
 DigitalOcean,https://www.digitalocean.com/careers,custom,digitalocean,4,true
@@ -383,7 +383,7 @@ Nike,https://careers.nike.com/,custom,nike-india,3,true
 Adidas,https://careers.adidas-group.com/,custom,adidas-india,3,true
 Zoho,https://www.zoho.com/careers/,custom,zoho-india,4,true
 Samsung R&D Institute India,https://research.samsung.com/sri-b/careers,custom,samsung-r-and-d-india,5,true
-Whatfix,https://whatfix.com/careers/,custom,whatfix-india,5,true
+Whatfix,https://whatfix101.hire.trakstar.com/,custom,whatfix-india,5,true
 Chargebee,https://www.chargebee.com/careers/,custom,chargebee-india,5,true
 Hasura,https://hasura.io/careers,custom,hasura-india,5,true
 Innovaccer,https://innovaccer.com/careers,custom,innovaccer-india,5,true
@@ -412,8 +412,8 @@ Tata Technologies,https://www.tatatechnologies.com/in/careers/,custom,tata-techn
 L&T Technology Services,https://www.ltts.com/careers,custom,ltts-india,4,true
 Larsen & Toubro,https://www.larsentoubro.com/corporate/careers/,custom,larsen-toubro-india,3,true
 Mercedes-Benz Research and Development India,https://www.mbrdi.co.in/careers,custom,mbrdi-india,5,true
-Volvo Group,https://www.volvogroup.com/en/careers.html,custom,volvo-group-india,4,true
-Volvo Cars,https://www.volvocars.com/intl/careers/,custom,volvo-cars-india,4,true
+Volvo Group,https://jobs.volvogroup.com/,xml,https://jobs.volvogroup.com/googlefeed.xml,4,true
+Volvo Cars,https://jobs.volvocars.com/,xml,https://jobs.volvocars.com/googlefeed.xml,4,true
 ZF Group,https://jobs.zf.com/,xml,https://jobs.zf.com/googlefeed.xml,4,true
 Valeo,https://www.valeo.com/en/career/,custom,valeo-india,3,true
 Caterpillar,https://careers.caterpillar.com/,custom,caterpillar-india,4,true
@@ -430,7 +430,7 @@ Trane Technologies,https://careers.tranetechnologies.com/global/en,custom,trane-
 Eaton,https://jobs.eaton.com/jobs,custom,eaton-india,4,true
 Baker Hughes,https://careers.bakerhughes.com/global/en,custom,baker-hughes-india,4,true
 SLB,https://careers.slb.com/,custom,slb-india,4,true
-Halliburton,https://jobs.halliburton.com/,custom,halliburton-india,3,true
+Halliburton,https://jobs.halliburton.com/,xml,https://jobs.halliburton.com/googlefeed.xml,3,true
 ExxonMobil,https://jobs.exxonmobil.com/,xml,https://jobs.exxonmobil.com/googlefeed.xml,4,true
 Chevron,https://careers.chevron.com/,custom,chevron-india,4,true
 BP,https://www.bp.com/en/global/corporate/careers.html,custom,bp-india,4,true
@@ -464,7 +464,7 @@ SMBC,https://www.smbcgroup.com/careers/,custom,smbc-india,3,true
 Nomura,https://www.nomura.com/careers/,custom,nomura-india,4,true
 BNP Paribas,https://group.bnpparibas/en/careers,custom,bnp-paribas-india,4,true
 Credit Agricole,https://jobs.ca-cib.com/,custom,credit-agricole-india,3,true
-Swiss Re,https://careers.swissre.com/,custom,swiss-re-india,4,true
+Swiss Re,https://careers.swissre.com/,xml,https://careers.swissre.com/googlefeed.xml,4,true
 AXA,https://careers.axa.com/,custom,axa-india,4,true
 Allianz,https://careers.allianz.com/,custom,allianz-india,4,true
 Chubb,https://careers.chubb.com/global/en,custom,chubb-india,4,true
@@ -499,11 +499,11 @@ Tata Digital,https://www.tatadigital.com/careers,custom,tata-digital-india,4,tru
 Angel One,https://www.angelone.in/careers,custom,angel-one-india,4,true
 Upstox,https://upstox.com/careers/,custom,upstox-india,5,true
 Growfin,https://www.growfin.ai/careers,custom,growfin-india,4,true
-Mindtickle,https://www.mindtickle.com/careers/,custom,mindtickle-india,4,true
+Mindtickle,https://jobs.lever.co/mindtickle,lever,mindtickle,4,true
 Clear,https://www.clear.in/s/careers,custom,clear,3,true
 Mudrex,https://mudrex.careers-page.com/,custom,mudrex,3,true
 Lokal,https://www.lokalapps.com/careers,custom,lokal,3,true
-FamPay,https://www.famapp.in:443/careers/,custom,fampay,3,true
+FamPay,https://jobs.lever.co/fampay,lever,fampay,3,true
 WareIQ,https://wareiq.com/careers,custom,wareiq,3,true
 Decentro,https://decentro.tech/careers,custom,decentro,3,true
 Orange Health Labs,https://www.orangehealth.in/jobs,custom,orange-health-labs,3,true
@@ -521,7 +521,7 @@ Sarla Aviation,https://www.sarla-aviation.com/open-roles/,custom,sarla-aviation,
 smallcase,https://app.pyjamahr.com/careers?company=smallcase&company_uuid=2615584222,custom,smallcase,3,true
 Glean,https://www.glean.com/careers,greenhouse,gleanwork,5,true
 Rippling,https://www.rippling.com/careers/open-roles,custom,rippling-india,5,true
-Atlan,https://atlan.com/careers/,custom,atlan-india,5,true
+Atlan,https://jobs.ashbyhq.com/atlan,ashby,atlan,5,true
 Eightfold AI,https://eightfold.ai/company/careers/,custom,eightfold-ai-india,5,true
 Highspot,https://www.highspot.com/careers/,custom,highspot-india,4,true
 Netskope,https://www.netskope.com/company/careers/open-positions,greenhouse,netskope,5,true
@@ -580,7 +580,7 @@ Ecolab,https://jobs.ecolab.com/,custom,ecolab-india,4,true
 3M,https://www.3m.com/3M/en_US/careers-us/,custom,3m-india,4,true
 Stryker,https://careers.stryker.com/,custom,stryker-india,4,true
 Baxter,https://jobs.baxter.com/,custom,baxter-india,4,true
-Boston Scientific,https://jobs.bostonscientific.com/,custom,boston-scientific-india,4,true
+Boston Scientific,https://jobs.bostonscientific.com/,xml,https://jobs.bostonscientific.com/googlefeed.xml,4,true
 Abbott,https://www.jobs.abbott/,custom,abbott-india,4,true
 Amgen,https://careers.amgen.com/,custom,amgen-india,4,true
 Novo Nordisk,https://www.novonordisk.com/careers/find-a-job.html,custom,novo-nordisk-india,4,true
