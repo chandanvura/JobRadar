@@ -207,3 +207,27 @@ Workday discovery also recognizes lowercase locale paths correctly.
 
 Exact attempted sources, identity checks and verified collection results:
 [`custom-source-audit-2026-10-05.json`](../companies/custom-source-audit-2026-10-05.json).
+
+Two focused batches now replace 91 custom mappings with employer-attributed
+feeds. The first 50 were verified in production, reducing Limited coverage from
+291 to 266 with no failed updated sources. The second 41 include UKG, Ericsson,
+American Express, Arista Networks, Airwallex, Verizon and Swiggy. Their exact
+listings, relevant candidates and eligibility results are recorded in the audit.
+
+MyNextHire reads the public requisition list used by Swiggy's career website and
+its separate public posting-date history. Full descriptions are required. The
+earliest publication is used when a requisition was republished; approval times
+are never substituted. Public detail links match the site's navigation encoder.
+Personal hiring-manager and applicant fields are neither collected nor published.
+
+Workday sources can opt into employer-published country location facets through
+`tenant|board|India`. This prevents Verizon's global 1000-record bound from
+hiding its India listings. Only exact country suffixes match; Indiana is excluded.
+All details in the bounded country set are read, including listings marked
+only “2 Locations”. Their actual employer locations determine city eligibility.
+
+NTT DATA remains explicitly partial because relevant descriptions are missing.
+Millennium's new redirect requires another interface and is not remapped to a
+nonworking Eightfold tenant. Shared-parent brands and stale boards remain
+unresolved until a correctly attributed public feed is verified. The reduction
+target is not met by hiding warnings, inventing vacancies or relaxing job filters.

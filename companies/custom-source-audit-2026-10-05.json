@@ -1,7 +1,7 @@
 {
   "review_date": "2026-10-05",
   "original_custom_sources_audited": 370,
-  "implemented_source_updates": 50,
+  "implemented_source_updates": 91,
   "collection_checks": [
     {
       "candidate": {
@@ -1604,6 +1604,1174 @@
       },
       "error": null,
       "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Citigroup",
+        "careers_url": "https://citi.eightfold.ai/careers",
+        "ats_provider": "eightfold",
+        "ats_identifier": "citi.eightfold.ai|citi.com",
+        "count": 612,
+        "sample": [
+          {
+            "id": 859038099364,
+            "displayJobId": "26997141",
+            "name": "Senior Java Technical Lead - Vice President",
+            "locations": [
+              "PUNE, Mah\u0101r\u0101shtra, India",
+              "Chennai, Tamil N\u0101du, India"
+            ],
+            "standardizedLocations": [
+              "Pune, MH, IN",
+              "Chennai, TN, IN"
+            ],
+            "postedTs": 1790726400,
+            "solrScore": null,
+            "stars": 0,
+            "department": "Technology",
+            "creationTs": 1790726400,
+            "isHot": 0,
+            "workLocationOption": "hybrid",
+            "locationFlexibility": null,
+            "atsJobId": "26997141",
+            "positionUrl": "/careers/job/859038099364"
+          }
+        ],
+        "provenance_url": "https://jobs.citi.com/",
+        "priority": 4
+      },
+      "seconds": 64,
+      "status": {
+        "name": "Citigroup",
+        "careers_url": "https://citi.eightfold.ai/careers",
+        "ats_provider": "eightfold",
+        "ats_identifier": "citi.eightfold.ai|citi.com",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:57:09.950192+00:00",
+        "last_success_at": "2026-10-05T16:58:13.749210+00:00",
+        "error_count": 0,
+        "jobs_found": 612,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Commonwealth Bank",
+        "careers_url": "https://cba.wd3.myworkdayjobs.com/CommBank_Careers",
+        "ats_provider": "workday",
+        "ats_identifier": "cba|CommBank_Careers",
+        "priority": 4,
+        "provenance_url": "https://www.commbank.com.au/about-us/careers.html"
+      },
+      "seconds": 237,
+      "status": {
+        "name": "Commonwealth Bank",
+        "careers_url": "https://cba.wd3.myworkdayjobs.com/CommBank_Careers",
+        "ats_provider": "workday",
+        "ats_identifier": "cba|CommBank_Careers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145204+00:00",
+        "last_success_at": "2026-10-05T16:33:13.090219+00:00",
+        "error_count": 0,
+        "jobs_found": 154,
+        "candidate_jobs": 42,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "DBS Bank",
+        "careers_url": "https://dbs.wd3.myworkdayjobs.com/DBS_Careers",
+        "ats_provider": "workday",
+        "ats_identifier": "dbs|DBS_Careers",
+        "priority": 4,
+        "provenance_url": "https://www.dbs.com/careers/default.page"
+      },
+      "seconds": 276,
+      "status": {
+        "name": "DBS Bank",
+        "careers_url": "https://dbs.wd3.myworkdayjobs.com/DBS_Careers",
+        "ats_provider": "workday",
+        "ats_identifier": "dbs|DBS_Careers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145208+00:00",
+        "last_success_at": "2026-10-05T16:33:52.135739+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 7,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Elevance Health",
+        "careers_url": "https://elevancehealth.wd1.myworkdayjobs.com/ANT",
+        "ats_provider": "workday",
+        "ats_identifier": "elevancehealth|ANT",
+        "priority": 4,
+        "provenance_url": "https://careers.elevancehealth.com/"
+      },
+      "seconds": 280,
+      "status": {
+        "name": "Elevance Health",
+        "careers_url": "https://elevancehealth.wd1.myworkdayjobs.com/ANT",
+        "ats_provider": "workday",
+        "ats_identifier": "elevancehealth|ANT",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145234+00:00",
+        "last_success_at": "2026-10-05T16:33:55.901640+00:00",
+        "error_count": 0,
+        "jobs_found": 230,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "FIS",
+        "careers_url": "https://careers.fisglobal.com/us/en",
+        "ats_provider": "phenom",
+        "ats_identifier": "FIGLUS",
+        "priority": 4,
+        "provenance_url": "https://careers.fisglobal.com/us/en"
+      },
+      "seconds": 318,
+      "status": {
+        "name": "FIS",
+        "careers_url": "https://careers.fisglobal.com/us/en",
+        "ats_provider": "phenom",
+        "ats_identifier": "FIGLUS",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145256+00:00",
+        "last_success_at": "2026-10-05T16:34:34.515904+00:00",
+        "error_count": 0,
+        "jobs_found": 115,
+        "candidate_jobs": 8,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Fortinet",
+        "careers_url": "https://edel.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2001",
+        "ats_provider": "oracle",
+        "ats_identifier": "edel.fa.us2.oraclecloud.com|CX_2001",
+        "priority": 4,
+        "provenance_url": "https://www.fortinet.com/corporate/careers"
+      },
+      "seconds": 44,
+      "status": {
+        "name": "Fortinet",
+        "careers_url": "https://edel.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2001",
+        "ats_provider": "oracle",
+        "ats_identifier": "edel.fa.us2.oraclecloud.com|CX_2001",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.143225+00:00",
+        "last_success_at": "2026-10-05T16:30:00.358393+00:00",
+        "error_count": 0,
+        "jobs_found": 978,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Honeywell",
+        "careers_url": "https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell",
+        "ats_provider": "oracle",
+        "ats_identifier": "ibqbjb.fa.ocs.oraclecloud.com|Honeywell",
+        "priority": 4,
+        "provenance_url": "https://careers.honeywell.com/en/sites/Honeywell"
+      },
+      "seconds": 98,
+      "status": {
+        "name": "Honeywell",
+        "careers_url": "https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell",
+        "ats_provider": "oracle",
+        "ats_identifier": "ibqbjb.fa.ocs.oraclecloud.com|Honeywell",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.144999+00:00",
+        "last_success_at": "2026-10-05T16:30:54.246485+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Johnson Controls",
+        "careers_url": "https://jci.wd5.myworkdayjobs.com/JCI",
+        "ats_provider": "workday",
+        "ats_identifier": "jci|JCI",
+        "priority": 4,
+        "provenance_url": "https://jobs.johnsoncontrols.com/"
+      },
+      "seconds": 120,
+      "status": {
+        "name": "Johnson Controls",
+        "careers_url": "https://jci.wd5.myworkdayjobs.com/JCI",
+        "ats_provider": "workday",
+        "ats_identifier": "jci|JCI",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145153+00:00",
+        "last_success_at": "2026-10-05T16:31:15.835409+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 4,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "KLA",
+        "careers_url": "https://kla.wd1.myworkdayjobs.com/Search",
+        "ats_provider": "workday",
+        "ats_identifier": "kla|Search",
+        "priority": 4,
+        "provenance_url": "https://www.kla.com/careers"
+      },
+      "seconds": 108,
+      "status": {
+        "name": "KLA",
+        "careers_url": "https://kla.wd1.myworkdayjobs.com/Search",
+        "ats_provider": "workday",
+        "ats_identifier": "kla|Search",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145149+00:00",
+        "last_success_at": "2026-10-05T16:31:04.526207+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "MUFG",
+        "careers_url": "https://mufgub.wd3.myworkdayjobs.com/MUFG-Careers",
+        "ats_provider": "workday",
+        "ats_identifier": "mufgub|MUFG-Careers",
+        "priority": 4,
+        "provenance_url": "https://www.mufg.jp/english/careers/index.html"
+      },
+      "seconds": 296,
+      "status": {
+        "name": "MUFG",
+        "careers_url": "https://mufgub.wd3.myworkdayjobs.com/MUFG-Careers",
+        "ats_provider": "workday",
+        "ats_identifier": "mufgub|MUFG-Careers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145222+00:00",
+        "last_success_at": "2026-10-05T16:34:12.436879+00:00",
+        "error_count": 0,
+        "jobs_found": 688,
+        "candidate_jobs": 15,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Marriott International",
+        "careers_url": "https://ejwl.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX",
+        "ats_provider": "oracle",
+        "ats_identifier": "ejwl.fa.us2.oraclecloud.com|CX",
+        "priority": 4,
+        "provenance_url": "https://careers.marriott.com/jobs?filter%5Bcategory%5D%5B0%5D=Information+Technology"
+      },
+      "seconds": 425,
+      "status": {
+        "name": "Marriott International",
+        "careers_url": "https://ejwl.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX",
+        "ats_provider": "oracle",
+        "ats_identifier": "ejwl.fa.us2.oraclecloud.com|CX",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145294+00:00",
+        "last_success_at": "2026-10-05T16:36:21.217098+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Marvell",
+        "careers_url": "https://marvell.wd1.myworkdayjobs.com/MarvellCareers",
+        "ats_provider": "workday",
+        "ats_identifier": "marvell|MarvellCareers",
+        "priority": 4,
+        "provenance_url": "https://www.marvell.com/company/careers.html"
+      },
+      "seconds": 120,
+      "status": {
+        "name": "Marvell",
+        "careers_url": "https://marvell.wd1.myworkdayjobs.com/MarvellCareers",
+        "ats_provider": "workday",
+        "ats_identifier": "marvell|MarvellCareers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145158+00:00",
+        "last_success_at": "2026-10-05T16:31:16.120749+00:00",
+        "error_count": 0,
+        "jobs_found": 285,
+        "candidate_jobs": 3,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "McKesson",
+        "careers_url": "https://careers.mckesson.com/en/location/india-jobs/733/1269750/2",
+        "ats_provider": "talentbrew",
+        "ats_identifier": "733",
+        "count": 4,
+        "provenance_url": "https://careers.mckesson.com/en/location/india-jobs/733/1269750/2",
+        "priority": 4
+      },
+      "seconds": 64,
+      "status": {
+        "name": "McKesson",
+        "careers_url": "https://careers.mckesson.com/en/location/india-jobs/733/1269750/2",
+        "ats_provider": "talentbrew",
+        "ats_identifier": "733",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:57:09.950228+00:00",
+        "last_success_at": "2026-10-05T16:58:13.661490+00:00",
+        "error_count": 0,
+        "jobs_found": 4,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Mixpanel",
+        "careers_url": "https://job-boards.greenhouse.io/mixpanel",
+        "ats_provider": "greenhouse",
+        "ats_identifier": "mixpanel",
+        "priority": 4,
+        "board_name": "Mixpanel",
+        "provenance_url": "https://job-boards.greenhouse.io/mixpanel/jobs/8238760"
+      },
+      "seconds": 350,
+      "status": {
+        "name": "Mixpanel",
+        "careers_url": "https://job-boards.greenhouse.io/mixpanel",
+        "ats_provider": "greenhouse",
+        "ats_identifier": "mixpanel",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145287+00:00",
+        "last_success_at": "2026-10-05T16:35:05.660979+00:00",
+        "error_count": 0,
+        "jobs_found": 63,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Moody's",
+        "careers_url": "https://careers.moodys.com/en/location/india-jobs/49841/1269750/2",
+        "ats_provider": "talentbrew",
+        "ats_identifier": "49841",
+        "count": 51,
+        "provenance_url": "https://careers.moodys.com/en",
+        "priority": 4
+      },
+      "seconds": 80,
+      "status": {
+        "name": "Moody's",
+        "careers_url": "https://careers.moodys.com/en/location/india-jobs/49841/1269750/2",
+        "ats_provider": "talentbrew",
+        "ats_identifier": "49841",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:57:09.950313+00:00",
+        "last_success_at": "2026-10-05T16:58:29.549157+00:00",
+        "error_count": 0,
+        "jobs_found": 51,
+        "candidate_jobs": 13,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "NTT DATA",
+        "careers_url": "https://careers.nttdata.com/global/en",
+        "ats_provider": "phenom",
+        "ats_identifier": "NTT1GLOBAL",
+        "priority": 4,
+        "provenance_url": "https://careers.nttdata.com/global/en"
+      },
+      "seconds": 181,
+      "status": {
+        "name": "NTT DATA",
+        "careers_url": "https://careers.nttdata.com/global/en",
+        "ats_provider": "phenom",
+        "ats_identifier": "NTT1GLOBAL",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:57:09.950361+00:00",
+        "last_success_at": "2026-10-05T17:00:11.404651+00:00",
+        "error_count": 0,
+        "jobs_found": 981,
+        "candidate_jobs": 42,
+        "eligible_jobs": 0,
+        "warning": "Limited coverage: 3 relevant public job details lack an employer description"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "NXP Semiconductors",
+        "careers_url": "https://nxp.wd3.myworkdayjobs.com/careers",
+        "ats_provider": "workday",
+        "ats_identifier": "nxp|careers",
+        "priority": 4,
+        "provenance_url": "https://www.nxp.com/company/about-nxp/careers:CAREERS"
+      },
+      "seconds": 204,
+      "status": {
+        "name": "NXP Semiconductors",
+        "careers_url": "https://nxp.wd3.myworkdayjobs.com/careers",
+        "ats_provider": "workday",
+        "ats_identifier": "nxp|careers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145166+00:00",
+        "last_success_at": "2026-10-05T16:32:39.964664+00:00",
+        "error_count": 0,
+        "jobs_found": 788,
+        "candidate_jobs": 19,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Nasdaq",
+        "careers_url": "https://nasdaq.wd1.myworkdayjobs.com/Global_External_Site",
+        "ats_provider": "workday",
+        "ats_identifier": "nasdaq|Global_External_Site",
+        "priority": 4,
+        "provenance_url": "https://www.nasdaq.com/about/careers"
+      },
+      "seconds": 206,
+      "status": {
+        "name": "Nasdaq",
+        "careers_url": "https://nasdaq.wd1.myworkdayjobs.com/Global_External_Site",
+        "ats_provider": "workday",
+        "ats_identifier": "nasdaq|Global_External_Site",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145178+00:00",
+        "last_success_at": "2026-10-05T16:32:41.989750+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 1,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Northern Trust",
+        "careers_url": "https://ntrs.wd1.myworkdayjobs.com/northerntrust",
+        "ats_provider": "workday",
+        "ats_identifier": "ntrs|northerntrust",
+        "priority": 4,
+        "provenance_url": "https://www.northerntrust.com/united-states/about-us/careers"
+      },
+      "seconds": 82,
+      "status": {
+        "name": "Northern Trust",
+        "careers_url": "https://ntrs.wd1.myworkdayjobs.com/northerntrust",
+        "ats_provider": "workday",
+        "ats_identifier": "ntrs|northerntrust",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.144994+00:00",
+        "last_success_at": "2026-10-05T16:30:38.096521+00:00",
+        "error_count": 0,
+        "jobs_found": 592,
+        "candidate_jobs": 1,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Proofpoint",
+        "careers_url": "https://proofpoint.wd5.myworkdayjobs.com/proofpointcareers",
+        "ats_provider": "workday",
+        "ats_identifier": "proofpoint|proofpointcareers",
+        "priority": 4,
+        "provenance_url": "https://www.proofpoint.com/us/company/careers"
+      },
+      "seconds": 311,
+      "status": {
+        "name": "Proofpoint",
+        "careers_url": "https://proofpoint.wd5.myworkdayjobs.com/proofpointcareers",
+        "ats_provider": "workday",
+        "ats_identifier": "proofpoint|proofpointcareers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145242+00:00",
+        "last_success_at": "2026-10-05T16:34:26.907260+00:00",
+        "error_count": 0,
+        "jobs_found": 118,
+        "candidate_jobs": 7,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Prudential",
+        "careers_url": "https://prudential.wd3.myworkdayjobs.com/prudential",
+        "ats_provider": "workday",
+        "ats_identifier": "prudential|prudential",
+        "priority": 4,
+        "provenance_url": "https://www.prudentialplc.com/en/careers/overview/"
+      },
+      "seconds": 284,
+      "status": {
+        "name": "Prudential",
+        "careers_url": "https://prudential.wd3.myworkdayjobs.com/prudential",
+        "ats_provider": "workday",
+        "ats_identifier": "prudential|prudential",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145225+00:00",
+        "last_success_at": "2026-10-05T16:34:00.581973+00:00",
+        "error_count": 0,
+        "jobs_found": 485,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Quantiphi",
+        "careers_url": "https://quantiphi.wd1.myworkdayjobs.com/Careers_at_Quantiphi",
+        "ats_provider": "workday",
+        "ats_identifier": "quantiphi|Careers_at_Quantiphi",
+        "priority": 4,
+        "provenance_url": "https://quantiphi.com/careers/"
+      },
+      "seconds": 186,
+      "status": {
+        "name": "Quantiphi",
+        "careers_url": "https://quantiphi.wd1.myworkdayjobs.com/Careers_at_Quantiphi",
+        "ats_provider": "workday",
+        "ats_identifier": "quantiphi|Careers_at_Quantiphi",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145186+00:00",
+        "last_success_at": "2026-10-05T16:32:21.725631+00:00",
+        "error_count": 0,
+        "jobs_found": 87,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Rockwell Automation",
+        "careers_url": "https://rockwellautomation.wd1.myworkdayjobs.com/External_Rockwell_Automation",
+        "ats_provider": "workday",
+        "ats_identifier": "rockwellautomation|External_Rockwell_Automation",
+        "priority": 4,
+        "provenance_url": "https://www.rockwellautomation.com/en-us/careers.html"
+      },
+      "seconds": 76,
+      "status": {
+        "name": "Rockwell Automation",
+        "careers_url": "https://rockwellautomation.wd1.myworkdayjobs.com/External_Rockwell_Automation",
+        "ats_provider": "workday",
+        "ats_identifier": "rockwellautomation|External_Rockwell_Automation",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145113+00:00",
+        "last_success_at": "2026-10-05T16:30:32.427205+00:00",
+        "error_count": 0,
+        "jobs_found": 392,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "SUSE",
+        "careers_url": "https://suse.wd3.myworkdayjobs.com/Jobsatsuse",
+        "ats_provider": "workday",
+        "ats_identifier": "suse|Jobsatsuse",
+        "priority": 4,
+        "provenance_url": "https://www.suse.com/careers/"
+      },
+      "seconds": 38,
+      "status": {
+        "name": "SUSE",
+        "careers_url": "https://suse.wd3.myworkdayjobs.com/Jobsatsuse",
+        "ats_provider": "workday",
+        "ats_identifier": "suse|Jobsatsuse",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.144981+00:00",
+        "last_success_at": "2026-10-05T16:29:54.424058+00:00",
+        "error_count": 0,
+        "jobs_found": 25,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Sabre",
+        "careers_url": "https://sabre.wd1.myworkdayjobs.com/SabreJobs",
+        "ats_provider": "workday",
+        "ats_identifier": "sabre|SabreJobs",
+        "priority": 4,
+        "provenance_url": "https://www.sabre.com/careers/"
+      },
+      "seconds": 51,
+      "status": {
+        "name": "Sabre",
+        "careers_url": "https://sabre.wd1.myworkdayjobs.com/SabreJobs",
+        "ats_provider": "workday",
+        "ats_identifier": "sabre|SabreJobs",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.144989+00:00",
+        "last_success_at": "2026-10-05T16:30:07.449475+00:00",
+        "error_count": 0,
+        "jobs_found": 111,
+        "candidate_jobs": 8,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Sonar",
+        "careers_url": "https://jobs.lever.co/sonarsource",
+        "ats_provider": "lever",
+        "ats_identifier": "sonarsource",
+        "priority": 4,
+        "provenance_url": "https://www.sonarsource.com/company/careers/"
+      },
+      "seconds": 336,
+      "status": {
+        "name": "Sonar",
+        "careers_url": "https://jobs.lever.co/sonarsource",
+        "ats_provider": "lever",
+        "ats_identifier": "sonarsource",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145280+00:00",
+        "last_success_at": "2026-10-05T16:34:52.167649+00:00",
+        "error_count": 0,
+        "jobs_found": 122,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Sophos",
+        "careers_url": "https://jobs.lever.co/sophos",
+        "ats_provider": "lever",
+        "ats_identifier": "sophos",
+        "priority": 4,
+        "provenance_url": "https://www.sophos.com/en-us/company/careers"
+      },
+      "seconds": 289,
+      "status": {
+        "name": "Sophos",
+        "careers_url": "https://jobs.lever.co/sophos",
+        "ats_provider": "lever",
+        "ats_identifier": "sophos",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145246+00:00",
+        "last_success_at": "2026-10-05T16:34:05.464025+00:00",
+        "error_count": 0,
+        "jobs_found": 84,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Stryker",
+        "careers_url": "https://stryker.wd1.myworkdayjobs.com/StrykerCareers",
+        "ats_provider": "workday",
+        "ats_identifier": "stryker|StrykerCareers",
+        "priority": 4,
+        "provenance_url": "https://careers.stryker.com/"
+      },
+      "seconds": 451,
+      "status": {
+        "name": "Stryker",
+        "careers_url": "https://stryker.wd1.myworkdayjobs.com/StrykerCareers",
+        "ats_provider": "workday",
+        "ats_identifier": "stryker|StrykerCareers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145274+00:00",
+        "last_success_at": "2026-10-05T16:36:46.645311+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Target",
+        "careers_url": "https://target.wd5.myworkdayjobs.com/targetcareers",
+        "ats_provider": "workday",
+        "ats_identifier": "target|targetcareers",
+        "priority": 4,
+        "provenance_url": "https://corporate.target.com/careers"
+      },
+      "seconds": 109,
+      "status": {
+        "name": "Target",
+        "careers_url": "https://target.wd5.myworkdayjobs.com/targetcareers",
+        "ats_provider": "workday",
+        "ats_identifier": "target|targetcareers",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.136179+00:00",
+        "last_success_at": "2026-10-05T16:31:05.145484+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "The Hartford",
+        "careers_url": "https://thehartford.wd5.myworkdayjobs.com/Careers_External",
+        "ats_provider": "workday",
+        "ats_identifier": "thehartford|Careers_External",
+        "priority": 4,
+        "provenance_url": "https://www.jointhehartford.com/jobs/in-telangana-hyderabad/"
+      },
+      "seconds": 389,
+      "status": {
+        "name": "The Hartford",
+        "careers_url": "https://thehartford.wd5.myworkdayjobs.com/Careers_External",
+        "ats_provider": "workday",
+        "ats_identifier": "thehartford|Careers_External",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145305+00:00",
+        "last_success_at": "2026-10-05T16:35:44.728573+00:00",
+        "error_count": 0,
+        "jobs_found": 228,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Unilever",
+        "careers_url": "https://careers.unilever.com/en/location/india-jobs/34155/1269750/2",
+        "ats_provider": "talentbrew",
+        "ats_identifier": "34155",
+        "count": 27,
+        "provenance_url": "https://careers.unilever.com/en",
+        "priority": 4
+      },
+      "seconds": 118,
+      "status": {
+        "name": "Unilever",
+        "careers_url": "https://careers.unilever.com/en/location/india-jobs/34155/1269750/2",
+        "ats_provider": "talentbrew",
+        "ats_identifier": "34155",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:57:09.950352+00:00",
+        "last_success_at": "2026-10-05T16:59:07.827720+00:00",
+        "error_count": 0,
+        "jobs_found": 27,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "ZoomInfo",
+        "careers_url": "https://job-boards.greenhouse.io/zoominfo",
+        "ats_provider": "greenhouse",
+        "ats_identifier": "zoominfo",
+        "priority": 4,
+        "board_name": "ZoomInfo Technologies LLC",
+        "provenance_url": "https://www.zoominfo.com/careers?gh_jid=8691497002"
+      },
+      "seconds": 458,
+      "status": {
+        "name": "ZoomInfo",
+        "careers_url": "https://job-boards.greenhouse.io/zoominfo",
+        "ats_provider": "greenhouse",
+        "ats_identifier": "zoominfo",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T16:29:16.145337+00:00",
+        "last_success_at": "2026-10-05T16:36:54.460165+00:00",
+        "error_count": 0,
+        "jobs_found": 97,
+        "candidate_jobs": 4,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Nike",
+        "careers_url": "https://nike.wd1.myworkdayjobs.com/nke",
+        "ats_provider": "workday",
+        "ats_identifier": "nike|nke",
+        "priority": 3,
+        "provenance_url": "https://careers.nike.com/"
+      },
+      "seconds": 222,
+      "status": {
+        "name": "Nike",
+        "careers_url": "https://nike.wd1.myworkdayjobs.com/nke",
+        "ats_provider": "workday",
+        "ats_identifier": "nike|nke",
+        "priority": 3,
+        "last_checked_at": "2026-10-05T16:29:16.145191+00:00",
+        "last_success_at": "2026-10-05T16:32:58.478307+00:00",
+        "error_count": 0,
+        "jobs_found": 821,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "T-Mobile",
+        "careers_url": "https://tmobile.wd1.myworkdayjobs.com/External",
+        "ats_provider": "workday",
+        "ats_identifier": "tmobile|External",
+        "priority": 3,
+        "provenance_url": "https://careers.t-mobile.com/"
+      },
+      "seconds": 249,
+      "status": {
+        "name": "T-Mobile",
+        "careers_url": "https://tmobile.wd1.myworkdayjobs.com/External",
+        "ats_provider": "workday",
+        "ats_identifier": "tmobile|External",
+        "priority": 3,
+        "last_checked_at": "2026-10-05T16:29:16.145201+00:00",
+        "last_success_at": "2026-10-05T16:33:25.366218+00:00",
+        "error_count": 0,
+        "jobs_found": 1000,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Airwallex",
+        "ats_provider": "ashby",
+        "ats_identifier": "airwallex",
+        "careers_url": "https://jobs.ashbyhq.com/airwallex",
+        "priority": 4
+      },
+      "seconds": 11,
+      "status": {
+        "name": "Airwallex",
+        "careers_url": "https://jobs.ashbyhq.com/airwallex",
+        "ats_provider": "ashby",
+        "ats_identifier": "airwallex",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T17:10:25.218849+00:00",
+        "last_success_at": "2026-10-05T17:10:36.502972+00:00",
+        "error_count": 0,
+        "jobs_found": 550,
+        "candidate_jobs": 1,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Arista Networks",
+        "ats_provider": "smartrecruiters",
+        "ats_identifier": "AristaNetworks",
+        "careers_url": "https://careers.smartrecruiters.com/AristaNetworks",
+        "priority": 5
+      },
+      "seconds": 18,
+      "status": {
+        "name": "Arista Networks",
+        "careers_url": "https://careers.smartrecruiters.com/AristaNetworks",
+        "ats_provider": "smartrecruiters",
+        "ats_identifier": "AristaNetworks",
+        "priority": 5,
+        "last_checked_at": "2026-10-05T17:10:25.220969+00:00",
+        "last_success_at": "2026-10-05T17:10:43.552239+00:00",
+        "error_count": 0,
+        "jobs_found": 240,
+        "candidate_jobs": 9,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Ericsson",
+        "ats_provider": "eightfold",
+        "ats_identifier": "jobs.ericsson.com|ericsson.com",
+        "careers_url": "https://jobs.ericsson.com/careers",
+        "priority": 4
+      },
+      "seconds": 17,
+      "status": {
+        "name": "Ericsson",
+        "careers_url": "https://jobs.ericsson.com/careers",
+        "ats_provider": "eightfold",
+        "ats_identifier": "jobs.ericsson.com|ericsson.com",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T17:10:31.781030+00:00",
+        "last_success_at": "2026-10-05T17:10:48.436561+00:00",
+        "error_count": 0,
+        "jobs_found": 84,
+        "candidate_jobs": 3,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "UKG",
+        "ats_provider": "eightfold",
+        "ats_identifier": "apply.ukg.com|ukg.com",
+        "careers_url": "https://apply.ukg.com/careers",
+        "priority": 4
+      },
+      "seconds": 27,
+      "status": {
+        "name": "UKG",
+        "careers_url": "https://apply.ukg.com/careers",
+        "ats_provider": "eightfold",
+        "ats_identifier": "apply.ukg.com|ukg.com",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T17:10:32.750546+00:00",
+        "last_success_at": "2026-10-05T17:11:00.121415+00:00",
+        "error_count": 0,
+        "jobs_found": 88,
+        "candidate_jobs": 9,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "American Express",
+        "ats_provider": "oracle",
+        "ats_identifier": "egug.fa.us2.oraclecloud.com|CX_1",
+        "careers_url": "https://egug.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1",
+        "priority": 5
+      },
+      "seconds": 44,
+      "status": {
+        "name": "American Express",
+        "careers_url": "https://egug.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1",
+        "ats_provider": "oracle",
+        "ats_identifier": "egug.fa.us2.oraclecloud.com|CX_1",
+        "priority": 5,
+        "last_checked_at": "2026-10-05T17:10:25.214405+00:00",
+        "last_success_at": "2026-10-05T17:11:09.587203+00:00",
+        "error_count": 0,
+        "jobs_found": 430,
+        "candidate_jobs": 3,
+        "eligible_jobs": 1,
+        "warning": null
+      },
+      "error": null,
+      "eligible": [
+        {
+          "external_job_id": "26009713",
+          "title": "Apprentice - Enterprise Technology Services",
+          "company": "American Express",
+          "location": "Bengaluru, KA, India \u00b7 Gurugram, HR, India \u00b7 Chennai, TN, India",
+          "description": "Innovation is at the heart of everything we do. Every single day, our technologists enable our customers around the globe to achieve their goals. They design and deliver American Express infrastructure and applications across all markets and business units. To meet these demands, we\u2019re looking for problem solvers who can get results through precise analysis and programming methodologies, individuals with a strong intellectual curiosity and a passion for innovation, and teammates who can convert their ideas into execution. Join our 12-month paid apprenticeship program where you will have opportunities for development, networking and engaging with our executives. An apprenticeship at American Express will give you the chance to influence and strengthen the core businesses across the organization. The candidate must have completed graduation under Bachelor\u2019s or Master\u2019s degree program in Computer Science and Information Technology Engineering or other technical discipline American Express is an equal opportunity employer and makes employment decisions without regard to race, color, religion, sex, sexual orientation, gender identity, national origin, veteran status, disability status, age, or any other status protected by law. Offer of employment with American Express is conditioned upon the successful completion of a background verification check, subject to applicable laws and regulations. Flexible working model with hybrid, onsite or virtual arrangements depending on role and business need Career development and training opportunities Join the team and make an impact right away: Write code with one or more programming languages (e.g., Java, JavaScript, .NET, Python) Function as a core member of an agile team working on API specs, conducting code reviews and testing in ongoing sprints, or doing proof of concepts/automation tools Design and develop new customer-facing applications on multiple channels like native iOS, Android, web, social integration and Java services/APIs Design and implement web-enabled systems for data collection We have the know-how, technology, and global reach to make nearly any idea a reality. All that\u2019s missing is you! Do you have? Passion for technology and strong desire to learn Curious mind to explore new possibilities and act on them Never-settle attitude and continuously looking for improvements Customer-focus to think differently and deliver value to customers Data-driven nature to drive decisions and results based on data",
+          "ats_provider": "oracle",
+          "source": "company_career",
+          "job_url": "https://egug.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/26009713",
+          "application_url": "https://egug.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/26009713",
+          "career_page_url": "https://egug.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1",
+          "posted_at": "2026-10-05T10:44:48+00:00",
+          "posted_label": null,
+          "posted_precision": "exact",
+          "reported_age_hours": null,
+          "normalized_title": "apprentice enterprise technology services",
+          "normalized_location": "Bengaluru",
+          "city": "Bengaluru",
+          "role_category": "Software Engineering",
+          "employment_type": "Internship",
+          "experience_min": null,
+          "experience_max": null,
+          "experience_label": "Unknown",
+          "skills": [
+            "Python",
+            "Java"
+          ],
+          "relevance_score": 47,
+          "freshness_score": 18,
+          "priority_score": 5,
+          "hiring_signal": null,
+          "is_eligible": true,
+          "eligibility_reason": "Eligible",
+          "first_seen_at": "2026-10-05T17:11:03.690631+00:00",
+          "last_seen_at": "2026-10-05T17:11:03.690642+00:00"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "name": "Verizon",
+        "ats_provider": "workday",
+        "ats_identifier": "verizon|verizon-careers|India",
+        "careers_url": "https://verizon.wd12.myworkdayjobs.com/verizon-careers",
+        "priority": 4
+      },
+      "seconds": 20,
+      "status": {
+        "name": "Verizon",
+        "careers_url": "https://verizon.wd12.myworkdayjobs.com/verizon-careers",
+        "ats_provider": "workday",
+        "ats_identifier": "verizon|verizon-careers|India",
+        "priority": 4,
+        "last_checked_at": "2026-10-05T17:16:15.899378+00:00",
+        "last_success_at": "2026-10-05T17:16:36.309046+00:00",
+        "error_count": 0,
+        "jobs_found": 11,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
+    },
+    {
+      "candidate": {
+        "name": "Swiggy",
+        "ats_provider": "mynexthire",
+        "ats_identifier": "swiggy",
+        "careers_url": "https://swiggy.mynexthire.com/employer/jobs/careers",
+        "priority": 5
+      },
+      "seconds": 7,
+      "status": {
+        "name": "Swiggy",
+        "careers_url": "https://swiggy.mynexthire.com/employer/jobs/careers",
+        "ats_provider": "mynexthire",
+        "ats_identifier": "swiggy",
+        "priority": 5,
+        "last_checked_at": "2026-10-05T17:15:51.311184+00:00",
+        "last_success_at": "2026-10-05T17:15:58.307963+00:00",
+        "error_count": 0,
+        "jobs_found": 78,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "eligible": []
     }
   ],
   "all_custom_sources": [
@@ -1908,7 +3076,7 @@
         "identifier": "Target",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Swiggy",
@@ -1935,7 +3103,7 @@
           "identifier": "SWIGGY"
         }
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "BrowserStack",
@@ -2629,7 +3797,7 @@
           "identifier": "AristaNetworks"
         }
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "F5",
@@ -2685,7 +3853,7 @@
         "identifier": "Fortinet",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Canonical",
@@ -2944,7 +4112,7 @@
         "identifier": "SUSE",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Juniper Networks",
@@ -3184,7 +4352,7 @@
         "identifier": "UKG",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Coforge",
@@ -3359,7 +4527,7 @@
         "identifier": "NTTDATA",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Darwinbox",
@@ -3636,7 +4804,7 @@
         "identifier": "Sabre",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Cleartrip",
@@ -3702,7 +4870,7 @@
         "identifier": "NorthernTrust",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Morgan Stanley",
@@ -3795,7 +4963,7 @@
         "identifier": "AmericanExpress",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Schneider Electric",
@@ -3908,7 +5076,7 @@
         "identifier": "Honeywell",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Ericsson",
@@ -3930,7 +5098,7 @@
         "identifier": "Ericsson",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Boeing",
@@ -4011,7 +5179,7 @@
         "identifier": "RockwellAutomation",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Informatica",
@@ -4132,7 +5300,7 @@
         "identifier": "KLA",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Johnson Controls",
@@ -4160,7 +5328,7 @@
         "identifier": "JohnsonControls",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Marvell",
@@ -4188,7 +5356,7 @@
         "identifier": "Marvell",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Analog Devices",
@@ -4268,7 +5436,7 @@
         "identifier": "NXPSemiconductors",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "MediaTek",
@@ -4449,7 +5617,7 @@
         "identifier": "Citigroup",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Barclays",
@@ -4632,7 +5800,7 @@
         "identifier": "Nasdaq",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Moody's",
@@ -4656,7 +5824,7 @@
         "identifier": "Moodys",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Charles Schwab",
@@ -5016,7 +6184,7 @@
         "identifier": "Quantiphi",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Bayer",
@@ -5375,7 +6543,7 @@
         "identifier": "Nike",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "MoEngage",
@@ -6398,7 +7566,7 @@
         "identifier": "TMobile",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Arcesium",
@@ -6439,7 +7607,7 @@
         "identifier": "Verizon",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Millennium",
@@ -6514,7 +7682,7 @@
         "identifier": "CommonwealthBank",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Colt Technology Services",
@@ -6611,7 +7779,7 @@
         "identifier": "DBSBank",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "AT&T",
@@ -6715,7 +7883,7 @@
         "identifier": "MUFG",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Nomura",
@@ -6897,7 +8065,7 @@
         "identifier": "Prudential",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "BNP Paribas",
@@ -6976,7 +8144,7 @@
         "identifier": "ElevanceHealth",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Apollo Hospitals",
@@ -8365,7 +9533,7 @@
         "identifier": "Proofpoint",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Blackhawk Network",
@@ -8456,7 +9624,7 @@
         "identifier": "Sophos",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Jumbotail",
@@ -8712,7 +9880,7 @@
         "identifier": "FIS",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "PepsiCo",
@@ -8763,7 +9931,7 @@
         "identifier": "Unilever",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Kimberly-Clark",
@@ -9020,7 +10188,7 @@
         "identifier": "Stryker",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Abbott",
@@ -9254,7 +10422,7 @@
         "identifier": "Sonar",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "PostHog",
@@ -9378,7 +10546,7 @@
         "identifier": "Mixpanel",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Dynatrace",
@@ -9771,7 +10939,7 @@
         "identifier": "ZoomInfo",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Kissflow",
@@ -9839,7 +11007,7 @@
         "identifier": "Airwallex",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Safe Security",
@@ -10078,7 +11246,7 @@
         "identifier": "MarriottInternational",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Costco",
@@ -10326,7 +11494,7 @@
         "identifier": "McKesson",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Cars24",
@@ -10381,7 +11549,7 @@
         "identifier": "TheHartford",
         "status": 200
       },
-      "implemented": false
+      "implemented": true
     },
     {
       "company": "Shiprocket",
@@ -10634,5 +11802,305 @@
       "company": "NTT DATA",
       "reason": "Real listings and complete descriptions collected where available; three missing descriptions remain a Limited coverage warning."
     }
-  ]
+  ],
+  "secondary_official_page_discoveries": [
+    {
+      "company": "Dream Sports",
+      "url": "https://www.dreamsports.group/careers",
+      "provenance_url": "https://www.dreamsports.group/lifeatdreamsports",
+      "status": 200,
+      "final_url": "https://www.dreamsports.group/lifeatdreamsports",
+      "ats": [
+        "lever",
+        "dreamsports",
+        "https://jobs.lever.co/dreamsports"
+      ],
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "UKG",
+      "url": "https://apply.ukg.com/careers",
+      "provenance_url": "https://www.ukg.com/company/careers",
+      "status": 200,
+      "final_url": "https://apply.ukg.com/careers",
+      "ats": null,
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": true
+    },
+    {
+      "company": "Ericsson",
+      "url": "https://jobs.ericsson.com/careers",
+      "provenance_url": "https://www.ericsson.com/en/careers",
+      "status": 200,
+      "final_url": "https://jobs.ericsson.com/careers",
+      "ats": null,
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": true
+    },
+    {
+      "company": "American Express",
+      "url": "https://careers.americanexpress.com/en/sites/CX_1/jobs?intlink=us-amex-career-en-us-navigation-jobs",
+      "provenance_url": "https://www.americanexpress.com/en-us/careers/",
+      "status": 200,
+      "final_url": "https://careers.americanexpress.com/en/sites/CX_1/jobs?intlink=us-amex-career-en-us-navigation-jobs",
+      "ats": [
+        "oracle",
+        "egug.fa.us2.oraclecloud.com|CX_1",
+        "https://egug.fa.us2.oraclecloud.com:443/hcmUI/CandidateExperience/en/sites/CX_1"
+      ],
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "Collins Aerospace",
+      "url": "https://careers.rtx.com/global/en/collins-aerospace-digital-technology-jobs",
+      "provenance_url": "https://careers.rtx.com/global/en/collins-aerospace",
+      "status": 200,
+      "final_url": "https://careers.rtx.com/global/en/collins-aerospace-digital-technology-jobs",
+      "ats": [
+        "workday",
+        "globalhr|REC_RTX_Ext_Gateway",
+        "https://globalhr.wd5.myworkdayjobs.com/REC_RTX_Ext_Gateway/job/IN-KA-BENGALURU-NORTHGATE--Sy-No-22-Venkatala-Village--SY-NO-22-VENKATALA-VILLAGE-Yelahanka-Hobli/Principal-Business-Integration-Analyst-SAP-FICO-9--Years--Night-Shift-Role-_01868982/apply"
+      ],
+      "phenom": true,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "Bank of America",
+      "url": "https://careers.bankofamerica.com/en-us/job-search.html?ref=search&search=getAllJobs&rows=10&start=0",
+      "provenance_url": "https://careers.bankofamerica.com/en-us",
+      "status": 200,
+      "final_url": "https://careers.bankofamerica.com/en-us/job-search?ref=search&search=getAllJobs&rows=10&start=0",
+      "ats": [
+        "workday",
+        "ghr|lateral-us",
+        "https://ghr.wd1.myworkdayjobs.com/en-us/lateral-us/login"
+      ],
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "AstraZeneca",
+      "url": "https://astrazeneca.eightfold.ai/careers",
+      "provenance_url": "https://careers.astrazeneca.com/",
+      "status": 200,
+      "final_url": "https://astrazeneca.eightfold.ai/careers",
+      "ats": null,
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": true
+    },
+    {
+      "company": "DHL",
+      "url": "https://careers.dhl.com/global/en/dhl-jobs-in-worksop",
+      "provenance_url": "https://careers.dhl.com/global/en",
+      "status": 200,
+      "final_url": "https://careers.dhl.com/global/en/dhl-jobs-in-worksop",
+      "ats": null,
+      "phenom": true,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "UPS",
+      "url": "https://www.jobs-ups.com/global/en/home",
+      "provenance_url": "https://www.jobs-ups.com/global/en",
+      "status": 200,
+      "final_url": "https://www.jobs-ups.com/global/en/home",
+      "ats": null,
+      "phenom": true,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "CVS Health",
+      "url": "https://jobs.cvshealth.com/us/en/blog",
+      "provenance_url": "https://jobs.cvshealth.com/us/en/home",
+      "status": 200,
+      "final_url": "https://jobs.cvshealth.com/us/en/blog",
+      "ats": null,
+      "phenom": true,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "Eightfold AI",
+      "url": "https://app.eightfold.ai/careers/search",
+      "provenance_url": "https://eightfold.ai/company/careers/",
+      "status": 200,
+      "final_url": "https://app.eightfold.ai/careers/search",
+      "ats": null,
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": true
+    },
+    {
+      "company": "CyberArk",
+      "url": "https://jobs.paloaltonetworks.com/en/",
+      "provenance_url": "https://www.paloaltonetworks.com/idira",
+      "status": 200,
+      "final_url": "https://jobs.paloaltonetworks.com/en/",
+      "ats": [
+        "workday",
+        "paloaltonetworks|panwexternalcareers",
+        "https://paloaltonetworks.wd5.myworkdayjobs.com/en-US/panwexternalcareers/introduceYourself?clientRequestID=06f06ca6dae2441d99391ed600fc2265"
+      ],
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "Ericsson",
+      "url": "https://jobs.ericsson.com/careers?query=Field%20Service%20Engineer",
+      "provenance_url": "https://www.ericsson.com/en/careers",
+      "status": 200,
+      "final_url": "https://jobs.ericsson.com/careers?query=Field%20Service%20Engineer",
+      "ats": null,
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": true
+    },
+    {
+      "company": "Collins Aerospace",
+      "url": "https://careers.rtx.com/global/en/collins-aerospace-engineering-jobs",
+      "provenance_url": "https://careers.rtx.com/global/en/collins-aerospace",
+      "status": 200,
+      "final_url": "https://careers.rtx.com/global/en/collins-aerospace-engineering-jobs",
+      "ats": [
+        "workday",
+        "globalhr|REC_RTX_Ext_Gateway",
+        "https://globalhr.wd5.myworkdayjobs.com/REC_RTX_Ext_Gateway/job/Winnersh-Wokingham/Associate-Director-Systems-Engineering_01874126/apply"
+      ],
+      "phenom": true,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "Lam Research",
+      "url": "https://careers.lamresearch.com/",
+      "provenance_url": "https://www.lamresearch.com/careers/careers-overview/?utm_source=vanity&utm_campaign=lam_careers_vanity&utm_medium=vanity&utm_content=careers_vanity",
+      "status": 200,
+      "final_url": "https://careers.lamresearch.com/careers",
+      "ats": null,
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": true
+    },
+    {
+      "company": "Bank of America",
+      "url": "https://careers.bankofamerica.com/en-us/job-search.html?ref=search&search=getAllJobs&start=0&rows=10",
+      "provenance_url": "https://careers.bankofamerica.com/en-us",
+      "status": 200,
+      "final_url": "https://careers.bankofamerica.com/en-us/job-search?ref=search&search=getAllJobs&start=0&rows=10",
+      "ats": [
+        "workday",
+        "ghr|lateral-us",
+        "https://ghr.wd1.myworkdayjobs.com/en-us/lateral-us/login"
+      ],
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "Amdocs",
+      "url": "https://jobs.amdocs.com/careers?domain=amdocs.com#upload",
+      "provenance_url": "https://jobs.amdocs.com/careers",
+      "status": 200,
+      "final_url": "https://jobs.amdocs.com/careers?domain=amdocs.com#upload",
+      "ats": null,
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": true
+    },
+    {
+      "company": "UPS",
+      "url": "https://www.jobs-ups.com/global/en/hourly-roles",
+      "provenance_url": "https://www.jobs-ups.com/global/en",
+      "status": 200,
+      "final_url": "https://www.jobs-ups.com/global/en/hourly-roles",
+      "ats": null,
+      "phenom": true,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "DHL",
+      "url": "https://careers.dhl.com/global/en/jobs-in-atlanta",
+      "provenance_url": "https://careers.dhl.com/global/en",
+      "status": 200,
+      "final_url": "https://careers.dhl.com/global/en/jobs-in-atlanta",
+      "ats": null,
+      "phenom": true,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "Verizon",
+      "url": "https://mycareer.verizon.com/jobs/r-1093952/sr-engr-cslt-tech-strategy/",
+      "provenance_url": "https://mycareer.verizon.com/",
+      "status": 200,
+      "final_url": "https://mycareer.verizon.com/jobs/r-1093952/sr-engr-cslt-tech-strategy/",
+      "ats": [
+        "workday",
+        "verizon|verizon-careers",
+        "https://verizon.wd12.myworkdayjobs.com/verizon-careers/job/Chennai-India/Sr-Engr-Cslt-Tech-Strategy_R-1093952/apply"
+      ],
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": false
+    },
+    {
+      "company": "Millennium",
+      "url": "https://app.eightfold.ai/careers?domain=mlp.com\u00b5site=campus-site",
+      "provenance_url": "https://www.mlp.com/careers/",
+      "status": 200,
+      "final_url": "https://app.eightfold.ai/careers?domain=mlp.com%C2%B5site=campus-site",
+      "ats": null,
+      "phenom": false,
+      "jobposting_count": 0,
+      "pcsx": true
+    },
+    {
+      "company": "Airwallex",
+      "url": "https://careers.airwallex.com/job/17fa30b4-c813-461a-acff-f2f2e23c31d6/engineering-director-payments-platform/",
+      "provenance_url": "https://careers.airwallex.com",
+      "status": 200,
+      "final_url": "https://careers.airwallex.com/job/17fa30b4-c813-461a-acff-f2f2e23c31d6/engineering-director-payments-platform/",
+      "ats": [
+        "ashby",
+        "airwallex",
+        "https://jobs.ashbyhq.com/airwallex/${jobID}`;"
+      ],
+      "phenom": false,
+      "jobposting_count": 1,
+      "pcsx": false
+    },
+    {
+      "company": "DHL",
+      "url": "https://careers.dhl.com/global/en/jobs-in-belfast",
+      "provenance_url": "https://careers.dhl.com/global/en",
+      "status": 200,
+      "final_url": "https://careers.dhl.com/global/en/jobs-in-belfast",
+      "ats": null,
+      "phenom": true,
+      "jobposting_count": 0,
+      "pcsx": false
+    }
+  ],
+  "first_batch_production_verification": {
+    "workflow_run": 37345555568,
+    "ci_run": 37345555546,
+    "verified_source_updates": 50,
+    "limited_before": 291,
+    "limited_after": 266,
+    "all_updated_sources_positive": true
+  },
+  "second_batch_count": 41
 }

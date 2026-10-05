@@ -114,3 +114,43 @@ def test_talentbrew_duplicate_view_link_and_sibling_location(monkeypatch):
     assert count==1 and len(jobs)==1
     assert jobs[0].location=='Bengaluru, India' and jobs[0].description=='Full requirements: Java; 0-2 years'
     assert jobs[0].posted_at is None
+
+
+def test_workday_country_locations_exclude_similarly_named_us_states(monkeypatch):
+    calls=[]
+    async def request(client,method,url,**kwargs):
+        facets=kwargs['json']['appliedFacets'];calls.append(facets)
+        if not facets:
+            return response(url,data={'facets':[{'facetParameter':'locationMainGroup','values':[{'facetParameter':'locations','values':[{'id':'in','descriptor':'Hyderabad, India'},{'id':'us','descriptor':'Indianapolis, Indiana'}]}]}]})
+        assert facets=={'locations':['in']}
+        return response(url,data={'jobPostings':[{'title':'Software Engineer','locationsText':'2 Locations','externalPath':'/job/1','postedOn':'Posted Today'}]})
+    async def cached(client,url):
+        return response(url,data={'jobPostingInfo':{'title':'Software Engineer','location':'Hyderabad, India','jobReqId':'1','jobDescription':'Java; 0-2 years'}})
+    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',cached)
+    jobs,count=asyncio.run(adapters.WorkdayAdapter().fetch_jobs(Company('Example','https://example.wd1.myworkdayjobs.com/Jobs','workday','example|Jobs|India')))
+    assert count==1 and len(jobs)==1 and len(calls)==2
+
+
+def test_mynexthire_uses_earliest_publication_and_public_job_navigation(monkeypatch):
+    import base64
+    from scraper.mynexthire import MyNextHireCareerAdapter
+    async def request(client,method,url,**kwargs):
+        if url.endswith('reqlist/get'):
+            assert kwargs['json']=={'source':'careers','code':'','filterByBuId':-1}
+            return response(url,data={'reqDetailsBOList':[{'reqId':1,'reqTitle':'Software Engineer','location':'Bengaluru','jdDisplay':'Java; 0-2 years','approvedOn':1791244800000}]})
+        return response(url,data={'data':{'careersJobPostingDatesList':[{'requisitionId':1,'publishedOn':1791244800000},{'requisitionId':1,'publishedOn':1791158400000}]}})
+    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request)
+    jobs,count=asyncio.run(MyNextHireCareerAdapter().fetch_jobs(Company('Example','https://example.mynexthire.com/employer/jobs/careers','mynexthire','example')))
+    assert count==1 and jobs[0].posted_at=='2026-10-05T00:00:00+00:00'
+    context=json.loads(base64.b64decode(jobs[0].job_url.split('%3D')[-1]))
+    assert context['reqId']==1 and context['pageType']=='jd'
+
+
+def test_mynexthire_does_not_use_approval_as_publication(monkeypatch):
+    from scraper.mynexthire import MyNextHireCareerAdapter
+    async def request(client,method,url,**kwargs):
+        data={'reqDetailsBOList':[{'reqId':1,'reqTitle':'Software Engineer','location':'Hyderabad','jdDisplay':'Python','approvedOn':1791244800000}]} if url.endswith('reqlist/get') else {'data':{'careersJobPostingDatesList':[]}}
+        return response(url,data=data)
+    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request)
+    jobs,_=asyncio.run(MyNextHireCareerAdapter().fetch_jobs(Company('Example','https://example.mynexthire.com/employer/jobs/careers','mynexthire','example')))
+    assert jobs[0].posted_at is None

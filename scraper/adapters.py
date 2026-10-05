@@ -258,16 +258,30 @@ class WorkdayAdapter(JobSource):
     async def fetch_jobs(self,c):
         origin,tenant,site=workday_config(c); api=f"{origin}/wday/cxs/{tenant}/{site}"
         async with client() as x:
-            postings=[]; offset=0
+            postings=[]; offset=0; facets={}
+            country=c.ats_identifier.split("|")[2] if len(c.ats_identifier.split("|"))>2 else None
+            if country:
+                response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":0,"searchText":""})
+                response.raise_for_status()
+                def find_locations(nodes):
+                    for node in nodes:
+                        if node.get("facetParameter")=="locations":
+                            for value in node.get("values",[]):
+                                if re.search(r",\s*"+re.escape(country)+r"$",value.get("descriptor",""),re.I):
+                                    yield value["id"]
+                        yield from find_locations(node.get("values",[]))
+                locations=list(find_locations(response.json().get("facets",[])))
+                if not locations: raise ValueError("Workday does not expose the configured country locations")
+                facets={"locations":locations}
             while offset < 1000:
-                response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
+                response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
                 postings.extend(batch)
                 if len(batch)<20: break
                 offset+=20
             semaphore=asyncio.Semaphore(8)
             async def convert(item):
-                if not likely_target(item.get("title",""),item.get("locationsText","")): return None
+                if not country and not likely_target(item.get("title",""),item.get("locationsText","")): return None
                 path=item.get("externalPath")
                 if not path: return None
                 async with semaphore: detail_response=await cached_get(x,f"{api}{path}")
@@ -590,4 +604,6 @@ from .public_platforms import PhenomCareerAdapter, WorkableCareerAdapter
 from .eightfold import EightfoldCareerAdapter
 from .talentbrew import TalentBrewCareerAdapter
 
-ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter(),"phenom":PhenomCareerAdapter(),"workable":WorkableCareerAdapter(),"eightfold":EightfoldCareerAdapter(),"talentbrew":TalentBrewCareerAdapter()}
+from .mynexthire import MyNextHireCareerAdapter
+
+ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter(),"phenom":PhenomCareerAdapter(),"workable":WorkableCareerAdapter(),"eightfold":EightfoldCareerAdapter(),"talentbrew":TalentBrewCareerAdapter(),"mynexthire":MyNextHireCareerAdapter()}
