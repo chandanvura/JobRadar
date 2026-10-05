@@ -44,3 +44,4 @@ def test_registry_sync_uses_company_only_ingestion_response(monkeypatch):
     payload = json.loads(calls[1].data)
     assert set(payload) == {"companies"}
     assert payload["companies"][0]["name"] == "New"
+    assert all(request.get_header("User-agent").startswith("JobRadar/") for request in calls)

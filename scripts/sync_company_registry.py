@@ -20,21 +20,23 @@ def missing_sources(companies, catalog):
 def main():
     # Fixed production origin prevents sending ingestion credentials elsewhere.
     origin = "https://jobradar.chandanvura.workers.dev"
-    with urlopen(origin + "/api/dashboard", timeout=30) as response:  # nosec B310
+    headers = {"User-Agent": "JobRadar/1.2 (company registry sync)", "Accept": "application/json"}
+    dashboard_request = Request(origin + "/api/dashboard", headers=headers)
+    with urlopen(dashboard_request, timeout=30) as response:  # nosec B310
         catalog = json.load(response)
     pending = missing_sources(load_companies(), catalog)
     if not pending:
         print("All enabled company sources already appear in the live catalog")
         return
     request = Request(origin + "/api/ingest", data=json.dumps({"companies": pending}).encode(),
-                      headers={"Content-Type": "application/json",
+                      headers={**headers, "Content-Type": "application/json",
                                "Authorization": "Bearer " + os.environ["JOBRADAR_INGEST_SECRET"]},
                       method="POST")
     with urlopen(request, timeout=60) as response:  # nosec B310
         result = json.load(response)
     if result.get("accepted") != 0 or result.get("rejected") != 0:
         raise RuntimeError("Company registration failed")
-    with urlopen(origin + "/api/dashboard", timeout=30) as response:  # nosec B310
+    with urlopen(dashboard_request, timeout=30) as response:  # nosec B310
         live = json.load(response)
     if missing_sources(load_companies(), live):
         raise RuntimeError("New sources not yet verified in live catalog")
