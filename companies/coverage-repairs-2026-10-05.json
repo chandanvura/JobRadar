@@ -1,0 +1,126 @@
+{
+  "reviewed_at": "2026-10-05",
+  "limited_sources_reviewed": 389,
+  "official_page_results": {
+    "ReadTimeout": 127,
+    "200": 223,
+    "403": 13,
+    "404": 15,
+    "406": 1,
+    "502": 8,
+    "202": 1,
+    "429": 1
+  },
+  "repairs": [
+    {
+      "name": "Bentley Systems",
+      "official_url": "https://jobs.bentley.com/",
+      "provider": "workday",
+      "identifier": "bentleysystems|bentley",
+      "board_url": "https://bentleysystems.wd5.myworkdayjobs.com/bentley",
+      "listings": 91
+    },
+    {
+      "name": "Celigo",
+      "official_url": "https://www.celigo.com/company/careers/",
+      "provider": "greenhouse",
+      "identifier": "celigo",
+      "board_url": "https://boards.greenhouse.io/embed/job_board/js?for=celigo",
+      "listings": 24
+    },
+    {
+      "name": "CloudSEK",
+      "official_url": "https://www.cloudsek.com/careers",
+      "provider": "greenhouse",
+      "identifier": "cloudsek",
+      "board_url": "https://boards.greenhouse.io/embed/job_board/js?for=cloudsek",
+      "listings": 18
+    },
+    {
+      "name": "DXC Technology",
+      "official_url": "https://careers.dxc.com/global/en",
+      "provider": "workday",
+      "identifier": "dxctechnology|DXCJobs",
+      "board_url": "https://dxctechnology.wd1.myworkdayjobs.com/DXCJobs/login",
+      "listings": 1146
+    },
+    {
+      "name": "Expedia Group",
+      "official_url": "https://careers.expediagroup.com/jobs/",
+      "provider": "workday",
+      "identifier": "expedia|search",
+      "board_url": "https://expedia.wd108.myworkdayjobs.com/en-US/search/introduceYourself",
+      "listings": 151
+    },
+    {
+      "name": "Johnson & Johnson",
+      "official_url": "https://www.careers.jnj.com/",
+      "provider": "workday",
+      "identifier": "jj|JJ",
+      "board_url": "https://jj.wd5.myworkdayjobs.com/JJ/login/",
+      "listings": 1740
+    },
+    {
+      "name": "Mastercard",
+      "official_url": "https://careers.mastercard.com/us/en",
+      "provider": "workday",
+      "identifier": "mastercard|CorporateCareers",
+      "board_url": "https://mastercard.wd1.myworkdayjobs.com/CorporateCareers",
+      "listings": 1036
+    },
+    {
+      "name": "Netskope",
+      "official_url": "https://www.netskope.com/company/careers/open-positions",
+      "provider": "greenhouse",
+      "identifier": "netskope",
+      "board_url": "https://boards.greenhouse.io/embed/job_board/js?for=netskope",
+      "listings": 150
+    },
+    {
+      "name": "Pfizer",
+      "official_url": "https://www.pfizer.com/about/careers",
+      "provider": "workday",
+      "identifier": "pfizer|PfizerCareers",
+      "board_url": "https://pfizer.wd1.myworkdayjobs.com/PfizerCareers/page/61cd8c398601100158e598894f100000",
+      "listings": 517
+    },
+    {
+      "name": "Rackspace Technology",
+      "official_url": "https://rackspace.jobs/",
+      "provider": "workday",
+      "identifier": "rackspace|External",
+      "board_url": "https://rackspace.wd1.myworkdayjobs.com/External",
+      "listings": 57
+    },
+    {
+      "name": "State Street",
+      "official_url": "https://careers.statestreet.com/",
+      "provider": "workday",
+      "identifier": "statestreet|Global",
+      "board_url": "https://statestreet.wd1.myworkdayjobs.com/en-US/Global/introduceYourself",
+      "listings": 1036
+    },
+    {
+      "name": "Uniphore",
+      "official_url": "https://www.uniphore.com/careers/",
+      "provider": "workday",
+      "identifier": "uniphore|Uniphore",
+      "board_url": "https://uniphore.wd503.myworkdayjobs.com/Uniphore",
+      "listings": 34
+    },
+    {
+      "name": "Yugabyte",
+      "official_url": "https://www.yugabyte.com/careers/",
+      "provider": "greenhouse",
+      "identifier": "yugabyte",
+      "board_url": "https://boards.greenhouse.io/yugabyte",
+      "listings": 16
+    }
+  ],
+  "notes": [
+    "Counts are live endpoint probe totals, not eligible jobs or a guarantee of complete collection.",
+    "Workday collection remains capped at 1000 listings per source per scan.",
+    "Dream Sports linked Lever board was unavailable; source remains custom.",
+    "Remaining unverified or inaccessible sources retain Limited coverage diagnostics."
+  ]
+}

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
-from urllib.parse import urljoin, urlparse
+from urllib.parse import parse_qs, urljoin, urlparse
 from pathlib import Path
 from hashlib import sha256
 import asyncio, html, json, os, re, time
@@ -136,15 +136,19 @@ class GreenhouseAdapter(JobSource):
             async def convert(j):
                 url=j.get("absolute_url",c.careers_url); posting=None
                 location=location_text(j.get("location"),j.get("offices"))
-                # Greenhouse's board API omits the posting timestamp. Its public
-                # job page normally exposes the employer date in JobPosting JSON-LD.
+                # The list omits posting dates; the public detail API provides
+                # first_published, including boards with JavaScript-only job pages.
                 if likely_target(j.get("title",""),location):
                     try:
-                        detail=await cached_get(x,url)
+                        detail=await cached_get(x,f"https://boards-api.greenhouse.io/v1/boards/{c.ats_identifier}/jobs/{j['id']}")
                         if detail.status_code==200:
-                            item=next(jsonld_objects(BeautifulSoup(detail.text,"html.parser")),None)
-                            if item: posting=item.get("datePosted")
-                    except httpx.HTTPError:
+                            posting=detail.json().get("first_published")
+                        if not posting:
+                            page=await cached_get(x,url)
+                            if page.status_code==200:
+                                item=next(jsonld_objects(BeautifulSoup(page.text,"html.parser")),None)
+                                if item: posting=item.get("datePosted")
+                    except (httpx.HTTPError,ValueError):
                         pass
                 return make_job(str(j["id"]),j["title"],c.name,location,clean(j.get("content","")),"greenhouse","company_career",url,url,c.careers_url,posting=posting)
             jobs=list(await asyncio.gather(*(convert(j) for j in data.get("jobs",[]))))
@@ -280,46 +284,66 @@ class JobviteAdapter(JobSource):
             return jobs,len(jobs)
 
 def jsonld_objects(soup):
+    def postings(value):
+        if isinstance(value, list):
+            for item in value: yield from postings(item)
+        elif isinstance(value, dict):
+            types=value.get("@type", [])
+            if types=="JobPosting" or (isinstance(types,list) and "JobPosting" in types):
+                yield value
+            else:
+                for child in value.values():
+                    if isinstance(child,(list,dict)): yield from postings(child)
     for script in soup.find_all("script",type="application/ld+json"):
         try: value=json.loads(script.string or "")
         except (json.JSONDecodeError,TypeError): continue
-        values=value if isinstance(value,list) else [value]
-        for item in values:
-            if isinstance(item,dict) and item.get("@type")=="JobPosting": yield item
-            if isinstance(item,dict) and isinstance(item.get("@graph"),list):
-                yield from (node for node in item["@graph"] if isinstance(node,dict) and node.get("@type")=="JobPosting")
+        yield from postings(value)
 
 ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com","jobvite.com","icims.com")
+ATS_BOARD_HOSTS={"greenhouse":{"boards.greenhouse.io","job-boards.greenhouse.io"},
+                 "lever":{"jobs.lever.co"},"ashby":{"jobs.ashbyhq.com"},
+                 "smartrecruiters":{"jobs.smartrecruiters.com","careers.smartrecruiters.com"},
+                 "jobvite":{"jobs.jobvite.com"}}
 ATS_PATTERNS=(
     ("greenhouse",re.compile(r"(?:boards|job-boards)\.greenhouse\.io/([\w.-]+)",re.I)),
     ("lever",re.compile(r"jobs\.lever\.co/([\w.-]+)",re.I)),
     ("ashby",re.compile(r"jobs\.ashbyhq\.com/([\w.-]+)",re.I)),
-    ("smartrecruiters",re.compile(r"jobs\.smartrecruiters\.com/([\w.-]+)",re.I)),
+    ("smartrecruiters",re.compile(r"(?:jobs|careers)\.smartrecruiters\.com/([\w.-]+)",re.I)),
     ("jobvite",re.compile(r"jobs\.jobvite\.com/([\w.-]+)",re.I)),
 )
 def discover_ats(soup,base_url):
     """Find a public ATS linked or embedded by an employer's official page."""
     values=[]
-    for tag in soup.find_all(["a","iframe"],href=True): values.append(tag.get("href"))
+    for tag in soup.find_all(True):
+        for attribute in ("href","ph-href","data-href","data-ph-href","data-src"):
+            if tag.get(attribute): values.append(tag.get(attribute))
     for tag in soup.find_all("form",action=True): values.append(tag.get("action"))
     for tag in soup.find_all(["iframe","script"],src=True): values.append(tag.get("src"))
     values.extend(script.string or "" for script in soup.find_all("script"))
     for value in values:
-        raw=str(value or "")
-        candidates=re.findall(r"https?://[^\s\"'<>]+",raw,re.I)
+        raw=html.unescape(str(value or "")).replace("\\/","/")
+        raw=re.sub(r"\\u002[fF]", "/", raw)
+        candidates=re.findall(r"https?://[^\s\"'<>\\]+",raw,re.I)
         if not candidates and len(raw)<2048:
             try: candidates=[urljoin(base_url,raw)]
             except ValueError: continue
         for absolute in candidates:
             try: parsed=urlparse(absolute); hostname=(parsed.hostname or "").lower()
             except ValueError: continue
+            if parsed.scheme not in {"https","http"}: continue
+            if hostname in {"boards.greenhouse.io","job-boards.greenhouse.io"} and parsed.path.startswith("/embed/"):
+                token=parse_qs(parsed.query).get("for",[""])[0]
+                if re.fullmatch(r"[\w.-]+",token):
+                    return "greenhouse",token,absolute
+                continue
             if hostname.endswith(".myworkdayjobs.com"):
                 parts=[part for part in parsed.path.split("/") if part and not re.fullmatch(r"[a-z]{2}(?:-[A-Z]{2})?",part)]
                 if parts:
                     tenant=parsed.hostname.split(".")[0]
                     return "workday",f"{tenant}|{parts[0]}",absolute
             for provider,pattern in ATS_PATTERNS:
-                match=pattern.search(absolute)
+                if hostname not in ATS_BOARD_HOSTS[provider]: continue
+                match=pattern.search(hostname+parsed.path)
                 if match: return provider,match.group(1),absolute
     return None
 def job_like_url(url,base_host):
@@ -352,14 +376,23 @@ class CustomCareerAdapter(JobSource):
                     try:return await cached_get(x,url)
                     except httpx.HTTPError:return None
             responses=[listing,*await asyncio.gather(*(fetch(url) for url in urls))]
+            for response in responses[1:]:
+                if response is None or response.status_code!=200: continue
+                detected=discover_ats(BeautifulSoup(response.text,"html.parser"),str(response.url))
+                if detected:
+                    provider,identifier,board_url=detected
+                    indexed=Company(c.name,board_url if provider=="workday" else c.careers_url,provider,identifier,c.priority,c.enabled)
+                    return await ADAPTERS[provider].fetch_jobs(indexed)
             for url,response in zip([str(listing.url),*urls],responses):
                 if response is None or response.status_code!=200: continue
                 for item in jsonld_objects(BeautifulSoup(response.text,"html.parser")):
-                    location_data=item.get("jobLocation") or {}
-                    if isinstance(location_data,list): location_data=location_data[0] if location_data else {}
-                    address=(location_data.get("address") or {}) if isinstance(location_data,dict) else {}
-                    location=", ".join(str(address.get(k,"")) for k in ("addressLocality","addressRegion","addressCountry") if address.get(k))
-                    apply_url=item.get("url") or url; external=str(item.get("identifier",{}).get("value") if isinstance(item.get("identifier"),dict) else item.get("identifier") or apply_url)
+                    locations=item.get("jobLocation") or []
+                    if not isinstance(locations,list): locations=[locations]
+                    addresses=[entry.get("address",{}) for entry in locations if isinstance(entry,dict)]
+                    location=" · ".join(dict.fromkeys(", ".join(str(address.get(k,"")) for k in ("addressLocality","addressRegion","addressCountry") if address.get(k)) for address in addresses if isinstance(address,dict)))
+                    apply_url=item.get("url") or url
+                    identifier=item.get("identifier")
+                    external=str((identifier.get("value") if isinstance(identifier,dict) else identifier) or apply_url)
                     jobs.append(make_job(external,item.get("title",""),c.name,location,clean(item.get("description","")),"custom","company_career",apply_url,apply_url,c.careers_url,posting=item.get("datePosted")))
         unique={}
         for job in jobs: unique[job.external_job_id]=job

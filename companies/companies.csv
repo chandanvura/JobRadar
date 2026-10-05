@@ -218,7 +218,7 @@ Confluent,https://www.confluent.io/careers/,custom,confluent,5,true
 HashiCorp,https://www.hashicorp.com/en/careers/open-positions,custom,hashicorp,5,true
 GitHub,https://www.github.careers/careers-home/jobs,custom,github-careers,5,true
 DigitalOcean,https://www.digitalocean.com/careers,custom,digitalocean,4,true
-Rackspace Technology,https://rackspace.jobs/,custom,rackspace,4,true
+Rackspace Technology,https://rackspace.wd1.myworkdayjobs.com/External,workday,rackspace|External,4,true
 Thoughtworks,https://boards.greenhouse.io/thoughtworks,greenhouse,thoughtworks,5,true
 EPAM,https://www.epam.com/careers/job-listings,custom,epam,4,true
 Globant,https://career.globant.com/,custom,globant,4,true
@@ -238,7 +238,7 @@ Tech Mahindra,https://careers.techmahindra.com/,custom,techmahindra,4,true
 Cognizant,https://careers.cognizant.com/global-en/jobs/,custom,cognizant,5,true
 HCLTech,https://www.hcltech.com/careers,custom,hcltech,5,true
 NTT DATA,https://careers.nttdata.com/,custom,nttdata,4,true
-DXC Technology,https://careers.dxc.com/global/en,custom,dxc,4,true
+DXC Technology,https://dxctechnology.wd1.myworkdayjobs.com/DXCJobs,workday,dxctechnology|DXCJobs,4,true
 ADP,https://jobs.adp.com/,custom,adp,4,true
 UKG,https://www.ukg.com/careers,custom,ukg,4,true
 Darwinbox,https://darwinbox.com/careers,custom,darwinbox,5,true
@@ -251,7 +251,7 @@ Informatica,https://informatica.gr8people.com/jobs,custom,informatica,5,true
 Manhattan Associates,https://careers.manh.com/,custom,manhattan-associates,4,true
 Blue Yonder,https://careers.blueyonder.com/,custom,blueyonder,4,true
 Sabre,https://jobs.sabre.com/,custom,sabre,4,true
-Expedia Group,https://careers.expediagroup.com/jobs/,custom,expedia,4,true
+Expedia Group,https://expedia.wd108.myworkdayjobs.com/search,workday,expedia|search,4,true
 Booking.com,https://jobs.booking.com/careers,custom,booking,4,true
 Agoda,https://boards.greenhouse.io/agoda,greenhouse,agoda,4,true
 Traveloka,https://careers.traveloka.com/,custom,traveloka,3,true
@@ -262,9 +262,9 @@ Optum,https://careers.unitedhealthgroup.com/,custom,optum,5,true
 Providence India,https://www.providence.in/careers,custom,providence-india,4,true
 Synchrony,https://www.synchronycareers.com/,custom,synchrony,4,true
 American Express,https://www.americanexpress.com/en-us/careers/,custom,americanexpress,5,true
-Mastercard,https://careers.mastercard.com/us/en,custom,mastercard,5,true
+Mastercard,https://mastercard.wd1.myworkdayjobs.com/CorporateCareers,workday,mastercard|CorporateCareers,5,true
 Morgan Stanley,https://www.morganstanley.com/careers/career-opportunities-search,custom,morganstanley,5,true
-State Street,https://careers.statestreet.com/,custom,statestreet,4,true
+State Street,https://statestreet.wd1.myworkdayjobs.com/Global,workday,statestreet|Global,4,true
 Northern Trust,https://www.northerntrust.com/united-states/about-us/careers,custom,northerntrust,4,true
 HSBC,https://www.hsbc.com/careers,custom,hsbc,5,true
 Harness,https://job-boards.greenhouse.io/harnessinc,greenhouse,harnessinc,5,true
@@ -367,7 +367,7 @@ Sanofi,https://jobs.sanofi.com/en,custom,sanofi-india,4,true
 Bayer,https://career.bayer.com/,custom,bayer-india,4,true
 Merck Group,https://www.merckgroup.com/en/careers.html,custom,merck-group-india,4,true
 Eli Lilly,https://careers.lilly.com/,custom,eli-lilly-india,4,true
-Pfizer,https://www.pfizer.com/about/careers,custom,pfizer-india,4,true
+Pfizer,https://pfizer.wd1.myworkdayjobs.com/PfizerCareers,workday,pfizer|PfizerCareers,4,true
 Bristol Myers Squibb,https://careers.bms.com/,custom,bristol-myers-squibb-india,4,true
 Thermo Fisher Scientific,https://jobs.thermofisher.com/global/en,custom,thermo-fisher-india,4,true
 IQVIA,https://jobs.iqvia.com/en,custom,iqvia-india,4,true
@@ -524,10 +524,10 @@ Rippling,https://www.rippling.com/careers/open-roles,custom,rippling-india,5,tru
 Atlan,https://atlan.com/careers/,custom,atlan-india,5,true
 Eightfold AI,https://eightfold.ai/company/careers/,custom,eightfold-ai-india,5,true
 Highspot,https://www.highspot.com/careers/,custom,highspot-india,4,true
-Netskope,https://www.netskope.com/company/careers/open-positions,custom,netskope-india,5,true
+Netskope,https://www.netskope.com/company/careers/open-positions,greenhouse,netskope,5,true
 ThoughtSpot,https://www.thoughtspot.com/careers,custom,thoughtspot-india,5,true
 Amagi,https://www.amagi.com/careers,custom,amagi-india,4,true
-Uniphore,https://www.uniphore.com/careers/,custom,uniphore-india,4,true
+Uniphore,https://uniphore.wd503.myworkdayjobs.com/Uniphore,workday,uniphore|Uniphore,4,true
 Druva,https://www.druva.com/about/careers,custom,druva-india,5,true
 Zeta,https://www.zeta.tech/in/careers,custom,zeta-india,5,true
 CoinDCX,https://careers.coindcx.com/,custom,coindcx-india,4,true
@@ -545,7 +545,7 @@ SAS,https://www.sas.com/en_in/careers.html,custom,sas-india,4,true
 Ansys,https://careers.ansys.com/,custom,ansys-india,4,true
 MathWorks,https://in.mathworks.com/company/jobs/opportunities.html,custom,mathworks-india,4,true
 Dassault Systemes,https://www.3ds.com/careers,custom,dassault-systemes-india,4,true
-Bentley Systems,https://jobs.bentley.com/,custom,bentley-systems-india,4,true
+Bentley Systems,https://bentleysystems.wd5.myworkdayjobs.com/bentley,workday,bentleysystems|bentley,4,true
 Microchip Technology,https://careers.microchip.com/,custom,microchip-india,4,true
 Western Digital,https://jobs.westerndigital.com/,custom,western-digital-india,4,true
 Sophos,https://www.sophos.com/en-us/careers,custom,sophos-india,4,true
@@ -587,7 +587,7 @@ Novo Nordisk,https://www.novonordisk.com/careers/find-a-job.html,custom,novo-nor
 Takeda,https://jobs.takeda.com/,custom,takeda-india,4,true
 Boehringer Ingelheim,https://jobs.boehringer-ingelheim.com/,custom,boehringer-ingelheim-india,4,true
 Viatris,https://careers.viatris.com/,custom,viatris-india,4,true
-Johnson & Johnson,https://www.careers.jnj.com/,custom,johnson-johnson-india,4,true
+Johnson & Johnson,https://jj.wd5.myworkdayjobs.com/JJ,workday,jj|JJ,4,true
 Ralph Lauren,https://careers.ralphlauren.com/,custom,ralph-lauren-india,4,true
 Victoria's Secret,https://careers.victoriassecret.com/,custom,victorias-secret-india,4,true
 Lululemon,https://careers.lululemon.com/,custom,lululemon-india,4,true
@@ -605,7 +605,7 @@ Dynatrace,https://careers.dynatrace.com/,custom,dynatrace-india,4,true
 Splunk,https://www.splunk.com/en_us/careers.html,custom,splunk-india,5,true
 Redis,https://redis.io/careers/,custom,redis-india,4,true
 Neo4j,https://neo4j.com/careers/,custom,neo4j-india,4,true
-Yugabyte,https://www.yugabyte.com/careers/,custom,yugabyte-india,4,true
+Yugabyte,https://www.yugabyte.com/careers/,greenhouse,yugabyte,4,true
 SingleStore,https://www.singlestore.com/careers/,custom,singlestore-india,4,true
 DataStax,https://www.datastax.com/company/careers,custom,datastax-india,4,true
 Airwallex,https://www.airwallex.com/careers,custom,airwallex-india,4,true
@@ -617,14 +617,14 @@ Checkout.com,https://www.checkout.com/careers,custom,checkout-com-india,4,true
 Klarna,https://www.klarna.com/careers/,custom,klarna-india,4,true
 Adyen,https://careers.adyen.com/,custom,adyen-india,4,true
 Cyware,https://www.cyware.com/careers,custom,cyware-india,4,true
-CloudSEK,https://www.cloudsek.com/careers,custom,cloudsek-india,4,true
+CloudSEK,https://www.cloudsek.com/careers,greenhouse,cloudsek,4,true
 Securonix,https://www.securonix.com/careers/,custom,securonix-india,4,true
 ColorTokens,https://colortokens.com/careers/,custom,colortokens-india,4,true
 Safe Security,https://safe.security/careers/,custom,safe-security-india,4,true
 Seclore,https://www.seclore.com/careers/,custom,seclore-india,4,true
 o9 Solutions,https://o9solutions.com/careers/,custom,o9-solutions-india,4,true
 E2open,https://www.e2open.com/company/careers/,custom,e2open-india,4,true
-Celigo,https://www.celigo.com/company/careers/,custom,celigo-india,4,true
+Celigo,https://www.celigo.com/company/careers/,greenhouse,celigo,4,true
 Avalara,https://careers.avalara.com/,custom,avalara-india,4,true
 Blackbaud,https://careers.blackbaud.com/,custom,blackbaud-india,4,true
 Ivanti,https://careers.ivanti.com/,custom,ivanti-india,4,true
