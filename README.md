@@ -207,3 +207,14 @@ will reject an unpatched installation. The patch rejects nesting at 128 levels,
 retains ordinary glob behavior, and fails installation on unexpected upstream
 source/version changes. Original MIT licensing is retained under web/security.
 Remove the patch only after verifying a safe upstream release.
+
+## Lean personal feed
+
+The feed now separates **match** (title, exact skill aliases, target experience
+and location) from **opportunity priority** (match, smooth age decay and source
+quality). Ranking is calculated once per catalog/profile/tracking change;
+feedback is bounded and close scores interleave companies and role families.
+Duplicate cards group conservatively without merging database or private
+application records. Career tools collapse and resume/settings load on demand.
+See [the lean-engine audit and algorithm notes](docs/LEAN-ENGINE.md) for weights,
+changed modules, security decisions, fixtures and verification limits.

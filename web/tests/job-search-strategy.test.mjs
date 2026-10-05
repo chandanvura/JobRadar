@@ -22,3 +22,15 @@ test('manager drafts require truthful personalization rather than invented wins'
   assert.match(text,/https:\/\/example.test\/job/);assert.match(text,/truthful, verifiable result/);assert.match(text,/\[portfolio link\]/);
   assert.equal(strategy.hiringSignalSearches('SRE','Hyderabad').length,3);
 });
+
+test('compact family searches stay bounded and preserve internship intent',async()=>{
+ const {groupedAtsSearches}=await import('../lib/job-search-strategy.ts');
+ const links=groupedAtsSearches('Java Developer','Bengaluru','day');
+ assert.equal(links.length,7);
+ const query=new URL(links[0].url).searchParams.get('q');
+ assert.ok(query.includes('"Backend Engineer"'));assert.ok(query.includes('"Bangalore"'));
+ assert.equal(groupedAtsSearches('Java','Mars','day').length,0);
+ const internship=new URL(groupedAtsSearches('Software Engineer Intern','Hyderabad','day')[0].url).searchParams.get('q');
+ assert.ok(internship.includes('"Software Engineer Intern"'));
+ assert.ok(!internship.includes('"SDE I"'));
+});

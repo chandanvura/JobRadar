@@ -56,6 +56,15 @@ jobs:
           npm run test:api
           npm run lint
           npm run typecheck:ui
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Verify collector changes before deployment
+        working-directory: .
+        run: |
+          pip install -r requirements-dev.txt
+          python -m pytest -q
+          python -m bandit -q -r scraper scripts
       - name: Ensure a workers.dev hostname exists
         run: |
           current_subdomain="$(curl --silent --show-error \

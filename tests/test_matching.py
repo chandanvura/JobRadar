@@ -381,3 +381,9 @@ def test_rejected_ingestion_never_finalizes_or_deactivates_existing_jobs(monkeyp
     with pytest.raises(RuntimeError,match='finalization withheld'):
         asyncio.run(ingest_scan('https://example.test',{},[{'company':'Example'}],[],{'started_at':'now'}))
     assert not any('run' in payload for payload in calls)
+
+def test_skill_aliases_and_plural_graduate_requirements():
+    job=enrich(sample(description="Fresh graduates welcome. Work with k8s, Amazon Web Services, springboot, postgres and GHA."))
+    assert job.is_eligible
+    assert {"Kubernetes","AWS","Spring Boot","PostgreSQL","GitHub Actions"}.issubset(job.skills)
+    assert extract_experience("Freshers welcome")[:2] == (0.0,1.0)

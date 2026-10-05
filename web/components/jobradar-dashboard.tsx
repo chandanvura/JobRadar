@@ -3,7 +3,7 @@ import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { hiringManagerDraft } from "@/lib/job-search-strategy";
 import { ThemeToggle } from "./theme-toggle";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   Bell,
@@ -41,8 +41,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { postingAge, currentPosting } from "@/lib/job-time";
-import { ProfilePanel } from "./profile-panel";
-import { ResumeWorkspace } from "./resume-workspace";
+const ProfilePanel = lazy(() => import("./profile-panel").then(module => ({default: module.ProfilePanel})));
+const ResumeWorkspace = lazy(() => import("./resume-workspace").then(module => ({default: module.ResumeWorkspace})));
 import {
   cleanSearch,
   profileId,
@@ -53,7 +53,8 @@ import {
   removePrivate,
 } from "@/lib/private-profile";
 import { Progress } from "@/components/ui/progress";
-import { feedbackBoost, personalMatch } from "@/lib/job-match";
+import { feedbackByFamily, opportunityPriority, personalMatch } from "@/lib/job-match";
+import { diversifyFeed, groupDuplicateJobs } from "@/lib/job-feed";
 
 type ApiJob = {
   description?: string;
@@ -185,14 +186,14 @@ const nav = [
 const primaryNav = new Set([
   "Dashboard",
   "Recommended",
-  "Latest Jobs",
   "All Jobs",
   "Needs Review",
-  "Internships",
   "Saved",
   "Applications",
 ]);
 const exploreNav = new Set([
+  "Latest Jobs",
+  "Internships",
   "Ultra Fresh",
   "DevOps & Cloud",
   "Software Engineering",
@@ -399,7 +400,8 @@ function DashboardContent() {
     [showWelcome, setShowWelcome] = useState(false),
     [showExplore, setShowExplore] = useState(false),
     [showMoreFilters, setShowMoreFilters] = useState(false),
-    [showOperations, setShowOperations] = useState(false);
+    [showOperations, setShowOperations] = useState(false),
+    [showTools, setShowTools] = useState(false);
   const loadGeneration = useRef(0);
   const activeLoad = useRef<AbortController | null>(null);
   const load = useCallback(async (silent = false) => {
@@ -558,13 +560,24 @@ function DashboardContent() {
     ],
     [currentJobs],
   );
+  const [rankingNow, setRankingNow] = useState(() => Date.now());
+  useEffect(() => {setRankingNow(Date.now());}, [data]);
+  const ranking = useMemo(() => {
+    const now = rankingNow;
+    const feedback = feedbackByFamily(Object.values(tracking));
+    return new Map(mergedJobs.map(job => {
+      const match = personalMatch(job, preferences);
+      const opportunity = opportunityPriority(job, preferences, now, match);
+      return [trackingKey(job), {match, priority: opportunity.score + (feedback.get(job.role_category) || 0)}];
+    }));
+  }, [mergedJobs, preferences, tracking, rankingNow]);
   const filtered = useMemo(() => {
     const reviewView = ["Needs Review", "Internships"].includes(active);
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j),
         q =
           `${j.title} ${j.company} ${j.skills} ${j.role_category} ${j.ats_provider}`.toLowerCase(),
-        match = personalMatch(j, preferences);
+        match = ranking.get(trackingKey(j))!.match;
       if (query && !q.includes(query.toLowerCase())) return false;
       if (active === "Internships" && !isInternship(j)) return false;
       if (active === "Needs Review" && (isInternship(j) || /\b(?:senior|staff|principal|lead|manager|experienced)\b/i.test(j.title) || !["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason))) return false;
@@ -672,7 +685,7 @@ function DashboardContent() {
       }
       return true;
     });
-    result.sort((a, b) =>
+    const compare = (a: ApiJob, b: ApiJob) =>
       sort === "Newest posting"
         ? (freshnessAge(a) ?? 999) - (freshnessAge(b) ?? 999)
         : sort === "Recently discovered" || (active === "Latest Jobs" && sort === "Best match")
@@ -680,11 +693,15 @@ function DashboardContent() {
             new Date(a.first_seen_at).getTime()
           : sort === "Company A–Z"
             ? a.company.localeCompare(b.company)
-        : personalMatch(b, preferences).score + feedbackBoost(b, Object.values(tracking)) -
-                personalMatch(a, preferences).score - feedbackBoost(a, Object.values(tracking)) ||
-              b.relevance_score - a.relevance_score,
-    );
-    return active === "Dashboard" ? result.slice(0, 20) : result;
+        : ranking.get(trackingKey(b))!.priority - ranking.get(trackingKey(a))!.priority ||
+              ranking.get(trackingKey(b))!.match.score - ranking.get(trackingKey(a))!.match.score ||
+              trackingKey(a).localeCompare(trackingKey(b));
+    result.sort(compare);
+    // Saved/application views retain each original source and tracking identity.
+    const unique = ["Saved", "Applications"].includes(active) ? result : groupDuplicateJobs(result).map(group => group.job).sort(compare);
+    const ordered = sort === "Best match" && active !== "Latest Jobs"
+      ? diversifyFeed(unique, job => ranking.get(trackingKey(job))!.priority) : unique;
+    return active === "Dashboard" ? ordered.slice(0, 20) : ordered;
   }, [
     mergedJobs,
     jobTracking,
@@ -698,7 +715,7 @@ function DashboardContent() {
     sort,
     applicationStage,
     matchMode,
-    tracking,
+    ranking,
   ]);
   const applyPreferences = (next: SearchPreferences) => {
     setPreferences(next);
@@ -850,7 +867,11 @@ function DashboardContent() {
             {showExplore ? <ChevronUp className="ml-auto" size={16} /> : <ChevronDown className="ml-auto" size={16} />}
           </button>
           {(showExplore || exploreNav.has(active)) && navGroup("Role views", exploreNav)}
-          {navGroup("Career tools", toolsNav)}
+          <button type="button" aria-expanded={showTools} onClick={() => setShowTools(value => !value)} className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-muted">
+            <BriefcaseBusiness size={18} /> Career tools
+            {showTools ? <ChevronUp className="ml-auto" size={16} /> : <ChevronDown className="ml-auto" size={16} />}
+          </button>
+          {(showTools || toolsNav.has(active)) && navGroup("Career tools", toolsNav)}
           <button
             type="button"
             aria-expanded={showOperations}
@@ -1098,9 +1119,9 @@ function DashboardContent() {
               )}
             </>
           )}
-          {active === "Settings" && <ProfilePanel />}
+          {active === "Settings" && <Suspense fallback={<Loading />}><ProfilePanel /></Suspense>}
           {active === "Resume Studio" ? (
-            <ResumeWorkspace />
+            <Suspense fallback={<Loading />}><ResumeWorkspace /></Suspense>
           ) : loading ? (
             <Loading />
           ) : showJobs ? (
@@ -1114,6 +1135,7 @@ function DashboardContent() {
                 </section>
               )}
               <JobList
+                now={rankingNow}
                 jobs={visibleJobs}
                 preferences={preferences}
                 getTracking={jobTracking}
@@ -1593,11 +1615,13 @@ function Pills({
   );
 }
 function JobList({
+  now,
   jobs,
   preferences,
   getTracking,
   saveTracking,
 }: {
+  now: number;
   jobs: ApiJob[];
   preferences: SearchPreferences;
   getTracking: (j: ApiJob) => Tracking;
@@ -1612,6 +1636,7 @@ function JobList({
           .slice(0, limit)
           .map((j) => (
             <JobCard
+              now={now}
               key={trackingKey(j)}
               job={j}
               preferences={preferences}
@@ -1697,11 +1722,13 @@ function ApplicationSummary({
   );
 }
 function JobCard({
+  now,
   job,
   preferences,
   tracking,
   saveTracking,
 }: {
+  now: number;
   job: ApiJob;
   preferences: SearchPreferences;
   tracking: Tracking;
@@ -1709,6 +1736,7 @@ function JobCard({
 }) {
   const [details, setDetails] = useState(false),
     match = personalMatch(job, preferences),
+    opportunity = opportunityPriority(job, preferences, now, match),
     skills = parseSkills(job.skills),
     age = freshnessAge(job),
     fresh = postedToday(job)
@@ -1819,14 +1847,16 @@ function JobCard({
           <div>
             <div className="flex items-end justify-between">
               <span className="text-xs font-bold uppercase text-muted-foreground">
-                Personal match
+                Opportunity priority
               </span>
               <span className="text-3xl font-black text-success">
-                {match.score}
+                {opportunity.score}
                 <small className="text-xs">/100</small>
               </span>
             </div>
-            <Progress value={match.score} className="mt-3 h-2" />
+            <Progress value={opportunity.score} className="mt-3 h-2" />
+            <p className="mt-2 text-xs font-semibold">Match: {match.score}/100 · {opportunity.freshness.basis === "discovered" ? "Posting age unknown" : "Employer posting age"}</p>
+            {match.missingSkills.length > 0 && <p className="mt-2 text-[11px] text-muted-foreground">Not in your profile: {match.missingSkills.slice(0, 3).join(", ")}</p>}
             <p className="mt-2 text-[11px] text-muted-foreground">
               {match.reasons.slice(0, 3).join(" · ") || "Target role to review"}
             </p>

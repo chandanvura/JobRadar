@@ -55,7 +55,7 @@ def classify_employment_type(title: str, description: str=""):
 
 def extract_experience(text: str):
     text=re.sub(r"\b(zero|one|two|three|four|five)\s+(?=years?|yrs?|yoe)",lambda m:str({"zero":0,"one":1,"two":2,"three":3,"four":4,"five":5}[m.group(1).lower()])+" ",text,flags=re.I)
-    junior=re.search(r"\b(fresher|fresh graduate|new graduate|entry.?level|early career|campus hire|university graduate|recent graduate|no (?:prior |professional |work )?experience required)\b",text,re.I)
+    junior=re.search(r"\b(freshers?|fresh graduates?|new graduates?|entry.?level|early career|campus hire|university graduate|recent graduates?|no (?:prior |professional |work )?experience required)\b",text,re.I)
     clauses=re.split(r"[\n.;•]+",text)
     relevant=[c for c in clauses if re.search(r"\b(years?|yrs?|yoe|experience|fresher|graduate)\b",c,re.I) and not re.search(r"\b(company|organisation|organization|founded|serving|combined|team has)\b.{0,35}\b(years?|experience)\b",c,re.I)]
     candidate_text=" ".join(relevant)
@@ -90,7 +90,7 @@ def extract_experience(text: str):
     return None,None,"Unknown"
 
 def skill_present(skill: str, corpus: str):
-    aliases={"CI/CD":r"\bci\s*/?\s*cd\b","REST API":r"\brest(?:ful)?\s+apis?\b","Spring":r"\bspring\b(?!\s+boot)","Git":r"\bgit\b(?!hub)","ELK":r"\belk\b"}
+    aliases={"CI/CD":r"\bci\s*/?\s*cd\b","REST API":r"\brest(?:ful)?\s+apis?\b","Spring":r"\bspring\b(?!\s+boot)","Git":r"\bgit\b(?!hub)","ELK":r"\belk\b","Kubernetes":r"\b(?:kubernetes|k8s)\b","AWS":r"\b(?:aws|amazon web services)\b","Spring Boot":r"\bspring\s*boot\b","PostgreSQL":r"\b(?:postgresql|postgres)\b","GitHub Actions":r"\b(?:github actions|gha)\b"}
     return bool(re.search(aliases.get(skill,rf"(?<![a-z0-9]){re.escape(skill.lower())}(?![a-z0-9])"),corpus,re.I))
 
 def posted_age_hours(posted_at):

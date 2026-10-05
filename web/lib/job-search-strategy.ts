@@ -25,3 +25,18 @@ export function hiringSignalSearches(role: string, city: string) {
 export function hiringManagerDraft(company: string, role: string, applicationUrl?: string) {
   return `Subject: ${role} — [Your name] / [Relevant specialty]\n\nHi [Name], I submitted an application for ${role} at ${company}${applicationUrl ? ` (${applicationUrl})` : ''}. My project work demonstrates [one relevant skill and a truthful, verifiable result].\n\nHere is [portfolio link] with [one concrete observation about the role's challenge].\n\nWould you be open to a brief conversation if this fits your team's priorities?`;
 }
+
+// Compact, bounded role-family searches replace title × city × source expansion.
+const ROLE_GROUPS: Record<string, string[]> = {
+  backend: ['Software Engineer', 'Backend Engineer', 'Java Developer', 'SDE I'],
+  devops: ['DevOps Engineer', 'Cloud Engineer', 'Platform Engineer'],
+  sre: ['Site Reliability Engineer', 'SRE', 'Production Engineer'],
+};
+export function groupedAtsSearches(role: string, city: string, period: string) {
+  if (!role.trim() || !['Bengaluru','Hyderabad'].includes(city) || !['day','week'].includes(period)) return [];
+  const family = /sre|site reliability|production engineer/i.test(role) ? 'sre' : /devops|cloud|platform/i.test(role) ? 'devops' : /java|backend|software|sde/i.test(role) ? 'backend' : null;
+  if (!family || /intern|graduate/i.test(role)) return atsSearches(role, city, period);
+  const titles = [...new Set([role, ...ROLE_GROUPS[family]])].slice(0, 4).map(literal).join(' OR ');
+  const location = city === 'Bengaluru' ? '("Bengaluru" OR "Bangalore")' : '"Hyderabad"';
+  return ATS_SOURCES.map(source => ({name:source.name, url:`https://www.google.com/search?${new URLSearchParams({q:`(site:${source.domain}) (${titles}) ${location}`,tbs:period==='day'?'qdr:d':'qdr:w'})}`}));
+}
