@@ -75,3 +75,8 @@ def test_focused_repair_refresh_publishes_only_real_results(monkeypatch):
     assert not jobs
     assert checked[0]['jobs_found'] == 42
     assert checked[1] == updates[1]
+
+
+def test_registry_does_not_repeat_repairs_for_default_https_port():
+    row = Company("FamPay", "https://www.famapp.in:443/careers/", "custom", "fampay")
+    assert not changed_sources([row], {"companies": [{"name": "FamPay", "careers_url": "https://www.famapp.in/careers/", "ats_provider": "custom"}]})

@@ -2,6 +2,7 @@
 import asyncio
 import json
 import os
+from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 from scraper.main import load_companies, scrape
 from scraper.normalization import TARGET_CITIES
@@ -19,6 +20,11 @@ def missing_sources(companies, catalog):
             for c in companies if c.enabled and c.name.strip().casefold() not in existing]
 
 
+def normalized_source_url(value):
+    parsed = urlsplit(value or "")
+    return parsed._replace(netloc=parsed.netloc.lower().removesuffix(":443"), path=parsed.path or "/").geturl()
+
+
 def changed_sources(companies, catalog):
     missing_sources([], catalog)  # Require a live catalog before any mutation.
     existing = {row["name"].strip().casefold(): row for row in catalog["companies"]}
@@ -26,7 +32,7 @@ def changed_sources(companies, catalog):
     for c in companies:
         row = existing.get(c.name.strip().casefold())
         if not c.enabled or not row: continue
-        if row.get("careers_url") == c.careers_url and row.get("ats_provider") == c.ats_provider: continue
+        if normalized_source_url(row.get("careers_url")) == normalized_source_url(c.careers_url) and row.get("ats_provider") == c.ats_provider: continue
         update = {key: row.get(key) for key in ("last_checked_at", "last_success_at", "error_count",
                   "jobs_found", "candidate_jobs", "eligible_jobs")}
         update.update(name=c.name, careers_url=c.careers_url, ats_provider=c.ats_provider,
