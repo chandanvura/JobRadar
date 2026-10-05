@@ -142,10 +142,11 @@ Exact links, live-probe evidence and excluded alternatives:
 
 ## Public career platforms — 2026-10-05
 
-Another 47 employer sources passed real listing and relevant-detail checks:
-18 Greenhouse boards, 20 Phenom career sites, three Workable boards, three
+Another 49 employer sources passed real listing and relevant-detail checks:
+20 Greenhouse boards, 20 Phenom career sites, three Workable boards, three
 Workday boards and three employer XML feeds. The review includes ABB, OpenText,
-Blue Yonder, RTX, GSK, Philips, BlackRock, Novartis, Innovaccer and Lokal.
+Blue Yonder, RTX, GSK, Philips, BlackRock, Novartis, Innovaccer, Lokal, Tide
+and Payoneer.
 
 Phenom collection uses the same public search widget as each employer's career
 site. It checks the employer identifier and keeps both search and detail URLs

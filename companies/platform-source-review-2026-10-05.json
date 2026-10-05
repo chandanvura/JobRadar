@@ -1,6 +1,6 @@
 {
   "review_date": "2026-10-05",
-  "verified_source_repairs": 47,
+  "verified_source_repairs": 49,
   "method": "Official employer-linked public structured feeds; full descriptions fetched for potentially relevant city/role matches. No generated jobs or invented posting dates.",
   "scope": {
     "phenom": "India country filter; complete pagination up to a bounded 2000 India records",
@@ -1043,6 +1043,59 @@
         "eligible_jobs": 0,
         "warning": "No roles with a published target-city location returned"
       }
+    },
+    {
+      "company_name": "Tide",
+      "careers_url": "https://job-boards.greenhouse.io/tide",
+      "ats_provider": "greenhouse",
+      "ats_identifier": "tide",
+      "priority": "4",
+      "enabled": "true",
+      "collection_check": {
+        "name": "Tide",
+        "careers_url": "https://job-boards.greenhouse.io/tide",
+        "ats_provider": "greenhouse",
+        "ats_identifier": "tide",
+        "priority": 3,
+        "last_checked_at": "2026-10-05T16:13:43.515199+00:00",
+        "last_success_at": "2026-10-05T16:14:07.116994+00:00",
+        "error_count": 0,
+        "jobs_found": 85,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "official_link_evidence": {
+        "url": "https://www.tide.co/careers/",
+        "linked_board": "https://job-boards.greenhouse.io/tide"
+      }
+    },
+    {
+      "company_name": "Payoneer",
+      "careers_url": "https://job-boards.greenhouse.io/payoneer",
+      "ats_provider": "greenhouse",
+      "ats_identifier": "payoneer",
+      "priority": "4",
+      "enabled": "true",
+      "collection_check": {
+        "name": "Payoneer",
+        "careers_url": "https://job-boards.greenhouse.io/payoneer",
+        "ats_provider": "greenhouse",
+        "ats_identifier": "payoneer",
+        "priority": 3,
+        "last_checked_at": "2026-10-05T16:13:43.570722+00:00",
+        "last_success_at": "2026-10-05T16:13:59.407791+00:00",
+        "error_count": 0,
+        "jobs_found": 104,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "official_link_evidence": {
+        "url": "https://careers.payoneer.com/",
+        "integration_type": "greenhouse",
+        "integration_id": "payoneer"
+      }
     }
   ],
   "excluded_alternatives": [
@@ -1069,6 +1122,10 @@
     {
       "company": "Dell / Caterpillar / BP / ASML",
       "reason": "Candidate alternate Workday endpoints failed verification."
+    },
+    {
+      "company": "Redis",
+      "reason": "Indexed Greenhouse board now returns HTTP 404; do not use stale search listings."
     }
   ]
 }
