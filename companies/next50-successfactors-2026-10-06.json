@@ -1,0 +1,770 @@
+{
+  "baseline_commit": "432cb5dae071d3175a802c0ed3c64d4ca0fb14e7",
+  "live_limited_sources_before": 214,
+  "batch_size": 50,
+  "production_verified_reductions": 0,
+  "method": "Read-only HTTP page probes, four concurrent requests, followed by bounded complete PayU search and relevant detail collection",
+  "results": [
+    {
+      "company": "Zomato",
+      "url": "https://www.zomato.com/careers",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Ola Electric",
+      "url": "https://www.olaelectric.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_banner_mweb_image.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_banner_web_image.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_future_mweb_image01.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_future_mweb_image02.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_future_mweb_image03.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_future_web_image01.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_future_web_image02.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_future_web_image03.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_lifeatola_mweb_image01.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_lifeatola_mweb_image02.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_lifeatola_mweb_image03.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_lifeatola_web_image01.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_lifeatola_web_image02.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_lifeatola_web_image03.webp",
+        "https://cdn.olaelectric.com/sites/evdp/pages/career/career_media_gallery_mweb_image01.webp"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Pine Labs",
+      "url": "https://www.pinelabs.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://plcorp-cdn.pinelabs.com/2025/08/career-advantage-section.webp",
+        "https://www.pinelabs.com/_next/static/chunks/app/(global)/careers/page-49e3732d3fa1633d.js",
+        "https://www.pinelabs.com/careers",
+        "https://www.pinelabs.com/careers/open-jobs"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "PayU",
+      "url": "https://corporate.payu.com/careers/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://corporate.payu.com/careers/",
+        "https://corporate.payu.com/job-board/",
+        "https://corporate.payu.com/wp-content/uploads/2026/08/Careers-2-52x52.png",
+        "https://corporate.payu.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fcorporate.payu.com%2Fcareers%2F&#038;format=xml&#038;lang=en",
+        "https://corporate.payu.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fcorporate.payu.com%2Fcareers%2F&#038;lang=en"
+      ],
+      "inline_ats": [],
+      "decision": "Verified active India employer-owned SuccessFactors board",
+      "verified_url": "https://careers.payu.in/PayU/go/_/514880/",
+      "verified_listings": 133,
+      "relevant_records": 31,
+      "coverage_warning": null,
+      "detail_employer": "PayU Payments",
+      "date_policy": "Read datePosted microdata; explicitly UTC timestamps are preserved"
+    },
+    {
+      "company": "KreditBee",
+      "url": "https://www.kreditbee.in/careers",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Rupeek",
+      "url": "https://rupeek.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://assets.rupeek.com/website/assets/images/careers_1.png",
+        "https://assets.rupeek.com/website/assets/images/careers_2.png",
+        "https://assets.rupeek.com/website/assets/images/careers_3.png",
+        "https://assets.rupeek.com/website/assets/images/careers_4.png",
+        "https://assets.rupeek.com/website/assets/images/careers_5.png",
+        "https://assets.rupeek.com/website/assets/images/careers_6.png",
+        "https://rupeek.com/careers",
+        "https://rupeek.com/careers?city=undefined",
+        "https://www.linkedin.com/jobs/view/assistant-manager-hr-operations-at-rupeek-4474672619",
+        "https://www.linkedin.com/jobs/view/assistant-manager-taxation-at-rupeek-4468068175",
+        "https://www.linkedin.com/jobs/view/manager-brand-cluster-marketing-at-rupeek-4466833957",
+        "https://www.linkedin.com/jobs/view/manager-lender-partnerships-at-rupeek-4469429526",
+        "https://www.linkedin.com/jobs/view/regional-business-head-gold-loan-branch-at-rupeek-4466177676",
+        "https://www.linkedin.com/jobs/view/relationship-manager-gold-loan-sales-at-rupeek-4474643291",
+        "https://www.linkedin.com/jobs/view/relationship-manager-gold-loan-sales-at-rupeek-4474644256"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Moneyview",
+      "url": "https://moneyview.in/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://moneyview.darwinbox.in/ms/candidate/careers",
+        "https://moneyview.in/careers"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Scaler",
+      "url": "https://www.scaler.com/careers/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://assets-v2.scaler.com/assets/master/products/careers-e11a7f5fd2d401bd2cf5a76a638d74da3a588955fb162b6ee09e1c324c6bb3ba.css",
+        "https://www.scaler.com/careers/",
+        "https://www.scaler.com/careers/associate-content-marketing-manager-socials",
+        "https://www.scaler.com/careers/entrepreneur-in-residence-eir-gtm",
+        "https://www.scaler.com/careers/performance-brand-art-director",
+        "https://www.scaler.com/careers/program-manager-sr-program-manager",
+        "https://www.scaler.com/careers/remote-instructor-python",
+        "https://www.scaler.com/careers/tax-manager"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection",
+      "excluded_board": "https://jobs.ashbyhq.com/scaler",
+      "exclusion_reason": "Board describes a real-estate sustainability data platform, not Scaler Academy; do not substitute it"
+    },
+    {
+      "company": "Unacademy",
+      "url": "https://unacademy.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://static.uacdn.net/production/_next/static/chunks/pages/careers-045c2eabf6e114e9.js",
+        "https://static.uacdn.net/production/_next/static/images/careers/Doublequotes.png",
+        "https://static.uacdn.net/production/_next/static/images/careers/InsuranceBenefits.svg?q=75&amp;auto=format%2Ccompress&amp;w=256",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters1.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters2.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters3.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters4.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters5.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters6.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters7.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters8.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/LeadershipPrinciplesPosters9.png?q=75&amp;auto=format%2Ccompress&amp;w=425",
+        "https://static.uacdn.net/production/_next/static/images/careers/carousel1.png?q=75&amp;auto=format%2Ccompress&amp;w=3840",
+        "https://static.uacdn.net/production/_next/static/images/careers/carousel2.png?q=75&amp;auto=format%2Ccompress&amp;w=3840",
+        "https://static.uacdn.net/production/_next/static/images/careers/carousel3.png?q=75&amp;auto=format%2Ccompress&amp;w=3840"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Simplilearn",
+      "url": "https://www.simplilearn.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://www.simplilearn.com/careers",
+        "https://www.simplilearn.com/job-openings/",
+        "mailto:careers@simplilearn.net"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "upGrad",
+      "url": "https://www.upgrad.com/about/careers/",
+      "error": "HTTP Error 404: Not Found",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Vedantu",
+      "url": "https://www.vedantu.com/careers",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "EPAM",
+      "url": "https://www.epam.com/careers/job-listings",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Globant",
+      "url": "https://career.globant.com/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://career.globant.com/",
+        "https://career.globant.com/recent-job-searches"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Mphasis",
+      "url": "https://careers.mphasis.com/home.html",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://careers.mphasis.com",
+        "https://careers.mphasis.com/content/dam/careers/global/common/icons/job_search.png",
+        "https://careers.mphasis.com/content/dam/careers/global/common/icons/top-arrow.png",
+        "https://careers.mphasis.com/content/dam/careers/global/common/logo/mphasis-career-logo-1.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/campus_alumni/alumni/america-icon.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/campus_alumni/alumni/apac-icon.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/campus_alumni/alumni/canada.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/campus_alumni/alumni/india-icon.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/campus_alumni/alumni/uk-icon.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/home/aday_life/aday_n_desktop.jpg",
+        "https://careers.mphasis.com/content/dam/careers/global/en/home/area-expertise/thumnail-Infrastructure-v3.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/home/area-expertise/thumnail-business-process-v3.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/home/area-expertise/thumnail-it-application-services-v3.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/home/area-expertise/thumnail-support-functions-v3.png",
+        "https://careers.mphasis.com/content/dam/careers/global/en/home/award/new-updated-careers-home-awards-desktop.png"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Coforge",
+      "url": "https://careers.coforge.com/coforge/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Sonata Software",
+      "url": "https://www.sonata-software.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://www.sonata-software.com/careers",
+        "https://www.sonata-software.com/careers#careers_img1",
+        "https://www.sonata-software.com/careers#careers_img2",
+        "https://www.sonata-software.com/careers#careers_img3",
+        "https://www.sonata-software.com/careers#careers_img4",
+        "https://www.sonata-software.com/careers#careers_img5",
+        "https://www.sonata-software.com/careers#careers_img6",
+        "https://www.sonata-software.com/careers#careers_img7",
+        "https://www.sonata-software.com/careers#careers_img8",
+        "https://www.sonata-software.com/careers/applynow",
+        "https://www.sonata-software.com/careers/our-dna",
+        "https://www.sonata-software.com/core/modules/system/css/components/position-container.module.css?tlrfuw",
+        "https://www.sonata-software.com/landing-page/fraudulent-job-offers",
+        "https://www.sonata-software.com/our-employee-value-proposition",
+        "https://www.sonata-software.com/sites/default/files/banner/image/mobile/2023-08/career-banner-mobile.webp"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Happiest Minds",
+      "url": "https://www.happiestminds.com/careers/",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "CGI",
+      "url": "https://cgi.njoyn.com/CORP/xweb/xweb.asp?page=joblisting&CLID=21001",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "http://www.cgi-group.co.uk/en-gb/careers",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0426-2480&amp;BRID=1296216&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0626-0839&amp;BRID=1310789&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0726-0048&amp;BRID=1315142&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0726-1496&amp;BRID=1322410&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0726-2033&amp;BRID=1338987&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0826-0930&amp;BRID=1338985&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0826-1189&amp;BRID=1328490&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0826-1407&amp;BRID=1327039&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0926-0022&amp;BRID=1329797&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0926-0903&amp;BRID=1332024&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0926-1797&amp;BRID=1338992&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0926-1799&amp;BRID=1338991&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0926-1800&amp;BRID=1338989&amp;SBDID=1&amp;searchFilled=",
+        "https://cgi.njoyn.com/CORP/xweb/XWeb.asp?NTKN=c&amp;Page=JobDetails&amp;Jobid=J0926-1813&amp;BRID=1339002&amp;SBDID=1&amp;searchFilled="
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Tech Mahindra",
+      "url": "https://careers.techmahindra.com/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://careers.techmahindra.com/Images/IT_Fraud/Fradulent_Job_Offers_Recruitment_Warning.pdf",
+        "https://careers.techmahindra.com/Javascript/careers-js.js",
+        "https://careers.techmahindra.com/Registration.aspx",
+        "https://careers.techmahindra.com/Signin.aspx",
+        "https://careers.techmahindra.com/css/careers-css-1.css",
+        "https://careers.techmahindra.com/css/careers-css-2.css",
+        "https://www.techmahindra.com/careers/diversity-inclusion/",
+        "https://www.techmahindra.com/careers/techm-way/",
+        "https://www.techmahindra.com/careers/why-techm/"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Pegasystems",
+      "url": "https://www.pega.com/about/careers",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Traveloka",
+      "url": "https://careers.traveloka.com/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://careers.traveloka.com/early-careers",
+        "https://careers.traveloka.com/jobs",
+        "https://careers.traveloka.com/jobs?department=1",
+        "https://careers.traveloka.com/jobs?department=10",
+        "https://careers.traveloka.com/jobs?department=11",
+        "https://careers.traveloka.com/jobs?department=2",
+        "https://careers.traveloka.com/jobs?department=3",
+        "https://careers.traveloka.com/jobs?department=4",
+        "https://careers.traveloka.com/jobs?department=5",
+        "https://careers.traveloka.com/jobs?department=6",
+        "https://careers.traveloka.com/jobs?department=7",
+        "https://careers.traveloka.com/jobs?department=8",
+        "https://careers.traveloka.com/jobs?department=9",
+        "https://careers.traveloka.com/jobs?location=AU",
+        "https://careers.traveloka.com/jobs?location=CN"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "MakeMyTrip",
+      "url": "https://careers.makemytrip.com/",
+      "error": "The read operation timed out",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Siemens",
+      "url": "https://jobs.siemens.com/careers",
+      "error": "<urlopen error timed out>",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Infineon Technologies",
+      "url": "https://www.infineon.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://assets.infineon.com/is/image/infineon/evp-image-career-home-hq-professional-meeting.jpg",
+        "https://assets.infineon.com/is/image/infineon/evp-image-career-home-kulim-3-students-walking.jpg:asset-680-2x1?qlt=55,0&resMode=sharp2&op_usm=1.75,0.3,2,0",
+        "https://assets.infineon.com/is/image/infineon/evp-image-career-home-kulim-student-group-outside.jpg",
+        "https://assets.infineon.com/is/image/infineon/evp-image-career-home.jpg",
+        "https://jobs.infineon.com/careers",
+        "https://www.infineon.cn/careers",
+        "https://www.infineon.com/applications/smart-home-building/home-building-automation/automatic-gate-and-door-opening-systems",
+        "https://www.infineon.com/careers",
+        "https://www.infineon.com/careers/diversity-inclusion",
+        "https://www.infineon.com/careers/global-career-development-and-benefits",
+        "https://www.infineon.com/careers/how-to-apply",
+        "https://www.infineon.com/careers/hr-contacts",
+        "https://www.infineon.com/careers/hr-report",
+        "https://www.infineon.com/careers/our-locations",
+        "https://www.infineon.com/careers/our-locations/bangalore"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Deutsche Bank",
+      "url": "https://careers.db.com/",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "UBS",
+      "url": "https://www.ubs.com/global/en/careers.html",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://www.facebook.com/ubscareers",
+        "https://www.instagram.com/ubscareers/",
+        "https://www.ubs.com/global/de/careers.html",
+        "https://www.ubs.com/global/en/careers.html",
+        "https://www.ubs.com/global/en/careers.smartappmanifest.xjson",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_5403018_86586446/col_1/textimage/image.580.jpg/1762863702311.jpg",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_5582830/col_2/videoaudio_copy_copy/image.580.png/1741004493512.png",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_copy/col_1/topic_copy_146942772/teaser/landscapeImage/image.580.jpg/1740153346137.jpg",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_copy/col_1/topic_copy_146942772/teaser_129687112/landscapeImage/image.580.jpg/1740125995113.jpg",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_copy/col_1/topic_copy_146942772/teaser_1719562647/landscapeImage/image.580.jpg/1742829765165.jpg",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_copy/col_1/topic_copy_146942772/teaser_736345058/landscapeImage/image.580.jpg/1740125956141.jpg",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_copy_co/col_1/messagestage/messageteaser_421667/image.580.jpg/1743689386509.jpg",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_copy_co/col_1/messagestage/messageteaser_421667_1196684760/image.580.jpg/1743689430249.jpg",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_copy_co/col_1/messagestage/messageteaser_421667_1823511197/image.580.jpg/1750836793371.jpg",
+        "https://www.ubs.com/global/en/careers/_jcr_content/root/contentarea/mainpar/toplevelgrid_copy_co/col_1/messagestage/messageteaser_copy/image.580.jpg/1743689409978.jpg"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Societe Generale",
+      "url": "https://careers.societegenerale.com/en",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://careers.societegenerale.com",
+        "https://careers.societegenerale.com/en",
+        "https://careers.societegenerale.com/en/job-offers/analyst-origination-energy-mining-and-industries-26000IXH-en",
+        "https://careers.societegenerale.com/en/job-offers/legal-graduate-trainee-trading-prime-services-legal-team-fixed-term-26000LIJ-en",
+        "https://careers.societegenerale.com/en/job-offers/project-coordinator-data-quality-26000LIW-en",
+        "https://careers.societegenerale.com/en/job-offers/vie-financial-accountant-26000HIJ-en",
+        "https://careers.societegenerale.com/en/job-offers/vie-risk-compliance-officer-26000LJK-en",
+        "https://careers.societegenerale.com/en/jobs",
+        "https://careers.societegenerale.com/en/jobs-wishlist",
+        "https://careers.societegenerale.com/en/jobs/compliance",
+        "https://careers.societegenerale.com/en/jobs/data",
+        "https://careers.societegenerale.com/en/jobs/financial-department",
+        "https://careers.societegenerale.com/en/jobs/general-inspection-audit-consulting",
+        "https://careers.societegenerale.com/en/jobs/global-banking-investor-solutions",
+        "https://careers.societegenerale.com/en/jobs/it"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Deutsche Boerse Group",
+      "url": "https://careers.deutsche-boerse.com/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://api.my-job-shop.com/new-cf/_nuxt/BFLkx0VE.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/BOSP-gTf.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/CbC-eaaP.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/Cg4rt6fA.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/CpzHcYzY.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/Cs2BwneX.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/DBett173.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/Dhhp_XTR.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/DmDk8goZ.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/YniIpZrx.js",
+        "https://api.my-job-shop.com/new-cf/_nuxt/_index.BeWeD38R.css",
+        "https://api.my-job-shop.com/new-cf/_nuxt/useContentModules.CPG9t4tT.css",
+        "https://api.my-job-shop.com/new-cf/_nuxt/useTypesenseKeyRefresh.BlYYuxNI.css",
+        "https://api.my-job-shop.com/new-cf/_nuxt/vWM1vsQG.js",
+        "https://career5.successfactors.eu/career?company=Dboerse&amp;site=&amp;lang=en_GB&amp;requestParams=&amp;navBarLevel=MY_PROFILE&amp;_s.crb=iUsJw6OlO3yLxt9ASDNqXtUx8EjegMA811Ch6E3Mugs%3D&amp;utm_source=talents-connect&amp;utm_medium=organic&amp;utm_campaign=talents-connect"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Grant Thornton",
+      "url": "https://www.grantthornton.in/careers/",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "McKinsey & Company",
+      "url": "https://www.mckinsey.com/careers/search-jobs",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://www.mckinsey.com/careers/search-jobs"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Mu Sigma",
+      "url": "https://www.mu-sigma.com/career/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://www.mu-sigma.com/career/",
+        "https://www.mu-sigma.com/career/#comm-faq",
+        "https://www.mu-sigma.com/wp-content/themes/musigma/new-assets/css/career.css?ver=1.3",
+        "https://www.mu-sigma.com/wp-content/uploads/2026/04/Career-page-banner-website-e-copy-fin-1.webp",
+        "https://www.mu-sigma.com/wp-content/uploads/2026/04/why-mu-career.webp",
+        "https://www.mu-sigma.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.mu-sigma.com%2Fcareer%2F",
+        "https://www.mu-sigma.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.mu-sigma.com%2Fcareer%2F&#038;format=xml"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Tredence",
+      "url": "https://www.tredence.com/careers/greatest-of-ai",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://tredence.ripplehire.com/candidate/?token=rzuz0vttMaz0VxxVzDiY&source=CAREERSITE#list",
+        "https://www.tredence.com/careers/greatest-of-ai",
+        "https://www.tredence.com/company-careers"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Tesco Bengaluru",
+      "url": "https://www.tescobengaluru.com/careers/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://careers.tesco.com/en_GB/careers/SearchJobs/?12328=%5B587056%5D&amp;12328_format=7246&amp;listFilterMode=1&amp;jobRecordsPerPage=10&amp;",
+        "https://www.tesco-careers.com/",
+        "https://www.tescobengaluru.com/careers/",
+        "https://www.tescobengaluru.com/careers/diversity-inclusion/",
+        "https://www.tescobengaluru.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.tescobengaluru.com%2Fcareers%2F",
+        "https://www.tescobengaluru.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.tescobengaluru.com%2Fcareers%2F&#038;format=xml"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Wayfair",
+      "url": "https://www.aboutwayfair.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://cdn.aboutwayfair.com/dims4/default/2d588c8/2147483647/strip/true/crop/1261x160+0+0/resize/200x25!/quality/90/?url=https%3A%2F%2Fcdn.aboutwayfair.com%2F77%2F17%2Fa7b7bdb34dada2969befcadc9c2b%2Fcareersasset-19header.png",
+        "https://www.aboutwayfair.com/careers",
+        "https://www.aboutwayfair.com/careers.rss",
+        "https://www.aboutwayfair.com/careers/business-operations",
+        "https://www.aboutwayfair.com/careers/customer-service-sales",
+        "https://www.aboutwayfair.com/careers/early-talent",
+        "https://www.aboutwayfair.com/careers/early-talent#early-talent-europe",
+        "https://www.aboutwayfair.com/careers/engineering-technology",
+        "https://www.aboutwayfair.com/careers/fulfillment-home-delivery",
+        "https://www.aboutwayfair.com/careers/how-we-work",
+        "https://www.aboutwayfair.com/careers/locations",
+        "https://www.wayfair.com/careers/jobs",
+        "https://www.wayfair.com/careers/jobs?teamCategoryIds=21&amp;teamIds=2&amp;gh_src=",
+        "https://www.wayfair.com/careers/jobs?teamCategoryIds=23%2C20&amp;teamIds=2&amp;gh_src=",
+        "https://www.wayfair.com/careers/jobs?teamIds=5&amp;gh_src="
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Adidas",
+      "url": "https://careers.adidas-group.com/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://careers.adidas-group.com/jobs",
+        "https://careers.adidas-group.com/jobs/feed.xml",
+        "https://careers.adidas-group.com/jobs?locale=en",
+        "https://careers.adidas-group.com/teams/retailers/career-oportunities?locale=en",
+        "https://careers.adidas-group.com/uploads/8f97ZLsCCPI79dmIrP6MgJyiLmHAbx7EeqKI356JEu4BrXeSQVaElrWGgB55xDkz/tablet.jpg",
+        "https://careers.adidas-group.com/uploads/WONHUMwjalPP9wzsxG69rMbHkOX164BP7MheV0FNN6sj6atrMqJBEFPQZgdDpHUN/tablet.jpg",
+        "https://careers.adidas-group.com/uploads/ZGVccENXo5JwmgjqNtuZzYJva2at55C0ubsOifQro5uHZHy8fZuinlnBPwo9FGBL/tablet.jpg",
+        "https://interviewtutorial.careers.adidas-group.com/#/",
+        "https://jobs.adidas-group.com/job/Cookstown-Retail-Store-Sales-Associate-I-Cookstown%2C-2007%2C-Ontario%2C-Canada/1444554333/?feedId=301201&amp;utm_source=j2w",
+        "https://jobs.adidas-group.com/job/Jakarta-Manager%2C-Key-Account-Wholesale-JK/1444565933/?feedId=301201&amp;utm_source=j2w",
+        "https://jobs.adidas-group.com/job/Kwun-Tong-Intern-Product-Development-&amp;-Sourcing/1444561533/?feedId=301201&amp;utm_source=j2w",
+        "https://jobs.adidas-group.com/job/Langley-Retail-Lead-Grandview%2C-2032%2C-Vancouver%2C-Canada/1444553333/?feedId=301201&amp;utm_source=j2w",
+        "https://jobs.adidas-group.com/job/Las-Vegas-Seasonal-Store-Associate-Las-Vegas-Premium-North%2C-6157%2C-Las-Vegas%2C-NV-NV/1444549833/?feedId=301201&amp;utm_source=j2w",
+        "https://jobs.adidas-group.com/job/Shanghai-Assistant-Manager-Franchise-In-Season-Trading-SH/1444556633/?feedId=301201&amp;utm_source=j2w",
+        "https://jobs.adidas-group.com/talentcommunity/login/?returnurl=/talentcommunity/profile/"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Zoho",
+      "url": "https://www.zoho.com/careers/",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "LeadSquared",
+      "url": "https://www.leadsquared.com/careers/",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Keka",
+      "url": "https://www.keka.com/careers",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Dhruva Space",
+      "url": "https://www.dhruvaspace.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://cdn.prod.website-files.com/6755291c52809136ad435619/6a830e91414caa977374c36f_Dhruva%20Space%20Careers%20page_banner.avif",
+        "https://www.dhruvaspace.com/careers",
+        "https://www.dhruvaspace.com/careers/senior-fpga-engineer-206191000000828749",
+        "mailto:careers@dhruvaspace.com"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "ASUS",
+      "url": "https://www.asus.com/content/about-asus/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Fujitsu",
+      "url": "https://global.fujitsu/en-global/about",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://global.fujitsu/en-global/careers"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Sony",
+      "url": "https://www.sonyjobs.com/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "http://www.sony.net/SonyInfo/Careers/",
+        "https://www.linkedin.com/company/sony-electronics/careers?trk=top_nav_careers",
+        "https://www.playstation.com/corporate/about/careers/",
+        "https://www.sony.co.uk/global-careers-at-sony/en/privacy.html",
+        "https://www.sony.com/etc/SCA/dam/sony/corp-site/sca-careers/EVerifyParticipationPoster.pdf",
+        "https://www.sony.com/etc/SCA/dam/sony/corp-site/sca-careers/IER_RightToWorkPoster-Eng_Es.pdf",
+        "https://www.sonyjobs.com/careers.html",
+        "https://www.sonyjobs.com/find-a-job.html",
+        "https://www.sonyjobs.com/find-a-job.html#faqs",
+        "https://www.sonyjobs.com/pdf/22-088_EEOC_KnowYourRights.pdf"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Tata Elxsi",
+      "url": "https://www.tataelxsi.com/careers",
+      "error": "HTTP Error 403: Forbidden",
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "L&T Technology Services",
+      "url": "https://www.ltts.com/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://ltts.com/careers/americas",
+        "https://www.ltts.com/careers",
+        "https://www.ltts.com/careers/india",
+        "https://www.ltts.com/careers/recruitment-caution",
+        "https://www.ltts.com/de/careers",
+        "https://www.ltts.com/jp/careers",
+        "https://www.ltts.com/sites/default/files/2024-10/Img_Careers_b_2x_1.webp",
+        "https://www.ltts.com/sites/default/files/banners/2026-07/Career%20page%20banner%201440%20x%20500%20pixels.webp",
+        "https://www.ltts.com/sites/default/files/card-with-image/2024-10/Img_Careers_d_Europe_2x_0.webp",
+        "https://www.ltts.com/sites/default/files/card-with-image/2024-10/Img_Careers_d_amerias_2x_0.webp",
+        "https://www.ltts.com/sites/default/files/card-with-image/2024-10/Img_Careers_d_india_2x_0.webp",
+        "https://www.ltts.com/sv/careers"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Larsen & Toubro",
+      "url": "https://www.larsentoubro.com/corporate/careers",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://larsentoubrocareers.peoplestrong.com/",
+        "https://www.larsentoubro.com/_next/image?url=https%3A%2F%2F2025prodstorageaccount-eqdyc8g8hpccdfez.a02.azurefd.net%2Fltprod%2Fmedia%2Fyzwo1p2n%2Fcareers-highlights-image-revised.webp&amp;w=256&amp;q=75",
+        "https://www.larsentoubro.com/careers",
+        "https://www.larsentoubro.com/careers/",
+        "https://www.larsentoubro.com/careers/campus-engage",
+        "https://www.larsentoubro.com/careers/campus-engage/",
+        "https://www.larsentoubro.com/careers/diversity-equity-inclusion",
+        "https://www.larsentoubro.com/careers/diversity-equity-inclusion/",
+        "https://www.larsentoubro.com/careers/learning-development",
+        "https://www.larsentoubro.com/careers/learning-development/",
+        "https://www.larsentoubro.com/careers/learning-development/leadership-development-academy",
+        "https://www.larsentoubro.com/careers/learning-development/leadership-development-academy/",
+        "https://www.larsentoubro.com/careers/recruitment-caution",
+        "https://www.larsentoubro.com/careers/recruitment-caution/",
+        "https://www.larsentoubro.com/careers/renew"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Toshiba",
+      "url": "https://www.global.toshiba/ww/recruit/corporate.html",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Mitsubishi Electric",
+      "url": "https://www.mitsubishielectric.com/en/careers/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://careers.mitsubishielectric.co.th/",
+        "https://careers.mitsubishielectric.it/it/",
+        "https://de.mitsubishielectric.com/de/about/local/careers/",
+        "https://de.mitsubishielectric.com/en/about/local/careers/",
+        "https://fr.mitsubishielectric.com/fr/about/local/careers/",
+        "https://gb.mitsubishielectric.com/en/about/local/careers/",
+        "https://ie.mitsubishielectric.com/en/about/local/careers/",
+        "https://in.mitsubishielectric.com/en/about/local/careers/",
+        "https://mm.mitsubishielectric.com/en/about/local/careers/",
+        "https://nl.mitsubishielectric.com/en/about/local/careers/",
+        "https://nl.mitsubishielectric.com/nl/about/local/careers/",
+        "https://pl.mitsubishielectric.com/en/about/local/careers/",
+        "https://pl.mitsubishielectric.com/pl/about/local/careers/",
+        "https://ru.mitsubishielectric.com/ru/about/local/careers/",
+        "https://se.mitsubishielectric.com/en/about/local/careers/"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "SLB",
+      "url": "https://careers.slb.com/",
+      "status": 200,
+      "ats_links": [],
+      "career_links": [
+        "https://careers.slb.com",
+        "https://careers.slb.com/",
+        "https://careers.slb.com/-/media/images/careers/experienced-roles/experienced-roles-promo-1.jpg",
+        "https://careers.slb.com/-/media/images/careers/former-military/former-military-intro-combo.jpg",
+        "https://careers.slb.com/-/media/images/careers/home/careers-homepage-full.jpg",
+        "https://careers.slb.com/-/media/images/careers/home/careers-overview-dynamic5050.jpg?la=en&amp;h=1659&amp;w=1920&amp;hash=4025712C05C17528EBEED7F71851387E",
+        "https://careers.slb.com/-/media/images/careers/inside-slb/team-behind-tela_hero.png",
+        "https://careers.slb.com/-/media/images/careers/inside-slb/team_behind_alphasight_hero.png",
+        "https://careers.slb.com/-/media/images/careers/inside-slb/wpp-conference_hero.jpg",
+        "https://careers.slb.com/-/media/images/careers/news/web-promo-forbes-200.png",
+        "https://careers.slb.com/-/media/images/careers/our-people/profile-pictures/jacqueline-card.jpg",
+        "https://careers.slb.com/-/media/images/careers/our-people/profile-pictures/renato_profile_pic.png",
+        "https://careers.slb.com/-/media/images/careers/our-people/raneem_profile-pic.png",
+        "https://careers.slb.com/-/media/images/careers/steve_promo.jpg",
+        "https://careers.slb.com/-/media/slbcareers/style/slb-careers-override.css"
+      ],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    },
+    {
+      "company": "Delta Air Lines",
+      "url": "https://delta.avature.net/en_US/careers",
+      "status": 202,
+      "ats_links": [],
+      "career_links": [],
+      "inline_ats": [],
+      "decision": "Unresolved; page response or career link alone does not establish complete collection"
+    }
+  ]
+}
