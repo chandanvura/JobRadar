@@ -48,6 +48,7 @@ def test_reconcile_all_live_pages_and_details_with_xml(monkeypatch, failure):
             if failure == 'different_feed': xml = xml.replace('<referencenumber>21', '<referencenumber>999')
             return httpx.Response(200, text=xml, request=httpx.Request(method, url))
         offset = kwargs['params']['offset']; offsets.append(offset)
+        assert kwargs['params']['sort'] == 'title'
         ids = list(range(offset + 1, min(offset + 21, 22)))
         if failure == 'duplicate' and offset: ids = [1]
         if failure == 'final_reorder' and len(offsets) == 3: ids.reverse()

@@ -58,7 +58,9 @@ class AdidasCareerAdapter:
                 raise ValueError('adidas official page no longer publishes the registered XML feed')
             response = await request(x, 'GET', FEED); response.raise_for_status()
             records = feed_records(response.content)
-            params = dict(brand='', team='', type='', keywords='', location='[]', sort='', locale='en', offset=0)
+            # "title" is a published sort option. The default date order
+            # overlaps pages among same-day postings; keep duplicate rejection.
+            params = dict(brand='', team='', type='', keywords='', location='[]', sort='title', locale='en', offset=0)
             headers = {'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest'}
             found = {}; expected = None; first_ids = None
             for offset in range(0, 2000, 20):
