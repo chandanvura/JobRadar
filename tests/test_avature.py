@@ -74,5 +74,41 @@ def test_avature_collects_all_advertised_offsets_and_full_details(monkeypatch):
     monkeypatch.setattr(adapters, 'cached_get', detail)
     jobs, count = asyncio.run(AvatureCareerAdapter().fetch_jobs(Company('Employer', 'https://careers.example/jobs', 'avature', 'careers.example')))
     assert count == 2 and len(jobs) == 2
-    assert len(calls) == 2 and 'jobOffset=1' in calls[1]
+    assert len(calls) == 3 and 'jobOffset=1' in calls[1]
     assert all('zero to two years' in j.description for j in jobs)
+
+
+def test_avature_disappeared_relevant_detail_remains_partial(monkeypatch):
+    import asyncio
+    import httpx
+    from scraper import adapters
+    from scraper.avature import AvatureCareerAdapter
+    from scraper.models import Company
+    async def request(client, method, url, **kwargs):
+        return httpx.Response(200, request=httpx.Request('GET', url), text=page([1], total=1))
+    async def detail(client, url):
+        return httpx.Response(410, request=httpx.Request('GET', url))
+    monkeypatch.setattr(adapters, 'request', request)
+    monkeypatch.setattr(adapters, 'cached_get', detail)
+    jobs, count = asyncio.run(AvatureCareerAdapter().fetch_jobs(
+        Company('Employer', 'https://careers.example/jobs', 'avature', 'careers.example')))
+    assert not jobs and count == 1
+    assert jobs.coverage_warning.startswith('Limited coverage: 1 relevant Avature')
+
+
+def test_avature_final_snapshot_detects_same_total_reordering(monkeypatch):
+    import asyncio
+    import httpx
+    from scraper import adapters
+    from scraper.avature import AvatureCareerAdapter
+    from scraper.models import Company
+    from scraper.snapshot import SnapshotChanged
+    calls = []
+    async def request(client, method, url, **kwargs):
+        calls.append(url)
+        return httpx.Response(200, request=httpx.Request('GET', url), text=page([1 if len(calls) == 1 else 2], total=1))
+    monkeypatch.setattr(adapters, 'request', request)
+    with pytest.raises(SnapshotChanged, match='final verification'):
+        asyncio.run(AvatureCareerAdapter().fetch_jobs(
+            Company('Employer', 'https://careers.example/jobs', 'avature', 'careers.example')))
+    assert len(calls) == 2

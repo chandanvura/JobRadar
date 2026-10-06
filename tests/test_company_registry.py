@@ -3,8 +3,38 @@ from scraper.main import load_companies
 from scraper.models import Company
 from scripts.sync_company_registry import changed_sources, missing_sources
 from scripts import sync_company_registry
+from scripts.sync_company_registry import selected_repairs
 from io import BytesIO
 import json
+
+
+def test_explicit_adapter_repairs_are_bounded_and_preserve_previous_metrics():
+    row = Company('Example', 'https://example.test/careers', 'custom', 'example')
+    catalog = {'companies': [{'name': 'Example', 'jobs_found': 17, 'last_checked_at': 'before'}]}
+    repairs = selected_repairs([row], catalog, ['Example'])
+    assert repairs[0]['jobs_found'] == 17
+    assert repairs[0]['last_checked_at'] == 'before'
+    assert repairs[0]['warning'] == 'Source updated; awaiting verification'
+    for names in ([], ['Example'] * 51, ['Example', 'Example'], ['Unknown']):
+        with pytest.raises(ValueError):
+            selected_repairs([row], catalog, names)
+
+
+def test_explicit_partial_repair_cannot_claim_production_success(monkeypatch):
+    row = Company('Example', 'https://example.test/careers', 'custom', 'example')
+    previous = dict(name='Example', careers_url=row.careers_url, ats_provider='custom',
+                    jobs_found=17, last_checked_at='before')
+    partial = dict(previous, last_checked_at='after', warning='Limited coverage: missing detail', error_count=0)
+    responses = iter([{'companies': [previous]}, {'accepted': 0, 'rejected': 0}, {'companies': [partial]}])
+    async def refresh(*args): return [], [partial]
+    monkeypatch.setattr(sync_company_registry, 'urlopen', lambda *a, **kw: BytesIO(json.dumps(next(responses)).encode()))
+    monkeypatch.setattr(sync_company_registry, 'load_companies', lambda: [row])
+    monkeypatch.setattr(sync_company_registry, 'refresh_repairs', refresh)
+    monkeypatch.setenv('JOBRADAR_REPAIR_COMPANIES', '["Example"]')
+    monkeypatch.setenv('JOBRADAR_VERIFY_SOURCE_UPDATES', 'true')
+    monkeypatch.setenv('JOBRADAR_INGEST_SECRET', 'test-only')
+    with pytest.raises(RuntimeError, match='not yet verified'):
+        sync_company_registry.main()
 
 
 def test_registry_has_unique_names_sources_and_public_career_urls():

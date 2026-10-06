@@ -4,6 +4,7 @@ from pathlib import Path
 import httpx
 from .adapters import ADAPTERS
 from .models import Company
+from .snapshot import SnapshotChanged
 from .normalization import TARGET_CITIES,enrich
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -56,6 +57,13 @@ async def fetch_company_jobs(company,attempts=3):
     for attempt in range(attempts):
         try:
             return await ADAPTERS[company.ats_provider].fetch_jobs(company)
+        except SnapshotChanged as exc:
+            # Discard the entire attempt. Two full snapshots at most; malformed
+            # schemas, duplicates, missing details and caps are never retried.
+            last=exc
+            if attempt >= min(attempts,2)-1:
+                raise
+            await asyncio.sleep(1)
         except (httpx.TimeoutException,httpx.NetworkError,json.JSONDecodeError) as exc:
             last=exc
             if attempt+1<attempts:
