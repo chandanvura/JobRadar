@@ -1,0 +1,325 @@
+{
+  "verified_sources": [
+    {
+      "company": "Electronic Arts India",
+      "careers_url": "https://jobs.ea.com/en_US/careers/Home/",
+      "ats_provider": "avature",
+      "ats_identifier": "jobs.ea.com",
+      "status": {
+        "name": "Electronic Arts India",
+        "careers_url": "https://jobs.ea.com/en_US/careers/Home/",
+        "ats_provider": "avature",
+        "ats_identifier": "jobs.ea.com",
+        "priority": 4,
+        "last_checked_at": "2026-10-06T03:09:05.828510+00:00",
+        "last_success_at": "2026-10-06T03:10:04.507300+00:00",
+        "error_count": 0,
+        "jobs_found": 356,
+        "candidate_jobs": 3,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 356,
+      "checked_at": "2026-10-06",
+      "candidate_jobs": 3,
+      "eligible_jobs": 0
+    },
+    {
+      "company": "Lenovo",
+      "careers_url": "https://jobs.lenovo.com/en_US/careers/SearchJobs/",
+      "ats_provider": "avature",
+      "ats_identifier": "jobs.lenovo.com",
+      "status": {
+        "name": "Lenovo",
+        "careers_url": "https://jobs.lenovo.com/en_US/careers/SearchJobs/",
+        "ats_provider": "avature",
+        "ats_identifier": "jobs.lenovo.com",
+        "priority": 4,
+        "last_checked_at": "2026-10-06T03:09:05.795471+00:00",
+        "last_success_at": "2026-10-06T03:10:54.674891+00:00",
+        "error_count": 0,
+        "jobs_found": 999,
+        "candidate_jobs": 3,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 999,
+      "checked_at": "2026-10-06",
+      "candidate_jobs": 3,
+      "eligible_jobs": 0
+    },
+    {
+      "company": "MetLife",
+      "careers_url": "https://www.metlifecareers.com/en_US/ml/SearchJobs/",
+      "ats_provider": "avature",
+      "ats_identifier": "www.metlifecareers.com",
+      "status": {
+        "name": "MetLife",
+        "careers_url": "https://www.metlifecareers.com/en_US/ml/SearchJobs/",
+        "ats_provider": "avature",
+        "ats_identifier": "www.metlifecareers.com",
+        "priority": 4,
+        "last_checked_at": "2026-10-06T03:09:05.827336+00:00",
+        "last_success_at": "2026-10-06T03:11:26.089764+00:00",
+        "error_count": 0,
+        "jobs_found": 455,
+        "candidate_jobs": 14,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 455,
+      "checked_at": "2026-10-06",
+      "candidate_jobs": 14,
+      "eligible_jobs": 0
+    }
+  ],
+  "public_source_probes": [
+    {
+      "company": "Lenovo",
+      "url": "https://jobs.lenovo.com/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "status": 200,
+      "final_url": "https://jobs.lenovo.com/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "articles": 10,
+      "counts": [
+        "1-10\n                                    of 999                \n                                     jobs",
+        "1-10\n                                    of 999                \n                                     jobs",
+        "",
+        "1",
+        "2"
+      ],
+      "next": [
+        "https://jobs.lenovo.com/en_US/careers/SearchJobs/?jobRecordsPerPage=10&jobOffset=10"
+      ],
+      "india_fields": [
+        [
+          "13036[]",
+          []
+        ],
+        [
+          "13037[]",
+          []
+        ],
+        [
+          "13038[]",
+          []
+        ],
+        [
+          "1637[]",
+          []
+        ],
+        [
+          "7715[]",
+          []
+        ]
+      ],
+      "detail": "https://jobs.lenovo.com/en_US/careers/JobDetail/LPS-IT-Admin/82362"
+    },
+    {
+      "company": "Lululemon",
+      "url": "https://careers.lululemon.com/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "status": 200,
+      "final_url": "https://careers.lululemon.com/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "articles": 10,
+      "counts": [
+        "1-10\n                            of 999+ results",
+        "Filters applied ( Reset )",
+        "Next >>",
+        "Next >>",
+        "Next >>"
+      ],
+      "next": [
+        "https://careers.lululemon.com/en_US/careers/SearchJobs/?jobRecordsPerPage=10&jobOffset=10"
+      ],
+      "india_fields": [
+        [
+          "1173",
+          []
+        ],
+        [
+          "1174",
+          []
+        ],
+        [
+          "6744",
+          []
+        ],
+        [
+          "1873[]",
+          []
+        ]
+      ],
+      "detail": "https://careers.lululemon.com/en_US/careers/JobDetail/Educator-Oasis-Coyoac-n/64736"
+    },
+    {
+      "company": "MetLife",
+      "url": "https://www.metlifecareers.com/en_US/ml/SearchJobs?jobRecordsPerPage=100",
+      "status": 200,
+      "final_url": "https://www.metlifecareers.com/en_US/ml/SearchJobs?jobRecordsPerPage=100",
+      "articles": 6,
+      "counts": [
+        "1-6\n                                    of 455                \n                 Results",
+        "1-6\n                                    of 455                \n                 Results",
+        "",
+        "Sort by Name Posted date",
+        "1-6\n                                    of 455                \n                 Results"
+      ],
+      "next": [
+        "https://www.metlifecareers.com/en_US/ml/SearchJobs/?jobRecordsPerPage=6&jobOffset=6"
+      ],
+      "india_fields": [
+        [
+          "12310[]",
+          []
+        ],
+        [
+          "4877[]",
+          []
+        ],
+        [
+          "8862",
+          []
+        ],
+        [
+          "7518",
+          []
+        ]
+      ],
+      "detail": "https://www.metlifecareers.com/en_US/ml/JobDetail/GG13-Investment-Finace-Accounting/19919"
+    },
+    {
+      "company": "Siemens",
+      "url": "https://jobs.siemens.com/en_US/externaljobs/SearchJobs?jobRecordsPerPage=100",
+      "status": 200,
+      "final_url": "https://jobs.siemens.com/en_US/externaljobs/SearchJobs?jobRecordsPerPage=100",
+      "articles": 6,
+      "counts": [
+        "1 - 6\n                                    of 999+                \n                 results",
+        "1 - 6\n                                    of 999+                \n                 results",
+        "1 - 6\n                                    of 999+                \n                 results",
+        "1 - 6\n                                    of 999+                \n                 results",
+        "Next >>"
+      ],
+      "next": [],
+      "india_fields": [
+        [
+          "42386[]",
+          []
+        ],
+        [
+          "42387[]",
+          []
+        ],
+        [
+          "42388[]",
+          []
+        ],
+        [
+          "42389[]",
+          []
+        ],
+        [
+          "42390[]",
+          []
+        ],
+        [
+          "43471[]",
+          []
+        ],
+        [
+          "42392[]",
+          []
+        ],
+        [
+          "42393[]",
+          []
+        ],
+        [
+          "42394",
+          []
+        ],
+        [
+          "42395",
+          []
+        ]
+      ],
+      "detail": "https://jobs.siemens.com/en_US/externaljobs/JobDetail/524806"
+    },
+    {
+      "company": "Electronic Arts India",
+      "url": "https://jobs.ea.com/en_US/careers?jobRecordsPerPage=100",
+      "status": 200,
+      "final_url": "https://jobs.ea.com/en_US/careers?jobRecordsPerPage=100",
+      "articles": 20,
+      "counts": [
+        "1-20\n                                    of 356                \n                 results",
+        "1-20\n                                    of 356                \n                 results",
+        "",
+        "1-20\n                                    of 356                \n                 results",
+        "1-20\n                                    of 356                \n                 results"
+      ],
+      "next": [
+        "https://jobs.ea.com/en_US/careers/Home/?jobRecordsPerPage=20&jobOffset=20"
+      ],
+      "india_fields": [
+        [
+          "8171[]",
+          []
+        ],
+        [
+          "4536[]",
+          []
+        ],
+        [
+          "4537[]",
+          []
+        ],
+        [
+          "4538[]",
+          []
+        ],
+        [
+          "4539[]",
+          []
+        ]
+      ],
+      "detail": "https://jobs.ea.com/en_US/careers/JobDetail/Director-PE-Shared-Services/214164"
+    },
+    {
+      "company": "CBRE",
+      "url": "https://careers.cbre.com/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "status": 202,
+      "final_url": "https://careers.cbre.com/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "articles": 0,
+      "counts": [],
+      "next": [],
+      "india_fields": [],
+      "detail": null
+    },
+    {
+      "company": "Ralph Lauren",
+      "url": "https://careers.ralphlauren.com/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "status": 502,
+      "final_url": "https://careers.ralphlauren.com/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "articles": 0,
+      "counts": [],
+      "next": [],
+      "india_fields": [],
+      "detail": null
+    },
+    {
+      "company": "Delta Air Lines",
+      "url": "https://delta.avature.net/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "status": 202,
+      "final_url": "https://delta.avature.net/en_US/careers/SearchJobs?jobRecordsPerPage=100",
+      "articles": 0,
+      "counts": [],
+      "next": [],
+      "india_fields": [],
+      "detail": null
+    }
+  ],
+  "policy": "Complete exact counts required; capped 999+ boards remain unresolved. Full description sections required. Public employer posting dates only; eligibility unchanged."
+}

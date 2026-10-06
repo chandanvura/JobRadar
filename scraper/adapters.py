@@ -622,9 +622,10 @@ class CustomCareerAdapter(JobSource):
 from .public_platforms import PhenomCareerAdapter, WorkableCareerAdapter
 from .eightfold import EightfoldCareerAdapter
 from .talentbrew import TalentBrewCareerAdapter
+from .avature import AvatureCareerAdapter
 
 from .mynexthire import MyNextHireCareerAdapter
 from .career_widgets import JuspayCareerAdapter, KulaCareerAdapter, BambooCareerAdapter, PyjamaCareerAdapter
 
 ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter(),"phenom":PhenomCareerAdapter(),"workable":WorkableCareerAdapter(),"eightfold":EightfoldCareerAdapter(),"talentbrew":TalentBrewCareerAdapter(),"mynexthire":MyNextHireCareerAdapter()}
-ADAPTERS.update(juspay=JuspayCareerAdapter(),kula=KulaCareerAdapter(),bamboohr=BambooCareerAdapter(),pyjamahr=PyjamaCareerAdapter())
+ADAPTERS.update(avature=AvatureCareerAdapter(),juspay=JuspayCareerAdapter(),kula=KulaCareerAdapter(),bamboohr=BambooCareerAdapter(),pyjamahr=PyjamaCareerAdapter())

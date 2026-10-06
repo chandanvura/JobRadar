@@ -291,3 +291,8 @@ Complete collection checks passed for Capgemini (6,363 public listings, 62 candi
 The web validation dependency audit found GHSA-68fv-2mgg-jv7q in source-map-js 1.2.1. The lockfile updates only this package to the patched 1.2.2 release. No forced dependency upgrades or disabled security gates are used.
 
 For a retry on a simple India TalentBrew page, the collector can reproduce the employer UI's public "show all" request. It carries the checked India facet explicitly and validates the response employer, country facet, bounded count, and unique records. This avoids combining independently cached pages. Normal collection runs first; unsupported filters continue through ordinary pagination. Requests are based on the public TalentBrew `search.js` UI; no browser JavaScript is executed.
+
+
+### Complete public Avature listings (2026-10-06)
+
+The Avature collector passed complete checks for Lenovo (999 listings), MetLife (455), and Electronic Arts India (356). It validates exact result counts, reported page ranges, and unique IDs; follows only employer-hosted detail URLs; and uses bounded concurrency for offsets advertised by the public pagination links. It reads the full Description and Requirements section rather than listing previews, and only explicit location fields establish the city. Explicit employer posting labels or JobPosting dates are used; missing dates remain unknown. Capped 999+ result sets, incomplete pages, wrong hosts, and missing full descriptions fail visibly. See `companies/avature-review-2026-10-06.json` for successful checks and the remaining unsuccessful public probes.
