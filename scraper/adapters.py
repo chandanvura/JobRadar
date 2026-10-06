@@ -193,7 +193,9 @@ class LeverAdapter(JobSource):
             sections.append(j.get('additionalPlain') or j.get('additional',''))
             return clean(' '.join(sections))
         jobs=[make_job(str(j["id"]),j["text"],c.name,location_text(j.get("categories",{}).get("location",""),j.get("categories",{}).get("allLocations",[])),description(j),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
-        return jobs,len(data)
+        missing=sum(likely_role(job.title) and not job.description for job in jobs)
+        warning=f'Limited coverage: {missing} relevant Lever jobs lack full requirements' if missing else None
+        return JobBatch(jobs,warning),len(data)
 
 class AshbyAdapter(JobSource):
     async def fetch_jobs(self,c):

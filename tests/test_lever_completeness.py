@@ -23,3 +23,12 @@ def test_lever_retains_requirement_lists_and_additional_sections(monkeypatch, du
         assert count == 1
         assert '0 to 2 years' in jobs[0].description and 'Kubernetes' in jobs[0].description
         assert 'Bengaluru, India' in jobs[0].location and jobs[0].posted_at is None
+
+
+def test_lever_missing_relevant_requirements_remain_partial(monkeypatch):
+    async def request(client, method, url, **kwargs):
+        return httpx.Response(200, request=httpx.Request(method, url), json=[dict(id='one', text='Software Engineer')])
+    monkeypatch.setattr(adapters, 'request', request)
+    jobs, count = asyncio.run(adapters.LeverAdapter().fetch_jobs(
+        Company('Example', 'https://jobs.lever.co/example', 'lever', 'example')))
+    assert count == 1 and jobs.coverage_warning.startswith('Limited coverage: 1 relevant Lever')
