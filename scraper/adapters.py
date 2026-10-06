@@ -8,6 +8,7 @@ import httpx
 from bs4 import BeautifulSoup
 from defusedxml import ElementTree as ET
 from .models import Company, Job, JobBatch
+from .snapshot import SnapshotChanged
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
 CACHE_ROOT=Path(os.getenv("JOBRADAR_HTTP_CACHE",".cache/jobradar-http"))
@@ -319,6 +320,8 @@ class WorkdayAdapter(JobSource):
                         raise ValueError("Workday complete listing exceeds its bound or omits its total")
                     if expected is None: expected=total
                     paths=[item.get("externalPath","") for item in batch]
+                    if offset and total not in (0,expected):
+                        raise SnapshotChanged(f"Workday complete pagination total changed: {expected} -> {total}")
                     if ((offset and total not in (0,expected)) or (not offset and total!=expected)
                             or len(batch)!=min(20,max(0,expected-offset))
                             or any(not path.startswith("/job/") for path in paths)
@@ -337,7 +340,7 @@ class WorkdayAdapter(JobSource):
                 check.raise_for_status(); snapshot=check.json()
                 if (snapshot.get("total")!=expected or [item.get("externalPath") for item in snapshot.get("jobPostings",[])]
                         !=[item.get("externalPath") for item in postings[:20]]):
-                    raise ValueError("Workday complete listing changed during final verification")
+                    raise SnapshotChanged("Workday complete listing changed during final verification")
             semaphore=asyncio.Semaphore(8); missing=[]
             async def convert(item):
                 # Complete mode reads relevant titles even if listing locations hide

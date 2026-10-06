@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 from urllib.parse import parse_qs, urlencode, urljoin, urlparse
 from bs4 import BeautifulSoup
+from .snapshot import SnapshotChanged
 
 
 def listing_page(text, base, host):
@@ -87,7 +88,9 @@ class AvatureCareerAdapter:
                     async with semaphore: result = await request(x, 'GET', url)
                     result.raise_for_status()
                     batch, first, last, count, more = listing_page(result.text, str(result.url), host)
-                    if count != total or first != offset + 1 or last != min(offset + end, total):
+                    if count != total:
+                        raise SnapshotChanged('Avature public listing total changed during pagination')
+                    if first != offset + 1 or last != min(offset + end, total):
                         raise ValueError('Avature public listing changed or omitted records during pagination')
                     return batch
                 for batch in await asyncio.gather(*(page(offset) for offset in range(end, total, end))):

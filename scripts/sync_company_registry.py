@@ -25,6 +25,26 @@ def normalized_source_url(value):
     return parsed._replace(netloc=parsed.netloc.lower().removesuffix(":443"), path=parsed.path or "/").geturl()
 
 
+def selected_repairs(companies, catalog, names):
+    """Explicit adapter-only repairs; never infer a full scan from a code push."""
+    missing_sources([], catalog)
+    if not names or len(names) > 50 or len(set(names)) != len(names):
+        raise ValueError("Select 1 to 50 distinct company names")
+    registry = {c.name: c for c in companies if c.enabled}
+    live = {row['name']: row for row in catalog['companies']}
+    if set(names) - (registry.keys() & live.keys()):
+        raise ValueError("Selected repairs must exist in the enabled registry and live catalog")
+    updates = []
+    for name in names:
+        c = registry[name]
+        update = dict(live[name])
+        update.update(name=name, careers_url=c.careers_url, ats_provider=c.ats_provider,
+                      ats_identifier=c.ats_identifier, priority=c.priority,
+                      warning='Source updated; awaiting verification')
+        updates.append(update)
+    return updates
+
+
 def changed_sources(companies, catalog):
     missing_sources([], catalog)  # Require a live catalog before any mutation.
     existing = {row["name"].strip().casefold(): row for row in catalog["companies"]}
@@ -82,8 +102,11 @@ def main():
     with urlopen(dashboard_request, timeout=30) as response:  # nosec B310
         catalog = json.load(response)
     companies = load_companies()
-    additions = missing_sources(companies, catalog)
-    repairs = changed_sources(companies, catalog)
+    selected = json.loads(os.environ['JOBRADAR_REPAIR_COMPANIES']) if os.environ.get('JOBRADAR_REPAIR_COMPANIES') else None
+    additions = [] if selected is not None else missing_sources(companies, catalog)
+    repairs = selected_repairs(companies, catalog, selected) if selected is not None else changed_sources(companies, catalog)
+    if selected is not None and os.environ.get('JOBRADAR_VERIFY_SOURCE_UPDATES') != 'true':
+        raise ValueError('Explicit repairs require live collection verification')
     jobs = []
     if repairs and os.environ.get("JOBRADAR_VERIFY_SOURCE_UPDATES") == "true":
         jobs, repairs = asyncio.run(refresh_repairs(companies, repairs))
@@ -109,7 +132,15 @@ def main():
     # A saved mapping is not a verified repair. Pending sources remain retryable
     # and fail this workflow until a real collection replaces the pending warning.
     remaining = changed_sources(companies, live)
-    if missing_sources(companies, live) or remaining:
+    if selected is not None:
+        live_rows = {row['name']: row for row in live['companies']}
+        remaining = [row for row in pending if row['name'] not in live_rows
+                     or live_rows[row['name']].get('last_checked_at') != row.get('last_checked_at')
+                     or live_rows[row['name']].get('error_count')
+                     or (live_rows[row['name']].get('warning') or '').startswith(('Limited coverage', 'Source updated'))
+                     or live_rows[row['name']].get('ats_provider') != row['ats_provider']
+                     or normalized_source_url(live_rows[row['name']].get('careers_url')) != normalized_source_url(row['careers_url'])]
+    if (selected is None and missing_sources(companies, live)) or remaining:
         raise RuntimeError("Company sources not yet verified in live catalog")
     print(f"Verified {len(pending)} company source updates in the live portal; scheduled scans remain unchanged")
 
