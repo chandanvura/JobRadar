@@ -308,3 +308,7 @@ The older public Eightfold search endpoint is documented in the career portal’
 ### Macquarie complete public board (2026-10-06)
 
 The Avature collector now supports published `JobDetail?jobId=` links, explicit Office Location/Posted Date fields, and split responsibilities/requirements panels. Macquarie’s complete scan returned 593 openings and 13 normalized candidates, with no eligible fresh entry-level match. Offset pagination remains bounded, count-checked and duplicate-checked. Other XML/portal probes retain their warnings; evidence is in `companies/macquarie-review-2026-10-06.json`.
+
+### Public PHB listings (2026-10-06)
+
+Cognizant's public HTML board returned all 2,023 unique openings, 82 full potentially relevant descriptions with original published dates, and 25 normalized target-city candidates. None passed all current eligibility filters. Public page representation depends on request headers, and the employer can change the effective page size. The collector validates every reported page range, stable total and unique identifier, with one complete restart on inconsistent pagination. Persistent inconsistency still fails visibly. Regeneron remains unresolved because its pagination and detail template did not pass complete verification. Evidence: `companies/phb-review-2026-10-06.json`. Production verification is required before counting the Cognizant warning as resolved.

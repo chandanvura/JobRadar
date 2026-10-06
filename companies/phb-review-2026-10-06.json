@@ -1,0 +1,30 @@
+{
+  "verified_at": "2026-10-06",
+  "results": [
+    {
+      "company": "Cognizant",
+      "url": "https://careers.cognizant.com/global-en/jobs/",
+      "count": 2023,
+      "details": 82,
+      "candidates": 25,
+      "eligible": 0,
+      "posted_dates": 82,
+      "duration_seconds": 22.6,
+      "error": null
+    },
+    {
+      "company": "Regeneron",
+      "url": "https://careers.regeneron.com/en/jobs/",
+      "error": "PHBPaginationError: PHB public pagination changed, repeated, or omitted its reported range: page=5, range=101-120, total=537, expected_total=537, page_size=20",
+      "duration_seconds": 22.2
+    }
+  ],
+  "method": "Complete public employer HTML listings; stable reported counts and exact page ranges, unique employer job identifiers, full detail descriptions and explicit original published dates. One bounded restart on inconsistent pagination.",
+  "registry_changes": [
+    "Cognizant"
+  ],
+  "unresolved": [
+    "Regeneron: inconsistent public page ranges; distinct detail template needs further verification. Source mapping and coverage warning retained."
+  ],
+  "production_confirmation": "Required after registry synchronization; local success does not clear a warning."
+}
