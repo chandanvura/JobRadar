@@ -300,3 +300,7 @@ The Avature collector passed complete checks for Lenovo (999 listings), MetLife 
 ### CloudBees public board verification (2026-10-06)
 
 CloudBees’ current official careers page embeds a public Paylocity feed. Its 36 job identifiers exactly match the public board linked by every feed record. The collector reads the complete embedded list, rejects internal or duplicate identifiers and mismatched board data, and fetches full descriptions plus requirements for target roles. Public PublishedDate supplies posting dates; creation dates are ignored. Current India openings are in Chennai, yielding zero Bangalore/Hyderabad candidates without inventing locations. Evidence is in `companies/paylocity-review-2026-10-06.json`. Remaining metadata-only, capped, and unsupported legacy portals retain their warnings.
+
+### Millennium legacy Eightfold verification (2026-10-06)
+
+The older public Eightfold search endpoint is documented in the career portal’s published JavaScript. A collector now validates employer configuration, India filters, stable counts, page lengths, unique public IDs, full descriptions, and matching public JobPosting dates. Millennium returned all 34 India openings across four pages, with 14 complete target-related details, eight normalized candidates and no eligible fresh entry-level match. HSBC remains unresolved: its offsets advertise inconsistent totals of 152/153. Its separate public XML feed is recorded as a probe, not substituted for unverified technology coverage. Evidence: `companies/eightfold-legacy-review-2026-10-06.json`.

@@ -1,0 +1,60 @@
+{
+  "reviewed_at": "2026-10-06",
+  "public_search_endpoint": "/api/apply/v2/jobs",
+  "public_detail_endpoint": "/api/apply/v2/jobs/{id}",
+  "endpoint_provenance": "Published smartApply JavaScript on employer career portals; only anonymous public search and job details used.",
+  "verification": [
+    {
+      "company": "Millennium",
+      "status": {
+        "name": "Millennium",
+        "careers_url": "https://career.mlp.com/careers?domain=mlp.com",
+        "ats_provider": "eightfold_legacy",
+        "ats_identifier": "career.mlp.com|mlp.com",
+        "priority": 5,
+        "last_checked_at": "2026-10-06T05:02:35.013161+00:00",
+        "last_success_at": "2026-10-06T05:03:01.213319+00:00",
+        "error_count": 0,
+        "jobs_found": 34,
+        "candidate_jobs": 8,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "count": 34,
+      "details_read": 14,
+      "posting_dates_verified": 14
+    },
+    {
+      "company": "HSBC",
+      "status": {
+        "name": "HSBC",
+        "careers_url": "https://portal.careers.hsbc.com/careers?domain=hsbc.com",
+        "ats_provider": "eightfold_legacy",
+        "ats_identifier": "portal.careers.hsbc.com|hsbc.com",
+        "priority": 5,
+        "last_checked_at": "2026-10-06T05:03:01.213552+00:00",
+        "last_success_at": null,
+        "error_count": 1,
+        "jobs_found": 0,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "ValueError: Legacy Eightfold public search count or employer filter changed"
+      },
+      "error": "Legacy Eightfold public search count or employer filter changed",
+      "count": 0,
+      "details_read": 0,
+      "posting_dates_verified": 0
+    }
+  ],
+  "millennium_provenance": {
+    "official_page": "https://www.mlp.com/careers/",
+    "prior_official_link_evidence": "companies/career-widget-review-2026-10-05.json identifies mlp.eightfold.ai/careers",
+    "current_public_portal": "https://career.mlp.com/careers?domain=mlp.com",
+    "original_date_source": "Matching public JobPosting.datePosted; t_create and t_update ignored"
+  },
+  "hsbc_not_mapped": {
+    "reason": "Pagination totals differ by offset: 152 on most pages, 153 at offsets 100,110,120. Larger num=2000 still yields 10 records. Completeness cannot be verified.",
+    "secondary_xml_probe": "Official apply.careers.hsbc.com/googlefeed.xml returns 1534 full records but only 15 potentially relevant city listings. It is not substituted for the separate technology portal without verifying division coverage."
+  }
+}
