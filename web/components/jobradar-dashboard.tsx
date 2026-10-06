@@ -3,7 +3,7 @@ import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { hiringManagerDraft } from "@/lib/job-search-strategy";
 import { ThemeToggle } from "./theme-toggle";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   Bell,
@@ -403,8 +403,42 @@ function DashboardContent() {
     [showMoreFilters, setShowMoreFilters] = useState(false),
     [showOperations, setShowOperations] = useState(false),
     [showTools, setShowTools] = useState(false);
+  const deferredQuery = useDeferredValue(query);
+  const navigationRef = useRef<HTMLElement>(null);
   const loadGeneration = useRef(0);
   const activeLoad = useRef<AbortController | null>(null);
+  useEffect(() => {
+    if (!mobile) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    if (desktop.matches) { setMobile(false); return; }
+    document.body.style.overflow = "hidden";
+    const focusable = () => Array.from(navigationRef.current?.querySelectorAll<HTMLElement>(
+      'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), [tabindex="0"]'
+    ) || []).filter(node => node.getClientRects().length > 0);
+    focusable()[0]?.focus();
+    const closeOnDesktop = () => { if (desktop.matches) setMobile(false); };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); setMobile(false); }
+      if (event.key !== "Tab") return;
+      const nodes = focusable(), first = nodes[0], last = nodes.at(-1);
+      if (!first || !last) return;
+      if (event.shiftKey && (document.activeElement === first || !navigationRef.current?.contains(document.activeElement))) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !navigationRef.current?.contains(document.activeElement))) {
+        event.preventDefault(); first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", closeOnDesktop);
+      if (previousFocus?.isConnected) previousFocus.focus();
+    };
+  }, [mobile]);
   const load = useCallback(async (silent = false) => {
     const generation = ++loadGeneration.current;
     activeLoad.current?.abort();
@@ -579,7 +613,7 @@ function DashboardContent() {
         q =
           `${j.title} ${j.company} ${j.skills} ${j.role_category} ${j.ats_provider}`.toLowerCase(),
         match = ranking.get(trackingKey(j))!.match;
-      if (query && !q.includes(query.toLowerCase())) return false;
+      if (deferredQuery && !q.includes(deferredQuery.toLowerCase())) return false;
       if (active === "Internships" && !isInternship(j)) return false;
       if (active === "Internships" && !technicalInternshipRole(j)) return false;
       if (active === "Fresher Roles" && !fresherRole(j)) return false;
@@ -708,7 +742,7 @@ function DashboardContent() {
   }, [
     mergedJobs,
     jobTracking,
-    query,
+    deferredQuery,
     location,
     ats,
     role,
@@ -744,7 +778,7 @@ function DashboardContent() {
         (location === "All cities" || j.normalized_location.includes(location)) &&
         (role === "All roles" || j.role_category === role) &&
         (ats === "All ATS" || j.ats_provider === ats) &&
-        (!query || `${j.title} ${j.company} ${j.skills} ${j.role_category} ${j.ats_provider}`.toLowerCase().includes(query.toLowerCase())) &&
+        (!deferredQuery || `${j.title} ${j.company} ${j.skills} ${j.role_category} ${j.ats_provider}`.toLowerCase().includes(deferredQuery.toLowerCase())) &&
         (matchMode !== "Exact" || ((!preferences.titles.length || personalMatch(j, preferences).titleMatch) &&
           (!preferences.skills.length || personalMatch(j, preferences).skillMatch))),
     ).slice(0, 20),
@@ -806,7 +840,7 @@ function DashboardContent() {
     setApplicationStage("All stages");
   };
   const showJobs = jobViews.has(active),
-    companySearch = active === "Companies" ? query : "";
+    companySearch = active === "Companies" ? deferredQuery : "";
   const visibleJobs = ["Dashboard", "Recommended"].includes(active) && !filtered.length ? reviewPreview : filtered;
   const navGroup = (title: string, items: Set<string>) => (
     <div className="mb-4">
@@ -833,9 +867,15 @@ function DashboardContent() {
     </div>
   );
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="radar-shell min-h-screen bg-background text-foreground">
+      {mobile && <button type="button" tabIndex={-1} aria-label="Close navigation" onClick={() => setMobile(false)} className="radar-scrim fixed inset-0 z-40 bg-black/35 lg:hidden" />}
       <aside
-        className={`${mobile ? "flex" : "hidden"} fixed inset-y-0 left-0 z-40 w-72 flex-col border-r border-border bg-sidebar lg:flex`}
+        ref={navigationRef}
+        id="radar-navigation"
+        role={mobile ? "dialog" : undefined}
+        aria-modal={mobile || undefined}
+        aria-label={mobile ? "Navigation" : undefined}
+        className={`${mobile ? "flex" : "hidden"} radar-drawer fixed inset-y-0 left-0 z-50 w-72 flex-col border-r border-border bg-sidebar lg:flex`}
       >
         <div className="flex h-20 items-center gap-3 border-b border-border px-6">
           <div className="grid size-10 place-items-center rounded-xl bg-hero text-white">
@@ -888,10 +928,12 @@ function DashboardContent() {
         </nav>
         <SystemCard data={data} loading={loading} />
       </aside>
-      <main className="pb-20 lg:pb-0 lg:pl-72">
+      <main inert={mobile} className="pb-20 lg:pb-0 lg:pl-72">
         <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-border bg-card/90 px-4 backdrop-blur-xl md:px-8">
           <button
             aria-label="Open navigation"
+            aria-expanded={mobile}
+            aria-controls="radar-navigation"
             onClick={() => setMobile(true)}
             className="lg:hidden"
           >
@@ -901,7 +943,7 @@ function DashboardContent() {
             <p className="text-xs font-bold uppercase tracking-[.18em] text-muted-foreground">
               Discover → verify → apply
             </p>
-            <h1 className="text-xl font-black">{active}</h1>
+            <h1 key={active} className="radar-view-title text-xl font-black">{active}</h1>
           </div>
           <div className="ml-auto hidden w-80 md:block">
             <SearchBox
@@ -968,7 +1010,7 @@ function DashboardContent() {
                   internships={() => navigate("Internships")}
                 />
               )}
-              <section className="mb-6 rounded-3xl bg-hero p-6 text-white md:p-8">
+              <section className="radar-hero mb-6 rounded-3xl bg-hero p-6 text-white md:p-8">
                 <div className="flex flex-col justify-between gap-6 xl:flex-row xl:items-center">
                   <div>
                     <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-white/80">
@@ -1172,6 +1214,7 @@ function DashboardContent() {
       </main>
       <nav
         aria-label="Quick navigation"
+        inert={mobile}
         className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-border bg-card/95 px-2 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-8px_24px_rgba(18,63,44,.08)] backdrop-blur lg:hidden"
       >
         {([
@@ -1767,7 +1810,7 @@ function JobCard({
           : tracking.appliedAt,
     });
   return (
-    <article className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
+    <article className="radar-job-card overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col lg:flex-row">
         <div className="flex-1 p-6">
           <div className="mb-4 flex flex-wrap items-center gap-2">

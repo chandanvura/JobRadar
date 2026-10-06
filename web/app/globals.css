@@ -174,13 +174,57 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Subtle feedback without motion for people who prefer reduced animation. */
-:where(button, a, input, select, textarea):focus-visible { outline: 3px solid #21946b; outline-offset: 3px; }
+/* Small compositor-friendly movements; no perpetual physics loop. */
+:root {
+  --motion-settle: cubic-bezier(.22, 1, .36, 1);
+  --motion-spring: cubic-bezier(.2, .9, .3, 1.12);
+  --surface-shadow: 0 4px 20px -12px rgb(18 63 44 / .16);
+}
+html[data-theme="dark"] { --surface-shadow: 0 6px 24px -12px rgb(0 0 0 / .5); }
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid var(--ring); outline-offset: 3px;
+}
+.radar-shell { isolation: isolate; }
+.radar-job-card { box-shadow: var(--surface-shadow); }
+.radar-hero {
+  background-image: radial-gradient(ellipse at 100% 0%, rgb(115 222 176 / .16), transparent 65%);
+  box-shadow: 0 12px 30px -20px rgb(18 63 44 / .4);
+}
+.radar-shell nav button[aria-current="page"] { box-shadow: inset 0 0 0 1px rgb(114 167 138 / .2); }
+.radar-shell :is(input, select, textarea) { accent-color: var(--primary); }
+.radar-shell header { box-shadow: 0 4px 18px -16px rgb(18 63 44 / .3); }
 @media (prefers-reduced-motion: no-preference) {
-  button, a { transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease; }
-  button:active, a:active { transform: translateY(1px); }
-  main article { animation: radar-enter 180ms ease-out both; }
-  @keyframes radar-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  .radar-shell :is(button, a) {
+    transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease,
+      box-shadow 220ms ease, transform 220ms var(--motion-spring);
+  }
+  .radar-shell button:not(:disabled):active { transform: scale(.975); }
+  .radar-shell :is(input, select, textarea) {
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+  .radar-job-card {
+    animation: radar-enter 320ms var(--motion-settle) backwards;
+    transition: transform 260ms var(--motion-spring), border-color 180ms ease, box-shadow 260ms ease;
+  }
+  .radar-view-title { animation: radar-enter 240ms var(--motion-settle) both; }
+  .radar-scrim { animation: radar-fade 180ms ease-out both; }
+  @media (max-width: 1023px) {
+    .radar-drawer { animation: radar-drawer-in 340ms var(--motion-settle) both; }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .radar-job-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--ring);
+      box-shadow: 0 12px 28px -16px rgb(18 63 44 / .3);
+    }
+    .radar-shell nav button:hover:not([aria-current="page"]) { transform: translateX(2px); }
+  }
+  @keyframes radar-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes radar-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes radar-drawer-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
