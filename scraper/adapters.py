@@ -715,3 +715,6 @@ ADAPTERS.update(workday_complete=WorkdayAdapter(complete=True),phb=PHBCareerAdap
 ADAPTERS['infosys'] = InfosysCareerAdapter()
 ADAPTERS['successfactors'] = SuccessFactorsCareerAdapter()
 ADAPTERS['adidas'] = AdidasCareerAdapter()
+
+from .thoughtspot import ThoughtSpotCareerAdapter
+ADAPTERS["thoughtspot"] = ThoughtSpotCareerAdapter()

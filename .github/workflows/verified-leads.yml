@@ -1,4 +1,4 @@
-name: Verify employer-linked ThoughtSpot board
+name: Verify current ThoughtSpot Rippling feed
 on:
   push:
     branches: [ats-detective/verified-leads]
