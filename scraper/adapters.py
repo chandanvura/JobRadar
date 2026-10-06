@@ -183,7 +183,16 @@ class LeverAdapter(JobSource):
         async with client() as x:
             response=await request(x,"GET",f"https://api.{region}lever.co/v0/postings/{slug}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
         if not isinstance(data,list): raise ValueError("Lever public board returned an unexpected schema")
-        jobs=[make_job(str(j["id"]),j["text"],c.name,location_text(j.get("categories",{}).get("location",""),j.get("categories",{}).get("allLocations",[])),clean(j.get("descriptionPlain") or j.get("description","")),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
+        identifiers=[j.get('id') for j in data]
+        if any(not isinstance(i,str) or not i for i in identifiers) or len(set(identifiers))!=len(data):
+            raise ValueError('Lever public board omitted or repeated job identifiers')
+        def description(j):
+            sections=[j.get('descriptionPlain') or j.get('description','')]
+            for section in j.get('lists') or []:
+                sections.extend([section.get('text',''),section.get('content','')])
+            sections.append(j.get('additionalPlain') or j.get('additional',''))
+            return clean(' '.join(sections))
+        jobs=[make_job(str(j["id"]),j["text"],c.name,location_text(j.get("categories",{}).get("location",""),j.get("categories",{}).get("allLocations",[])),description(j),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
         return jobs,len(data)
 
 class AshbyAdapter(JobSource):

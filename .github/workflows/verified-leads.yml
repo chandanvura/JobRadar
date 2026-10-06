@@ -1,0 +1,30 @@
+name: Verify employer-linked Dream Sports and ThoughtSpot boards
+on:
+  push:
+    branches: [ats-detective/verified-leads]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: bash scripts/verify-harness.sh python
+      - run: python -m scripts.probe_verified_leads
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '1'
+          JOBRADAR_WORKDAY_LISTING_CONCURRENCY: '1'
+          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: '1'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: verified-leads
+          path: artifacts/verified-leads.json
+          if-no-files-found: warn
+          retention-days: 7
