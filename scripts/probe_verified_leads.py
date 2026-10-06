@@ -8,7 +8,6 @@ from scraper.adapters import client, discover_ats, request
 from scraper.main import load_companies, scrape
 
 OFFICIAL = {
-    'Dream Sports': 'https://www.dreamsports.group/careers/',
     'ThoughtSpot': 'https://www.thoughtspot.com/fr/careers',
 }
 

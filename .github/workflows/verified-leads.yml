@@ -1,4 +1,4 @@
-name: Verify employer-linked Dream Sports and ThoughtSpot boards
+name: Verify employer-linked ThoughtSpot board
 on:
   push:
     branches: [ats-detective/verified-leads]
