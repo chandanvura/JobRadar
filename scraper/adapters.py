@@ -694,6 +694,7 @@ from .phb import PHBCareerAdapter
 from .icims import ICIMSCareerAdapter
 from .infosys import InfosysCareerAdapter
 from .successfactors import SuccessFactorsCareerAdapter
+from .adidas import AdidasCareerAdapter
 
 from .mynexthire import MyNextHireCareerAdapter
 from .career_widgets import JuspayCareerAdapter, KulaCareerAdapter, BambooCareerAdapter, PyjamaCareerAdapter
@@ -702,3 +703,4 @@ ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyA
 ADAPTERS.update(workday_complete=WorkdayAdapter(complete=True),phb=PHBCareerAdapter(),eightfold_legacy=LegacyEightfoldCareerAdapter(),paylocity=PaylocityCareerAdapter(),avature=AvatureCareerAdapter(),juspay=JuspayCareerAdapter(),kula=KulaCareerAdapter(),bamboohr=BambooCareerAdapter(),pyjamahr=PyjamaCareerAdapter(),icims=ICIMSCareerAdapter())
 ADAPTERS['infosys'] = InfosysCareerAdapter()
 ADAPTERS['successfactors'] = SuccessFactorsCareerAdapter()
+ADAPTERS['adidas'] = AdidasCareerAdapter()

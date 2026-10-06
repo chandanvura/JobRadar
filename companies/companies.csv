@@ -380,7 +380,7 @@ Best Buy,https://jobs.bestbuy.com/bby?id=career_area,custom,best-buy-india,4,tru
 Wayfair,https://www.wayfair.com/careers,custom,wayfair-india,4,true
 Gap Inc.,https://www.gapinc.com/en-us/careers,custom,gap-india,3,true
 Nike,https://nike.wd1.myworkdayjobs.com/nke,workday,nike|nke,3,true
-Adidas,https://careers.adidas-group.com/,custom,adidas-india,3,true
+Adidas,https://careers.adidas-group.com/,adidas,https://careers.adidas-group.com/jobs/feed.xml,3,true
 Zoho,https://www.zoho.com/careers/,custom,zoho-india,4,true
 Samsung R&D Institute India,https://research.samsung.com/sri-b/careers,custom,samsung-r-and-d-india,5,true
 Whatfix,https://whatfix101.hire.trakstar.com/,custom,whatfix-india,5,true
