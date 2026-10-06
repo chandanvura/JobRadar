@@ -20,11 +20,10 @@
     }
   ],
   "method": "Complete public employer HTML listings; stable reported counts and exact page ranges, unique employer job identifiers, full detail descriptions and explicit original published dates. One bounded restart on inconsistent pagination.",
-  "registry_changes": [
-    "Cognizant"
-  ],
+  "registry_changes": [],
   "unresolved": [
     "Regeneron: inconsistent public page ranges; distinct detail template needs further verification. Source mapping and coverage warning retained."
   ],
-  "production_confirmation": "Required after registry synchronization; local success does not clear a warning."
+  "production_confirmation": "Failed: GitHub Actions scheduled runner received HTTP 403 on three bounded checks. Original custom mapping restored; coverage warning retained. Collector remains tested for accessible public sources.",
+  "production_run": "https://github.com/chandanvura/JobRadar/actions/runs/37440215891"
 }
