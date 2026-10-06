@@ -289,8 +289,13 @@
       "/_mk-www-next/_next/static/chunks/0cz1d0mv5g_q7.js",
       "/_mk-www-next/_next/static/chunks/1s1xr0mhtixmi.js"
     ],
-    "decision": "Unresolved: no verified complete employer feed from this page probe",
-    "links_are_unverified_candidates": true
+    "decision": "Verified complete Workday collection after inspecting official open-positions JavaScript",
+    "links_are_unverified_candidates": true,
+    "verified_source": "https://postman.wd108.myworkdayjobs.com/careers",
+    "verified_identifier": "postman|careers",
+    "verified_listings": 34,
+    "collected_relevant_details": 25,
+    "posting_date_policy": "Missing publication timestamps remain unknown; cached marketing updated_at is not a publication date"
   },
   {
     "company": "Rippling",
