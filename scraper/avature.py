@@ -15,16 +15,24 @@ def listing_page(text, base, host):
     if match[4] or total > 2000: raise ValueError('Avature listing exceeds the bounded complete scan')
     records = {}
     for article in soup.select('article.article--result'):
-        link = article.select_one('h3 a[href*="/JobDetail/"],h2 a[href*="/JobDetail/"]')
+        link = article.select_one('h3 a[href*="/JobDetail"],h2 a[href*="/JobDetail"]')
         if not link: raise ValueError('Avature result is missing its job detail link')
         url = urljoin(base, link['href']); parsed = urlparse(url)
-        identifier = parsed.path.rstrip('/').split('/')[-1]
+        identifier = (parse_qs(parsed.query).get('jobId') or [parsed.path.rstrip('/').split('/')[-1]])[0]
         if parsed.scheme != 'https' or parsed.hostname != host or not identifier.isdigit():
             raise ValueError('Avature public job does not match its employer host')
         if identifier in records: raise ValueError('Avature listing repeated a public job identifier')
         subtitle = article.select_one('.article__header__text__subtitle')
         location = subtitle.get_text(' ', strip=True) if subtitle else ''
         posting = None
+        for field in article.select('.article__details__data'):
+            icon = field.select_one('img[alt]')
+            body = field.find('p')
+            label = icon.get('alt', '').lower().rstrip(': ') if icon else ''
+            if label == 'office location' and body:
+                location = body.get_text(' ', strip=True)
+            if label == 'posted date' and body:
+                posting = datetime.strptime(body.get_text(' ', strip=True), '%d %b %Y').date().isoformat()
         posted = re.search(r'\bPosted\s+(\d{1,2}-[A-Za-z]{3}-\d{4})', location)
         if posted: posting = datetime.strptime(posted[1], '%d-%b-%Y').date().isoformat()
         records[identifier] = {'title': link.get_text(' ', strip=True), 'location': location, 'url': url, 'posting': posting}
@@ -40,6 +48,18 @@ def detail_section(soup):
         if header and re.search(r'Description\s*(?:and|&)\s*Requirements', header.get_text(' ', strip=True), re.I):
             body = article.select_one('.article__content')
             return body.get_text(' ', strip=True) if body else ''
+    # Macquarie publishes responsibilities and requirements as separate panels.
+    articles = soup.select('article.article--details')
+    headings = [article.select_one('.article__header__text__title') for article in articles]
+    titles = {heading.get_text(' ', strip=True).lower() for heading in headings if heading}
+    if {'what role will you play?', 'what you offer'} <= titles:
+        sections = []
+        for article, heading in zip(articles, headings):
+            if heading or not article.select('.article__content__view__field__label'):
+                body = article.select_one('.article__content')
+                if body:
+                    sections.append(body.get_text(' ', strip=True))
+        return '\n'.join(sections)
     return ''
 
 

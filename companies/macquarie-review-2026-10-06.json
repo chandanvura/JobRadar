@@ -1,0 +1,53 @@
+{
+  "reviewed_at": "2026-10-06",
+  "company": "Macquarie Group",
+  "official_source": "https://recruitment.macquarie.com/en_US/careers/SearchJobs",
+  "verification": {
+    "status": {
+      "name": "Macquarie Group",
+      "careers_url": "https://recruitment.macquarie.com/en_US/careers/SearchJobs",
+      "ats_provider": "avature",
+      "ats_identifier": "recruitment.macquarie.com",
+      "priority": 4,
+      "last_checked_at": "2026-10-06T05:11:49.467439+00:00",
+      "last_success_at": "2026-10-06T05:13:39.968818+00:00",
+      "error_count": 0,
+      "jobs_found": 593,
+      "candidate_jobs": 13,
+      "eligible_jobs": 0,
+      "warning": null
+    },
+    "error": null,
+    "count": 593,
+    "details_read": 23
+  },
+  "listing_format": "Published numeric jobId query parameter, explicit Office Location and Posted Date labels, numbered offset pagination, exact total and unique IDs.",
+  "detail_format": "Full introductory text and panels including What role will you play? and What you offer; both panels required.",
+  "other_probes": [
+    {
+      "company": "Deutsche Boerse Group",
+      "url": "https://careers.deutsche-boerse.com/search",
+      "result": "Current Nuxt portal publishes offer links. Old googlefeed.xml path returns 404; integration needs complete public search verification."
+    },
+    {
+      "company": "Globant",
+      "url": "https://career.globant.com/",
+      "result": "Current Next portal; old googlefeed.xml returns 404. Not mapped."
+    },
+    {
+      "company": "EPAM",
+      "url": "https://careers.epam.com/googlefeed.xml",
+      "result": "Returns HTML, not XML. Not mapped."
+    },
+    {
+      "company": "BNP Paribas",
+      "url": "https://bwelcome.hr.bnpparibas/en_US/externalcareers/SearchJobs",
+      "result": "404. Not mapped."
+    },
+    {
+      "company": "ColorTokens",
+      "url": "https://colortokens.com/careers/",
+      "result": "Current page does not link a Kula board; prior marker is insufficient to map."
+    }
+  ]
+}

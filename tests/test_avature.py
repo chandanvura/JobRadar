@@ -30,6 +30,29 @@ def test_avature_requires_full_description_section():
     assert detail_section(BeautifulSoup('<p>Preview only</p>', 'html.parser')) == ''
 
 
+def test_avature_query_identifier_and_explicit_office_and_posted_labels():
+    html = '''<div>1-1 of 1 results</div><article class="article--result">
+    <h3><a href="/en_US/careers/JobDetail?jobId=123">Software Engineer</a></h3>
+    <div class="article__details__data"><img alt="Office Location:"><p>Bengaluru Office</p></div>
+    <div class="article__details__data"><img alt="Posted Date:"><p>06 Oct 2026</p></div>
+    <div class="article__details__data"><img alt="Job Category:"><p>London Finance</p></div></article>'''
+    rows, start, end, count, more = listing_page(html, 'https://careers.example/jobs', 'careers.example')
+    assert rows['123']['location'] == 'Bengaluru Office'
+    assert rows['123']['posting'] == '2026-10-06'
+    assert (start, end, count, more) == (1, 1, 1, None)
+
+
+def test_avature_split_panels_require_responsibilities_and_requirements():
+    html = '''<article class="article--details"><div class="article__content">Full introduction</div></article>
+    <article class="article--details"><h3 class="article__header__text__title">What role will you play?</h3>
+    <div class="article__content">Build Java services</div></article>
+    <article class="article--details"><h3 class="article__header__text__title">What you offer</h3>
+    <div class="article__content">Two years experience required</div></article>'''
+    description = detail_section(BeautifulSoup(html, 'html.parser'))
+    assert all(text in description for text in ['Full introduction', 'Java services', 'Two years'])
+    assert detail_section(BeautifulSoup(html.replace('What you offer', 'Preview'), 'html.parser')) == ''
+
+
 def test_avature_collects_all_advertised_offsets_and_full_details(monkeypatch):
     import asyncio
     import httpx

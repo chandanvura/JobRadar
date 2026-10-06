@@ -304,3 +304,7 @@ CloudBees’ current official careers page embeds a public Paylocity feed. Its 3
 ### Millennium legacy Eightfold verification (2026-10-06)
 
 The older public Eightfold search endpoint is documented in the career portal’s published JavaScript. A collector now validates employer configuration, India filters, stable counts, page lengths, unique public IDs, full descriptions, and matching public JobPosting dates. Millennium returned all 34 India openings across four pages, with 14 complete target-related details, eight normalized candidates and no eligible fresh entry-level match. HSBC remains unresolved: its offsets advertise inconsistent totals of 152/153. Its separate public XML feed is recorded as a probe, not substituted for unverified technology coverage. Evidence: `companies/eightfold-legacy-review-2026-10-06.json`.
+
+### Macquarie complete public board (2026-10-06)
+
+The Avature collector now supports published `JobDetail?jobId=` links, explicit Office Location/Posted Date fields, and split responsibilities/requirements panels. Macquarie’s complete scan returned 593 openings and 13 normalized candidates, with no eligible fresh entry-level match. Offset pagination remains bounded, count-checked and duplicate-checked. Other XML/portal probes retain their warnings; evidence is in `companies/macquarie-review-2026-10-06.json`.
