@@ -14,12 +14,12 @@ class TalentBrewCareerAdapter:
     async def fetch_jobs(self, company):
         for attempt in range(2):
             try:
-                return await self._fetch_jobs(company)
+                return await self._fetch_jobs(company, use_snapshot=bool(attempt))
             except TalentBrewPaginationChanged:
                 if attempt: raise
                 # Restart from page one; never accept a partial or deduplicated scan.
 
-    async def _fetch_jobs(self, company):
+    async def _fetch_jobs(self, company, use_snapshot=False):
         from .adapters import cached_get, clean, client, jsonld_objects, likely_target, location_text, make_job, request
         host = urlparse(company.careers_url).hostname
         if urlparse(company.careers_url).scheme != 'https' or not company.ats_identifier.isdigit():
@@ -43,6 +43,36 @@ class TalentBrewCareerAdapter:
                     raise ValueError('TalentBrew listing count is missing or invalid')
                 count = int(raw_count)
                 if count > 2000: raise ValueError('TalentBrew search exceeded the bounded scan')
+                if use_snapshot and len(pages) == 1 and count:
+                    # Reproduce the public UI's "show all" action for a simple India facet.
+                    # A single response avoids combining independently cached pages.
+                    filters = soup.select('#search-filters input.filter-checkbox[checked]')
+                    endpoint = search.get('data-ajax-url', '')
+                    if (len(filters) == 1 and filters[0].get('data-id') == '1269750'
+                            and filters[0].get('data-facet-type') == '2'
+                            and not search.get('data-keywords')
+                            and endpoint.endswith('/search-jobs/results')):
+                        params = {key: search.get('data-' + attribute, '') for key, attribute in (
+                            ('Distance', 'distance'), ('FacetTerm', 'facet-term'), ('FacetType', 'facet-type'),
+                            ('SearchResultsModuleName', 'search-results-module-name'), ('SortCriteria', 'sort-criteria'),
+                            ('SortDirection', 'sort-direction'), ('SearchType', 'search-type'),
+                            ('OrganizationIds', 'organization-ids'), ('ResultsType', 'results-type'))}
+                        params.update(CurrentPage=1, RecordsPerPage=2000, Keywords='', Location='',
+                                      ShowRadius='false', IsPagination='False', ActiveFacetID=0,
+                                      **{'FacetFilters[0].ID': '1269750', 'FacetFilters[0].FacetType': 2,
+                                         'FacetFilters[0].Display': 'India', 'FacetFilters[0].IsApplied': 'true',
+                                         'FacetFilters[0].FieldName': filters[0].get('data-field-name', '')})
+                        response = await request(x, 'GET', official_url(str(response.url), endpoint), params=params)
+                        response.raise_for_status(); payload = response.json()
+                        if not isinstance(payload.get('results'), str):
+                            raise ValueError('TalentBrew public snapshot is missing its listing')
+                        soup = BeautifulSoup(payload['results'], 'html.parser'); search = soup.select_one('#search-results')
+                        if (not search or search.get('data-organization-ids') != company.ats_identifier
+                                or search.get('data-facet-term') != '1269750' or search.get('data-facet-type') != '2'):
+                            raise ValueError('TalentBrew snapshot does not match its employer and India facet')
+                        count = int(search.get('data-total-results', '-1'))
+                        if count < 0 or count > 2000: raise ValueError('Invalid TalentBrew snapshot count')
+
                 if expected_count is None: expected_count = count
                 if count != expected_count:
                     raise TalentBrewPaginationChanged('TalentBrew listing count changed during pagination')

@@ -112,7 +112,7 @@ SAP,https://careers.sap.com/,xml,https://careers.sap.com/googlefeed.xml,5,true
 Cisco,https://cisco.wd5.myworkdayjobs.com/Cisco_Careers,workday,cisco|Cisco_Careers,5,true
 IBM,https://www.ibm.com/careers/search,custom,ibm,5,true
 Accenture,https://accenture.wd103.myworkdayjobs.com/AccentureCareers,workday,accenture|AccentureCareers,5,true
-Deloitte,https://southasiacareers.deloitte.com/,custom,deloitte,4,true
+Deloitte,https://southasiacareers.deloitte.com/,xml,https://southasiacareers.deloitte.com/googlefeed.xml,4,true
 EY,https://careers.ey.com/,xml,https://careers.ey.com/googlefeed.xml,4,true
 PwC,https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers,workday,pwc|Global_Experienced_Careers,4,true
 JPMorgan Chase,https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001,oracle,jpmc.fa.oraclecloud.com|CX_1001,4,true
@@ -230,7 +230,7 @@ Sonata Software,https://www.sonata-software.com/careers,custom,sonata,4,true
 Happiest Minds,https://www.happiestminds.com/careers/,custom,happiestminds,4,true
 UST,https://www.ust.com/en/careers,custom,ust,4,true
 CGI,https://www.cgi.com/en/careers-search,custom,cgi,4,true
-Capgemini,https://www.capgemini.com/in-en/careers/join-capgemini/job-search/,custom,capgemini,5,true
+Capgemini,https://careers.capgemini.com/,xml,https://careers.capgemini.com/googlefeed.xml,5,true
 Infosys,https://career.infosys.com/joblist,custom,infosys,5,true
 TCS,https://www.tcs.com/careers/india,custom,tcs,5,true
 Wipro,https://careers.wipro.com/,xml,https://careers.wipro.com/googlefeed.xml,5,true
@@ -375,7 +375,7 @@ Parexel,https://jobs.parexel.com/en/location/india-jobs/877/1269750/2,talentbrew
 Syneos Health,https://www.syneoshealth.com/careers,custom,syneos-health-india,4,true
 Lowe's India,https://talent.lowes.com/in/en,custom,lowes-india,4,true
 Tesco Bengaluru,https://www.tescobengaluru.com/careers/,custom,tesco-bengaluru,4,true
-IKEA,https://jobs.ikea.com/en/location/india-jobs/22908/1269750/2?p=1,talentbrew,22908,3,true
+IKEA,https://jobs.ikea.com/en/location/jobs/22908/1269750/2,talentbrew,22908,3,true
 Best Buy,https://jobs.bestbuy.com/bby?id=career_area,custom,best-buy-india,4,true
 Wayfair,https://www.wayfair.com/careers,custom,wayfair-india,4,true
 Gap Inc.,https://www.gapinc.com/en-us/careers,custom,gap-india,3,true

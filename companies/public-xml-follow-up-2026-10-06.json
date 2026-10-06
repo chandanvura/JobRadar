@@ -1,0 +1,136 @@
+{
+  "verified_sources": [
+    {
+      "company": "Capgemini",
+      "careers_url": "https://careers.capgemini.com/",
+      "ats_provider": "xml",
+      "ats_identifier": "https://careers.capgemini.com/googlefeed.xml",
+      "status": {
+        "name": "Capgemini",
+        "careers_url": "https://careers.capgemini.com/",
+        "ats_provider": "xml",
+        "ats_identifier": "https://careers.capgemini.com/googlefeed.xml",
+        "priority": 5,
+        "last_checked_at": "2026-10-06T02:56:22.834625+00:00",
+        "last_success_at": "2026-10-06T02:57:26.563412+00:00",
+        "error_count": 0,
+        "jobs_found": 6363,
+        "candidate_jobs": 62,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 6363,
+      "checked_at": "2026-10-06",
+      "candidate_jobs": 62,
+      "eligible_jobs": 0
+    },
+    {
+      "company": "Deloitte",
+      "careers_url": "https://southasiacareers.deloitte.com/",
+      "ats_provider": "xml",
+      "ats_identifier": "https://southasiacareers.deloitte.com/googlefeed.xml",
+      "status": {
+        "name": "Deloitte",
+        "careers_url": "https://southasiacareers.deloitte.com/",
+        "ats_provider": "xml",
+        "ats_identifier": "https://southasiacareers.deloitte.com/googlefeed.xml",
+        "priority": 4,
+        "last_checked_at": "2026-10-06T02:57:44.672857+00:00",
+        "last_success_at": "2026-10-06T02:58:39.953830+00:00",
+        "error_count": 0,
+        "jobs_found": 1667,
+        "candidate_jobs": 61,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "listings": 1667,
+      "checked_at": "2026-10-06",
+      "candidate_jobs": 61,
+      "eligible_jobs": 0
+    },
+    {
+      "company": "IKEA",
+      "careers_url": "https://jobs.ikea.com/en/location/jobs/22908/1269750/2",
+      "ats_provider": "talentbrew",
+      "ats_identifier": "22908",
+      "status": {
+        "name": "IKEA",
+        "careers_url": "https://jobs.ikea.com/en/location/jobs/22908/1269750/2",
+        "ats_provider": "talentbrew",
+        "ats_identifier": "22908",
+        "priority": 3,
+        "last_checked_at": "2026-10-06T02:59:13.096410+00:00",
+        "last_success_at": "2026-10-06T02:59:26.621393+00:00",
+        "error_count": 0,
+        "jobs_found": 26,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "listings": 26,
+      "checked_at": "2026-10-06",
+      "candidate_jobs": 0,
+      "eligible_jobs": 0
+    }
+  ],
+  "other_public_feed_probes": [
+    {
+      "company": "LTIMindtree",
+      "feed": "https://careers.ltimindtree.com/googlefeed.xml",
+      "status": 502,
+      "final_url": "https://careers.ltimindtree.com/googlefeed.xml",
+      "size": 150
+    },
+    {
+      "company": "Ansys",
+      "feed": "https://careers.ansys.com/googlefeed.xml",
+      "status": 502,
+      "final_url": "https://careers.ansys.com/googlefeed.xml",
+      "size": 150
+    },
+    {
+      "company": "HARMAN",
+      "feed": "https://jobs.harman.com/googlefeed.xml",
+      "status": 502,
+      "final_url": "https://jobs.harman.com/googlefeed.xml",
+      "size": 185
+    },
+    {
+      "company": "Coforge",
+      "feed": "https://careers.coforge.com/googlefeed.xml",
+      "status": 404,
+      "final_url": "https://careers.coforge.com/googlefeed.xml",
+      "size": 196
+    },
+    {
+      "company": "Deloitte",
+      "feed": "https://southasiacareers.deloitte.com/googlefeed.xml",
+      "status": 200,
+      "final_url": "https://southasiacareers.deloitte.com/googlefeed.xml",
+      "size": 16830458,
+      "items": 1667,
+      "title": [
+        "Analyst | Generative AI | Mumbai | Engineering | Quality Engineering (Mumbai, IN)",
+        "Consultant | Generative AI | Bengaluru | Engineering | Quality Engineering (Bengaluru, IN)"
+      ]
+    },
+    {
+      "company": "Bayer",
+      "feed": "https://career.bayer.com/googlefeed.xml",
+      "status": 403,
+      "final_url": "https://www.bayer.com/en/career",
+      "size": 9669
+    },
+    {
+      "company": "L&T Technology Services",
+      "feed": "https://careers.ltts.com/googlefeed.xml",
+      "status": 502,
+      "final_url": "https://careers.ltts.com/googlefeed.xml",
+      "size": 150
+    }
+  ],
+  "policy": "Failures remain unresolved. No inferred posting dates or changed city/experience eligibility."
+}

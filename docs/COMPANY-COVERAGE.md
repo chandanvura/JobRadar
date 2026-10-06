@@ -282,3 +282,12 @@ Zeta, ShareChat, Goldman Sachs, Nomura, Intuit, and Sanofi passed fresh checks a
 TalentBrew now checks that the reported count stays stable across pages and equals the unique records collected. A changed count, repeated record, or temporarily omitted listing triggers one complete restart from page one. If the second scan remains incomplete, it still fails visibly. Wrong employer hosts, invalid source identity, and other validation errors are not retried. Regression tests cover restart, persistent failure, and count mismatch.
 
 Fresh complete checks also passed for Amgen (636 listings) and IKEA (26 listings). Their registered first-page URLs now explicitly select page one, requiring a focused production refresh. IKEA previously served conflicting first/second-page totals of 28 and 26; refreshed pages consistently reported 26. Complete counts and employer identity remain enforced. These repairs address separate collection failures, not the Limited coverage target.
+
+
+### Public XML follow-up and validation repair (2026-10-06)
+
+Complete collection checks passed for Capgemini (6,363 public listings, 62 candidates) and Deloitte (1,667 listings, 61 candidates). These employer XML feeds include full job descriptions; missing posting dates require employer detail evidence and otherwise stay unknown. Other XML probes returned errors and were not mapped. IKEA's publicly indexed canonical India route also passed a complete 26-listing check, but production confirmation remains required. See `companies/public-xml-follow-up-2026-10-06.json`.
+
+The web validation dependency audit found GHSA-68fv-2mgg-jv7q in source-map-js 1.2.1. The lockfile updates only this package to the patched 1.2.2 release. No forced dependency upgrades or disabled security gates are used.
+
+For a retry on a simple India TalentBrew page, the collector can reproduce the employer UI's public "show all" request. It carries the checked India facet explicitly and validates the response employer, country facet, bounded count, and unique records. This avoids combining independently cached pages. Normal collection runs first; unsupported filters continue through ordinary pagination. Requests are based on the public TalentBrew `search.js` UI; no browser JavaScript is executed.
