@@ -1,0 +1,588 @@
+[
+  {
+    "company": "AMD",
+    "url": "https://careers.amd.com/careers-home/jobs",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Apple",
+    "url": "https://jobs.apple.com/en-in/search?location=india-INDC",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "/content/js/analytics/v4/packager-20201111A-JOBS.launch-20201111F-prod.js",
+      "/static/jobsite.vendors.96c2e6005a80b24c9aa8.js",
+      "/static/jobsite.main.6f4557d0431a06ce7e9e.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Arcesium",
+    "url": "https://www.arcesium.com/careers.html",
+    "status": 404,
+    "links": [
+      "https://www.galaxy.com/insights/research/crypto-leverage-q3-2025-defi-cefi-lending-digital-asset-treasury-debt-futures-perpetuals"
+    ],
+    "scripts": [
+      "/_next/static/chunks/6532c26514020cb5.js?dpl=dpl_8TE2QkLCPDdLcKiiYKoD2ENM98Dw",
+      "/_next/static/chunks/turbopack-2f9ad18b006ff9c6.js?dpl=dpl_8TE2QkLCPDdLcKiiYKoD2ENM98Dw",
+      "/_next/static/chunks/798ce111b4bea5d1.js?dpl=dpl_8TE2QkLCPDdLcKiiYKoD2ENM98Dw",
+      "/_next/static/chunks/ec932ea9c2df88c6.js?dpl=dpl_8TE2QkLCPDdLcKiiYKoD2ENM98Dw",
+      "/_next/static/chunks/a6dad97d9634a72d.js?dpl=dpl_8TE2QkLCPDdLcKiiYKoD2ENM98Dw",
+      "/_next/static/chunks/4d7226b2afccf1de.js?dpl=dpl_8TE2QkLCPDdLcKiiYKoD2ENM98Dw"
+    ],
+    "decision": "Verified official Greenhouse mapping after following current /careers page",
+    "links_are_unverified_candidates": true,
+    "verified_board": "arcesiumllc",
+    "verified_listings": 48,
+    "full_descriptions": 48,
+    "target_city_role_candidates": 9
+  },
+  {
+    "company": "Atlassian",
+    "url": "https://www.atlassian.com/company/careers/all-jobs",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/main.js?cdnVersion=3706"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Chargebee",
+    "url": "https://www.chargebee.com/careers/",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Cognizant",
+    "url": "https://careers.cognizant.com/global-en/jobs/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js",
+      "/phb/jobAlerts.js.v85ed436c46539616dc97a7feab28c3719e892606"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Darwinbox",
+    "url": "https://darwinbox.com/careers",
+    "status": 200,
+    "links": [
+      "https://explore.darwinbox.com/lp/why-darwinbox/compare/darwinbox-vs-workday"
+    ],
+    "scripts": [
+      "/_next/static/chunks/5733.61f6c9bd817c2e84.js",
+      "/_next/static/chunks/webpack-516b48ab24ae731b.js",
+      "/_next/static/chunks/framework-6c8598519c693321.js",
+      "/_next/static/chunks/main-5beff16878da2e0d.js",
+      "/_next/static/chunks/pages/_app-30f2fe0bd2ca0f20.js",
+      "/_next/static/chunks/pages/%5B...slug%5D-b251e8a2a225a189.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Flipkart",
+    "url": "https://www.flipkartcareers.com/#!/joblist",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "GitHub",
+    "url": "https://www.github.careers/careers-home/jobs",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Google",
+    "url": "https://www.google.com/about/careers/applications/jobs/results/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://www.gstatic.com/_/mss/boq-hiring/_/js/k=boq-hiring.HiringCportalFrontendUi.en_US.y888q3tRu_M.2018.O/am=AAAAAPhfW7McQiYI/d=1/excm=_b,_tp,jobsresultsview/ed=1/dg=0/wt=2/ujg=1/rs=AIJKeT6T2cs740TGho29tz_sG9-7VwhX_Q/dti=1/m=_b,_tp"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "HSBC",
+    "url": "https://www.hsbc.com/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "HashiCorp",
+    "url": "https://www.ibm.com/careers/search?q=hashicorp",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Hasura",
+    "url": "https://promptql.io/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "/_next/static/chunks/pages/_app.c19107e6810dc6ed.1791275709186.js",
+      "/_next/static/chunks/3996.6ca8bd1086d10dd2.1791275709186.js",
+      "/_next/static/chunks/1862.26869e7195790e20.1791275709186.js",
+      "/_next/static/chunks/5276.a7f014800140ebb6.1791275709186.js",
+      "/_next/static/chunks/9555.364d239026fb71d1.1791275709186.js",
+      "/_next/static/chunks/pages/careers.296ff700dec3471d.1791275709186.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "IBM",
+    "url": "https://www.ibm.com/careers/search",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Informatica",
+    "url": "https://www.salesforce.com/company/careers/jobs/?search=&bc=OTH",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://c.salesforce.com/digital/xsf/components/v1-stable/careers.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Infosys",
+    "url": "https://career.infosys.com/joblist",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "main.js"
+    ],
+    "decision": "Repaired separately in PR #2",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Jupiter",
+    "url": "https://jupiter.money/careers/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "/assets/main.js?v=aed945bbda"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Mercedes-Benz Research and Development India",
+    "url": "https://www.mbrdi.co.in/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "./static/js/main.37de2488.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Meta",
+    "url": "https://www.metacareers.com/jobsearch/",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Myntra",
+    "url": "https://careers.myntra.com/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://careers.myntra.com/wp-content/themes/myntra_career/assets/js/plugins/jquery.min.js",
+      "https://careers.myntra.com/wp-content/themes/myntra_career/assets/js/plugins/lottie.js",
+      "https://careers.myntra.com/wp-content/themes/myntra_career/assets/js/app.js",
+      "https://careers.myntra.com/wp-content/themes/myntra_career/assets/js/career.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Navi",
+    "url": "https://navi.com/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "/static/js/87.b6c87eaa.chunk.js",
+      "/static/js/main.510840a3.chunk.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "NetApp",
+    "url": "https://careers.netapp.com/",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Open Financial Technologies",
+    "url": "https://open.money/company/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Persistent Systems",
+    "url": "https://careers.persistent.com/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "main.63f5a2fe94635f23.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Postman",
+    "url": "https://www.postman.com/company/careers/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "/_mk-www-next/_next/static/chunks/1b0d9cpm6f469.js",
+      "/_mk-www-next/_next/static/chunks/06sxgwx4yyi3x.js",
+      "/_mk-www-next/_next/static/chunks/2--u67u0-e_5g.js",
+      "/_mk-www-next/_next/static/chunks/3q_3ulrp-buei.js",
+      "/_mk-www-next/_next/static/chunks/0cz1d0mv5g_q7.js",
+      "/_mk-www-next/_next/static/chunks/1s1xr0mhtixmi.js"
+    ],
+    "decision": "Verified complete Workday collection after inspecting official open-positions JavaScript",
+    "links_are_unverified_candidates": true,
+    "verified_source": "https://postman.wd108.myworkdayjobs.com/careers",
+    "verified_identifier": "postman|careers",
+    "verified_listings": 34,
+    "collected_relevant_details": 25,
+    "posting_date_policy": "Missing publication timestamps remain unknown; cached marketing updated_at is not a publication date"
+  },
+  {
+    "company": "Rippling",
+    "url": "https://www.rippling.com/careers/open-roles",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Splunk",
+    "url": "https://careers.cisco.com/global/en/splunk",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "TCS",
+    "url": "https://www.tcs.com/careers/india",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "/content/dam/tcstop/swiper-bundle.min.js",
+      "/content/dam/tcstop/bootstrap.bundle.min.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "ThoughtSpot",
+    "url": "https://www.thoughtspot.com/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "/_next/static/chunks/84731-954a7f7b7c0c26c4.js",
+      "/_next/static/chunks/23760-41c006984ad90a77.js",
+      "/_next/static/chunks/51358-befc0ac1a6b14c13.js",
+      "/_next/static/chunks/5605-3b6a7114da0e25b3.js",
+      "/_next/static/chunks/4067-8cacb221d2e28ade.js",
+      "/_next/static/chunks/pages/%5B...slug%5D-4963969da6c15287.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Upstox",
+    "url": "https://upstox.com/careers/",
+    "status": 200,
+    "links": [
+      "https://upstox.com/stocks/hindustan-unilever-ltd-share-price/"
+    ],
+    "scripts": [
+      "/marketing-page-assets/_next/static/chunks/79-9ca9bb161738b614.js",
+      "/marketing-page-assets/_next/static/chunks/app/page-2cc6450eb9ece3a1.js",
+      "/marketing-page-assets/_next/static/chunks/536-1a5b6e3b27c0ed18.js",
+      "/marketing-page-assets/_next/static/chunks/app/careers/page-6ce457ecd18886a2.js",
+      "/marketing-page-assets/_next/static/chunks/polyfills-42372ed130431b0a.js",
+      "/marketing-page-assets/_next/static/chunks/webpack-f20d1705fc682d72.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Walmart Global Tech",
+    "url": "https://careers.walmart.com/us/en/home/careers-areas/technology",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://i5.walmartimages.com/dfw/6019e67e-4d91/b4d18730-9880-4875-906b-0d9cb9d9c03b/v2/_next/static/chunks/main-f23a933feea9dc34.js",
+      "https://i5.walmartimages.com/dfw/6019e67e-4d91/b4d18730-9880-4875-906b-0d9cb9d9c03b/v2/_next/static/chunks/pages/_app-9edc24be502dfa1c.js",
+      "https://i5.walmartimages.com/dfw/6019e67e-4d91/b4d18730-9880-4875-906b-0d9cb9d9c03b/v2/_next/static/chunks/b857c259-b34b2045e6b00cb9.js",
+      "https://i5.walmartimages.com/dfw/6019e67e-4d91/b4d18730-9880-4875-906b-0d9cb9d9c03b/v2/_next/static/chunks/1074-023ca96731e8c075.js",
+      "https://i5.walmartimages.com/dfw/6019e67e-4d91/b4d18730-9880-4875-906b-0d9cb9d9c03b/v2/_next/static/chunks/3334-09214f5396fa65c2.js",
+      "https://i5.walmartimages.com/dfw/6019e67e-4d91/b4d18730-9880-4875-906b-0d9cb9d9c03b/v2/_next/static/chunks/pages/%5Bcountry%5D/%5Blang%5D/%5B%5B...page%5D%5D-937fa7e9015fc133.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Zerodha",
+    "url": "https://careers.zerodha.com/",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "ACKO",
+    "url": "https://www.acko.com/careers/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://acko-seo-prod-assets.ackoassets.com/next_assets/9ef2bcea3467b0a5bf616142be815e7e934d9a03/_next/static/chunks/app/careers/not-found-cfad0889a5c4ad90.js",
+      "https://acko-seo-prod-assets.ackoassets.com/next_assets/9ef2bcea3467b0a5bf616142be815e7e934d9a03/_next/static/chunks/app/layout-5550fea286d7e264.js",
+      "https://acko-seo-prod-assets.ackoassets.com/next_assets/9ef2bcea3467b0a5bf616142be815e7e934d9a03/_next/static/chunks/6405-2a3b9167d6087f90.js",
+      "https://acko-seo-prod-assets.ackoassets.com/next_assets/9ef2bcea3467b0a5bf616142be815e7e934d9a03/_next/static/chunks/app/careers/page-abcbaad81c8cab51.js",
+      "https://acko-seo-prod-assets.ackoassets.com/next_assets/9ef2bcea3467b0a5bf616142be815e7e934d9a03/_next/static/chunks/polyfills-42372ed130431b0a.js",
+      "https://acko-seo-prod-assets.ackoassets.com/next_assets/9ef2bcea3467b0a5bf616142be815e7e934d9a03/_next/static/chunks/webpack-da874cc21f9102ff.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "ADP",
+    "url": "https://jobs.adp.com/en/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "ASML",
+    "url": "https://www.asml.com/en/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://www.asml.com/_next/static/chunks/6d2b60a9-0294c11089f3edb5.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+      "https://www.asml.com/_next/static/chunks/149-824b71077dbc0c52.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+      "https://www.asml.com/_next/static/chunks/595-1cd1a0a2fd19de62.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+      "https://www.asml.com/_next/static/chunks/584-66188404b8c7973a.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+      "https://www.asml.com/_next/static/chunks/66-8ddc9ad892f945ca.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+      "https://www.asml.com/_next/static/chunks/pages/%5B%5B...path%5D%5D-2c9fa468e984f37b.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "AXA",
+    "url": "https://careers.axa.com/",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Ajio",
+    "url": "https://careers.ril.com/",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Angel One",
+    "url": "https://www.angelone.in/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://www.angelone.in/_next/static/chunks/1238-30e92df0d2be9573.js",
+      "https://www.angelone.in/_next/static/chunks/app/(zeocommission)/layout-6a5f0afb95732b4e.js",
+      "https://www.angelone.in/_next/static/chunks/109-761e4888fd83ee62.js",
+      "https://www.angelone.in/_next/static/chunks/app/(organic)/careers/page-d28bb6e02b99c9a3.js",
+      "https://www.angelone.in/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+      "https://www.angelone.in/_next/static/chunks/webpack-a56f44324b5f3c66.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Ansys",
+    "url": "https://careers.ansys.com/",
+    "status": 502,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Aon",
+    "url": "https://jobs.aon.com/",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Ather Energy",
+    "url": "https://careers.atherenergy.com/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "/_next/static/chunks/539-35d5f66e2f8f0248.js",
+      "/_next/static/chunks/583-8ed50f43085e3727.js",
+      "/_next/static/chunks/396-4b406eac894d3296.js",
+      "/_next/static/chunks/94-2f57771145d47f54.js",
+      "/_next/static/chunks/167-cd756b98ae9bd434.js",
+      "/_next/static/chunks/pages/index-a31e52d1344e0116.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Avaamo",
+    "url": "https://avaamo.ai/careers/",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Avalara",
+    "url": "https://careers.avalara.com/",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "BD",
+    "url": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "BNP Paribas",
+    "url": "https://group.bnpparibas/en/careers",
+    "status": 200,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "BP",
+    "url": "https://www.bp.com/en/global/corporate/careers.html",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Bain & Company",
+    "url": "https://www.bain.com/careers/",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "https://consent.trustarc.com/notice?domain=bain.com&c=teconsent&text=true>m=1&js=nj\u00aciceType=bb&language=en&cookieLink=https%3a%2f%2fwww.bain.com%2fabout%2fcookie-policy%2f&privacypolicylink=https%3a%2f%2fwww.bain.com%2fabout%2fprivacy%2f ",
+      "/Bundles/JS/v-639262850273995406.js"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Bayer",
+    "url": "https://www.bayer.com/en/career",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "Best Buy",
+    "url": "https://jobs.bestbuy.com/bby?id=career_area",
+    "status": 200,
+    "links": [],
+    "scripts": [
+      "x_nero_bb_career.google_tag_manager .jsdbx?c=10",
+      "/x_nero_bb_career.vimeo_player.js.jsdbx?c=3"
+    ],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  },
+  {
+    "company": "BigBasket",
+    "url": "https://www.bigbasket.com/careers/",
+    "status": 403,
+    "links": [],
+    "scripts": [],
+    "decision": "Unresolved: no verified complete employer feed from this page probe",
+    "links_are_unverified_candidates": true
+  }
+]
