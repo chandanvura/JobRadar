@@ -1,7 +1,7 @@
 """Paginate iCIMS employer iframes and read JSON-LD job details."""
 import asyncio
 import re
-from urllib.parse import urljoin, urlparse
+from urllib.parse import parse_qs, urljoin, urlparse
 
 from bs4 import BeautifulSoup
 class ICIMSCareerAdapter:
@@ -14,6 +14,7 @@ class ICIMSCareerAdapter:
         async with client(timeout=40) as x:
             urls = []
             total_jobs = 0
+            seen_ids = set()
             for pr in range(40):
                 url = f"https://{host}/jobs/search?in_iframe=1&pr={pr}"
                 response = await request(x, 'GET', url)
@@ -22,14 +23,21 @@ class ICIMSCareerAdapter:
                 
                 rows = soup.select('.iCIMS_JobsTable .row')
                 if not rows:
-                    break
+                    raise ValueError('iCIMS search is missing its public listing rows')
                 total_jobs += len(rows)
                 
                 for row in rows:
                     link = row.select_one('.title a, h3 a, a.iCIMS_Anchor')
                     if not link:
-                        continue
+                        raise ValueError('iCIMS public listing omitted a job link')
                     job_url = urljoin(url, link.get('href'))
+                    parsed = urlparse(job_url)
+                    match = re.match(r'/jobs/(\d+)/', parsed.path)
+                    if parsed.scheme != 'https' or parsed.hostname != host or not match:
+                        raise ValueError('iCIMS listing links to an unexpected employer source')
+                    if match[1] in seen_ids:
+                        raise ValueError('iCIMS pagination repeated a job identifier')
+                    seen_ids.add(match[1])
                     if 'in_iframe' not in job_url:
                         job_url += '&in_iframe=1' if '?' in job_url else '?in_iframe=1'
                     
@@ -41,8 +49,18 @@ class ICIMSCareerAdapter:
                     if likely_target(title_str, location_str):
                         urls.append((title_str, job_url))
                 
-                if len(rows) < 50:
+                # iCIMS page sizes vary. Only an explicit next-page control
+                # establishes whether another page exists.
+                next_link = next((a for a in soup.select('a[href]')
+                                  if 'invisible' not in a.get('class', []) and
+                                  (a.get('rel') == ['next'] or
+                                   re.search(r'\bnext\b', a.get('title', '') + ' ' +
+                                             a.get('aria-label', '') + ' ' + a.get_text(' ', strip=True), re.I))), None)
+                if not next_link:
                     break
+                next_url = urlparse(urljoin(url, next_link['href']))
+                if next_url.hostname != host or parse_qs(next_url.query).get('pr') != [str(pr + 1)]:
+                    raise ValueError('iCIMS next-page control has an unexpected offset or employer')
             else:
                 raise ValueError('iCIMS search exceeded the bounded scan')
             

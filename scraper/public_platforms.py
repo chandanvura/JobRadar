@@ -43,24 +43,41 @@ class PhenomCareerAdapter:
             page=await request(x,'GET',company.careers_url)
             page.raise_for_status()
             config=phenom_config(page.text,str(page.url),company.ats_identifier)
+            india_embedded=(urlparse(config['baseUrl']).hostname=='talent.lowes.com'
+                            and config['country']=='in' and config['refNum']=='LOWEUS')
             jobs=[]; offset=0; seen=set()
             while offset<2000:
                 payload={'ddoKey':'refineSearch','country':config['country'],'lang':'en',
                          'locale':config['locale'],'deviceType':'desktop','refNum':config['refNum'],
                          'from':offset,'size':50,'keywords':'','selected_fields':{'country':['India','IND','INDIA','IN']},
                          'all_fields':[],'jobs':True,'counts':True,'pageName':'search-results','siteType':'external'}
-                response=await request(x,'POST',config['widgetApiEndpoint'],json=payload)
-                response.raise_for_status()
-                result=response.json().get('refineSearch',{})
+                if india_embedded:
+                    response=await request(x,'GET',config['baseUrl'].rstrip('/')+'/search-results',
+                                           params={'from':offset,'s':1})
+                    response.raise_for_status()
+                    phenom_config(response.text,str(response.url),company.ats_identifier)
+                    result=script_json(response.text,r'\bphApp\.ddo\s*=\s*').get('eagerLoadRefineSearch',{})
+                else:
+                    response=await request(x,'POST',config['widgetApiEndpoint'],json=payload)
+                    response.raise_for_status()
+                    result=response.json().get('refineSearch',{})
                 batch=result.get('data',{}).get('jobs')
                 if result.get('status') not in (200,'success') or not isinstance(batch,list):
                     raise ValueError('Phenom public search returned an unexpected schema')
-                if not batch: break
+                total=result.get('totalHits')
+                if not isinstance(total,int) or total<0:
+                    raise ValueError('Phenom search is missing its total job count')
+                if not batch:
+                    if offset!=total: raise ValueError('Phenom search ended before its reported total')
+                    break
+                if india_embedded and any(item.get('country')!='India' for item in batch):
+                    raise ValueError('Phenom India page returned another country')
                 ids={str(item.get('jobSeqNo') or '') for item in batch}
                 if '' in ids or ids & seen:
                     raise ValueError('Phenom public search pagination repeated or omitted job identifiers')
                 seen.update(ids); jobs.extend(batch); offset+=len(batch)
-                if offset>=int(result.get('totalHits',offset)): break
+                if offset==total: break
+                if offset>total: raise ValueError('Phenom search exceeded its reported total')
             else:
                 raise ValueError('Phenom India search exceeded the bounded scan')
             semaphore=asyncio.Semaphore(6)

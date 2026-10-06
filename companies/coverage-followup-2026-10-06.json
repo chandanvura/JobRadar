@@ -1,0 +1,47 @@
+{
+  "baseline_commit": "7731460df7478fd50f3066a063392226b9f70f14",
+  "live_dashboard_limited_sources": 218,
+  "production_verified_reductions": 0,
+  "repairs": [
+    {
+      "company": "Infosys",
+      "provider": "infosys",
+      "listings": 1487,
+      "target_city_role_candidates": 515,
+      "coverage_warning": null,
+      "posting_date_policy": "createdOn is not treated as publication date",
+      "endpoint": "Read JobsUnAuthUrl from official environment.json; GET getCareerSearchJobs?sourceId=1,21&searchText=ALL"
+    },
+    {
+      "company": "Lowe's India",
+      "provider": "phenom",
+      "listings": 43,
+      "target_city_role_candidates": 9,
+      "coverage_warning": null,
+      "endpoint": "GET /in/en/search-results?from=OFFSET&s=1; parse phApp.ddo.eagerLoadRefineSearch",
+      "completeness_policy": "Fail on duplicate IDs, missing total, wrong country, premature empty page, or scan bound"
+    },
+    {
+      "company": "MSCI",
+      "provider": "icims",
+      "listings": 73,
+      "target_city_role_candidates": 0,
+      "fix": "Follow accessible Next control instead of assuming page size; reject repeated/missing IDs and malformed pages"
+    },
+    {
+      "company": "Atlassian",
+      "decision": "Unresolved; no registry change",
+      "reason": "APAC iCIMS search returned no usable listing rows"
+    },
+    {
+      "company": "Schneider Electric",
+      "decision": "Unresolved; no registry change",
+      "reason": "Current career host returned HTTP 403; ATS endpoint unverified"
+    },
+    {
+      "company": "Scaler",
+      "decision": "Unresolved; no registry change",
+      "reason": "Antigravity report says mapped, but registry remains custom; empty Ashby API alone does not verify active employer attribution"
+    }
+  ]
+}
