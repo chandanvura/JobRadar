@@ -63,8 +63,11 @@ async def cached_get(x,url,ttl_hours=30):
 def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
+def likely_role(title):
+    return bool(re.search(r"\b(engineer|developer|devops|devsecops|sre|sde|swe|sdet|qa|quality assurance|platform|cloud|infrastructure|operations|support|release|build|site reliability|security|cybersecurity|data|analytics|etl|graduate|trainee|associate|intern|internship|apprentice|co[ -]?op)\b",str(title),re.I))
+
 def likely_target(title, location):
-    return bool(re.search(r"\b(engineer|developer|devops|devsecops|sre|sde|swe|sdet|qa|quality assurance|platform|cloud|infrastructure|operations|support|release|build|site reliability|security|cybersecurity|data|analytics|etl|graduate|trainee|associate|intern|internship|apprentice|co[ -]?op)\b",str(title),re.I) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
+    return bool(likely_role(title) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
 
 def location_text(*values):
     """Flatten ATS primary and secondary locations without guessing a city."""
@@ -278,30 +281,63 @@ def workday_country_facets(nodes,country):
     return countries or ({"locations":locations} if locations else {})
 
 class WorkdayAdapter(JobSource):
+    def __init__(self, complete=False):
+        self.complete=complete
+
     async def fetch_jobs(self,c):
         origin,tenant,site=workday_config(c); api=f"{origin}/wday/cxs/{tenant}/{site}"
         async with client() as x:
-            postings=[]; offset=0; facets={}
+            postings=[]; offset=0; facets={}; expected=None; identifiers=set()
+            bound=2000 if self.complete else 1000
             country=c.ats_identifier.split("|")[2] if len(c.ats_identifier.split("|"))>2 else None
             if country:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":0,"searchText":""})
                 response.raise_for_status()
                 facets=workday_country_facets(response.json().get("facets",[]),country)
                 if not facets: raise ValueError("Workday does not expose the configured country locations")
-            while offset < 1000:
+            while offset < bound:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
+                if self.complete:
+                    total=page.get("total")
+                    if not isinstance(total,int) or isinstance(total,bool) or total<0 or total>bound:
+                        raise ValueError("Workday complete listing exceeds its bound or omits its total")
+                    if expected is None: expected=total
+                    paths=[item.get("externalPath","") for item in batch]
+                    if ((offset and total not in (0,expected)) or (not offset and total!=expected)
+                            or len(batch)!=min(20,max(0,expected-offset))
+                            or any(not path.startswith("/job/") for path in paths)
+                            or len(set(paths))!=len(paths) or identifiers.intersection(paths)):
+                        raise ValueError(f"Workday complete pagination changed, repeated or omitted records: offset={offset}, total={total}, expected={expected}, rows={len(batch)}, first_path={paths[0] if paths else None}")
+                    identifiers.update(paths)
                 postings.extend(batch)
                 if len(batch)<20: break
                 offset+=20
+            if self.complete:
+                if len(postings)!=expected:
+                    raise ValueError("Workday listing does not match its complete count")
+                # Workday returns total=0 on later pages to omit recounting.
+                # Verify the first page again after collecting the entire list.
+                check=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":0,"searchText":""})
+                check.raise_for_status(); snapshot=check.json()
+                if (snapshot.get("total")!=expected or [item.get("externalPath") for item in snapshot.get("jobPostings",[])]
+                        !=[item.get("externalPath") for item in postings[:20]]):
+                    raise ValueError("Workday complete listing changed during final verification")
             semaphore=asyncio.Semaphore(8)
             async def convert(item):
-                if not country and not likely_target(item.get("title",""),item.get("locationsText","")): return None
+                # Complete mode reads relevant titles even if listing locations hide
+                # secondary offices; actual detail fields alone establish the city.
+                relevant=likely_role(item.get("title","")) if self.complete else likely_target(item.get("title",""),item.get("locationsText",""))
+                if not country and not relevant: return None
                 path=item.get("externalPath")
                 if not path: return None
                 async with semaphore: detail_response=await cached_get(x,f"{api}{path}")
-                if detail_response.status_code != 200: return None
+                if detail_response.status_code in (404,410): return None
+                if self.complete: detail_response.raise_for_status()
+                elif detail_response.status_code != 200: return None
                 info=detail_response.json().get("jobPostingInfo",{})
+                if self.complete and (not info.get("jobDescription") or not info.get("title")):
+                    raise ValueError("Workday complete detail omitted its full description or title")
                 public_url=urljoin(origin,f"/{site}{path}")
                 posting=item.get("postedOn") or info.get("startDate")
                 location=location_text(info.get("location"),info.get("additionalLocations"),item.get("locationsText"))
@@ -631,4 +667,4 @@ from .mynexthire import MyNextHireCareerAdapter
 from .career_widgets import JuspayCareerAdapter, KulaCareerAdapter, BambooCareerAdapter, PyjamaCareerAdapter
 
 ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter(),"phenom":PhenomCareerAdapter(),"workable":WorkableCareerAdapter(),"eightfold":EightfoldCareerAdapter(),"talentbrew":TalentBrewCareerAdapter(),"mynexthire":MyNextHireCareerAdapter()}
-ADAPTERS.update(phb=PHBCareerAdapter(),eightfold_legacy=LegacyEightfoldCareerAdapter(),paylocity=PaylocityCareerAdapter(),avature=AvatureCareerAdapter(),juspay=JuspayCareerAdapter(),kula=KulaCareerAdapter(),bamboohr=BambooCareerAdapter(),pyjamahr=PyjamaCareerAdapter())
+ADAPTERS.update(workday_complete=WorkdayAdapter(complete=True),phb=PHBCareerAdapter(),eightfold_legacy=LegacyEightfoldCareerAdapter(),paylocity=PaylocityCareerAdapter(),avature=AvatureCareerAdapter(),juspay=JuspayCareerAdapter(),kula=KulaCareerAdapter(),bamboohr=BambooCareerAdapter(),pyjamahr=PyjamaCareerAdapter())

@@ -1,0 +1,76 @@
+{
+  "reviewed_at": "2026-10-06",
+  "verification": [
+    {
+      "name": "Maersk",
+      "url": "https://maersk.wd3.myworkdayjobs.com/Maersk_Careers",
+      "provider": "workday_complete",
+      "identifier": "maersk|Maersk_Careers",
+      "count": 1301,
+      "details": 353,
+      "candidates": 10,
+      "eligible": 0,
+      "error": null
+    },
+    {
+      "name": "Viatris",
+      "url": "https://viatris.wd5.myworkdayjobs.com/External",
+      "provider": "workday_complete",
+      "identifier": "viatris|External",
+      "count": 359,
+      "details": 35,
+      "candidates": 0,
+      "eligible": 0,
+      "error": null
+    },
+    {
+      "name": "Morningstar",
+      "url": "https://morningstar.wd5.myworkdayjobs.com/morningstar",
+      "provider": "workday_complete",
+      "identifier": "morningstar|morningstar|India",
+      "count": 45,
+      "details": 45,
+      "candidates": 0,
+      "eligible": 0,
+      "error": null
+    },
+    {
+      "name": "Otis",
+      "url": "https://otis.wd504.myworkdayjobs.com/REC_Ext_Gateway",
+      "provider": "workday_complete",
+      "identifier": "otis|REC_Ext_Gateway|India",
+      "count": 44,
+      "details": 44,
+      "candidates": 0,
+      "eligible": 0,
+      "error": null
+    }
+  ],
+  "method": "Opt-in bounded complete Workday mode; reported total up to 2000, exact expected page lengths, unique public paths, final first-page/count recheck, full descriptions and explicit detail locations. Later pages may publish total=0 as an omitted recount. Country filters only use published employer facets.",
+  "attribution": [
+    {
+      "company": "Morningstar",
+      "official_page": "https://www.morningstar.com/company/careers",
+      "public_link": "https://morningstar.wd5.myworkdayjobs.com/morningstar?locationCountry=c4f78be1a8f14da0ab49ce1162348a5e"
+    },
+    {
+      "company": "Otis",
+      "official_page": "https://www.otis.com/en/in/careers",
+      "public_link": "https://otis.wd504.myworkdayjobs.com/REC_Ext_Gateway",
+      "note": "Current official link changed shard to wd504; indexed older wd5 returned 422."
+    },
+    {
+      "company": "Viatris",
+      "official_page": "https://www.viatris.in/en-in/careers",
+      "public_link": "https://viatris.wd5.myworkdayjobs.com/External",
+      "note": "Current complete global board has 359 jobs and no published India country facet; no India vacancies inferred."
+    },
+    {
+      "company": "Maersk",
+      "official_page": "https://www.maersk.com/careers/vacancies/wd/Senior-Software-Engineer---Workday_R135740/jt-senior-software-engineer-workday",
+      "public_link": "https://maersk.wd3.myworkdayjobs.com/en-US/Maersk_Careers/job/Software-Engineer_R193468",
+      "note": "Global 1301-job board exceeds legacy 1000 cap; complete mode reads all global pages and relevant details including hidden secondary locations."
+    }
+  ],
+  "production_confirmation": "Required; local successes do not clear coverage warnings."
+}
