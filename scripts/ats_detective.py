@@ -81,6 +81,19 @@ async def run(manifest, output):
                     # Existing parser supplies evidence-based leads only.
                     case['ats_lead'] = discover_ats(soup, str(page.url))
                     case['status'] = 'DISCOVERED_UNVERIFIED'
+                    # Follow actual published navigation, never fabricated paths.
+                    followed = {str(page.url), company.careers_url}
+                    for url in [u for u in links if u not in followed and not urlsplit(u).fragment][:2]:
+                        linked = await client.get(url)
+                        record = dict(url=str(linked.url), linked_from=str(page.url), http_status=linked.status_code,
+                                      content_type=linked.headers.get('content-type'),
+                                      sha256=hashlib.sha256(linked.content).hexdigest())
+                        case['pages'].append(record)
+                        if linked.status_code == 200 and 'html' in linked.headers.get('content-type', ''):
+                            linked_soup, linked_links, linked_scripts = public_links(linked.text, str(linked.url))
+                            record.update(title=linked_soup.title.get_text(' ', strip=True) if linked_soup.title else None,
+                                          links=linked_links, scripts=linked_scripts,
+                                          ats_lead=discover_ats(linked_soup, str(linked.url)))
                     for url in [u for u in scripts if any(t in u.lower() for t in ('career', 'jobs'))][:2]:
                         asset = await client.get(url)
                         case['pages'].append(dict(url=str(asset.url), http_status=asset.status_code,
@@ -110,6 +123,7 @@ async def run(manifest, output):
                     except TimeoutError:
                         case['blocker'] = 'Bounded full-snapshot probe timed out; remains unresolved'
                 print(json.dumps(dict(company=name, status=case['status'], blocker=case.get('blocker'))), flush=True)
+                (output / ('case-' + hashlib.sha256(name.encode()).hexdigest()[:12] + '.json')).write_text(json.dumps(case, indent=2))
                 return case
         cases = await asyncio.gather(*(investigate(name) for name in names))
         response = await client.get(ORIGIN + '/api/dashboard'); response.raise_for_status()

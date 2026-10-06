@@ -5,6 +5,7 @@ from datetime import datetime
 from urllib.parse import parse_qs, urlencode, urljoin, urlparse
 from bs4 import BeautifulSoup
 from .snapshot import SnapshotChanged
+from .models import JobBatch
 
 
 def listing_page(text, base, host):
@@ -73,6 +74,7 @@ class AvatureCareerAdapter:
         async with client(timeout=40) as x:
             response = await request(x, 'GET', company.careers_url); response.raise_for_status()
             found, start, end, total, next_url = listing_page(response.text, str(response.url), host)
+            first_ids = list(found)
             if start != 1: raise ValueError('Avature complete scan must begin at page one')
             if len(found) < total:
                 if not next_url: raise ValueError('Avature public listing omitted its next page')
@@ -97,11 +99,18 @@ class AvatureCareerAdapter:
                     if found.keys() & batch.keys(): raise ValueError('Avature pagination repeated a public job')
                     found.update(batch)
             if len(found) != total: raise ValueError('Avature listing did not match its complete result count')
+            check = await request(x, 'GET', company.careers_url); check.raise_for_status()
+            first, start, last, checked_total, more = listing_page(check.text, str(check.url), host)
+            if checked_total != total or list(first) != first_ids:
+                raise SnapshotChanged('Avature public listing changed during final verification')
             semaphore = asyncio.Semaphore(5)
+            missing = []
             async def convert(identifier, item):
                 if not likely_target(item['title'], item['location']): return None
                 async with semaphore: result = await cached_get(x, item['url'])
-                if result.status_code in (404, 410): return None
+                if result.status_code in (404, 410):
+                    missing.append(identifier)
+                    return None
                 result.raise_for_status(); soup = BeautifulSoup(result.text, 'html.parser')
                 ld = list(jsonld_objects(soup)); detail = ld[0] if ld else {}
                 description = clean(detail.get('description')) or detail_section(soup)
@@ -125,4 +134,5 @@ class AvatureCareerAdapter:
                 return make_job(identifier, detail.get('title') or item['title'], company.name, location, description,
                                 'avature', 'company_career', item['url'], item['url'], company.careers_url, posting=posting)
             jobs = await asyncio.gather(*(convert(identifier, item) for identifier, item in found.items()))
-        return [job for job in jobs if job], total
+        warning = f'Limited coverage: {len(missing)} relevant Avature details disappeared during collection' if missing else None
+        return JobBatch([job for job in jobs if job], warning), total

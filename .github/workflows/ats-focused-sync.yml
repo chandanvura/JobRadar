@@ -1,0 +1,55 @@
+name: ATS Detective focused production verification
+on:
+  push:
+    branches: [main]
+    paths: [companies/ats-detective-repairs-01.json]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: jobradar-free-tier-scan
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: bash scripts/verify-harness.sh python
+      - name: Select only explicitly reviewed adapter repairs
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from scripts.ats_detective import validate_names
+          from scraper.main import load_companies
+          names = json.loads(Path('companies/ats-detective-repairs-01.json').read_text())['companies']
+          validate_names(names, {c.name: c for c in load_companies() if c.enabled})
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write('JOBRADAR_REPAIR_COMPANIES=' + json.dumps(names) + '\n')
+          PY
+      - name: Save actual production baseline
+        run: python -m scripts.coverage_snapshot --output artifacts/focused-before.json
+      - name: Collect, publish and verify only the selected employers
+        run: python -m scripts.sync_company_registry
+        env:
+          JOBRADAR_VERIFY_SOURCE_UPDATES: 'true'
+          JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}
+          JOBRADAR_DOMAIN_CONCURRENCY: '1'
+          JOBRADAR_WORKDAY_LISTING_CONCURRENCY: '1'
+          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: '1'
+      - name: Save actual after counts even when a source stays unresolved
+        if: always()
+        run: python -m scripts.coverage_snapshot --output artifacts/focused-after.json
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ats-focused-production-verification
+          path: artifacts/focused-*.json
+          retention-days: 7
+          if-no-files-found: warn

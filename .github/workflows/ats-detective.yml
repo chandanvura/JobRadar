@@ -2,6 +2,7 @@ name: ATS Detective batch 01
 on:
   push:
     branches: [ats-detective/batch-01]
+    paths: [scripts/ats_detective.py, companies/ats-detective-batch-01.json]
   workflow_dispatch:
 permissions:
   contents: read
