@@ -1,0 +1,38 @@
+{
+  "reviewed_at": "2026-10-06",
+  "company": "CloudBees",
+  "official_source": "https://www.cloudbees.com/careers",
+  "published_feed": "https://recruiting.paylocity.com/recruiting/v2/api/feed/jobs/982bc369-6352-4fa4-942d-7c76bfca29b4",
+  "published_list_url": "https://recruiting.paylocity.com/recruiting/jobs/All/a432d829-f701-4cf3-9108-56ef703b2ac5/Cloud-Bees-Inc",
+  "verification": {
+    "official_page_embeds_feed": true,
+    "feed_and_public_board_identifiers_match": true,
+    "public_openings": 36,
+    "target_city_candidates": 0,
+    "full_description_and_requirements_verified_for_job_id": "4275275",
+    "date_field": "PublishedDate; createdUtc ignored"
+  },
+  "unresolved_probes": [
+    {
+      "companies": [
+        "Darwinbox",
+        "Upstox",
+        "Moneyview"
+      ],
+      "reason": "Public pages return employer metadata only, no job list. Not mapped."
+    },
+    {
+      "companies": [
+        "HSBC",
+        "Millennium"
+      ],
+      "reason": "Legacy Eightfold frontend lacks existing PCSX public configuration. No unverified private endpoint substituted."
+    },
+    {
+      "companies": [
+        "Lululemon"
+      ],
+      "reason": "Public board has capped 999+ global count and no published India country option. Not mapped."
+    }
+  ]
+}
