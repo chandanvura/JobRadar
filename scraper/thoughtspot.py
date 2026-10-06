@@ -21,13 +21,24 @@ def listing_records(payload):
     found = {}
     for row in rows:
         identifier = row.get('id'); url = urlsplit(row.get('url', ''))
-        if (not isinstance(identifier, str) or not identifier or identifier in found
+        if (not isinstance(identifier, str) or not identifier
                 or not row.get('name') or not isinstance(row.get('locations'), list)
                 or url.scheme != 'https' or url.hostname != 'ats.rippling.com'
                 or url.path != f'/thoughtspot/jobs/{identifier}' or url.query or url.fragment
                 or url.username or url.password):
             raise ValueError('ThoughtSpot listing has duplicate IDs, incomplete fields or an unrelated board')
-        found[identifier] = row
+        if identifier in found:
+            previous = found[identifier]
+            if ({k: v for k, v in previous.items() if k != 'locations'} !=
+                    {k: v for k, v in row.items() if k != 'locations'}):
+                raise ValueError('ThoughtSpot repeated ID has conflicting job identity')
+            # The official component expands multi-location jobs into rows.
+            # Preserve every location/workplace variant; details must reconcile
+            # the union of real location names before this counts as complete.
+            found[identifier] = dict(previous, locations=previous['locations'] +
+                                     [v for v in row['locations'] if v not in previous['locations']])
+        else:
+            found[identifier] = dict(row, locations=list(row['locations']))
     return found
 
 
@@ -44,7 +55,7 @@ def detail_record(text, row):
             or job.get('url') != row['url'] or job.get('unlistedFromSearch') is not False):
         raise ValueError('Rippling detail identity differs from the official current listing')
     locations = [v.get('name') for v in row['locations']]
-    if job.get('workLocations') != locations:
+    if set(job.get('workLocations') or []) != set(locations):
         raise SnapshotChanged('ThoughtSpot location changed between listing and detail')
     description = job.get('description')
     if not isinstance(description, dict) or not description.get('role'):

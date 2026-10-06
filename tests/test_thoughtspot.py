@@ -25,7 +25,7 @@ def html(api):
 @pytest.mark.parametrize('mutation', ['duplicate', 'host', 'path', 'missing_name', 'missing_locations', 'cap'])
 def test_listing_rejects_incomplete_or_unrelated_boards(mutation):
     row=copy.deepcopy(ROW);rows=[row]
-    if mutation=='duplicate': rows.append(row)
+    if mutation=='duplicate': rows.append(dict(row, name='Different Engineer'))
     elif mutation=='host':row['url']='https://example.com/thoughtspot/jobs/one'
     elif mutation=='path':row['url']='https://ats.rippling.com/other/jobs/one'
     elif mutation=='missing_name':row['name']=''
@@ -63,3 +63,13 @@ def test_complete_array_all_details_and_final_snapshot(monkeypatch,changed):
         assert 'Bengaluru' in jobs[0].location and 'Hyderabad' in jobs[0].location
         assert '0 to 2 years' in jobs[0].description
         assert calls==[LISTING,ROW['url'],LISTING]
+
+
+def test_location_variants_merge_only_identical_job_identity():
+    other = dict(ROW, locations=[{'name': 'London, United Kingdom'}])
+    records = listing_records({'data': [ROW, other]})
+    assert len(records) == 1
+    assert [v['name'] for v in records['one']['locations']] == ['Bengaluru, India', 'Hyderabad, India', 'London, United Kingdom']
+    api = detail(records['one'])
+    api['jobPost']['workLocations'].reverse()
+    assert detail_record(html(api), records['one'])['uuid'] == 'one'
