@@ -7,7 +7,7 @@ import asyncio, html, json, os, re, time
 import httpx
 from bs4 import BeautifulSoup
 from defusedxml import ElementTree as ET
-from .models import Company, Job
+from .models import Company, Job, JobBatch
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
 CACHE_ROOT=Path(os.getenv("JOBRADAR_HTTP_CACHE",".cache/jobradar-http"))
@@ -653,6 +653,12 @@ class CustomCareerAdapter(JobSource):
         unique={}
         for job in jobs: unique[job.external_job_id]=job
         jobs=list(unique.values())
+        reported=soup.select_one('#js-job-search-results[data-results]')
+        if reported:
+            total=reported.get('data-results','')
+            if not total.isdigit() or len(jobs)!=int(total):
+                warning=f"Limited coverage: public board reports {total} jobs; generic collector read {len(jobs)} structured details"
+                return JobBatch(jobs,coverage_warning=warning),len(jobs)
         return jobs,len(jobs)
 
 from .public_platforms import PhenomCareerAdapter, WorkableCareerAdapter

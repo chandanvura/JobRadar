@@ -97,3 +97,15 @@ def test_employer_jsonld_with_literal_description_newlines():
     items=list(jsonld_objects(BeautifulSoup(markup,'html.parser')))
     assert len(items)==1 and items[0]['description']=='Build services\n0-2 years'
     assert items[0]['datePosted']=='2026-10-05'
+
+
+def test_generic_collector_keeps_warning_for_partial_public_board(monkeypatch):
+    item={'@type':'JobPosting','title':'Software Engineer','identifier':'REQ-1','description':'Full Java requirements','jobLocation':{'address':{'addressLocality':'Bengaluru'}}}
+    async def request(client,method,url,**kwargs):
+        markup='<div id="js-job-search-results" data-results="2023"></div><script type="application/ld+json">'+json.dumps(item)+'</script>'
+        return httpx.Response(200,text=markup,request=httpx.Request(method,url))
+    monkeypatch.setattr(adapters,'request',request)
+    jobs,count=asyncio.run(adapters.CustomCareerAdapter().fetch_jobs(Company('Employer','https://employer.test/careers','custom','employer')))
+    assert count==1 and jobs[0].description=='Full Java requirements'
+    assert jobs.coverage_warning.startswith('Limited coverage:')
+    assert '2023' in jobs.coverage_warning and '1 structured details' in jobs.coverage_warning

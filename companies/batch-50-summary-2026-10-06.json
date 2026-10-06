@@ -1,0 +1,22 @@
+{
+  "reviewed_at": "2026-10-06",
+  "companies_reviewed": 220,
+  "batch_sizes": [
+    50,
+    50,
+    50,
+    50,
+    20
+  ],
+  "outcomes": {
+    "failed": 71,
+    "limited": 146,
+    "partial_coverage": 1,
+    "regional_board_only": 1,
+    "policy_blocked_not_retried": 1
+  },
+  "production_verified_reductions": 0,
+  "coverage_warnings_last_confirmed": 220,
+  "regression_tests_passed": 180,
+  "interpretation": "Limited means no complete structured source returned. Failed requests do not establish permanent unavailability. One previously policy-blocked host was not retried. Partial and regional boards do not count as complete repairs."
+}
