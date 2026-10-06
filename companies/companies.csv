@@ -24,7 +24,7 @@ SPAN,https://www.span.io/careers,ashby,span,3,true
 Cardboard,https://www.cardboard.ai/careers,ashby,cardboard,3,true
 Ambient.ai,https://ambient.ai/careers,ashby,ambient.ai,3,true
 Ema,https://www.ema.co/careers,ashby,ema,4,true
-Airbus,https://ag.wd3.myworkdayjobs.com/Airbus,workday,ag|Airbus,4,true
+Airbus,https://ag.wd3.myworkdayjobs.com/Airbus?locationCountry=c4f78be1a8f14da0ab49ce1162348a5e,workday_complete,ag|Airbus|India,4,true
 Intel,https://intel.wd1.myworkdayjobs.com/External,workday,intel|External,5,true
 Lloyds Technology Centre,https://lbg.wd3.myworkdayjobs.com/Lloyds_Technology_Centre,workday,lbg|Lloyds_Technology_Centre,4,true
 Visa,https://visa.wd5.myworkdayjobs.com/Visa,workday,visa|Visa,5,true
@@ -398,7 +398,7 @@ Skyroot Aerospace,https://skyroot.in/careers.html,custom,skyroot-aerospace-india
 Dhruva Space,https://www.dhruvaspace.com/careers,custom,dhruva-space-india,4,true
 Ather Energy,https://www.atherenergy.com/careers,custom,ather-energy-india,4,true
 Porter,https://porter.in/careers,custom,porter-india,4,true
-Lenovo,https://jobs.lenovo.com/en_US/careers/SearchJobs/,avature,jobs.lenovo.com,4,true
+Lenovo,https://jobs.lenovo.com/en_US/careers/SearchJobs/?13036=12016672,avature,jobs.lenovo.com,4,true
 ASUS,https://www.asus.com/about-asus/careers/,custom,asus-india,3,true
 Acer,https://www.acer.com/corporate/en/careers,custom,acer-india,3,true
 Fujitsu,https://www.fujitsu.com/global/about/careers/,custom,fujitsu-india,4,true

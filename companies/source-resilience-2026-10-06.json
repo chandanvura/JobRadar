@@ -1,0 +1,29 @@
+{
+  "baseline_commit": "a04853d04941323fe3429ee678e7ddea8e2a5d83",
+  "limited_sources_before": 213,
+  "scope": ["Airbus", "Lenovo", "Maersk"],
+  "verified_repairs": {
+    "Airbus": {
+      "provider": "workday_complete",
+      "identifier": "ag|Airbus|India",
+      "country_facet": {"locationCountry": ["c4f78be1a8f14da0ab49ce1162348a5e"]},
+      "live_listings": 199,
+      "note": "Exact India descriptor from employer Workday facets; complete bounded pagination and first-page verification passed. Records are subsequently subject to ordinary target-role, city, date and experience filters."
+    },
+    "Lenovo": {
+      "provider": "avature",
+      "url": "https://jobs.lenovo.com/en_US/careers/SearchJobs/?13036=12016672",
+      "filter_api": "https://jobs.lenovo.com/en_US/careers/_wizardPortalDatasetSingleColumnOptionsSearchApi",
+      "published_option": {"id": 12016672, "name": "India"},
+      "live_listings": 65,
+      "target_title_city_records": 25,
+      "note": "Payload taken from official HTML wizard registrar metadata and its public JS. Exact India filter retained in employer-generated next-page links; all advertised offsets collected. This avoids globally capped counts without relaxing completeness checks."
+    }
+  },
+  "unresolved": {
+    "Maersk": "Previously inconsistent offset 60 returned valid records during this audit. No explicit country facet exists. Leave full-board pagination and missing-path safeguards intact; a valid probe is not proof of a complete repaired feed."
+  },
+  "transport_fix": "Up to three attempts for GET/HEAD and employer Workday listing POSTs on transient HTTP 5xx or network timeouts; exponential 0.5/1.0 second backoff outside provider concurrency slot. No replay of mutation POSTs or 403/429 responses.",
+  "integrity_fix": "Complete Workday collection retains a Limited coverage warning if a relevant detail returns 404/410.",
+  "scheduling": "Four-hour scheduled scans with a five-hour recovery threshold are intentional free-tier safeguards; frequency unchanged."
+}

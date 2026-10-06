@@ -58,3 +58,14 @@ def test_complete_workday_final_recheck_detects_changed_first_page(monkeypatch):
     monkeypatch.setattr(adapters,'request',request)
     with pytest.raises(ValueError,match='final verification'):
         asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
+
+
+def test_complete_workday_removed_relevant_detail_keeps_coverage_warning(monkeypatch):
+    async def request(client,method,url,**kwargs):
+        return httpx.Response(200,request=httpx.Request(method,url),json={'total':1,'jobPostings':[{'externalPath':'/job/X/R1','title':'Software Engineer','locationsText':'Bengaluru'}]})
+    async def detail(client,url):
+        return httpx.Response(410,request=httpx.Request('GET',url))
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
+    assert count==1 and len(jobs)==0
+    assert 'Limited coverage' in jobs.coverage_warning
