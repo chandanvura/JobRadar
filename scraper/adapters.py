@@ -38,8 +38,23 @@ def domain_limiter(url):
     return _DOMAIN_LIMITERS[key]
 
 async def request(x,method,url,**kwargs):
-    async with domain_limiter(url):
-        return await x.request(method,url,**kwargs)
+    # Only read operations may be replayed: Workday's search is a POST.
+    parsed=urlparse(url)
+    replayable=method.upper() in {"GET","HEAD"} or (
+        method.upper()=="POST" and (parsed.hostname or "").endswith(".myworkdayjobs.com")
+        and parsed.path.startswith("/wday/cxs/") and parsed.path.endswith("/jobs"))
+    for attempt in range(3 if replayable else 1):
+        try:
+            async with domain_limiter(url):
+                response=await x.request(method,url,**kwargs)
+        except (httpx.TimeoutException,httpx.NetworkError):
+            if not replayable or attempt==2: raise
+        else:
+            if response.status_code not in {500,502,503,504,520,521,522,523,524} or not replayable or attempt==2:
+                return response
+            await response.aclose()
+        # Release the provider semaphore while backing off; never retry 403/429.
+        await asyncio.sleep(0.5 * 2**attempt)
 
 def _cache_path(url): return CACHE_ROOT/(sha256(url.encode()).hexdigest()+".json")
 
@@ -323,7 +338,7 @@ class WorkdayAdapter(JobSource):
                 if (snapshot.get("total")!=expected or [item.get("externalPath") for item in snapshot.get("jobPostings",[])]
                         !=[item.get("externalPath") for item in postings[:20]]):
                     raise ValueError("Workday complete listing changed during final verification")
-            semaphore=asyncio.Semaphore(8)
+            semaphore=asyncio.Semaphore(8); missing=[]
             async def convert(item):
                 # Complete mode reads relevant titles even if listing locations hide
                 # secondary offices; actual detail fields alone establish the city.
@@ -332,7 +347,9 @@ class WorkdayAdapter(JobSource):
                 path=item.get("externalPath")
                 if not path: return None
                 async with semaphore: detail_response=await cached_get(x,f"{api}{path}")
-                if detail_response.status_code in (404,410): return None
+                if detail_response.status_code in (404,410):
+                    if self.complete: missing.append(path)
+                    return None
                 if self.complete: detail_response.raise_for_status()
                 elif detail_response.status_code != 200: return None
                 info=detail_response.json().get("jobPostingInfo",{})
@@ -344,6 +361,9 @@ class WorkdayAdapter(JobSource):
                 return make_job(str(info.get("jobReqId") or info.get("jobPostingId") or path),info.get("title") or item.get("title",""),c.name,location,clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting)
             converted=await asyncio.gather(*(convert(item) for item in postings))
             jobs=[job for job in converted if job]
+        if self.complete:
+            warning=f"Limited coverage: {len(missing)} relevant Workday details disappeared during collection" if missing else None
+            return JobBatch(jobs,warning),len(postings)
         return jobs,len(postings)
 
 def jobvite_config(c):
