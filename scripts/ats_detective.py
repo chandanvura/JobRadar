@@ -40,7 +40,7 @@ def counts(catalog):
 def public_links(text, base):
     soup = BeautifulSoup(text, 'html.parser')
     links, scripts = [], []
-    for node in soup.select('a[href],iframe[src],script[src],link[href]'):
+    for node in soup.select('a[href],iframe[src],script[src],link[rel="alternate"][href],link[rel="sitemap"][href]'):
         raw = node.get('href') or node.get('src')
         url = urljoin(base, raw)
         parsed = urlsplit(url)
@@ -49,7 +49,7 @@ def public_links(text, base):
         # Publish URLs only, never inline configuration, keys or JS snippets.
         if node.name == 'script':
             scripts.append(url)
-        elif any(term in url.lower() for term in ('career', 'jobs', 'greenhouse', 'lever.co', 'ashby', 'workday', 'sitemap', '.xml')):
+        elif not parsed.path.lower().endswith(('.png', '.jpg', '.jpeg', '.svg', '.woff', '.woff2', '.css', '.ico')) and any(term in url.lower() for term in ('career', 'jobs', 'greenhouse', 'lever.co', 'ashby', 'workday', 'sitemap', '.xml')):
             links.append(url)
     return soup, list(dict.fromkeys(links))[:80], list(dict.fromkeys(scripts))[:30]
 
@@ -70,11 +70,18 @@ async def run(manifest, output):
                         ownership='Requires manual current first-party link-chain review', pages=[])
             async with semaphore:
                 try:
-                    page = await client.get(company.careers_url)
+                    # A broken existing mapping is not the employer website.
+                    start_url = 'https://www.hubspot.com/careers/jobs' if name == 'HubSpot' else company.careers_url
+                    page = await client.get(start_url)
                     item = dict(url=str(page.url), http_status=page.status_code, content_type=page.headers.get('content-type'),
                                 sha256=hashlib.sha256(page.content).hexdigest())
                     case['pages'].append(item)
                     page.raise_for_status()
+                    if page.status_code != 200 or any(marker in page.text.lower() for marker in ('token.awswaf.com', 'cf-chl-', '<title>just a moment')):
+                        case['status'] = 'BLOCKED_PUBLIC_ACCESS'
+                        case['blocker'] = 'Public page returned a challenge or non-listing response'
+                        (output / ('case-' + hashlib.sha256(name.encode()).hexdigest()[:12] + '.json')).write_text(json.dumps(case, indent=2))
+                        return case
                     soup, links, scripts = public_links(page.text, str(page.url))
                     item.update(title=soup.title.get_text(' ', strip=True) if soup.title else None,
                                 links=links, scripts=scripts, jsonld_blocks=len(soup.select('script[type="application/ld+json"]')))
@@ -83,7 +90,9 @@ async def run(manifest, output):
                     case['status'] = 'DISCOVERED_UNVERIFIED'
                     # Follow actual published navigation, never fabricated paths.
                     followed = {str(page.url), company.careers_url}
-                    for url in [u for u in links if u not in followed and not urlsplit(u).fragment][:2]:
+                    candidates = [u for u in links if u not in followed and not urlsplit(u).fragment]
+                    candidates.sort(key=lambda u: 0 if any(t in urlsplit(u).path.lower() for t in ('jobs', 'join-us', 'open-positions', 'opportunities')) else 1)
+                    for url in candidates[:2]:
                         linked = await client.get(url)
                         record = dict(url=str(linked.url), linked_from=str(page.url), http_status=linked.status_code,
                                       content_type=linked.headers.get('content-type'),

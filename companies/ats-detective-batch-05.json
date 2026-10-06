@@ -1,0 +1,22 @@
+{
+  "batch": "ats-detective-05",
+  "max_companies": 50,
+  "companies": [
+    "Vimeo",
+    "Vodafone",
+    "Walmart Global Tech",
+    "Wayfair",
+    "WebEngage",
+    "WTW",
+    "xPay",
+    "Yellow.ai",
+    "Yubi",
+    "Yulu",
+    "Zepto",
+    "Zerodha",
+    "Zetwerk",
+    "Zoho",
+    "Zomato",
+    "Zoom"
+  ]
+}

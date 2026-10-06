@@ -1,0 +1,43 @@
+name: ATS Detective remaining attached cases
+on:
+  push:
+    branches: [ats-detective/remaining]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: bash scripts/verify-harness.sh python
+  investigate:
+    needs: validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        batch: ['02', '03', '04', '05']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Read-only public HTTP investigation with no D1 writes
+        run: python -m scripts.ats_detective --manifest companies/ats-detective-batch-${{ matrix.batch }}.json --output artifacts/ats-detective-${{ matrix.batch }}
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ats-detective-${{ matrix.batch }}
+          path: artifacts/ats-detective-${{ matrix.batch }}
+          if-no-files-found: warn
+          retention-days: 7
