@@ -231,7 +231,7 @@ Happiest Minds,https://www.happiestminds.com/careers/,custom,happiestminds,4,tru
 UST,https://www.ust.com/en/careers,custom,ust,4,true
 CGI,https://www.cgi.com/en/careers-search,custom,cgi,4,true
 Capgemini,https://careers.capgemini.com/,xml,https://careers.capgemini.com/googlefeed.xml,5,true
-Infosys,https://career.infosys.com/joblist,custom,infosys,5,true
+Infosys,https://career.infosys.com/joblist,infosys,infosys-india,5,true
 TCS,https://www.tcs.com/careers/india,custom,tcs,5,true
 Wipro,https://careers.wipro.com/,xml,https://careers.wipro.com/googlefeed.xml,5,true
 Tech Mahindra,https://careers.techmahindra.com/,custom,techmahindra,4,true
@@ -373,7 +373,7 @@ Thermo Fisher Scientific,https://jobs.thermofisher.com/global/en/,phenom,TFSCGLO
 IQVIA,https://jobs.iqvia.com/en,custom,iqvia-india,4,true
 Parexel,https://jobs.parexel.com/en/location/india-jobs/877/1269750/2,talentbrew,877,4,true
 Syneos Health,https://www.syneoshealth.com/careers,custom,syneos-health-india,4,true
-Lowe's India,https://talent.lowes.com/in/en,custom,lowes-india,4,true
+Lowe's India,https://talent.lowes.com/in/en,phenom,LOWEUS,4,true
 Tesco Bengaluru,https://www.tescobengaluru.com/careers/,custom,tesco-bengaluru,4,true
 IKEA,https://jobs.ikea.com/en/location/jobs/22908/1269750/2,talentbrew,22908,3,true
 Best Buy,https://jobs.bestbuy.com/bby?id=career_area,custom,best-buy-india,4,true

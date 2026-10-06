@@ -669,9 +669,11 @@ from .avature import AvatureCareerAdapter
 from .paylocity import PaylocityCareerAdapter
 from .phb import PHBCareerAdapter
 from .icims import ICIMSCareerAdapter
+from .infosys import InfosysCareerAdapter
 
 from .mynexthire import MyNextHireCareerAdapter
 from .career_widgets import JuspayCareerAdapter, KulaCareerAdapter, BambooCareerAdapter, PyjamaCareerAdapter
 
 ADAPTERS={"greenhouse":GreenhouseAdapter(),"lever":LeverAdapter(),"ashby":AshbyAdapter(),"smartrecruiters":SmartRecruitersAdapter(),"workday":WorkdayAdapter(),"jobvite":JobviteAdapter(),"custom":CustomCareerAdapter(),"xml":PublicXMLAdapter(),"oracle":OracleCareerAdapter(),"amazon":AmazonCareerAdapter(),"phenom":PhenomCareerAdapter(),"workable":WorkableCareerAdapter(),"eightfold":EightfoldCareerAdapter(),"talentbrew":TalentBrewCareerAdapter(),"mynexthire":MyNextHireCareerAdapter()}
 ADAPTERS.update(workday_complete=WorkdayAdapter(complete=True),phb=PHBCareerAdapter(),eightfold_legacy=LegacyEightfoldCareerAdapter(),paylocity=PaylocityCareerAdapter(),avature=AvatureCareerAdapter(),juspay=JuspayCareerAdapter(),kula=KulaCareerAdapter(),bamboohr=BambooCareerAdapter(),pyjamahr=PyjamaCareerAdapter(),icims=ICIMSCareerAdapter())
+ADAPTERS['infosys'] = InfosysCareerAdapter()
