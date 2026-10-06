@@ -525,7 +525,7 @@ Atlan,https://jobs.ashbyhq.com/atlan,ashby,atlan,5,true
 Eightfold AI,https://app.eightfold.ai/careers?domain=volkscience.com,eightfold,app.eightfold.ai|volkscience.com,5,true
 Highspot,https://www.highspot.com/careers/,custom,highspot-india,4,true
 Netskope,https://www.netskope.com/company/careers/open-positions,greenhouse,netskope,5,true
-ThoughtSpot,https://www.thoughtspot.com/careers,custom,thoughtspot-india,5,true
+ThoughtSpot,https://www.thoughtspot.com/careers,thoughtspot,https://www.thoughtspot.com/api/getCareersListing,5,true
 Amagi,https://amagi.mynexthire.com/employer/jobs/careers,mynexthire,amagi,4,true
 Uniphore,https://uniphore.wd503.myworkdayjobs.com/Uniphore,workday,uniphore|Uniphore,4,true
 Druva,https://www.druva.com/about/careers,greenhouse,druva,5,true
