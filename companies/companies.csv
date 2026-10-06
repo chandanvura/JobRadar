@@ -116,7 +116,7 @@ Deloitte,https://southasiacareers.deloitte.com/,custom,deloitte,4,true
 EY,https://careers.ey.com/,xml,https://careers.ey.com/googlefeed.xml,4,true
 PwC,https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers,workday,pwc|Global_Experienced_Careers,4,true
 JPMorgan Chase,https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001,oracle,jpmc.fa.oraclecloud.com|CX_1001,4,true
-Goldman Sachs,https://higher.gs.com/,custom,goldmansachs,4,true
+Goldman Sachs,https://hdpc.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/LateralHiring/jobs,oracle,hdpc.fa.us2.oraclecloud.com|LateralHiring,4,true
 Target,https://target.wd5.myworkdayjobs.com/targetcareers,workday,target|targetcareers,4,true
 Walmart Global Tech,https://careers.walmart.com/technology,custom,walmart,5,true
 Flipkart,https://www.flipkartcareers.com/#!/joblist,custom,flipkart,5,true
@@ -173,7 +173,7 @@ Airbnb,https://job-boards.greenhouse.io/airbnb,greenhouse,airbnb,4,true
 Meesho,https://jobs.lever.co/meesho,lever,meesho,5,true
 BrowserStack,https://www.browserstack.com/careers,custom,browserstack,5,true
 Tekion,https://jobs.ashbyhq.com/Tekion,ashby,Tekion,5,true
-ShareChat,https://sharechat.com/careers,custom,sharechat,4,true
+ShareChat,https://sharechat.mynexthire.com/employer/jobs/careers,mynexthire,sharechat,4,true
 InMobi,https://job-boards.greenhouse.io/inmobi,greenhouse,inmobi,4,true
 Ola Electric,https://www.olaelectric.com/careers,custom,olaelectric,4,true
 CRED,https://jobs.lever.co/cred,lever,cred,5,true
@@ -331,7 +331,7 @@ Commvault,https://job-boards.greenhouse.io/commvault,greenhouse,commvault,4,true
 Cohesity,https://cohesity.wd5.myworkdayjobs.com/Cohesity_Careers,workday,cohesity|Cohesity_Careers,5,true
 Veeam,https://careers.veeam.com/,greenhouse,veeamsoftware,4,true
 Amdocs,https://jobs.amdocs.com/careers,eightfold,jobs.amdocs.com|amdocs.com,4,true
-Intuit,https://www.intuit.com/careers/,custom,intuit-india,5,true
+Intuit,https://jobs.intuit.com/location/india-jobs/27595/1269750/2,talentbrew,27595,5,true
 Citigroup,https://citi.eightfold.ai/careers,eightfold,citi.eightfold.ai|citi.com,4,true
 Bank of America,https://careers.bankofamerica.com/en-us,custom,bank-of-america-india,4,true
 Deutsche Bank,https://careers.db.com/,custom,deutsche-bank-india,4,true
@@ -363,7 +363,7 @@ Novartis,https://novartis.wd3.myworkdayjobs.com/Novartis_Careers,workday,novarti
 Roche,https://roche.wd3.myworkdayjobs.com/roche-ext,workday,roche|roche-ext,4,true
 AstraZeneca,https://astrazeneca.eightfold.ai/careers,eightfold,astrazeneca.eightfold.ai|astrazeneca.com,4,true
 GSK,https://jobs.gsk.com/gb/en/,phenom,GHVGPAGB,4,true
-Sanofi,https://jobs.sanofi.com/en,custom,sanofi-india,4,true
+Sanofi,https://jobs.sanofi.com/en/location/india-jobs/2649/1269750/2,talentbrew,2649,4,true
 Bayer,https://career.bayer.com/,custom,bayer-india,4,true
 Merck Group,https://careers.emdgroup.com/us/en/,phenom,MQAEGZUS,4,true
 Eli Lilly,https://careers.lilly.com/us/en/,phenom,LILLUS,4,true
@@ -375,7 +375,7 @@ Parexel,https://jobs.parexel.com/en/location/india-jobs/877/1269750/2,talentbrew
 Syneos Health,https://www.syneoshealth.com/careers,custom,syneos-health-india,4,true
 Lowe's India,https://talent.lowes.com/in/en,custom,lowes-india,4,true
 Tesco Bengaluru,https://www.tescobengaluru.com/careers/,custom,tesco-bengaluru,4,true
-IKEA,https://jobs.ikea.com/en/location/india-jobs/22908/1269750/2,talentbrew,22908,3,true
+IKEA,https://jobs.ikea.com/en/location/india-jobs/22908/1269750/2?p=1,talentbrew,22908,3,true
 Best Buy,https://jobs.bestbuy.com/bby?id=career_area,custom,best-buy-india,4,true
 Wayfair,https://www.wayfair.com/careers,custom,wayfair-india,4,true
 Gap Inc.,https://www.gapinc.com/en-us/careers,custom,gap-india,3,true
@@ -461,7 +461,7 @@ DBS Bank,https://dbs.wd3.myworkdayjobs.com/DBS_Careers,workday,dbs|DBS_Careers,4
 OCBC,https://www.ocbc.com/group/careers,custom,ocbc-india,3,true
 MUFG,https://mufgub.wd3.myworkdayjobs.com/MUFG-Careers,workday,mufgub|MUFG-Careers,4,true
 SMBC,https://www.smbcgroup.com/careers/,custom,smbc-india,3,true
-Nomura,https://www.nomura.com/careers/,custom,nomura-india,4,true
+Nomura,https://careers.nomura.com/Nomura/,xml,https://careers.nomura.com/googlefeed.xml,4,true
 BNP Paribas,https://group.bnpparibas/en/careers,custom,bnp-paribas-india,4,true
 Credit Agricole,https://jobs.ca-cib.com/,custom,credit-agricole-india,3,true
 Swiss Re,https://careers.swissre.com/,xml,https://careers.swissre.com/googlefeed.xml,4,true
@@ -529,7 +529,7 @@ ThoughtSpot,https://www.thoughtspot.com/careers,custom,thoughtspot-india,5,true
 Amagi,https://amagi.mynexthire.com/employer/jobs/careers,mynexthire,amagi,4,true
 Uniphore,https://uniphore.wd503.myworkdayjobs.com/Uniphore,workday,uniphore|Uniphore,4,true
 Druva,https://www.druva.com/about/careers,greenhouse,druva,5,true
-Zeta,https://www.zeta.tech/in/careers,custom,zeta-india,5,true
+Zeta,https://jobs.lever.co/zeta,lever,zeta,5,true
 CoinDCX,https://careers.coindcx.com/,custom,coindcx-india,4,true
 Icertis,https://iaaviz.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Jobs-at-Icertis,oracle,iaaviz.fa.ocs.oraclecloud.com|Jobs-at-Icertis,4,true
 Guidewire,https://careers.guidewire.com/,custom,guidewire-india,4,true
@@ -582,7 +582,7 @@ Stryker,https://stryker.wd1.myworkdayjobs.com/StrykerCareers,workday,stryker|Str
 Baxter,https://jobs.baxter.com/en/location/india-jobs/152/1269750/2,talentbrew,152,4,true
 Boston Scientific,https://jobs.bostonscientific.com/,xml,https://jobs.bostonscientific.com/googlefeed.xml,4,true
 Abbott,https://www.jobs.abbott/us/en,phenom,ABLAUS,4,true
-Amgen,https://careers.amgen.com/en/location/india-jobs/87/1269750/2,talentbrew,87,4,true
+Amgen,https://careers.amgen.com/en/location/india-jobs/87/1269750/2?p=1,talentbrew,87,4,true
 Novo Nordisk,https://careers.novonordisk.com/,xml,https://careers.novonordisk.com/googlefeed.xml,4,true
 Takeda,https://jobs.takeda.com/location/india-jobs/1113/1269750/2,talentbrew,1113,4,true
 Boehringer Ingelheim,https://jobs.boehringer-ingelheim.com/,xml,https://jobs.boehringer-ingelheim.com/googlefeed.xml,4,true

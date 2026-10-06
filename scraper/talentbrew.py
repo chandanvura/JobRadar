@@ -6,8 +6,20 @@ from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
 
 
+class TalentBrewPaginationChanged(ValueError):
+    """The employer changed or incompletely served its listing during a scan."""
+
+
 class TalentBrewCareerAdapter:
     async def fetch_jobs(self, company):
+        for attempt in range(2):
+            try:
+                return await self._fetch_jobs(company)
+            except TalentBrewPaginationChanged:
+                if attempt: raise
+                # Restart from page one; never accept a partial or deduplicated scan.
+
+    async def _fetch_jobs(self, company):
         from .adapters import cached_get, clean, client, jsonld_objects, likely_target, location_text, make_job, request
         host = urlparse(company.careers_url).hostname
         if urlparse(company.careers_url).scheme != 'https' or not company.ats_identifier.isdigit():
@@ -18,7 +30,7 @@ class TalentBrewCareerAdapter:
                 raise ValueError('TalentBrew pagination and details must remain on the official career host')
             return url
         async with client(timeout=40) as x:
-            url = company.careers_url; pages = set(); found = {}
+            url = company.careers_url; pages = set(); found = {}; expected_count = None
             for _ in range(100):
                 if url in pages: raise ValueError('TalentBrew pagination repeated a page')
                 pages.add(url)
@@ -26,15 +38,23 @@ class TalentBrewCareerAdapter:
                 soup = BeautifulSoup(response.text, 'html.parser'); search = soup.select_one('#search-results')
                 if not search or search.get('data-organization-ids') != company.ats_identifier:
                     raise ValueError('TalentBrew search does not match its registered employer')
+                raw_count = search.get('data-total-results')
+                if not raw_count or not raw_count.isdigit():
+                    raise ValueError('TalentBrew listing count is missing or invalid')
+                count = int(raw_count)
+                if count > 2000: raise ValueError('TalentBrew search exceeded the bounded scan')
+                if expected_count is None: expected_count = count
+                if count != expected_count:
+                    raise TalentBrewPaginationChanged('TalentBrew listing count changed during pagination')
                 listing = soup.select_one('#search-results-list')
                 if not listing: raise ValueError('TalentBrew search is missing its job listing')
                 batch = listing.select('a[data-job-id][href]')
                 if not batch and int(search.get('data-total-results', 0)):
-                    raise ValueError('TalentBrew search omitted its reported job records')
+                    raise TalentBrewPaginationChanged('TalentBrew search omitted its reported job records')
                 page_records = {}
                 for link in batch:
                     identifier = link['data-job-id']
-                    if identifier in found: raise ValueError('TalentBrew pagination repeated a job')
+                    if identifier in found: raise TalentBrewPaginationChanged('TalentBrew pagination repeated a job')
                     job_url = official_url(str(response.url), link['href'])
                     if identifier in page_records:
                         if page_records[identifier]['url'] != job_url:
@@ -56,6 +76,8 @@ class TalentBrewCareerAdapter:
                 url = official_url(str(response.url), next_page['href'])
             else:
                 raise ValueError('TalentBrew pagination exceeded the bounded scan')
+            if len(found) != expected_count:
+                raise TalentBrewPaginationChanged('TalentBrew listing did not match its reported count')
             semaphore = asyncio.Semaphore(6)
             async def convert(identifier, item):
                 if not likely_target(item['title'], item['location']): return None

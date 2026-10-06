@@ -106,7 +106,7 @@ def test_public_missing_details_keep_partial_coverage_visible(monkeypatch):
 
 def test_talentbrew_duplicate_view_link_and_sibling_location(monkeypatch):
     async def request(client,method,url,**kwargs):
-        return response(url,text='<section id="search-results" data-organization-ids="123"><section id="search-results-list"><li><h2><a data-job-id="1" href="/job/1">Software Engineer</a></h2><span class="location">Bengaluru, India</span><a data-job-id="1" href="/job/1">View Role</a></li></section></section>')
+        return response(url,text='<section id="search-results" data-organization-ids="123" data-total-results="1"><section id="search-results-list"><li><h2><a data-job-id="1" href="/job/1">Software Engineer</a></h2><span class="location">Bengaluru, India</span><a data-job-id="1" href="/job/1">View Role</a></li></section></section>')
     async def cached(client,url):
         return response(url,text='<div class="ats-description">Full requirements: Java; 0-2 years</div>')
     monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',cached)
