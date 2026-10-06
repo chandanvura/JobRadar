@@ -1,0 +1,20 @@
+--- a/companies/companies.csv
++++ b/companies/companies.csv
+@@ -380,7 +380,7 @@
+ Wayfair,https://www.wayfair.com/careers,custom,wayfair-india,4,true
+ Gap Inc.,https://www.gapinc.com/en-us/careers,custom,gap-india,3,true
+ Nike,https://nike.wd1.myworkdayjobs.com/nke,workday,nike|nke,3,true
+-Adidas,https://careers.adidas-group.com/,custom,adidas-india,3,true
++Adidas,https://careers.adidas-group.com/,adidas,https://careers.adidas-group.com/jobs/feed.xml,3,true
+ Zoho,https://www.zoho.com/careers/,custom,zoho-india,4,true
+ Samsung R&D Institute India,https://research.samsung.com/sri-b/careers,custom,samsung-r-and-d-india,5,true
+ Whatfix,https://whatfix101.hire.trakstar.com/,custom,whatfix-india,5,true
+@@ -525,7 +525,7 @@
+ Eightfold AI,https://app.eightfold.ai/careers?domain=volkscience.com,eightfold,app.eightfold.ai|volkscience.com,5,true
+ Highspot,https://www.highspot.com/careers/,custom,highspot-india,4,true
+ Netskope,https://www.netskope.com/company/careers/open-positions,greenhouse,netskope,5,true
+-ThoughtSpot,https://www.thoughtspot.com/careers,custom,thoughtspot-india,5,true
++ThoughtSpot,https://www.thoughtspot.com/careers,thoughtspot,https://www.thoughtspot.com/api/getCareersListing,5,true
+ Amagi,https://amagi.mynexthire.com/employer/jobs/careers,mynexthire,amagi,4,true
+ Uniphore,https://uniphore.wd503.myworkdayjobs.com/Uniphore,workday,uniphore|Uniphore,4,true
+ Druva,https://www.druva.com/about/careers,greenhouse,druva,5,true
