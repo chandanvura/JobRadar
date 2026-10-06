@@ -37,6 +37,8 @@ class TalentBrewCareerAdapter:
                 response = await request(x, 'GET', url); response.raise_for_status()
                 soup = BeautifulSoup(response.text, 'html.parser'); search = soup.select_one('#search-results')
                 if not search or search.get('data-organization-ids') != company.ats_identifier:
+                    if len(pages) > 1:
+                        raise TalentBrewPaginationChanged('TalentBrew pagination lost employer identity')
                     raise ValueError('TalentBrew search does not match its registered employer')
                 raw_count = search.get('data-total-results')
                 if not raw_count or not raw_count.isdigit():
@@ -67,9 +69,8 @@ class TalentBrewCareerAdapter:
                         if not isinstance(payload.get('results'), str):
                             raise ValueError('TalentBrew public snapshot is missing its listing')
                         soup = BeautifulSoup(payload['results'], 'html.parser'); search = soup.select_one('#search-results')
-                        if (not search or search.get('data-organization-ids') != company.ats_identifier
-                                or search.get('data-facet-term') != '1269750' or search.get('data-facet-type') != '2'):
-                            raise ValueError('TalentBrew snapshot does not match its employer and India facet')
+                        if (not search or search.get('data-organization-ids') != company.ats_identifier):
+                            raise ValueError('TalentBrew snapshot does not match its employer')
                         count = int(search.get('data-total-results', '-1'))
                         if count < 0 or count > 2000: raise ValueError('Invalid TalentBrew snapshot count')
 

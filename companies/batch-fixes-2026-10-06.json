@@ -1,0 +1,38 @@
+[
+    {
+        "company": "Capital One",
+        "provider": "talentbrew",
+        "tested_url": "https://www.capitalonecareers.com/search-jobs/?orgIds=234&alcpm=1269750&alcipm=1168579-1164807-11744832-7046295",
+        "total_count": 16,
+        "eligible_jobs": 11,
+        "decision": "Mapped",
+        "notes": "TalentBrew pagination dropped employer ID on page 2. Patched adapter to raise TalentBrewPaginationChanged and fallback to snapshot mode. Relaxed strict snapshot checking of facet-term as Capital One does not populate it."
+    },
+    {
+        "company": "MSCI",
+        "provider": "icims",
+        "tested_url": "https://globalcareers-msci.icims.com",
+        "total_count": 73,
+        "eligible_jobs": 0,
+        "decision": "Mapped",
+        "notes": "Created iCIMS adapter. Paginates over in_iframe=1 HTML endpoint and parses JSON-LD from each job detail page."
+    },
+    {
+        "company": "Dell Technologies",
+        "provider": "oracle",
+        "tested_url": "https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers",
+        "total_count": 437,
+        "eligible_jobs": 8,
+        "decision": "Mapped",
+        "notes": "Dell uses Oracle Cloud Recruiting on a custom domain. Explicitly mapped it to the oracle adapter with the correct domain identifier."
+    },
+    {
+        "company": "Scaler",
+        "provider": "ashby",
+        "tested_url": "https://www.scaler.com/careers/",
+        "total_count": 0,
+        "eligible_jobs": 0,
+        "decision": "Mapped",
+        "notes": "Discovered Ashby API endpoint for Scaler. Returns 0 jobs currently, but API is valid."
+    }
+]

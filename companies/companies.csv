@@ -51,7 +51,7 @@ Medtronic,https://medtronic.wd1.myworkdayjobs.com/medtroniccareers,workday,medtr
 Silicon Labs,https://silabs.wd1.myworkdayjobs.com/SiliconLabsCareers,workday,silabs|SiliconLabsCareers,4,true
 Rimini Street,https://riministreet.wd1.myworkdayjobs.com/riministreet,workday,riministreet|riministreet,3,true
 AVEVA,https://aveva.wd3.myworkdayjobs.com/AVEVA_careers,workday,aveva|AVEVA_careers,4,true
-Dell Technologies,https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers/jobs,custom,dell,5,true
+Dell Technologies,https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers,oracle,enterpriseplatform.dell.com|careers,5,true
 HP,https://hp.wd5.myworkdayjobs.com/ExternalCareerSite,workday,hp|ExternalCareerSite,4,true
 HPE,https://hpe.wd5.myworkdayjobs.com/Jobsathpe,workday,hpe|Jobsathpe,5,true
 Qualcomm,https://qualcomm.wd12.myworkdayjobs.com/External,workday,qualcomm|External,5,true
@@ -347,7 +347,7 @@ Morningstar,https://morningstar.wd5.myworkdayjobs.com/morningstar,workday_comple
 Nasdaq,https://nasdaq.wd1.myworkdayjobs.com/Global_External_Site,workday,nasdaq|Global_External_Site,4,true
 Deutsche Boerse Group,https://careers.deutsche-boerse.com/,custom,deutsche-boerse-india,4,true
 Intercontinental Exchange,https://careers.ice.com/,custom,ice-india,4,true
-MSCI,https://careers.msci.com/,custom,msci-india,4,true
+MSCI,https://globalcareers-msci.icims.com,icims,msci-india,4,true
 KPMG,https://ejgk.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_3,oracle,ejgk.fa.em2.oraclecloud.com|CX_3,4,true
 Grant Thornton,https://www.grantthornton.in/careers/,custom,grant-thornton-india,3,true
 McKinsey & Company,https://www.mckinsey.com/careers/search-jobs,custom,mckinsey-india,4,true
@@ -561,7 +561,7 @@ Exotel,https://exotel.com/careers/,custom,exotel-india,4,true
 Yubi,https://www.go-yubi.com/careers,custom,yubi-india,4,true
 M2P Fintech,https://m2pfintech.com/careers/,custom,m2p-fintech-india,4,true
 Jumbotail,https://jumbotail.com/careers/,custom,jumbotail-india,3,true
-Capital One,https://www.capitalonecareers.com/search-jobs/India/234/2/1269750/22/79/50/2,talentbrew,234,5,true
+Capital One,https://www.capitalonecareers.com/search-jobs/?orgIds=234&alcpm=1269750&alcipm=1168579-1164807-11744832-7046295,talentbrew,234,5,true
 BNY,https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/BNY-Careers,oracle,eofe.fa.us2.oraclecloud.com|BNY-Careers,5,true
 FIS,https://careers.fisglobal.com/us/en,phenom,FIGLUS,4,true
 Fiserv,https://fiserv.wd5.myworkdayjobs.com/EXT,workday,fiserv|EXT,5,true
