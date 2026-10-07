@@ -1,0 +1,314 @@
+{
+  "merged_commit": "87a5ee6aee93b1be35780559d917ebd7dc9b7b1f",
+  "before": {
+    "checked_at": "2026-10-07T18:46:22.256693+00:00",
+    "counts": {
+      "companies": 700,
+      "limited": 200,
+      "errors": 2,
+      "server_time": "2026-10-07T18:46:22.168Z"
+    }
+  },
+  "after": {
+    "checked_at": "2026-10-07T18:49:43.023547+00:00",
+    "counts": {
+      "companies": 700,
+      "limited": 197,
+      "errors": 1,
+      "server_time": "2026-10-07T18:49:42.929Z"
+    }
+  },
+  "health": {
+    "checked_at": "2026-10-07T18:49:38.003720+00:00",
+    "http_status": 503,
+    "payload": {
+      "ok": false,
+      "database": true,
+      "ingestion_configured": true,
+      "latest_run": {
+        "finished_at": "2026-10-07T14:10:21.377034+00:00",
+        "status": "degraded",
+        "companies_checked": 700,
+        "companies_successful": 698,
+        "companies_failed": 2,
+        "companies_empty": 12,
+        "jobs_scanned": 163479,
+        "candidate_jobs": 3398
+      },
+      "run_age_hours": 4.654613611111111,
+      "stale": false
+    }
+  },
+  "public_api_check": {
+    "first_http": 200,
+    "first_page_jobs": 100,
+    "second_http": 200,
+    "second_page_jobs": 100,
+    "distinct_pages": true,
+    "next_cursor_present": true
+  },
+  "selected_production_sources": [
+    {
+      "name": "Bayer",
+      "careers_url": "https://talent.bayer.com/careers?domain=bayer.com",
+      "ats_provider": "eightfold_legacy_complete",
+      "last_checked_at": "2026-10-07T18:47:50.459829+00:00",
+      "last_success_at": "2026-10-07T18:48:02.887206+00:00",
+      "error_count": 0,
+      "jobs_found": 33,
+      "candidate_jobs": 2,
+      "eligible_jobs": 0,
+      "warning": null
+    },
+    {
+      "name": "Aon",
+      "careers_url": "https://jobs.aon.com/jobs",
+      "ats_provider": "jibe",
+      "last_checked_at": "2026-10-07T18:47:50.509156+00:00",
+      "last_success_at": "2026-10-07T18:47:55.457976+00:00",
+      "error_count": 0,
+      "jobs_found": 23,
+      "candidate_jobs": 3,
+      "eligible_jobs": 0,
+      "warning": null
+    },
+    {
+      "name": "DocuSign",
+      "careers_url": "https://careers.docusign.com/careers-home/jobs",
+      "ats_provider": "jibe",
+      "last_checked_at": "2026-10-07T18:47:50.522511+00:00",
+      "last_success_at": "2026-10-07T18:47:57.196980+00:00",
+      "error_count": 0,
+      "jobs_found": 30,
+      "candidate_jobs": 20,
+      "eligible_jobs": 0,
+      "warning": null
+    },
+    {
+      "name": "Adidas",
+      "careers_url": "https://careers.adidas-group.com/",
+      "ats_provider": "adidas",
+      "last_checked_at": "2026-10-07T18:47:05.856824+00:00",
+      "last_success_at": "2026-10-07T18:47:34.470709+00:00",
+      "error_count": 0,
+      "jobs_found": 1182,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "No roles with a published target-city location returned"
+    }
+  ],
+  "release_probes": [
+    {
+      "company": "Bayer",
+      "provider": "eightfold_legacy_complete",
+      "identifier": "talent.bayer.com|bayer.com",
+      "board": "https://talent.bayer.com/careers?domain=bayer.com",
+      "collection": {
+        "name": "Bayer",
+        "careers_url": "https://talent.bayer.com/careers?domain=bayer.com",
+        "ats_provider": "eightfold_legacy_complete",
+        "ats_identifier": "talent.bayer.com|bayer.com",
+        "priority": 4,
+        "last_checked_at": "2026-10-07T18:44:55.674717+00:00",
+        "last_success_at": "2026-10-07T18:45:26.568626+00:00",
+        "error_count": 0,
+        "jobs_found": 33,
+        "candidate_jobs": 2,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "advertised_total": 33,
+      "unique_ids": 33,
+      "details": 33,
+      "missing_descriptions": 0,
+      "complete": true
+    },
+    {
+      "company": "Aon",
+      "provider": "jibe",
+      "identifier": "aon|India",
+      "board": "https://jobs.aon.com/jobs",
+      "collection": {
+        "name": "Aon",
+        "careers_url": "https://jobs.aon.com/jobs",
+        "ats_provider": "jibe",
+        "ats_identifier": "aon|India",
+        "priority": 4,
+        "last_checked_at": "2026-10-07T18:44:37.047455+00:00",
+        "last_success_at": "2026-10-07T18:44:51.182855+00:00",
+        "error_count": 0,
+        "jobs_found": 23,
+        "candidate_jobs": 3,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "advertised_total": 23,
+      "unique_ids": 23,
+      "details": 23,
+      "missing_descriptions": 0,
+      "complete": true
+    },
+    {
+      "company": "DocuSign",
+      "provider": "jibe",
+      "identifier": "docusign|India",
+      "board": "https://careers.docusign.com/careers-home/jobs",
+      "collection": {
+        "name": "DocuSign",
+        "careers_url": "https://careers.docusign.com/careers-home/jobs",
+        "ats_provider": "jibe",
+        "ats_identifier": "docusign|India",
+        "priority": 4,
+        "last_checked_at": "2026-10-07T18:44:51.184047+00:00",
+        "last_success_at": "2026-10-07T18:44:55.394459+00:00",
+        "error_count": 0,
+        "jobs_found": 30,
+        "candidate_jobs": 20,
+        "eligible_jobs": 0,
+        "warning": null
+      },
+      "error": null,
+      "advertised_total": 30,
+      "unique_ids": 30,
+      "details": 30,
+      "missing_descriptions": 0,
+      "complete": true
+    },
+    {
+      "company": "Adidas",
+      "provider": "adidas",
+      "identifier": "https://careers.adidas-group.com/jobs/feed.xml",
+      "board": "https://careers.adidas-group.com/",
+      "collection": {
+        "name": "Adidas",
+        "careers_url": "https://careers.adidas-group.com/",
+        "ats_provider": "adidas",
+        "ats_identifier": "https://careers.adidas-group.com/jobs/feed.xml",
+        "priority": 4,
+        "last_checked_at": "2026-10-07T18:44:10.437498+00:00",
+        "last_success_at": "2026-10-07T18:44:37.046910+00:00",
+        "error_count": 0,
+        "jobs_found": 1182,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      "error": null,
+      "advertised_total": 1182,
+      "unique_ids": 1182,
+      "details": 1182,
+      "missing_descriptions": 0,
+      "complete": true
+    }
+  ],
+  "official_chains": {
+    "Bayer": {
+      "company": "Bayer",
+      "chain": [
+        "https://www.bayer.com/en",
+        "https://www.bayer.com/en/careers",
+        "https://talent.bayer.com/careers?domain=bayer.com#upload-resume-button"
+      ],
+      "requests": [
+        {
+          "url": "https://www.bayer.com/",
+          "final_url": "https://www.bayer.com/en",
+          "http_status": 200,
+          "sha256": "05f013fef5e7547d67f5edb86209e6c195711059fb270751d85758d38ae2e4c7"
+        },
+        {
+          "url": "https://www.bayer.com/en/careers",
+          "final_url": "https://www.bayer.com/en/careers",
+          "http_status": 200,
+          "sha256": "2790edba9b28bbe7c16ae0d6812c0a69f0964d93ca14f0afc4594b4528c276a1"
+        },
+        {
+          "url": "https://talent.bayer.com/careers?domain=bayer.com#upload-resume-button",
+          "final_url": "https://talent.bayer.com/careers?domain=bayer.com#upload-resume-button",
+          "http_status": 200,
+          "sha256": "0c02a157e0142d85003adadc7a1d74e57f8e1cd04a0f31264eecf395928d3a5e"
+        }
+      ],
+      "verified": true
+    },
+    "Aon": {
+      "company": "Aon",
+      "chain": [
+        "https://www.aon.com/en/",
+        "https://jobs.aon.com/",
+        "https://jobs.aon.com/jobs"
+      ],
+      "requests": [
+        {
+          "url": "https://www.aon.com/",
+          "final_url": "https://www.aon.com/en/",
+          "http_status": 200,
+          "sha256": "245b043f904fd84de4e7d5c4745841507b60ec7c6a5bfc38f973fff1a0b63616"
+        },
+        {
+          "url": "https://jobs.aon.com/",
+          "final_url": "https://jobs.aon.com/",
+          "http_status": 200,
+          "sha256": "fd85076fa31eec8868277aee7bfe0776385af84e5364d14413a85f380f02a4e8"
+        },
+        {
+          "url": "https://jobs.aon.com/jobs",
+          "final_url": "https://jobs.aon.com/jobs",
+          "http_status": 200,
+          "sha256": "526d4df10b00e8952fe8a9a6e9b8b7e177530d22dd11a7741fa43d34bea829f3"
+        }
+      ],
+      "verified": true
+    },
+    "DocuSign": {
+      "company": "DocuSign",
+      "chain": [
+        "https://www.docusign.com/",
+        "https://careers.docusign.com/careers-home",
+        "https://careers.docusign.com/careers-home/jobs"
+      ],
+      "requests": [
+        {
+          "url": "https://www.docusign.com/",
+          "final_url": "https://www.docusign.com/",
+          "http_status": 200,
+          "sha256": "2201e44851c975a4b641ffc3f97834a06514b14a2def3e1286ad051d52a6c4d2"
+        },
+        {
+          "url": "https://careers.docusign.com",
+          "final_url": "https://careers.docusign.com/careers-home",
+          "http_status": 200,
+          "sha256": "6362ee8a1386ef0a99bc609040de2af3aff91bd70a9cd3a6be3d3f07c5c7a7c0"
+        },
+        {
+          "url": "https://careers.docusign.com/",
+          "final_url": "https://careers.docusign.com/careers-home",
+          "http_status": 200,
+          "sha256": "38014181e73c2ce44168135628d24efcae3b2f4872c5891d099ab52e3245c1cd"
+        },
+        {
+          "url": "https://careers.docusign.com/jobs",
+          "final_url": "https://careers.docusign.com/careers-home/jobs",
+          "http_status": 200,
+          "sha256": "54074c70784d05c29ad43d3a6dadc2ab9ba337d0d596a677a0a535c4c05f3af4"
+        }
+      ],
+      "verified": true
+    }
+  },
+  "score": {
+    "Bayer": 15,
+    "Aon": 15,
+    "DocuSign": 15
+  },
+  "runs": {
+    "release_probe": 37669052891,
+    "release_ci": 37669059239,
+    "main_ci": 37669428905,
+    "registry_sync": 37669428907,
+    "focused_adidas": 37669428801
+  },
+  "remaining": "197 Limited sources; HubSpot remains the one active error. Health uses the latest full scan, which still records two failures."
+}
