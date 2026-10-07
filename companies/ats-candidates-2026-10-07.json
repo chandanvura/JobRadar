@@ -1,1 +1,18 @@
-{"companies":[{"name":"ACKO","official":"https://www.acko.com/careers/","navigation":"https://www.acko.com/careers/jobs/","board":"https://careers.kula.ai/acko","provider":"kula","identifier":"acko"},{"name":"Lingaro","board":"https://jobs.lever.co/lingarogroup","provider":"lever","identifier":"lingarogroup"}]}
+{
+  "companies": [
+    {
+      "name": "ACKO",
+      "official": "https://www.acko.com/careers/",
+      "navigation": "https://www.acko.com/careers/jobs/",
+      "board": "https://careers.kula.ai/acko?jobs=true",
+      "provider": "kula",
+      "identifier": "acko"
+    },
+    {
+      "name": "Lingaro",
+      "board": "https://jobs.lever.co/lingarogroup",
+      "provider": "lever",
+      "identifier": "lingarogroup"
+    }
+  ]
+}
