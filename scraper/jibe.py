@@ -45,15 +45,22 @@ def detail_record(payload,row,tenant):
         raise SnapshotChanged('Jibe job ceased to be public during collection')
     # The search UI concatenates primary and additional display locations.
     # Detail returns primary separately; reconcile those actual locations.
-    displayed=[payload.get('full_location') or '']
+    from .adapters import location_text
+    options=[{payload.get('full_location') or ''}]
     for loc in payload.get('additional_locations') or []:
         if not isinstance(loc,dict):raise ValueError('Jibe additional location schema changed')
-        displayed.append(loc.get('full_location') or ', '.join(str(v) for v in
-                         (loc.get('city'),loc.get('state') or loc.get('country')) if v))
+        # Employers select either region or country for their display text.
+        # Match only strings built from the actual published address fields.
+        rendered={loc.get('full_location') or '',
+                  location_text(loc.get('city'),loc.get('state'),loc.get('country')),
+                  location_text(loc.get('city'),loc.get('state') or loc.get('country')),
+                  location_text(loc.get('city'),loc.get('country'))}
+        options.append({v.strip() for v in rendered if v.strip()})
     listed={v.strip() for v in (row.get('full_location') or '').split(';') if v.strip()}
-    detailed={v.strip() for v in displayed if v.strip()}
-    if payload.get('country')!=row.get('country') or listed!=detailed:
-        raise SnapshotChanged(f"Jibe location discrepancy {row['slug']}: listed={sorted(listed)!r}; detailed={sorted(detailed)!r}; primary={payload.get('full_location')!r}; additional={payload.get('additional_locations')!r}")
+    if (payload.get('country')!=row.get('country') or
+            any(not (variants & listed) for variants in options) or
+            not listed.issubset(set().union(*options))):
+        raise SnapshotChanged(f"Jibe location discrepancy {row['slug']}: listed={sorted(listed)!r}; actual={options!r}")
     from .adapters import clean
     if not clean(payload.get('description')):raise ValueError('Jibe full job detail omitted employer requirements')
     return payload
@@ -106,8 +113,6 @@ class JibeCareerAdapter:
                 r=await request(x,'GET',endpoint,params=params);r.raise_for_status()
                 count,rows=listing_records(r.json(),page,total);total=count
                 if found.keys() & rows.keys():raise ValueError('Jibe pagination repeated a unique job ID')
-                if country and any(row.get('country')!=country for row in rows.values()):
-                    raise ValueError('Jibe requested country facet returned another country')
                 if brand and any(row.get('brand')!=brand for row in rows.values()):raise ValueError('Jibe brand facet includes another employer')
                 if first is None:first=rows
                 found.update(rows)
@@ -119,6 +124,8 @@ class JibeCareerAdapter:
                 async with gate:r=await request(x,'GET',url)
                 if r.status_code in (404,410):raise SnapshotChanged('Jibe listed detail disappeared during collection')
                 r.raise_for_status();job=detail_record(r.json(),row,tenant)
+                countries={job.get('country')} | {v.get('country') for v in job.get('additional_locations') or [] if isinstance(v,dict)}
+                if country and country not in countries:raise ValueError('Jibe country facet includes a job with no published requested-country location')
                 description=clean(' '.join(job.get(k) or '' for k in ['description','qualifications','responsibilities','benefits']))
                 public=f"{origin}/jobs/{row['slug']}?lang={row['language']}"
                 return make_job(row['slug'],job['title'],company.name,job_location(job),description,
