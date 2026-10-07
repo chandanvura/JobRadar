@@ -1,0 +1,2624 @@
+{
+  "batch": "career-ops-01",
+  "cases": [
+    {
+      "company": "IBM",
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages": [
+        {
+          "url": "https://www.ibm.com/careers/search",
+          "linked_from": null,
+          "final_url": "https://www.ibm.com/careers/search",
+          "http_status": 200,
+          "content_type": "text/html;charset=utf-8",
+          "sha256": "3cc0f767fe3869d557c839605e35d0128cdb88ec25f7b9a695863875084a9901",
+          "artifact": "973a4a818d79/1.html",
+          "title": "Search jobs | IBM Careers",
+          "jsonld_blocks": 1
+        },
+        {
+          "url": "https://www.ibm.com/",
+          "linked_from": null,
+          "final_url": "https://www.ibm.com/us-en",
+          "http_status": 200,
+          "content_type": "text/html;charset=utf-8",
+          "sha256": "33bf495ea09e7a03bec1be42225821b4adb1975b7b75b4e1a9ec9dbcd3cfd3bd",
+          "artifact": "973a4a818d79/2.html",
+          "title": "IBM",
+          "jsonld_blocks": 1
+        },
+        {
+          "url": "https://www.ibm.com/marketplace/static/components/search/insights/r7insight.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/marketplace/static/components/search/insights/r7insight.min.js",
+          "http_status": 200,
+          "content_type": "application/x-javascript",
+          "sha256": "356a8b62e5c5efb59f062e741c414fc4146ed25bf4f5d58f053002cd9ce40905",
+          "artifact": "973a4a818d79/3.js"
+        },
+        {
+          "url": "https://www.ibm.com/marketplace/static/components/search/insights/ibm-search-insights.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/marketplace/static/components/search/insights/ibm-search-insights.js",
+          "http_status": 200,
+          "content_type": "application/x-javascript",
+          "sha256": "c41d54b21471ace9c44e646a062839e916b81223ea5647be20ce797d1df211ac",
+          "artifact": "973a4a818d79/4.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-idlBundle.lc-d0d8f36e0e99910456f774244e2f42fe-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-idlBundle.lc-d0d8f36e0e99910456f774244e2f42fe-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "35b643514b2e49d0f6a10f1ce12ace34315a8497f9f226dd5ab4937e93626b88",
+          "artifact": "973a4a818d79/5.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-components-main.lc-e617909fe03f8b4b8511e8e21463a8dc-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-components-main.lc-e617909fe03f8b4b8511e8e21463a8dc-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "af75a1cb5a904454d91f1c318797beee562ee8d1dd09f9e7452e1fdcde7962ea",
+          "artifact": "973a4a818d79/6.js"
+        },
+        {
+          "url": "https://rum.hlx.page/.rum/@adobe/helix-rum-js@%5E2/dist/micro.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://rum.hlx.page/.rum/@adobe/helix-rum-js@%5E2/dist/micro.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "00713621fb4060161024c28053ceaee9a43c687311ccfc28ac099ea600bdfe4a",
+          "artifact": "973a4a818d79/7.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-smartling-context.lc-d30c41c1c7a4511befbe3e285d76955a-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-smartling-context.lc-d30c41c1c7a4511befbe3e285d76955a-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "fe21a9f7d12d0b933e95be00fe04fd16a548a43c1645f839d0e75fd21167550e",
+          "artifact": "973a4a818d79/8.js"
+        },
+        {
+          "url": "https://assets.adobedtm.com/0f2de1d5b89a/565c2aeb0d39/launch-560e54b3e83c.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://assets.adobedtm.com/0f2de1d5b89a/565c2aeb0d39/launch-560e54b3e83c.min.js",
+          "http_status": 200,
+          "content_type": "application/x-javascript",
+          "sha256": "6811f560295c38b02005f415d815924610b0075aa02788e27420159a01681ad1",
+          "artifact": "973a4a818d79/9.js"
+        },
+        {
+          "url": "https://1.www.s81c.com/common/stats/ibm-common.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://1.www.s81c.com/common/stats/ibm-common.js",
+          "http_status": 200,
+          "content_type": "application/x-javascript",
+          "sha256": "3f4797d2851b9c4be6b0385179db84f5fc2bd3a55628eb2a72ed50b678e4ce80",
+          "artifact": "973a4a818d79/10.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-masthead-container.lc-3cdb154c362a652eae334101ff9c98db-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-masthead-container.lc-3cdb154c362a652eae334101ff9c98db-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "b3c0bd302d9eccdae48ffb1cecc55fd9f95826c2c1c5c300c7386392c814b1eb",
+          "artifact": "973a4a818d79/11.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/structure/navigation/masthead/clientlibs/site.lc-896245da59e50446b51138c4b0c0eb3e-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/structure/navigation/masthead/clientlibs/site.lc-896245da59e50446b51138c4b0c0eb3e-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "8514b3ff4abdc710868f44e2eee7698cb72a324e1a82ea3ea02688ba1d88ca11",
+          "artifact": "973a4a818d79/12.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/structure/navigation/masthead/clientlibs/country-restoration.lc-849dd35b12585fe0bf0fee55c31b147c-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/structure/navigation/masthead/clientlibs/country-restoration.lc-849dd35b12585fe0bf0fee55c31b147c-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "11f67b56b678514ae2d7236acc69f314b134c27f27ea95342eeb15d00b2a2504",
+          "artifact": "973a4a818d79/13.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-new-design.lc-d512509cc4e86661b00f0ed84fb1c77d-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-new-design.lc-d512509cc4e86661b00f0ed84fb1c77d-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "23130123c53f2fdccd1187955f8ac4e1aa3278b831f58fcce3a4a4c593d21e1a",
+          "artifact": "973a4a818d79/14.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-lightbox-media-viewer.lc-bbbda983369a47ebe68c956b05582571-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-lightbox-media-viewer.lc-bbbda983369a47ebe68c956b05582571-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "7c67d6380782493115954c6a32f454da811a8be9615e5763e8edbc669195f992",
+          "artifact": "973a4a818d79/15.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-button-group.lc-9a6721eb2e3a9efc7c83c374cd94b1e8-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-button-group.lc-9a6721eb2e3a9efc7c83c374cd94b1e8-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "33c36526d67f2805bee5e2c14892d3c0f079378b8c08aa44a5ddd99dad37dc20",
+          "artifact": "973a4a818d79/16.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-background-media.lc-a2656cda6e897d0f7bc6810fdb75a40e-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-background-media.lc-a2656cda6e897d0f7bc6810fdb75a40e-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "e1cd069a45745ff8a28edcff4885407221f44721ebfafbec6861ab71c205775b",
+          "artifact": "973a4a818d79/17.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-star-rating.lc-ac9e6f485abb5e9caac490f8b09edc80-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-star-rating.lc-ac9e6f485abb5e9caac490f8b09edc80-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "87d9338337df074ae39ec9bf67663269b8c4eb0843206e13b75bb601308a396d",
+          "artifact": "973a4a818d79/18.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-link-list.lc-2e02203fb8b3424838b0fe951b6a5cea-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-link-list.lc-2e02203fb8b3424838b0fe951b6a5cea-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "d8551ade351bed8501fa3b645b182d77d16fee0b190759bfc85c2ee09702e2d0",
+          "artifact": "973a4a818d79/19.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-cta-block.lc-c73d8b7fe4fd0959db6fd885c2cd16a7-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-cta-block.lc-c73d8b7fe4fd0959db6fd885c2cd16a7-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "195074764e3ce67a47752ff3683adbf46d64e59eeb7469c71acc780743283318",
+          "artifact": "973a4a818d79/20.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-cibm-cta.lc-a53d0f07a2ef5cb431dbbb59015d4bd5-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-cibm-cta.lc-a53d0f07a2ef5cb431dbbb59015d4bd5-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "ae2a6dee40add16f877d388156b07f3c80e58f429aaa88ba34799866de5f0491",
+          "artifact": "973a4a818d79/21.js"
+        },
+        {
+          "url": "https://www.ibm.com/apps/adobe-cms/components/content/organisms/carousel/carousel/style-validation.lc-8dc852e52b819615e76d2f25a70b8c6c-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/apps/adobe-cms/components/content/organisms/carousel/carousel/style-validation.lc-8dc852e52b819615e76d2f25a70b8c6c-lc.min.js",
+          "http_status": 404,
+          "content_type": "text/html",
+          "sha256": "73948440a68a8955787c14c57b3214113d86639b0ca4460cea9a1218f1a65150"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/content/atoms/link/clientlibs/action.lc-888066cab8fb677e5046ed8c7accd118-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/content/atoms/link/clientlibs/action.lc-888066cab8fb677e5046ed8c7accd118-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "301fcbe6c13bdd829a6c5c0cfb8c0e146ea5b7c155957e8f7602df2f7c59d573",
+          "artifact": "973a4a818d79/23.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/content/molecules/cta-section-item/clientlibs.lc-91f654c9cd5d4d1638362746cf767166-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/content/molecules/cta-section-item/clientlibs.lc-91f654c9cd5d4d1638362746cf767166-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "a099179d450709dd961267d41d1f34f73363f9964017f87344d0b28d50b97bc2",
+          "artifact": "973a4a818d79/24.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-table-of-contents.lc-30fae8aad5d166c29b073b76bd8824e2-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-table-of-contents.lc-30fae8aad5d166c29b073b76bd8824e2-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "d2209b90e48fe7755fc7672a95e9e5e7aeb5f1ed7908dc43cdb658edbd5f5a27",
+          "artifact": "973a4a818d79/25.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-footer.lc-e4556247b5eaa5ddf0bfeb0523232d4d-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-footer.lc-e4556247b5eaa5ddf0bfeb0523232d4d-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "8d1f4cba13d5550c9148157ad23f3a567e3d788246825598e059b568832e0cad",
+          "artifact": "973a4a818d79/26.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/structure/footer-configuration/clientlibs/site.lc-b4a62f4105057beb9158cca91124e50e-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/structure/footer-configuration/clientlibs/site.lc-b4a62f4105057beb9158cca91124e50e-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "c973380d228907058b068cf2a106ac26bc5eb94c6421c949760944a9a271165d",
+          "artifact": "973a4a818d79/27.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-video-player-v7.lc-9b71d9d0818c16d4de96c11ca7238486-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-video-player-v7.lc-9b71d9d0818c16d4de96c11ca7238486-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "649f23b1235812ce24e113fc9769bce8997925b71edeeab2f87ad459dcf6ebb2",
+          "artifact": "973a4a818d79/28.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-cweb-loading.lc-bf5f1bc1d22a37b7b50b2e8cc6ac9710-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-cweb-loading.lc-bf5f1bc1d22a37b7b50b2e8cc6ac9710-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "339a69addc1cee000aa18b1f4a715beb45fde38b9cca13ffd1863bca867ecf50",
+          "artifact": "973a4a818d79/29.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-ibm-logger.lc-36e5d2891df65964c169c81e085bcb76-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-ibm-logger.lc-36e5d2891df65964c169c81e085bcb76-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "efb7c8ceda88b89cba11902c08e6d8da2d8c915bcd2c616a25e5d7b2b88393c1",
+          "artifact": "973a4a818d79/30.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-base.lc-c7d8c8a31404fb2a97939ee4096001bf-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-base.lc-c7d8c8a31404fb2a97939ee4096001bf-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "4d1864b4d771a9185c9732985b2f74ea6dc35291e9781b32d2c396258a68aa24",
+          "artifact": "973a4a818d79/31.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-idlStyles.lc-1cdcd95be8967ff137bde26f49e9f773-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-idlStyles.lc-1cdcd95be8967ff137bde26f49e9f773-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "f8f4abdb6b33dc890d4d3d7038c4d6992c6f51fb27c408bc14cf8b57bcd5bd94",
+          "artifact": "973a4a818d79/32.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/content/atoms/image-dm/clientlibs/site.lc-d8745ddb7348148535910a0ec30b1007-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/content/atoms/image-dm/clientlibs/site.lc-d8745ddb7348148535910a0ec30b1007-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "c4941e90751241ff9d71a80d1de4fa20a30b016ff612e08d622d328365ff8d8f",
+          "artifact": "973a4a818d79/33.js"
+        },
+        {
+          "url": "https://www.ibm.com/common/digitaladvisor/cm-app/latest/cm-app.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/common/digitaladvisor/cm-app/latest/cm-app.min.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "3eaf604be9c4656632f951be60257925703bf331d88c1cf8ecbc08676cb7095a",
+          "artifact": "973a4a818d79/34.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-cweb-code-snippet.lc-24f99d6b7c4ddaab098e859bb80a2bd4-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-cweb-code-snippet.lc-24f99d6b7c4ddaab098e859bb80a2bd4-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "fcdffe00de8586dd201c7fb4c418c3b0474c7a6a8f66a724de2ff43c507a8cb6",
+          "artifact": "973a4a818d79/35.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-pdfviewer.lc-8bfe9f0acb55448748772c5b315c99bb-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-pdfviewer.lc-8bfe9f0acb55448748772c5b315c99bb-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "d1f96b0ddee8ff4676bd7fa35d298497246acf8999c415b1f4c4252a4c274fc8",
+          "artifact": "973a4a818d79/36.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-adobe-data-layer.lc-a27dd47fa802878abcfd8cfc0ead27f8-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-adobe-data-layer.lc-a27dd47fa802878abcfd8cfc0ead27f8-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "93678ce1d47d00b89596e6c883e1794d7e933e25ff5ef7bf4305124dab034026",
+          "artifact": "973a4a818d79/37.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/core/wcm/components/commons/datalayer/v1/clientlibs/core.wcm.components.commons.datalayer.v1.lc-70264651675213ed7f7cc5a02a00f621-lc.min.js",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/etc.clientlibs/core/wcm/components/commons/datalayer/v1/clientlibs/core.wcm.components.commons.datalayer.v1.lc-70264651675213ed7f7cc5a02a00f621-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "688ff48275efa35f288640b557886e8082f8712ac6db7f94cdca17ca32718c69",
+          "artifact": "973a4a818d79/38.js"
+        },
+        {
+          "url": "https://www.ibm.com/t7C--9Ps84Ob/8PA_Wv/DwXqQt/iJJ9Jfhc6kmS2Lka/fRFdDCcC/Mx/s6QxlqC1M",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/t7C--9Ps84Ob/8PA_Wv/DwXqQt/iJJ9Jfhc6kmS2Lka/fRFdDCcC/Mx/s6QxlqC1M",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "ce0c500347720bb2bb7a6dd587c6b5b5e9e2a1ca27502203edf82c461a74df72",
+          "artifact": "973a4a818d79/39.js"
+        },
+        {
+          "url": "https://www.ibm.com/t7C--9Ps84Ob/8PA_Wv/DwXqQt/N4J9/NSI_DCcC/P3/g0fTcPZGYo",
+          "linked_from": "https://www.ibm.com/careers/search",
+          "final_url": "https://www.ibm.com/t7C--9Ps84Ob/8PA_Wv/DwXqQt/N4J9/NSI_DCcC/P3/g0fTcPZGYo",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "7f022c63e4067c86ed0a7507d4028a8b47a002d24e18abb48e83553bc10c856e",
+          "artifact": "973a4a818d79/40.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-countdown.lc-f665d8da8c9c9e057e5c74b4076ff35f-lc.min.js",
+          "linked_from": "https://www.ibm.com/us-en",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-countdown.lc-f665d8da8c9c9e057e5c74b4076ff35f-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "0d66c510f47342322bbdb8a93f9ec4f0f8e7c5fce4a5b73abe4dca277eef806e",
+          "artifact": "973a4a818d79/41.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-promo-banner.lc-65e464fb68c9d84f8b2ca755da4b4b2b-lc.min.js",
+          "linked_from": "https://www.ibm.com/us-en",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-promo-banner.lc-65e464fb68c9d84f8b2ca755da4b4b2b-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "05ce2e356fd22843529b5ffff773f5c7bab060cdceffd1a608bb7632b303fe8b",
+          "artifact": "973a4a818d79/42.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-button.lc-43dfc9b4652059164c706bfc38af49d9-lc.min.js",
+          "linked_from": "https://www.ibm.com/us-en",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-button.lc-43dfc9b4652059164c706bfc38af49d9-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "792b33bb188ca50a51b84ff08807bfc055546bfbb2bef5d639b045644e119c37",
+          "artifact": "973a4a818d79/43.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-image.lc-94664d1356804ad218bc0d95bbd8a86b-lc.min.js",
+          "linked_from": "https://www.ibm.com/us-en",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-image.lc-94664d1356804ad218bc0d95bbd8a86b-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "a28c9856f860ca2aadd84ce0a2ab7e376d69a0ddd1c09e9e713c39977ff63027",
+          "artifact": "973a4a818d79/44.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/content/organisms/tile-group/tile-group-container/clientlibs.lc-7765080e6ee21326256a1572435cc07b-lc.min.js",
+          "linked_from": "https://www.ibm.com/us-en",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/components/content/organisms/tile-group/tile-group-container/clientlibs.lc-7765080e6ee21326256a1572435cc07b-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "e2bea90abda77b13d234bc8c38ddbc99bf891ba6244f5a0715153c3570ccd114",
+          "artifact": "973a4a818d79/45.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-card.lc-9d69aa5b5105c1f9f30986a5db7eac18-lc.min.js",
+          "linked_from": "https://www.ibm.com/us-en",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-card.lc-9d69aa5b5105c1f9f30986a5db7eac18-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "5bc0174e16f7e4bd90a5d25bafd5ae234f4b4ea29ad145a50de38da79c35c2bd",
+          "artifact": "973a4a818d79/46.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-card-group.lc-cc8e951b520332e14b419886389e918a-lc.min.js",
+          "linked_from": "https://www.ibm.com/us-en",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-card-group.lc-cc8e951b520332e14b419886389e918a-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "83aa0f397ca5d615d49485619211811104f84a49e9386b63ce6585178d3cc1bc",
+          "artifact": "973a4a818d79/47.js"
+        },
+        {
+          "url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-carousel.lc-9276c97364d3fcdfb3a43331918dec72-lc.min.js",
+          "linked_from": "https://www.ibm.com/us-en",
+          "final_url": "https://www.ibm.com/etc.clientlibs/adobe-cms/clientlibs/clientlib-carousel.lc-9276c97364d3fcdfb3a43331918dec72-lc.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "1c2740b8743258dcc334ec2f7cc04dad87498b3c0ebdddd587cd3164833fcafa",
+          "artifact": "973a4a818d79/48.js"
+        }
+      ],
+      "production_writes": 0
+    },
+    {
+      "company": "Dassault Systemes",
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages": [
+        {
+          "url": "https://www.3ds.com/careers",
+          "linked_from": null,
+          "final_url": "https://www.3ds.com/careers",
+          "http_status": 200,
+          "content_type": "text/html;charset=utf-8",
+          "sha256": "34f97df7ed6e3ed528f787a5a9cdde9479a6c0e5cc96d662ae65221f332859c3",
+          "artifact": "1c7b5d9678c5/1.html",
+          "title": "Imagine New Horizons | Careers - Dassault Syst\u00e8mes",
+          "jsonld_blocks": 7
+        },
+        {
+          "url": "https://www.3ds.com/careers/jobs",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/careers/jobs",
+          "http_status": 200,
+          "content_type": "text/html;charset=utf-8",
+          "sha256": "fac5bb3a308c8cc1da35eadec625423137017fd5b97ac19ce850bcae890ae9f9",
+          "artifact": "1c7b5d9678c5/2.html",
+          "title": "Be the Next Game Changer | Careers - Dassault Syst\u00e8mes",
+          "jsonld_blocks": 8
+        },
+        {
+          "url": "https://www.3ds.com/",
+          "linked_from": null,
+          "final_url": "https://www.3ds.com/",
+          "http_status": 200,
+          "content_type": "text/html; charset=UTF-8",
+          "sha256": "23abcca8802f479f820b015679d068d80cc9d6f3f3c5b6fb3ef4f35b9d02295b",
+          "artifact": "1c7b5d9678c5/3.html",
+          "title": "Virtual Worlds for Real Life | Dassault Syst\u00e8mes",
+          "jsonld_blocks": 5
+        },
+        {
+          "url": "https://tracking.3ds.com/stat/init/ds_init_global.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://tracking.3ds.com/stat/init/ds_init_global.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "47f29a6dc76241c0c31314eb26da6ec392a66db21711e469dc5b26cd1dfee5ec",
+          "artifact": "1c7b5d9678c5/4.js"
+        },
+        {
+          "url": "https://www.3ds.com/statics/fet/1/frontend-toolbox/js/FeT.full.min.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/statics/fet/1/frontend-toolbox/js/FeT.full.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "f3964a9533cd51ced818348fcadada96ab7c0b65b5ca0f7c6b74d0c8dc5aff82",
+          "artifact": "1c7b5d9678c5/5.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BgaX5KSi.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BgaX5KSi.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "618c25683dcc74030bc2bf797d055add69a943739193395beefedcb22dec4d3f",
+          "artifact": "1c7b5d9678c5/6.js"
+        },
+        {
+          "url": "https://www.3ds.com/statics/3ds-navigation/ds-header.min.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/statics/3ds-navigation/ds-header.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "d9ecedc77edf22f8e162fa7822fc898c526b4e01e9cdcc02a0eaefa2ca0f25a2",
+          "artifact": "1c7b5d9678c5/7.js"
+        },
+        {
+          "url": "https://www.3ds.com/statics/3ds-navigation/ds-footer.min.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/statics/3ds-navigation/ds-footer.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "6cdb8a255d1dff1e578fa863b5149560bf4d3dff11210bedee17339e86e55d72",
+          "artifact": "1c7b5d9678c5/8.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/D03rB5qT.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/D03rB5qT.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "fad3964941eb2dc339c585342ec74373f53411056588c0bcfbe7c3bba22e0088",
+          "artifact": "1c7b5d9678c5/9.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/Ib1jYPSS.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/Ib1jYPSS.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "1bd238a727ef143427dfba1e7efa1832f7a7ac2882d36d9d641cb64a30be2d80",
+          "artifact": "1c7b5d9678c5/10.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BUba7gzX.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BUba7gzX.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "8b2df5ca21021cb845dc8364cce28dab92b2fe273a235cc0eb8239473b4f0392",
+          "artifact": "1c7b5d9678c5/11.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/C6ZUoosd.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/C6ZUoosd.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "642cc5047383ed0a7079607b8fb125e90084fab3dd47b38904202a2052c9dc79",
+          "artifact": "1c7b5d9678c5/12.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CpVwzX98.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CpVwzX98.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "15d10379d179a927a16420b240bd832822be4e4c2286d092a0c6adb36a866262",
+          "artifact": "1c7b5d9678c5/13.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/FJJ_VChM.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/FJJ_VChM.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "0cf4e2a4fee030a6611a34971673e4f6eaadec7815ac2a2f29436521f1cd45eb",
+          "artifact": "1c7b5d9678c5/14.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DtaY8qrM.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DtaY8qrM.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "1207ae002d9791c921a5edc26c11776ae7cdabf1a6d0e6d82f141564b40397c7",
+          "artifact": "1c7b5d9678c5/15.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CsuJmS6O.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CsuJmS6O.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "79d625aed3cca4566643685e2f591d1af02ee4252a6f2b3c7bae945529026110",
+          "artifact": "1c7b5d9678c5/16.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DC1376r_.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DC1376r_.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "f30b2c174025b1fc11cb5ee409b3fd5cfae38700fc64839f1fc0f9a052769b3c",
+          "artifact": "1c7b5d9678c5/17.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BdkJsTKp.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BdkJsTKp.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "80c9ccc1b3cfe2a8cb8a4ff6f54ef7a39594bf4e1c6a5b8f81c72e6cf9892c48",
+          "artifact": "1c7b5d9678c5/18.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DWaXlSpP.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DWaXlSpP.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "4a96b583e9fdf8fb75cd05b571542f2c8cb42f88ebd954efac7d66128d722b1f",
+          "artifact": "1c7b5d9678c5/19.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BQkrBGv_.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BQkrBGv_.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "3b18bc7b60e591f77d87db893d81f3be5e485308ac8483ae84cd33530cd50948",
+          "artifact": "1c7b5d9678c5/20.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BZQxftcF.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BZQxftcF.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "f95c3a527bcda80c1996a748025085e4a1c82d1dd215257fc4e6107438040a2e",
+          "artifact": "1c7b5d9678c5/21.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/QK40quwo.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/QK40quwo.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "15f17a58a00dd0434ce979570ab363048e301b380e1acb2499a067c0f87700e0",
+          "artifact": "1c7b5d9678c5/22.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/JqdlnaPu.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/JqdlnaPu.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "06540a0ff85f4a4d656140e566d379d098368baad0219eb69ca927c5ca0034dd",
+          "artifact": "1c7b5d9678c5/23.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/HfXWir6p.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/HfXWir6p.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "22bfa3ec7fcf01f2182fe85c58c2d7de4e7774224c2977a762c1ac4d0d3c5608",
+          "artifact": "1c7b5d9678c5/24.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CYUVKaBB.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CYUVKaBB.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "1aff73295dd30686fef5a9a73d3089e79b6ad842a287aed3772d7048829d0eb7",
+          "artifact": "1c7b5d9678c5/25.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DaQnnMSs.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DaQnnMSs.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "9fa308548f228bed3f3884770ada2581a53d8f063ebf34163b60e94340ed4af5",
+          "artifact": "1c7b5d9678c5/26.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BDNMzG2s.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BDNMzG2s.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "27e87fe62aa760227b7529576953d8314891fd2aec28e0a3f03aece406f2d7d7",
+          "artifact": "1c7b5d9678c5/27.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CGGqVbw6.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CGGqVbw6.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "dc3d26eef8a91e0961ecff7df50d86fbcbc8bc66bc275ee2fc62641c7789499d",
+          "artifact": "1c7b5d9678c5/28.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DMXaKSyi.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DMXaKSyi.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "382b1c9ddedf911f3f28ee02456cf122f05580c15a8478cb2df1d7d4cbdf48b9",
+          "artifact": "1c7b5d9678c5/29.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DhZJVE8C.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DhZJVE8C.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "595034b8c99cf9e4dbac4dd9f2a9c039c2de545ceacb0c351db3cb109d71b459",
+          "artifact": "1c7b5d9678c5/30.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CxYTccrx.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CxYTccrx.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "907e465c65f129f57d0d9d77f9d0587c0a9197f43439819f4fec51931b38f4b7",
+          "artifact": "1c7b5d9678c5/31.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BTfz2ahz.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BTfz2ahz.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "f60a17427ee46cb153194c7496f7b43e246b1fc48d0734f678d230c9d76ef0d0",
+          "artifact": "1c7b5d9678c5/32.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/eeX8izwk.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/eeX8izwk.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "c725d2167fdcf17b8d3ec1b77dba7c02a091d8d85c41c61acfb5671b0c6065ae",
+          "artifact": "1c7b5d9678c5/33.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CQ1mmii6.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CQ1mmii6.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "ef2de72b17dbc34e0c22309636ad33b5c62642dc7157d6ef4a54bd4094cf9363",
+          "artifact": "1c7b5d9678c5/34.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/Bw-U12nz.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/Bw-U12nz.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "0f6a9268b683acfd04d58d5d324a1a67ea86ebec69b971848ae32151818b2215",
+          "artifact": "1c7b5d9678c5/35.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/By-_ixP72.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/By-_ixP72.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "c1563042951b1e587102992bd33f3854fb8d1ce9dbbaa2e14cb61bbd6bfc59f9",
+          "artifact": "1c7b5d9678c5/36.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/iG6EAUzA.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/iG6EAUzA.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "843a2660542fe103adc0606acd44f52c2c0fad1d3d2045ffde1e411777921752",
+          "artifact": "1c7b5d9678c5/37.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/Nu0ztoVj.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/Nu0ztoVj.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "1eea2c49e4d763a367d040f55da2356add2263ca302501dd81ff4adf5d58ff3e",
+          "artifact": "1c7b5d9678c5/38.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/UcnsVDq3.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/UcnsVDq3.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "4752a97a2bc482863730328120cf69c9218ec10ae075d3c3d94e8d1595306d88",
+          "artifact": "1c7b5d9678c5/39.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/1lc3I4NG2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/1lc3I4NG2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "173912ac6f3ff284b6df62cf7cb9b2abc7265138d5a684224ab5fb3d1841b037",
+          "artifact": "1c7b5d9678c5/40.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CxpRfDXP2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CxpRfDXP2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "e1c64e019c249a96729784151e44ff268afb3968b29d502c9a390129f7ebb26d",
+          "artifact": "1c7b5d9678c5/41.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DeoCEYZ72.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DeoCEYZ72.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "31d272ac8d3c984b41e66f662e0455dda0a15702c42e1d5a3b92a9b94ff36a1e",
+          "artifact": "1c7b5d9678c5/42.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CE6ierLG2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CE6ierLG2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "c865857170158f165ac32dad528eee0211c0cd83877c63841266f21c9b6e1867",
+          "artifact": "1c7b5d9678c5/43.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/dVxfsPPb2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/dVxfsPPb2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "774caecebd4d3d8ac4a558dbe2d29edf6a9ba7a737aba5b5ecd47584b1470bad",
+          "artifact": "1c7b5d9678c5/44.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/Bzf2GoIs2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/Bzf2GoIs2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "b8097dfd4f96cc10896a26e6de96f34fe5001abd2ef0fc47725a85416ac696e8",
+          "artifact": "1c7b5d9678c5/45.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/B8dbOwpz.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/B8dbOwpz.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "c8bedf72dbab23d9cec5ad68d4cc89aecb8ae3abb92cf401f38570581ffd9d2b",
+          "artifact": "1c7b5d9678c5/46.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/COankInz.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/COankInz.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "cc44a09366eb21451000cf8efbb386cf9fff62b6f7e49f0e6f3a83a42182d540",
+          "artifact": "1c7b5d9678c5/47.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/X09v_uoX.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/X09v_uoX.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "929b6ce0cdebef74910af07cbf9c7ceef85f35f074c331b87b4d9e71c44448e4",
+          "artifact": "1c7b5d9678c5/48.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/B_jqyA89.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/B_jqyA89.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "5e0dcbce75076e63b56c595d5230c84b5f70ae5f2a3825917554f16fc2e0408d",
+          "artifact": "1c7b5d9678c5/49.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BdbTZ8Oc.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BdbTZ8Oc.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "f602d851bf6b7ccfc9f123e01ff5d7e0dae533228b288964eb2d258ed2297eb7",
+          "artifact": "1c7b5d9678c5/50.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/17_Pf2o8.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/17_Pf2o8.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "5736f7d05238bc00f3551d47e6d3f031ae570c4bff5b2e5d3c155a6dbcc092cb",
+          "artifact": "1c7b5d9678c5/51.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CNbaiCT1.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CNbaiCT1.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "d2c54221aa273011ad71acd6e01cedc6a4402416580d39ca054bc80fcf38a63a",
+          "artifact": "1c7b5d9678c5/52.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/kY8YvjGe2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/kY8YvjGe2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "aae892b6b573d9c378009e4fe40f4c3355ed309b219188728f749796ade1977c",
+          "artifact": "1c7b5d9678c5/53.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/Bs3ZHN8A2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/Bs3ZHN8A2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "0f8bc4e9fa821653022473d6259199eeb4b110bc92da7c8bf880fde0d92f0ae2",
+          "artifact": "1c7b5d9678c5/54.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/Bbau6htx2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/Bbau6htx2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "90c6be6b02be0bd6c6429ee440f5e10bdd6bdbfb7ab6bab4b6e7a15d45afa970",
+          "artifact": "1c7b5d9678c5/55.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DxJuGaHV2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DxJuGaHV2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "149e0b14ac79007324d611e76b98cae6e2d54409962f1d1772e833d4e99ce30f",
+          "artifact": "1c7b5d9678c5/56.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/cjO5h1he2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/cjO5h1he2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "f049720298e8149792d580fd6fe42ef5a9361c2387bc09b58612b087cb163b4b",
+          "artifact": "1c7b5d9678c5/57.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/_gEeDF1U.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/_gEeDF1U.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "a970adc6c6e765611c04ddec04801dbc7d7b5357e5cf72499af22a31e735f171",
+          "artifact": "1c7b5d9678c5/58.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CreBDZLT.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CreBDZLT.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "d7aba0f662be8f96b018ff51c9858005c03e62921761bfe0b95fa0ec0dba4153",
+          "artifact": "1c7b5d9678c5/59.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/B009sXUe.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/B009sXUe.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "70e13d4f5b0d7529631bc040f3d59e3fb18fd4dc83b3bba59b5e2386f6791140",
+          "artifact": "1c7b5d9678c5/60.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BuXmmUlD.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BuXmmUlD.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "29af2c249fcb8e06d9f2abc154724d1a80144b55976b322fd2de4953c4433238",
+          "artifact": "1c7b5d9678c5/61.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/DztEbBKI.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/DztEbBKI.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "9842da8c6e0f5314f39464641d247378e62bc32f48eee11e2f31fba939641b02",
+          "artifact": "1c7b5d9678c5/62.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/CFtQdc1d.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/CFtQdc1d.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "4166d147f778b69f2398e208b56ed695271329d1c658c42b9e112abe1d99dff4",
+          "artifact": "1c7b5d9678c5/63.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/Cl8bJfQX.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/Cl8bJfQX.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "3a60d66e983e3582735780a8b46bafe9f977d154951fcb3557dd6dd9da98563c",
+          "artifact": "1c7b5d9678c5/64.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/BUTLlpy62.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/BUTLlpy62.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "b64ffd6bae14b9f84a5a3b0bbd1a6991565f2595af67798cecbbe35f4b2784ef",
+          "artifact": "1c7b5d9678c5/65.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/D9oUqiFu2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/D9oUqiFu2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "95fdfe2897a058acf50551581836c656e92a6978db22bbc099822cee66753fb4",
+          "artifact": "1c7b5d9678c5/66.js"
+        },
+        {
+          "url": "https://www.3ds.com/core/mdDV7JOA2.js",
+          "linked_from": "https://www.3ds.com/careers",
+          "final_url": "https://www.3ds.com/core/mdDV7JOA2.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "bef7a5a16a10fb1cfd3512fad5651287c15eed97268d8d3fbb9f2a12a4b666e4",
+          "artifact": "1c7b5d9678c5/67.js"
+        }
+      ],
+      "production_writes": 0
+    },
+    {
+      "company": "Infineon Technologies",
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages": [
+        {
+          "url": "https://www.infineon.com/cms/en/careers/",
+          "linked_from": null,
+          "final_url": "https://www.infineon.com/careers",
+          "http_status": 200,
+          "content_type": "text/html;charset=utf-8",
+          "sha256": "4017d29ad087a838bb944476457cd5eec546508437dba012173f59e93841c0eb",
+          "artifact": "f749faf4dfb9/1.html",
+          "title": "Careers | Infineon Technologies",
+          "jsonld_blocks": 2
+        },
+        {
+          "url": "https://jobs.infineon.com/careers",
+          "linked_from": "https://www.infineon.com/cms/en/careers/",
+          "final_url": "https://jobs.infineon.com/careers",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "sha256": "952d89aeaeb66f07ae25836b6a5187d7715ced8315ac92b14b87e0a7f9c7040c",
+          "artifact": "f749faf4dfb9/2.html",
+          "title": "Infineon Careers",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://www.infineon.com/",
+          "linked_from": null,
+          "final_url": "https://www.infineon.com/",
+          "http_status": 200,
+          "content_type": "text/html;charset=utf-8",
+          "sha256": "66d7770ddf9eba82ed40893ebb4b3a4ad535800b634c94480a194d4036582643",
+          "artifact": "f749faf4dfb9/3.html",
+          "title": "Semiconductor & System Solutions | Infineon Technologies",
+          "jsonld_blocks": 2
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-careerHero.min.ACSHASH6c9b9548fef91d3a98669a97f30b24ca.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-careerHero.min.ACSHASH6c9b9548fef91d3a98669a97f30b24ca.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "17775a1c86731f2d228ee72afe4edd8c632c7f825a30b2d2e9521dbf3c429ab8",
+          "artifact": "f749faf4dfb9/4.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/careerhero-jobsearch/clientlibs/resources/coveoCustom.min.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/careerhero-jobsearch/clientlibs/resources/coveoCustom.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "02ee42622e1be8f9a61c2f136af85a07efa135fe88621292ccc73fe9de48c879",
+          "artifact": "f749faf4dfb9/5.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/base.df0a37eeb2ad2ad3851a2f3a7bf662ab.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/base.df0a37eeb2ad2ad3851a2f3a7bf662ab.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "c0eb1352f87fdcb786dde251f7fe09916a62d95935274e97ceb5feb6895e535d",
+          "artifact": "f749faf4dfb9/6.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-0.e3a903f8961d8e04.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-0.e3a903f8961d8e04.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "cb5b061cacd6600600cafe57c753e627b6fad3e187fcaa31df6013708a7d163d",
+          "artifact": "f749faf4dfb9/7.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-1.8efc9c56c820bc97.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-1.8efc9c56c820bc97.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "7a7e68a037c779e37686b82ebb7e73b913987e1b4bfd3ac95dd61465f05ec4db",
+          "artifact": "f749faf4dfb9/8.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-2.bc21cedad31a55a2.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-2.bc21cedad31a55a2.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "552714e584de9b0391fc0ea8f6f074a968d124c53c8c62eeddfd161ea620841d",
+          "artifact": "f749faf4dfb9/9.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-3.7697d80fc0f8996e.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-3.7697d80fc0f8996e.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "9b8f7a394fb04afd99d5cae258fd69ce121860dfbaa6f1cd090b26d0f661941e",
+          "artifact": "f749faf4dfb9/10.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-4.d5ab2b6a0b5a4bae.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-4.d5ab2b6a0b5a4bae.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "69b89a5b104ded54d9b9efd539eb3f4e693905bebd39fa09f90081cfed850919",
+          "artifact": "f749faf4dfb9/11.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-5.66827ad9695e1e06.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-5.66827ad9695e1e06.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "e59e4e918bb3d6040b3796658fd625787238bfc424266b0eb6e25ce85a9fbec8",
+          "artifact": "f749faf4dfb9/12.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-6.8a0b169c38c89395.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-6.8a0b169c38c89395.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "1d0d1e6bc795b758bcab1e1b7a3949a2ee2f728e9069fd0c70c9970c21cc5e92",
+          "artifact": "f749faf4dfb9/13.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-7.fbb8230ccd9acf12.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-7.fbb8230ccd9acf12.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "7bfac18302643ec205c10817b016cbf5b9a6ffc0dd10a5954200c4484a7bced1",
+          "artifact": "f749faf4dfb9/14.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-8.968af945f0490f2d.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-8.968af945f0490f2d.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "215a0b3207504b6db2a8d55d7d15c08c7bdc82156fcf89ab8707c244bd0569c4",
+          "artifact": "f749faf4dfb9/15.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-9.b3b1f884bcf5f610.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-9.b3b1f884bcf5f610.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "4f35d79f415bf57a3025d1748788e4b6ff29d8bcc73c8c3b2915bfec7d3ee7fc",
+          "artifact": "f749faf4dfb9/16.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-ce0efe24.1bfb648ed5c92148.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-ce0efe24.1bfb648ed5c92148.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "aa9182d3111757c922db06d28dfcbe955c13406d8c94eb0172ea8230f47092bd",
+          "artifact": "f749faf4dfb9/17.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-11.c68868baebf71a21.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-11.c68868baebf71a21.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "0a1f150e32dba982ed6f980dab44e6b53fe5c5bd7aa3dc995fad7babc3433bcd",
+          "artifact": "f749faf4dfb9/18.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-12.715b89c294d870bd.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-12.715b89c294d870bd.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "744ef8b6e5b172b0da28a9159494058f7dba5ddf6aabb104194a188abbae7b1c",
+          "artifact": "f749faf4dfb9/19.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-13.ed66e48f62ba678f.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-13.ed66e48f62ba678f.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "d1c7e269b780eb2fddb1891564e7648a20f79f5e029510ea39b316632eeba7c9",
+          "artifact": "f749faf4dfb9/20.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-14.49e71b97bf5f4c2a.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-14.49e71b97bf5f4c2a.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "0d229230ec3d04a836f64bf6fe3c6eb32bfe0aa080957e912ef0ccc78942ccb4",
+          "artifact": "f749faf4dfb9/21.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-15.3dce9ea903005fd0.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-15.3dce9ea903005fd0.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "035b56e9ca20d3a767c56f4f043d0085175e99d4e05c59b31e98459d9675b118",
+          "artifact": "f749faf4dfb9/22.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-16.23e2a91ec3eacbc1.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-16.23e2a91ec3eacbc1.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "37ccec0b15d2cdecc758d9cc677d9b28502df40d575e78f4c2e27a5eec42f967",
+          "artifact": "f749faf4dfb9/23.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-17.967147ae7d2075a3.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-17.967147ae7d2075a3.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "6a11e57266de353f4e0cf69cb12e2f6069d13d62baa7ef1634bf69a841b836d6",
+          "artifact": "f749faf4dfb9/24.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-18.c33faf61d0eb974c.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-18.c33faf61d0eb974c.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "5c3bfacfc400429455d86cf8d0f20f2022cc1b30f807f3dbf09faa3650f7f618",
+          "artifact": "f749faf4dfb9/25.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-19.6360ac41f5c8b6de.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-19.6360ac41f5c8b6de.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "333a456e9ed768a20cc874deeb7d9e8be17cb0b064637000ff8c8a4897b9606d",
+          "artifact": "f749faf4dfb9/26.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-20.799f4f2f74c5a676.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-20.799f4f2f74c5a676.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "989319661488e20ad1432a3bc6c09c4fd844042f16f14f01500950d1b2937953",
+          "artifact": "f749faf4dfb9/27.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-21.7cf0bcdac2dd382b.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-21.7cf0bcdac2dd382b.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "2408fbc910daebd9247262d77058296842c63b9e55dfabdb269a7aee80560779",
+          "artifact": "f749faf4dfb9/28.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/ef-22.c2ba8012d6d7aa65.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/ef-22.c2ba8012d6d7aa65.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "4b789bedf01ff6f134973c581df7c1668122ab0e1647661086c18069eae664e9",
+          "artifact": "f749faf4dfb9/29.js"
+        },
+        {
+          "url": "https://rum.hlx.page/.rum/@adobe/helix-rum-js@2.14.0/dist/rum-standalone.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://rum.hlx.page/.rum/@adobe/helix-rum-js@2.14.0/dist/rum-standalone.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "e1f0d3410c150971dfe0999a2ca908203a08c61b035503bd1d6c8859157c18e4",
+          "artifact": "f749faf4dfb9/30.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-utils.min.ACSHASH614d8bb423ffdae02e6c39c00bce270e.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-utils.min.ACSHASH614d8bb423ffdae02e6c39c00bce270e.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "b7f0eb677632b9b7505abd546bf3b537a190e2920ffefacbf41172a4a4045295",
+          "artifact": "f749faf4dfb9/31.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/clientlibs/granite/utils.min.ACSHASH899004cc02c33efc1f6694b1aee587fd.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/clientlibs/granite/utils.min.ACSHASH899004cc02c33efc1f6694b1aee587fd.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "377e9731df07066631dc615291a3dbdbc923893629702f2e3b9b7a5775cc027b",
+          "artifact": "f749faf4dfb9/32.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc/clientlibs/onetrustrow/oneTrust-production/scripttemplates/otSDKStub.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc/clientlibs/onetrustrow/oneTrust-production/scripttemplates/otSDKStub.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "c417d61d7ec10c6cdee008c3912ce23b5584b3a0396aa2d418daf06206dab55e",
+          "artifact": "f749faf4dfb9/33.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/components/secondary-navigation/clientlibs.min.ACSHASHacfe64429d9af65157df9b1e3333756c.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/components/secondary-navigation/clientlibs.min.ACSHASHacfe64429d9af65157df9b1e3333756c.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "f76eaaa88ccc247f43aabb6a340e5ee9076676ca607d27e10cb85e41febbdd8b",
+          "artifact": "f749faf4dfb9/34.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/video/clientlibs.min.ACSHASHb58385030f93bd5b462273f1ff0618c5.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/video/clientlibs.min.ACSHASHb58385030f93bd5b462273f1ff0618c5.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "ce1d55ba6697b4eddc14a8ecfced7c7eaa23db180b272796c5299d2c20a794ad",
+          "artifact": "f749faf4dfb9/35.js"
+        },
+        {
+          "url": "https://assets.infineon.com/s7viewers/html5/js/VideoViewer.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://assets.infineon.com/s7viewers/html5/js/VideoViewer.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "803f4fe25af204fdecc070ff837f9a1ff3147677b28ec4fffe0d83f79aa738a4",
+          "artifact": "f749faf4dfb9/36.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/tertiarylink/clientlibs.min.ACSHASH5eeb853e909430852e03e81eddc58e33.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/tertiarylink/clientlibs.min.ACSHASH5eeb853e909430852e03e81eddc58e33.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "c0996c0a29b2383b9553d64dc86a4f01064c8d1dee12de353c381d2b595f3e9f",
+          "artifact": "f749faf4dfb9/37.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/image/clientlibs.min.ACSHASH777f9983c48e09f418966c9b64196262.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/image/clientlibs.min.ACSHASH777f9983c48e09f418966c9b64196262.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "b900a62ca580005d9578db75a82580cfc31016a30957319b5fe4b37dbed3d64f",
+          "artifact": "f749faf4dfb9/38.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/components/product/functionaltabbedcontent/clientlibs.min.ACSHASHb5be33c648806f58ca730ff97afc477e.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/components/product/functionaltabbedcontent/clientlibs.min.ACSHASHb5be33c648806f58ca730ff97afc477e.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "4e5612b3eb1b9d872ee9e6342eefab70e96e1653e9489815f3f985a2df3b2436",
+          "artifact": "f749faf4dfb9/39.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/teaserrowcards/clientlibs.min.ACSHASH8fed20544178482795005b7023d023b4.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/components/common/teaserrowcards/clientlibs.min.ACSHASH8fed20544178482795005b7023d023b4.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "47ceb7acd88ec10c8d975204993e1c4c69a221c64f85e3501bbf8f197719bf15",
+          "artifact": "f749faf4dfb9/40.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-jobofframp.min.ACSHASHff32b00e2fd354a24c0cc80acdf5bd63.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-jobofframp.min.ACSHASHff32b00e2fd354a24c0cc80acdf5bd63.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "5b8d253f75a099f02fa203ab0afc7b3c9e0a282b76784cb3b90b9c5b863e65d4",
+          "artifact": "f749faf4dfb9/41.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-head.min.ACSHASH9ce301af1902979a58163fa0e54239b9.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-head.min.ACSHASH9ce301af1902979a58163fa0e54239b9.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "ba4343b23c57f68849ef577dc20331287dd6ea0e96a24661bd8730a9449912ff",
+          "artifact": "f749faf4dfb9/42.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/core/wcm/components/commons/site/clientlibs/container.min.ACSHASH0a6aff292f5cc42142779cde92054524.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/core/wcm/components/commons/site/clientlibs/container.min.ACSHASH0a6aff292f5cc42142779cde92054524.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "c250924012fdc9ea9516b30650895201cd167dbd49c9d148924f30881abfa393",
+          "artifact": "f749faf4dfb9/43.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-headfooter.min.ACSHASHf144ce810eb18f95d5e67d7ed66174e9.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-headfooter.min.ACSHASHf144ce810eb18f95d5e67d7ed66174e9.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "350f128a196699a9367041c49a092a3b4e9728ccff460d5646c5e5665ac85fd5",
+          "artifact": "f749faf4dfb9/44.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-site.min.ACSHASH02fd0a4e85fccb73d48504d223ec55d1.js",
+          "linked_from": "https://www.infineon.com/careers",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlib-site.min.ACSHASH02fd0a4e85fccb73d48504d223ec55d1.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "057c2b974926d62b4ec0b6b9fe4f431cc323a1e612c8604a4d3c9bea02654321",
+          "artifact": "f749faf4dfb9/45.js"
+        },
+        {
+          "url": "https://www.recaptcha.net/recaptcha/api.js?render=6LfwboYUAAAAAJb6QcVuRXi7R9pTqgGKF6TnNzia",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://www.recaptcha.net/recaptcha/api.js?render=6LfwboYUAAAAAJb6QcVuRXi7R9pTqgGKF6TnNzia",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "6baf017aceccecc1d6851f2aea6f10b7562aa08816165449ccc5d14f8e7c9409",
+          "artifact": "f749faf4dfb9/46.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/gettext.min.235fc3739e4f06089751dc69a2df8372.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/gettext.min.235fc3739e4f06089751dc69a2df8372.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "67c915c113f4567e4b8e0142a08f4849a7e870529537039b8bf2504c836b0ba9",
+          "artifact": "f749faf4dfb9/47.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/moment-with-locales.min.ca6972cb6a768aa6b2769b4a32162fa2.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/moment-with-locales.min.ca6972cb6a768aa6b2769b4a32162fa2.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "ea218fb113939aadf1b7c46359b384b77ecfb74cabd3818af68c8c8440d1dc8a",
+          "artifact": "f749faf4dfb9/48.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/toastr.min.302e74f93481e4a7c43e503b29a88d45.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/toastr.min.302e74f93481e4a7c43e503b29a88d45.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "b0c44a723b496d37458cac39aef81c478a426de72532d5adf7265274d69778d4",
+          "artifact": "f749faf4dfb9/49.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/base_i18n.22343826eaf2c90f793657d87c08ecba.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/base_i18n.22343826eaf2c90f793657d87c08ecba.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "ce8cb129ac0d30059d527fb10949c777cb92d5207b6f163dc276cdbe74954cd7",
+          "artifact": "f749faf4dfb9/50.js"
+        },
+        {
+          "url": "https://static.vscdn.net/gen/i18n/i18n_override_infineon.com_en_17336d3d.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://static.vscdn.net/gen/i18n/i18n_override_infineon.com_en_17336d3d.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "915995877ffdb4a8cd3ca6ba805290abc94d6dab61a5191ab314fd1b3b8e3fa2",
+          "artifact": "f749faf4dfb9/51.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/i18n_data_en.a8a0de36.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/i18n_data_en.a8a0de36.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "4afc47340807a3249eaaba31af80efea6eb83c2c9c7e017622be275c3142079a",
+          "artifact": "f749faf4dfb9/52.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/user_interaction.d05956ed.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/user_interaction.d05956ed.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "26b974ae03e99d2393f033e63906674203f65f36ff6e2b13d3084e903352cac0",
+          "artifact": "f749faf4dfb9/53.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/vendor_react.06907669c2948291.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/vendor_react.06907669c2948291.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "78fbd8f94e1004d1374c36fde8f91ddccd40fab4b7c1b590bf2982a2c5e3d4f4",
+          "artifact": "f749faf4dfb9/54.js"
+        },
+        {
+          "url": "https://jobs.infineon.com/gen/js/pcsxPwa.b679e27b8d77b921.js",
+          "linked_from": "https://jobs.infineon.com/careers",
+          "final_url": "https://jobs.infineon.com/gen/js/pcsxPwa.b679e27b8d77b921.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "c2d9842d9699a1457091b173e808ada69844495807b7d9b26699373d9c5463cc",
+          "artifact": "f749faf4dfb9/55.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlibs-homePage.min.ACSHASH928386f70fd602db9381846468974858.js",
+          "linked_from": "https://www.infineon.com/",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/clientlibs/clientlibs-homePage.min.ACSHASH928386f70fd602db9381846468974858.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "8205bbfa1f07e56dc390f86d2c4b458b30757254a268414d2879856772a5d314",
+          "artifact": "f749faf4dfb9/56.js"
+        },
+        {
+          "url": "https://www.infineon.com/etc.clientlibs/ifx/components/product/productcarousel/clientlibs.min.ACSHASH3362e3bb7d706f5e32aa668603ca300b.js",
+          "linked_from": "https://www.infineon.com/",
+          "final_url": "https://www.infineon.com/etc.clientlibs/ifx/components/product/productcarousel/clientlibs.min.ACSHASH3362e3bb7d706f5e32aa668603ca300b.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "fdf333568d896bfff58f92e0124a61d2113ef1dd9244f6452a55eefc7b8818ea",
+          "artifact": "f749faf4dfb9/57.js"
+        }
+      ],
+      "production_writes": 0
+    },
+    {
+      "company": "Siemens",
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages": [
+        {
+          "url": "https://jobs.siemens.com/careers",
+          "linked_from": null,
+          "final_url": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "http_status": 200,
+          "content_type": "text/html;charset=UTF-8",
+          "sha256": "b731d634b1544c97d1332cfc02da30523eecc0811b038557211b593517a31c04",
+          "artifact": "1f35120568f6/1.html",
+          "title": "Careers Marketplace - Siemens",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://jobs.siemens.com/en_US/externaljobs",
+          "linked_from": "https://jobs.siemens.com/careers",
+          "final_url": "https://jobs.siemens.com/en_US/externaljobs",
+          "http_status": 200,
+          "content_type": "text/html;charset=UTF-8",
+          "sha256": "c35e757514ffdb3af9f5c69d248a12d61898667e3b052bd3a1257dc31f03712f",
+          "artifact": "1f35120568f6/2.html",
+          "title": "Jobs at Siemens",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://jobs.siemens.com/en_US/externaljobs/Home",
+          "linked_from": "https://jobs.siemens.com/careers",
+          "final_url": "https://jobs.siemens.com/en_US/externaljobs/Home",
+          "http_status": 200,
+          "content_type": "text/html;charset=UTF-8",
+          "sha256": "a0b3781be3e08a45ca075009c1ce0111ef8d3387d699cfe4588f13a19190f313",
+          "artifact": "1f35120568f6/3.html",
+          "title": "Jobs at Siemens",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://www.siemens.com/",
+          "linked_from": null,
+          "final_url": "https://www.siemens.com/en-us/",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "sha256": "7865c30ca4aac70194aa8c445eb5c4ca3246baaeb5a4fc13d4c09f02db548f03",
+          "artifact": "1f35120568f6/4.html",
+          "title": "Siemens home | Siemens",
+          "jsonld_blocks": 1
+        },
+        {
+          "url": "https://www.siemens.com/en-us/company/jobs/",
+          "linked_from": "https://www.siemens.com/",
+          "final_url": "https://www.siemens.com/en-us/company/jobs/",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "sha256": "24d69af1acc3b4f66477333ac40673b18b7ebcb567f431b95ffa2dafbbec97ee",
+          "artifact": "1f35120568f6/5.html",
+          "title": "Jobs & careers | Siemens",
+          "jsonld_blocks": 1
+        },
+        {
+          "url": "https://static.sw.cdn.siemens.com/digitalexperiences/search/1.x/searchbox.load.js",
+          "linked_from": "https://www.siemens.com/en-us/",
+          "final_url": "https://static.sw.cdn.siemens.com/digitalexperiences/search/1.x/searchbox.load.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "6332cbd7327a44b68b86e3684304b9cb327928d75497c69504ae0297d31d4239",
+          "artifact": "1f35120568f6/6.js"
+        },
+        {
+          "url": "https://jobs.siemens.com/portalpacks/web/js/head/head.DKodxVax.iife.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://jobs.siemens.com/portalpacks/web/js/head/head.DKodxVax.iife.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "d19444407c4d5f49c266ad5a774f0d4e25c1e177c7e3da8e87841fd5b1751a78",
+          "artifact": "1f35120568f6/7.js"
+        },
+        {
+          "url": "https://jobs.siemens.com/portalpacks/web/js/body.DGY7GCmi.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://jobs.siemens.com/portalpacks/web/js/body.DGY7GCmi.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "b9b03073d569e16e15b94b5f6981c519d2d1389f86d63a6a54afbdf5b1042cd0",
+          "artifact": "1f35120568f6/8.js"
+        },
+        {
+          "url": "https://w3.siemens.com/ote/ote_config.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://w3.siemens.com/ote/ote_config.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "1a82e16f326addfdfd6046bcf5e44e2e0e7ea284163653366f359e367d48533b",
+          "artifact": "1f35120568f6/9.js"
+        },
+        {
+          "url": "https://w3.siemens.com/ote/global/ote.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://w3.siemens.com/ote/global/ote.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "91aedf9117c908c43bae2412d0039b6a8f8a84bf752c94c1fb327ce9fbd43362",
+          "artifact": "1f35120568f6/10.js"
+        },
+        {
+          "url": "https://assets.adobedtm.com/5dfc7d97c6fb/febff9103b9b/launch-a45a09a9ed18.min.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://assets.adobedtm.com/5dfc7d97c6fb/febff9103b9b/launch-a45a09a9ed18.min.js",
+          "http_status": 200,
+          "content_type": "application/x-javascript",
+          "sha256": "09e40fd9316996655d0737eda27234c9348de58022991bf7166694d2064cad6b",
+          "artifact": "1f35120568f6/11.js"
+        },
+        {
+          "url": "https://jobs.siemens.com/portal/locales/en_US/templatebuilder-hydration.js?prwbhDGZtnJWQJnEwX8x5tHt4BY=",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://jobs.siemens.com/portal/locales/en_US/templatebuilder-hydration.js?prwbhDGZtnJWQJnEwX8x5tHt4BY=",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "1d076c96fecef48952fecb6442753c141262563b1865ed648524054d7fbacb5b",
+          "artifact": "1f35120568f6/12.js"
+        },
+        {
+          "url": "https://jobs.siemens.com/portalpacks/web/js/templatebuilder-hydration.lihg19-M.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://jobs.siemens.com/portalpacks/web/js/templatebuilder-hydration.lihg19-M.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "11ad8bea9cc8e07cd7b048835aa23862f603116faa10d751b25563fc57ce82b8",
+          "artifact": "1f35120568f6/13.js"
+        },
+        {
+          "url": "https://templates-static-assets.avacdn.net/jsLibrary/24.4/core.min.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://templates-static-assets.avacdn.net/jsLibrary/24.4/core.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "368b298d2a12dc4c883bf8bfe0b2703897f64e44ded8206994831d301bb7b480",
+          "artifact": "1f35120568f6/14.js"
+        },
+        {
+          "url": "https://jobs.siemens.com/portal/144/js/specifics.js?v=1791272711",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://jobs.siemens.com/portal/144/js/specifics.js?v=1791272711",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "9a42967de515addedcc233dc140106ea5e8be9c1d5ca086baeb1e9fc64bb9345",
+          "artifact": "1f35120568f6/15.js"
+        },
+        {
+          "url": "https://jobs.siemens.com/portalpacks/web/js/session-popup.DrgxtAa2.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+          "final_url": "https://jobs.siemens.com/portalpacks/web/js/session-popup.DrgxtAa2.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "6e3e12865913cff6a267b0ae811c194bbd77421a718b2999a3ffa548126a55f6",
+          "artifact": "1f35120568f6/16.js"
+        },
+        {
+          "url": "https://jobs.siemens.com/portalpacks/web/js/wizard-legacy.BUfVi9o6.js",
+          "linked_from": "https://jobs.siemens.com/en_US/externaljobs",
+          "final_url": "https://jobs.siemens.com/portalpacks/web/js/wizard-legacy.BUfVi9o6.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "be573430936b4e9f8a154a5ea7b5bc2b36998d9bd73f02d26a7d3e4ba53b9cd9",
+          "artifact": "1f35120568f6/17.js"
+        },
+        {
+          "url": "https://static.sw.cdn.siemens.com/xd/xd-utils/1.x/xd-utils.min.js",
+          "linked_from": "https://www.siemens.com/en-us/",
+          "final_url": "https://static.sw.cdn.siemens.com/xd/xd-utils/1.x/xd-utils.min.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "a7514ad9233bc7d10fea0d5421ddb66064d567fe253388dec6bef5fb93c241c4",
+          "artifact": "1f35120568f6/18.js"
+        },
+        {
+          "url": "https://static.sw.cdn.siemens.com/xd/universal-components/1.x/web/index.js",
+          "linked_from": "https://www.siemens.com/en-us/",
+          "final_url": "https://static.sw.cdn.siemens.com/xd/universal-components/1.x/web/index.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "ff01abd01ab579beb1756970c17422ae37f75382fd362a5000d70ac003281d34",
+          "artifact": "1f35120568f6/19.js"
+        },
+        {
+          "url": "https://www.siemens.com/shared-assets/261a28a8740a5a31369e637ab0c0bd742182c9b8/lib/helpers/esm/index.module.js",
+          "linked_from": "https://www.siemens.com/en-us/",
+          "final_url": "https://www.siemens.com/shared-assets/261a28a8740a5a31369e637ab0c0bd742182c9b8/lib/helpers/esm/index.module.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "5752f253b2d1ecab3db7960b678bf8e4b39105ab4658a47cfcd473bee9310ae8",
+          "artifact": "1f35120568f6/20.js"
+        },
+        {
+          "url": "https://static.sw.cdn.siemens.com/digitalexperiences/utility/1.x/vendor.min.js",
+          "linked_from": "https://www.siemens.com/en-us/",
+          "final_url": "https://static.sw.cdn.siemens.com/digitalexperiences/utility/1.x/vendor.min.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "artifact": "1f35120568f6/21.js"
+        },
+        {
+          "url": "https://www.siemens.com/shared-assets/261a28a8740a5a31369e637ab0c0bd742182c9b8/js/is-land.js",
+          "linked_from": "https://www.siemens.com/en-us/",
+          "final_url": "https://www.siemens.com/shared-assets/261a28a8740a5a31369e637ab0c0bd742182c9b8/js/is-land.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "91fbddf979e83608399f24cdac8d6d78d0a806561e37e53bd73eaae86ddc8bfc",
+          "artifact": "1f35120568f6/22.js"
+        }
+      ],
+      "production_writes": 0
+    },
+    {
+      "company": "Schneider Electric",
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages": [
+        {
+          "url": "https://www.se.com/ww/en/about-us/careers/",
+          "linked_from": null,
+          "final_url": "https://www.se.com/ww/en/about-us/careers/",
+          "http_status": 404,
+          "content_type": "text/html; charset=UTF-8",
+          "sha256": "ba69df1830ffea7ddc5631d6641d9b55803ca30c4f6e417a8a07273b5a66efb3"
+        },
+        {
+          "url": "https://www.se.com/",
+          "linked_from": null,
+          "final_url": "https://www.se.com/ww/en/",
+          "http_status": 200,
+          "content_type": "text/html",
+          "sha256": "6cc73aa6f8b2449afd3eef56b8f5c3f6e692b14e92911648992cdf561a6a2ba5",
+          "artifact": "c64bc2b136d0/2.html",
+          "title": "Schneider Electric Global | Your Energy Technology Partner",
+          "jsonld_blocks": 1
+        },
+        {
+          "url": "https://sdk.trackingplan.com/js/a/trackingplan-secom.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://sdk.trackingplan.com/js/a/trackingplan-secom.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "3895170ad81d7221bcdad62ea6466f9c47809442e8b0c346992334de7cb47ffc",
+          "artifact": "c64bc2b136d0/3.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/@quartzds/core/@1.0.0-beta.131/dist/esm/qds.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/@quartzds/core/@1.0.0-beta.131/dist/esm/qds.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "93f9c7893b60bb1b1bb923f1ce97ceb0468ae26be4c5e0faa864e450b1a633fa",
+          "artifact": "c64bc2b136d0/4.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/@quartzds/websites/@1.0.0-beta.90/dist/esm/qds-web.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/@quartzds/websites/@1.0.0-beta.90/dist/esm/qds-web.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "b8eafadd9baca95d710145cc98a3c3ce7c533b578b79b22940d806c0740a29bc",
+          "artifact": "c64bc2b136d0/5.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/unsupportedBrowser/unsupportedBrowser.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/unsupportedBrowser/unsupportedBrowser.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "65556167890f20c77f90f952cf12b12e3181244fb145f94093e745d75d6aa15d",
+          "artifact": "c64bc2b136d0/6.js"
+        },
+        {
+          "url": "https://selectandconfig-widget.se.com/release/wrapper/2.X/wrapper.min.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://selectandconfig-widget.se.com/release/wrapper/2.X/wrapper.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "3cfeaa8dd6d5357efa316d421f97a409a9f56930a1b5b90ab82f3da38514b5fb",
+          "artifact": "c64bc2b136d0/7.js"
+        },
+        {
+          "url": "https://selectandconfig-widget.schneider-electric.com/release/wrapper/2.X/wrapper.min.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://selectandconfig-widget.schneider-electric.com/release/wrapper/2.X/wrapper.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "3cfeaa8dd6d5357efa316d421f97a409a9f56930a1b5b90ab82f3da38514b5fb",
+          "artifact": "c64bc2b136d0/8.js"
+        },
+        {
+          "url": "https://www.se.com/assets-sdl/v2/script-chat/vlatest/purify.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://www.se.com/assets-sdl/v2/script-chat/vlatest/purify.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "ed2a2ae5a15cca15b2d97b85718c8c0d348b6bf75d6fa334961ed0cbfa41a2fd",
+          "artifact": "c64bc2b136d0/9.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/systemjs/6.15.1/system.min.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/systemjs/6.15.1/system.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "23ff4c7727d315742c9caaa92c3609cd104d0f1cd880e0e0aeab1623e676c5ef",
+          "artifact": "c64bc2b136d0/10.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/systemjs/6.15.1/extras/named-register.min.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/systemjs/6.15.1/extras/named-register.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "c5121d865650bf38506c42562daef6ba36b0b6260269ecf5e45e53732f142df2",
+          "artifact": "c64bc2b136d0/11.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/@se/web-ui/@3.28.4/se-components/se-components.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/@se/web-ui/@3.28.4/se-components/se-components.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "f40efacd53cf5e1d9b3225cc7630c4fd5e0fec72aa92e1826647a479cb54a6ed",
+          "artifact": "c64bc2b136d0/12.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/@se/web-ui/@3.28.4/se-components/se-components.esm.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/@se/web-ui/@3.28.4/se-components/se-components.esm.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "64631345fcd43753ac661222ea45462f9543ef40affe493aabad12c3eca84cb9",
+          "artifact": "c64bc2b136d0/13.js"
+        },
+        {
+          "url": "https://js-cdn.dynatrace.com/jstag/147f84b2bdc/bf45848ori/bf2699e3c0b468f0_complete.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://js-cdn.dynatrace.com/jstag/147f84b2bdc/bf45848ori/bf2699e3c0b468f0_complete.js",
+          "http_status": 200,
+          "content_type": "text/javascript; charset=utf-8",
+          "sha256": "b574c4f1b5bf9559533de22528b9f9ced0e842e7d4ab6aa2e7b050604633c0ca",
+          "artifact": "c64bc2b136d0/14.js"
+        },
+        {
+          "url": "https://www.se.com/akam/13/6522a9a5",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://www.se.com/akam/13/6522a9a5",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "6270b3785add5eed924222cca38df9a41b2c68e9c98b8c010987d7fb549ade53",
+          "artifact": "c64bc2b136d0/15.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/@quartzds/websites/@1.0.0-beta.90/dist/esm/qds-web-carousel_2.entry.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/@quartzds/websites/@1.0.0-beta.90/dist/esm/qds-web-carousel_2.entry.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "c8e3c926a5d5de72c5c076a18e57afaeb1c1b379fdcf3268ee42741a94b4cfeb",
+          "artifact": "c64bc2b136d0/16.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/@quartzds/websites/@1.0.0-beta.90/dist/esm/qds-web-media.entry.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/@quartzds/websites/@1.0.0-beta.90/dist/esm/qds-web-media.entry.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "3a2b3e38920fadc9db364945ae4f944791ab9000a6b6347fbfcc8a3d95b9e6a1",
+          "artifact": "c64bc2b136d0/17.js"
+        },
+        {
+          "url": "https://uiaas.myschneider.se.com/@quartzds/websites/@1.0.0-beta.90/dist/esm/qds-web-block-promo.entry.js",
+          "linked_from": "https://www.se.com/ww/en/",
+          "final_url": "https://uiaas.myschneider.se.com/@quartzds/websites/@1.0.0-beta.90/dist/esm/qds-web-block-promo.entry.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "e29a30d93adbe15f9f7aba55db74c159e4d4ee3aad6854a66d777910b9026cdd",
+          "artifact": "c64bc2b136d0/18.js"
+        }
+      ],
+      "production_writes": 0
+    },
+    {
+      "company": "ASML",
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages": [
+        {
+          "url": "https://www.asml.com/en/careers",
+          "linked_from": null,
+          "final_url": "https://www.asml.com/en/careers",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "sha256": "f616b014f5c9837b0c86049b8d00a946d21bb02e8f57c8fcafb5b982fb19e43f",
+          "artifact": "c908d13f3032/1.html",
+          "title": "ASML Careers  - World's supplier to the semiconductor industry",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://www.asml.com/en/careers/saved-jobs",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/en/careers/saved-jobs",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "sha256": "3d5fef6f087a21eceadd3f7f6c417afa0e66dbcf9c59099ecbf2349c19da1a97",
+          "artifact": "c908d13f3032/2.html",
+          "title": "Saved jobs | ASML",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://www.asml.com/en/careers/find-your-job",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/en/careers/find-your-job",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "sha256": "b3765a4126486a91bc4229149c276fbb3800612bc00fbad954db445dc5694427",
+          "artifact": "c908d13f3032/3.html",
+          "title": "Find your job - Careers at ASML",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://www.asml.com/",
+          "linked_from": null,
+          "final_url": "https://www.asml.com/en",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "sha256": "dac5aeaf295e197b8551010a08902f5eaa2b5ff8e9f1b911d95c47df02979113",
+          "artifact": "c908d13f3032/4.html",
+          "title": "ASML | The world's supplier to the semiconductor industry",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/main-9a565952a5274f4a.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/main-9a565952a5274f4a.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "db585eb0da40b8cffbe5a7e6f21571d43b35d4eb54f7c4f1a3f0e5973ef07228",
+          "artifact": "c908d13f3032/5.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/webpack-d0590472fab97066.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/webpack-d0590472fab97066.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "2d76dbb6580025a6a28601addb3085029521f79defa2eaa8d7316b5b0db25775",
+          "artifact": "c908d13f3032/6.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/framework-5ce682ea41927f33.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/framework-5ce682ea41927f33.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "bbb2bcb9f495cac8982113de07c7bc2c556904506f97880010382a9aeab49c6a",
+          "artifact": "c908d13f3032/7.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/pages/_app-0a9d5cba4b11a4ae.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/pages/_app-0a9d5cba4b11a4ae.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "533d2e19f0050d3a8ca3ac18085a3f37232ae12a827726885a73598f0d5dde01",
+          "artifact": "c908d13f3032/8.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/6d2b60a9-0294c11089f3edb5.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/6d2b60a9-0294c11089f3edb5.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "39a5d8c4b7fd6d7ff022591d0a1686d36f223d36f9ff75538eddb23c2c3f394c",
+          "artifact": "c908d13f3032/9.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/149-824b71077dbc0c52.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/149-824b71077dbc0c52.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "e806df191fb0c3dfd16c98e69d790a8c7172076affc98c4c26dd5d787fa243fa",
+          "artifact": "c908d13f3032/10.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/595-1cd1a0a2fd19de62.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/595-1cd1a0a2fd19de62.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "2a9fce11019bb1e099e92a5df084106e408de09d56dfc5cba6080ef616b93ccd",
+          "artifact": "c908d13f3032/11.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/584-66188404b8c7973a.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/584-66188404b8c7973a.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "2077ed4c90e3bcc9457498e88eb0b2074c4d953e8e21f6dae79a0a4b39e5825f",
+          "artifact": "c908d13f3032/12.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/66-8ddc9ad892f945ca.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/66-8ddc9ad892f945ca.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "b04d2d70764b70a38d47d7f71f52f9825b42e36bd1a0e940d3b0b722fa53e80e",
+          "artifact": "c908d13f3032/13.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/chunks/pages/%5B%5B...path%5D%5D-2c9fa468e984f37b.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/chunks/pages/%5B%5B...path%5D%5D-2c9fa468e984f37b.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "3fc7b604dc933a4cdaacaa4bbfb4325c6c4cfdf2fb761cd5098d1866ca35ac86",
+          "artifact": "c908d13f3032/14.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/build-TfctsWXpff2fKS/_buildManifest.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/build-TfctsWXpff2fKS/_buildManifest.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "5b6d8c317d65a01478e3a6127701f801104905309e8a4d8593bfd9195e08cce6",
+          "artifact": "c908d13f3032/15.js"
+        },
+        {
+          "url": "https://www.asml.com/_next/static/build-TfctsWXpff2fKS/_ssgManifest.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "linked_from": "https://www.asml.com/en/careers",
+          "final_url": "https://www.asml.com/_next/static/build-TfctsWXpff2fKS/_ssgManifest.js?dpl=dpl_EjyM8e7pCznfPzug6DvduxgwUErM",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "72b3881784178e502ced0d66d648e9e4c0d535c12f8a69e9929322e697878bf5",
+          "artifact": "c908d13f3032/16.js"
+        }
+      ],
+      "production_writes": 0
+    },
+    {
+      "company": "SAS",
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages": [
+        {
+          "url": "https://www.sas.com/en_in/careers.html",
+          "linked_from": null,
+          "final_url": "https://www.sas.com/en_in/careers.html",
+          "http_status": 200,
+          "content_type": "text/html;charset=utf-8",
+          "sha256": "efd67812b3543201f2352f4e3dae67f4b5f115b0ee5f414e7a53cbca037efeb2",
+          "artifact": "a9d35ae9c3c3/1.html",
+          "title": "Careers | SAS India",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://globalcareers-sas.icims.com/jobs/intro",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://globalcareers-sas.icims.com/jobs/intro",
+          "http_status": 200,
+          "content_type": "text/html;charset=UTF-8",
+          "sha256": "6c8cb2aff1fc53c3f4fe3ef7afd19beff27adde7e957f5846f6f0f0436d4c73a",
+          "artifact": "a9d35ae9c3c3/2.html",
+          "title": "SAS | Careers Center | Welcome",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://globalcareers-sas.icims.com/jobs/intro?hashed=-435680032&mobile=false&width=1180&height=500&bga=true&needsRedirect=false&jan1offset=-300&jun1offset=-240",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://globalcareers-sas.icims.com/jobs/intro?hashed=-435680032&mobile=false&width=1180&height=500&bga=true&needsRedirect=false&jan1offset=-300&jun1offset=-240",
+          "http_status": 200,
+          "content_type": "text/html;charset=UTF-8",
+          "sha256": "118c1ff6074462833efce136fbf07d77bb5c0a2e7cfe2dad5902814550bd75aa",
+          "artifact": "a9d35ae9c3c3/3.html",
+          "title": "SAS | Careers Center | Welcome",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://www.sas.com/",
+          "linked_from": null,
+          "final_url": "https://www.sas.com/en_us/home.geo.html",
+          "http_status": 200,
+          "content_type": "text/html;charset=utf-8",
+          "sha256": "2413bbaf6de094957887c5402b31a8afb189c135685da9f9169e856f9cdebcf9",
+          "artifact": "a9d35ae9c3c3/4.html",
+          "title": null,
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://assets.adobedtm.com/c81b78ad72fa/4b509bb05cb3/launch-5d0b718ce8bb.min.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://assets.adobedtm.com/c81b78ad72fa/4b509bb05cb3/launch-5d0b718ce8bb.min.js",
+          "http_status": 200,
+          "content_type": "application/x-javascript",
+          "sha256": "ff54037a8633fe7ea30cb7879e34517b5ffb0afdf14912452c100825bc5f4449",
+          "artifact": "a9d35ae9c3c3/5.js"
+        },
+        {
+          "url": "https://www.sas.com/etc.clientlibs/clientlibs/granite/utils.min.899004cc02c33efc1f6694b1aee587fd.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc.clientlibs/clientlibs/granite/utils.min.899004cc02c33efc1f6694b1aee587fd.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "377e9731df07066631dc615291a3dbdbc923893629702f2e3b9b7a5775cc027b",
+          "artifact": "a9d35ae9c3c3/6.js"
+        },
+        {
+          "url": "https://www.sas.com/etc.clientlibs/foundation/clientlibs/shared.min.e9d9a3990d7779c2e8e3361187f3d36b.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc.clientlibs/foundation/clientlibs/shared.min.e9d9a3990d7779c2e8e3361187f3d36b.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "786e429789593e3a89d19e4869805c23a417449163acb5f3388d6c3ea3901d30",
+          "artifact": "a9d35ae9c3c3/7.js"
+        },
+        {
+          "url": "https://www.sas.com/etc/clientlibs/sas/user_profile.min.52269275545596a2710fae3e2096d4a3.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc/clientlibs/sas/user_profile.min.52269275545596a2710fae3e2096d4a3.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "5c359f84a54c4d75e83489834ec7b24f218934825cbde1bcb2668d40200ec0d5",
+          "artifact": "a9d35ae9c3c3/8.js"
+        },
+        {
+          "url": "https://www.sas.com/etc/clientlibs/sas/components/button.min.60858364fb85b9ffe1bbda48cc43de22.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc/clientlibs/sas/components/button.min.60858364fb85b9ffe1bbda48cc43de22.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "5e2a3b5174212a433dcf15d85f31c5c409a250fcbd536a603a9a169f902fa7d6",
+          "artifact": "a9d35ae9c3c3/9.js"
+        },
+        {
+          "url": "https://www.sas.com/etc/clientlibs/sas/components/accordionwrapper.min.953607cf6923e8aaec993414d7c3507d.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc/clientlibs/sas/components/accordionwrapper.min.953607cf6923e8aaec993414d7c3507d.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "571c318f976ce04711d3456598b6a6da7b9600bb2c505a04369d41c884d2cb36",
+          "artifact": "a9d35ae9c3c3/10.js"
+        },
+        {
+          "url": "https://www.sas.com/etc/cloudsettings.kernel.js/conf/global/settings/cloudsettings/default/contexthub",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc/cloudsettings.kernel.js/conf/global/settings/cloudsettings/default/contexthub",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "c31dbf7ee16bc15e1c56723e33d0ed64ce7d098c8aab4ef8ce825f70295fe947",
+          "artifact": "a9d35ae9c3c3/11.js"
+        },
+        {
+          "url": "https://www.sas.com/etc/clientlibs/sas/commons/encodings.min.f04cc6dea4b679fcee575fcc22494f86.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc/clientlibs/sas/commons/encodings.min.f04cc6dea4b679fcee575fcc22494f86.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "f85299a3c5b38b9191c4c91e05438b6447bdfc082f56ec5926b360c6dec907de",
+          "artifact": "a9d35ae9c3c3/12.js"
+        },
+        {
+          "url": "https://www.sas.com/etc/clientlibs/global/foundation_foot.min.bdad4c6c85b363a0b4f7facde1178aa2.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc/clientlibs/global/foundation_foot.min.bdad4c6c85b363a0b4f7facde1178aa2.js",
+          "http_status": 200,
+          "content_type": "application/javascript;charset=utf-8",
+          "sha256": "8093c4618515cc9b2b053700a6299096d8e64a0ccad7214d88b63f09576d1756",
+          "artifact": "a9d35ae9c3c3/13.js"
+        },
+        {
+          "url": "https://www.sas.com/etc/designs/saswww/js/static-39afb33cd697014756b5419880c9caeb.min.js",
+          "linked_from": "https://www.sas.com/en_in/careers.html",
+          "final_url": "https://www.sas.com/etc/designs/saswww/js/static-39afb33cd697014756b5419880c9caeb.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "bd4190c639e4f874abafeafdb10ca4519cd8208775b65f055eb099fa4ffb21d8",
+          "artifact": "a9d35ae9c3c3/14.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/react/sumoLogger.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/react/sumoLogger.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "681ab8bad5d606455516ba033321e8fb130adabeb48d2abb0182bfdab2cea13b",
+          "artifact": "a9d35ae9c3c3/15.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/lib/domreplacement/domReplacement.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/lib/domreplacement/domReplacement.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "12969ac3d5a0ad953d2ec6d0f535dc2a88a14d18a704fee7fc8a273e2aa37fd3",
+          "artifact": "a9d35ae9c3c3/16.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/common/icims.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/common/icims.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "0266cbfd399230295222462034ecba1e18f3e2175a3626f33ea930920e00e050",
+          "artifact": "a9d35ae9c3c3/17.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/utils.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/utils.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "93c5690ccfd3e650aaa3ba0950f7f4812c2b4d3c46823e35918572eb5756551d",
+          "artifact": "a9d35ae9c3c3/18.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/login.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/login.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "d9ce34413331c86cb14dfdc0c2df31761d23b8b77f1eba1233da774e9c72600a",
+          "artifact": "a9d35ae9c3c3/19.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/geolocation.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/geolocation.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "76fb40735c892aa8001634cdcb55b6c602566b7aef57540a44b68bfac1f8de3c",
+          "artifact": "a9d35ae9c3c3/20.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/icims.application.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/icims.application.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "9dc562484db994e2df69c022652f1939a469bb3894ef8da84c76b2745e8eb3c3",
+          "artifact": "a9d35ae9c3c3/21.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/mobileDetect.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/mobileDetect.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "5aede41696c8033b98535514847fb9c0c5f1d30f3c785cda681295af2b466555",
+          "artifact": "a9d35ae9c3c3/22.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/messageformat/messageformat.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/messageformat/messageformat.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "6f1b880a3c07a7ee08f35b98e5ae0a3e52b0d0b43175c3c01e45ea243730b2cd",
+          "artifact": "a9d35ae9c3c3/23.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/messageformat/locale/en.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/messageformat/locale/en.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "588c7f2bbd0f8a335eb3c975f2f324e514ae4c560630292fa6241e3a351d3516",
+          "artifact": "a9d35ae9c3c3/24.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc.clientlibs/clientlibs/granite/utils.min.4a192b590a2c2926fb000264370c0588.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc.clientlibs/clientlibs/granite/utils.min.4a192b590a2c2926fb000264370c0588.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "214c80e178a0ff1343d7618807f40bae75f394862b59959f62926f52a77cd10e",
+          "artifact": "a9d35ae9c3c3/25.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc.clientlibs/foundation/clientlibs/shared.min.9f3716b2c473fd53ab31b1caa53131a8.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc.clientlibs/foundation/clientlibs/shared.min.9f3716b2c473fd53ab31b1caa53131a8.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "0756cd7785a98151e12aea2c9f5256b1e21b321f0261e0f543f241d95ba2029e",
+          "artifact": "a9d35ae9c3c3/26.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/sas/user_profile.min.b08069d5fdc98b158c0b083476ff853a.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/sas/user_profile.min.b08069d5fdc98b158c0b083476ff853a.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "c09a3da0822ef57d71228abc29f5746aa23348c9b91bc4d09d0c9e16545c9b39",
+          "artifact": "a9d35ae9c3c3/27.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/sas/components/button.min.60858364fb85b9ffe1bbda48cc43de22.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/sas/components/button.min.60858364fb85b9ffe1bbda48cc43de22.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "9726dd979608be0f04383c59810b91476395d4123b7e2b37c657378709db0802",
+          "artifact": "a9d35ae9c3c3/28.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/sas/components/accordionwrapper.min.953607cf6923e8aaec993414d7c3507d.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/sas/components/accordionwrapper.min.953607cf6923e8aaec993414d7c3507d.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "ac59e36816a9fbd40ca0268bf48177bba96f5a0b139bd84a5d19b93e2b45263e",
+          "artifact": "a9d35ae9c3c3/29.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/cloudsettings.kernel.js/conf/global/settings/cloudsettings/default/contexthub",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://www.sas.com/etc/cloudsettings.kernel.js/conf/global/settings/cloudsettings/default/contexthub",
+          "http_status": 200,
+          "content_type": "application/javascript; charset=utf-8",
+          "sha256": "c31dbf7ee16bc15e1c56723e33d0ed64ce7d098c8aab4ef8ce825f70295fe947",
+          "artifact": "a9d35ae9c3c3/30.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/sas/commons/encodings.min.f04cc6dea4b679fcee575fcc22494f86.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/sas/commons/encodings.min.f04cc6dea4b679fcee575fcc22494f86.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "4ae546d24f499ec8ce4b1d121c073786d59392a5e6c61766627261d3abf0c45d",
+          "artifact": "a9d35ae9c3c3/31.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/global/foundation_foot.min.ecaff965469873914723f71caa2a71f9.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/clientlibs/global/foundation_foot.min.ecaff965469873914723f71caa2a71f9.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "2309a7848b4a0278abdab26e25d765a972a86482690ac4a7ca8d74966f23be9e",
+          "artifact": "a9d35ae9c3c3/32.js"
+        },
+        {
+          "url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/designs/saswww/js/static-1459c13dd19347d2c23abd4a039a1237.min.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro",
+          "final_url": "https://c-6750-20240919-www-sas-com.i.icims.com/etc/designs/saswww/js/static-1459c13dd19347d2c23abd4a039a1237.min.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "037d5c3f15b02bcc9de03d1a945a21606a2552af818b147a8781b8f4619619ea",
+          "artifact": "a9d35ae9c3c3/33.js"
+        },
+        {
+          "url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/dataLayer/jibeTracker.js",
+          "linked_from": "https://globalcareers-sas.icims.com/jobs/intro?hashed=-435680032&mobile=false&width=1180&height=500&bga=true&needsRedirect=false&jan1offset=-300&jun1offset=-240",
+          "final_url": "https://cdn02.icims.com/a/images.icims.com/content/platform_188.1.2.261002-c6454e1457c-11-pg-0/script/portal/dataLayer/jibeTracker.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "fee89379166142fe2a1a1d78a0949a498632dfa72ede98141ac5f4dcea949ee4",
+          "artifact": "a9d35ae9c3c3/34.js"
+        }
+      ],
+      "production_writes": 0
+    },
+    {
+      "company": "Deutsche Bank",
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages": [
+        {
+          "url": "https://careers.db.com/",
+          "linked_from": null,
+          "final_url": "https://careers.db.com/",
+          "http_status": 200,
+          "content_type": "text/html;charset=UTF-8",
+          "sha256": "389941af12270be02b35042ba247a8c3401c3f8c34f75083864f806f77c21eca",
+          "artifact": "538b15b97d32/1.html",
+          "title": "Home \u2013 Deutsche Bank Careers",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://careers.db.com/professionals/search-roles",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://careers.db.com/professionals/search-roles/",
+          "http_status": 200,
+          "content_type": "text/html;charset=UTF-8",
+          "sha256": "30272f6570762b8e33f0dfd0bebc06c72ef8c05a50ca9efb7f40baa71166dcb5",
+          "artifact": "538b15b97d32/2.html",
+          "title": "Search Roles \u2013 Deutsche Bank Careers",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://www.db.com/",
+          "linked_from": null,
+          "final_url": "https://www.db.com/",
+          "http_status": 200,
+          "content_type": "text/html;charset=UTF-8",
+          "sha256": "f7824238518c39a20f26f5916f4329a3ec6d9c4d411b54d580609cf2b038ff73",
+          "artifact": "538b15b97d32/3.html",
+          "title": "Deutsche Bank",
+          "jsonld_blocks": 0
+        },
+        {
+          "url": "https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js",
+          "http_status": 200,
+          "content_type": "application/javascript",
+          "sha256": "24b921da16b2a5252a6c2b9e1b88b2bac3c4e5d366d9cd9d1f8e5d14ffe30d15",
+          "artifact": "538b15b97d32/4.js"
+        },
+        {
+          "url": "https://careers.db.com/application/project/js/scrollposition.js",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://careers.db.com/application/project/js/scrollposition.js",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "b1e8cd63a660df8f31530ca4371a41ff84b5f2976c63c7626803906185240e76",
+          "artifact": "538b15b97d32/5.js"
+        },
+        {
+          "url": "https://careers.db.com/application/project/js/marketingautomation.js?v41",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://careers.db.com/application/project/js/marketingautomation.js?v41",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "7aaadee9f78874327bf2c249174b8051afd255c429b525f428c77cbf3e745c90",
+          "artifact": "538b15b97d32/6.js"
+        },
+        {
+          "url": "https://careers.db.com/application/project/js/careersJs.js?v41",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://careers.db.com/application/project/js/careersJs.js?v41",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "4a656d65fdfdb44b14b5750bf722828fbac7073b33bc65c766136c50832d9066",
+          "artifact": "538b15b97d32/7.js"
+        },
+        {
+          "url": "https://app.usercentrics.eu/browser-ui/latest/loader.js",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://app.usercentrics.eu/browser-ui/latest/loader.js",
+          "http_status": 200,
+          "content_type": "text/javascript",
+          "sha256": "5c1c4c6c04190ec84d096b98053a42a97a57d2629950109bdbbe7cb869eb002a",
+          "artifact": "538b15b97d32/8.js"
+        },
+        {
+          "url": "https://www.db.com/eye-able/public/js/www.db.com.js",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://www.db.com/eye-able/public/js/www.db.com.js",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "839257ae96e705816d20b4e4af1891505256294932c9bb03935d337ef01a5585",
+          "artifact": "538b15b97d32/9.js"
+        },
+        {
+          "url": "https://www.db.com/eye-able/public/js/eyeAble.js",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://www.db.com/eye-able/public/js/eyeAble.js",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "b996649452030375f4984a00d3dfb9ae25d42613cb841231702ba655c7f5d175",
+          "artifact": "538b15b97d32/10.js"
+        },
+        {
+          "url": "https://prod2.master.dwebcms.db.com/application/version/latest/js/mainJs.js?20260915",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://prod2.master.dwebcms.db.com/application/version/latest/js/mainJs.js?20260915",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "ac790c45f1f15b01cd92ccd707c2a75fb24b0cdbb68d90599d2c6c474646f4c9",
+          "artifact": "538b15b97d32/11.js"
+        },
+        {
+          "url": "https://prod2.master.dwebcms.db.com/application/version/latest/js/webtrekk.js?452",
+          "linked_from": "https://careers.db.com/",
+          "final_url": "https://prod2.master.dwebcms.db.com/application/version/latest/js/webtrekk.js?452",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "dca5fef9d405d8bae31860b8875eeea3aa3fb4ff4e3771b5d999499213730e9b",
+          "artifact": "538b15b97d32/12.js"
+        },
+        {
+          "url": "https://www.db.com/application/project/js/scrollposition.js",
+          "linked_from": "https://www.db.com/",
+          "final_url": "https://www.db.com/application/project/js/scrollposition.js",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "b1e8cd63a660df8f31530ca4371a41ff84b5f2976c63c7626803906185240e76",
+          "artifact": "538b15b97d32/13.js"
+        },
+        {
+          "url": "https://www.db.com/application/project/js/ghpJs.js",
+          "linked_from": "https://www.db.com/",
+          "final_url": "https://www.db.com/application/project/js/ghpJs.js",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "ff983bddede6804b64d4c16b17244f7a9a9279083d2c3838cb1ed7dc4812141f",
+          "artifact": "538b15b97d32/14.js"
+        },
+        {
+          "url": "https://www.db.com/application/project/js/dbcomJs.js?v6",
+          "linked_from": "https://www.db.com/",
+          "final_url": "https://www.db.com/application/project/js/dbcomJs.js?v6",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "81f88cffe388b95036f9354470db00d97923b31e70d9cd88ddcabcb2abe4697a",
+          "artifact": "538b15b97d32/15.js"
+        },
+        {
+          "url": "https://www.db.com/application/shared/js/sharedInternetJs.js?20260811",
+          "linked_from": "https://www.db.com/",
+          "final_url": "https://www.db.com/application/shared/js/sharedInternetJs.js?20260811",
+          "http_status": 200,
+          "content_type": "text/javascript;charset=UTF-8",
+          "sha256": "b7b4ad496eb39ffc0869db5e40fad549b1c1e549f80e46f48d07a9612c9416cb",
+          "artifact": "538b15b97d32/16.js"
+        }
+      ],
+      "production_writes": 0
+    }
+  ],
+  "production_writes": 0,
+  "reference_repository": "https://github.com/career-ops-hq/career-ops",
+  "reference_commit": "3be1cdf033d54e977c9770441122c9e7cf3c823f",
+  "actions_run": "https://github.com/chandanvura/JobRadar/actions/runs/37584678951",
+  "validation_run": "https://github.com/chandanvura/JobRadar/actions/runs/37584685794",
+  "baseline": {
+    "companies": 700,
+    "limited": 201,
+    "errors": 1,
+    "server_time": "2026-10-07T06:54:47.946Z"
+  },
+  "registry_changes": [],
+  "coverage_recoveries": 0
+}

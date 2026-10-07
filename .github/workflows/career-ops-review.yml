@@ -3,6 +3,7 @@ on:
   push:
     branches: [career-ops/2026-10-07]
     paths: [companies/career-ops-review-2026-10-07.json, scripts/ats_deep.py, scripts/career_ops_probe.py, .github/workflows/career-ops-review.yml]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
