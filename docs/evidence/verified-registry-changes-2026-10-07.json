@@ -1,0 +1,40 @@
+[
+  {
+    "company": "Bayer",
+    "before": {
+      "company_name": "Bayer",
+      "careers_url": "https://career.bayer.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "bayer-india",
+      "priority": "4",
+      "enabled": "true"
+    },
+    "after": {
+      "company_name": "Bayer",
+      "careers_url": "https://talent.bayer.com/careers?domain=bayer.com",
+      "ats_provider": "eightfold_legacy_complete",
+      "ats_identifier": "talent.bayer.com|bayer.com",
+      "priority": "4",
+      "enabled": "true"
+    }
+  },
+  {
+    "company": "Vodafone",
+    "before": {
+      "company_name": "Vodafone",
+      "careers_url": "https://careers.vodafone.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "vodafone-india",
+      "priority": "4",
+      "enabled": "true"
+    },
+    "after": {
+      "company_name": "Vodafone",
+      "careers_url": "https://jobs.vodafone.com/careers",
+      "ats_provider": "vodafone",
+      "ats_identifier": "vodafone.com",
+      "priority": "4",
+      "enabled": "true"
+    }
+  }
+]

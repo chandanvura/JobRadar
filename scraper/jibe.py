@@ -108,7 +108,9 @@ class JibeCareerAdapter:
             if country or brand:
                 probe=await request(x,'GET',endpoint,params=params);probe.raise_for_status();data=probe.json()
                 facets=data.get('filter',{}).get('facetList',{}).get('country',[])
-                if country and not any(v.get('term')==country for v in facets):
+                locations=data.get('filter',{}).get('locations',{}).get('all',[])
+                country_published=any(v.get('term')==country for v in facets) or any(v.get('country')==country for v in locations)
+                if country and not country_published:
                     raise ValueError('Jibe employer did not publish the requested country facet; zero is unverified')
                 if country:params['country']=country
                 if brand:

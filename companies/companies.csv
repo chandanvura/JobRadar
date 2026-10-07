@@ -364,7 +364,7 @@ Roche,https://roche.wd3.myworkdayjobs.com/roche-ext,workday,roche|roche-ext,4,tr
 AstraZeneca,https://astrazeneca.eightfold.ai/careers,eightfold,astrazeneca.eightfold.ai|astrazeneca.com,4,true
 GSK,https://jobs.gsk.com/gb/en/,phenom,GHVGPAGB,4,true
 Sanofi,https://jobs.sanofi.com/en/location/india-jobs/2649/1269750/2,talentbrew,2649,4,true
-Bayer,https://career.bayer.com/,custom,bayer-india,4,true
+Bayer,https://talent.bayer.com/careers?domain=bayer.com,eightfold_legacy_complete,talent.bayer.com|bayer.com,4,true
 Merck Group,https://careers.emdgroup.com/us/en/,phenom,MQAEGZUS,4,true
 Eli Lilly,https://careers.lilly.com/us/en/,phenom,LILLUS,4,true
 Pfizer,https://pfizer.wd1.myworkdayjobs.com/PfizerCareers,workday,pfizer|PfizerCareers,4,true
@@ -444,7 +444,7 @@ United Airlines,https://careers.united.com/us/en/,phenom,UAIUADUS,4,true
 Emirates Group,https://www.emiratesgroupcareers.com/,custom,emirates-group-india,3,true
 Deutsche Telekom,https://www.telekom.com/en/careers,custom,deutsche-telekom-india,4,true
 BT Group,https://jobs.bt.com/,xml,https://jobs.bt.com/googlefeed.xml,4,true
-Vodafone,https://careers.vodafone.com/,custom,vodafone-india,4,true
+Vodafone,https://jobs.vodafone.com/careers,vodafone,vodafone.com,4,true
 Verizon,https://verizon.wd12.myworkdayjobs.com/verizon-careers,workday,verizon|verizon-careers|India,4,true
 AT&T,https://www.att.jobs/location/india-jobs/117/1269750/2,talentbrew,117,4,true
 T-Mobile,https://tmobile.wd1.myworkdayjobs.com/External,workday,tmobile|External,3,true

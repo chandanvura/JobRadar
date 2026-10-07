@@ -87,3 +87,22 @@ def test_state_only_listing_preserves_more_precise_published_detail():
     assert detail_record(detail,listing,'employer')==detail
     listing['city']='Los Angeles';listing['full_location']='Los Angeles, California; United States'
     with pytest.raises(SnapshotChanged):detail_record(detail,listing,'employer')
+
+
+def test_country_scope_uses_published_location_countries_and_rejects_absent_country(monkeypatch):
+    captured=[];published='India'
+    async def request(client,method,url,**kwargs):
+        req=httpx.Request(method,url)
+        if url.endswith('/jobs') and '/api/' not in url:
+            return httpx.Response(200,text='<script>window._jibe = {"cid":"employer"};</script><script src="https://app.jibecdn.com/prod/search/v/main.js"></script>',request=req)
+        if 'jibecdn' in url:return httpx.Response(200,text='this.http.get("/api/jobs" searchJobBySlug',request=req)
+        if url.endswith('/api/jobs'):
+            params=dict(kwargs['params']);captured.append(params)
+            return httpx.Response(200,json={'count':0,'totalCount':0,'jobs':[],'filter':{'locations':{'all':[{'country':published}]}}},request=req)
+        raise AssertionError(url)
+    monkeypatch.setattr(adapters,'request',request)
+    c=Company('Employer','https://official.test/jobs','jibe','employer|India')
+    jobs,count=asyncio.run(JibeCareerAdapter().fetch_jobs(c));assert count==len(jobs)==0
+    assert captured[0].get('country') is None and all(p.get('country')=='India' for p in captured[1:])
+    published='United States'
+    with pytest.raises(ValueError,match='country facet'):asyncio.run(JibeCareerAdapter().fetch_jobs(c))

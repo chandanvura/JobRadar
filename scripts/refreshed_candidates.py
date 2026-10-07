@@ -8,6 +8,7 @@ from scraper.models import Company
 
 OUT=Path('artifacts/refreshed-candidates')
 CANDIDATES=[
+    Company('Adidas','https://careers.adidas-group.com/','adidas','https://careers.adidas-group.com/jobs/feed.xml',4),
     Company('Vodafone','https://jobs.vodafone.com/careers','vodafone','vodafone.com',4),
     Company('Aon','https://jobs.aon.com/jobs','jibe','aon|India',4),
     Company('DocuSign','https://careers.docusign.com/careers-home/jobs','jibe','docusign|India',4),
@@ -69,5 +70,8 @@ async def run():
         except Exception as exc:case['blocker']=str(exc)
         print(json.dumps(case),flush=True)
     (OUT/'evidence.json').write_text(json.dumps(cases,indent=2))
+    verified={c['company']:c for c in cases if 'complete' in c}
+    if any(not verified[name]['complete'] for name in ['Bayer','Vodafone']):
+        raise RuntimeError('Approved registry repairs failed complete collection')
 
 if __name__=='__main__':asyncio.run(run())
