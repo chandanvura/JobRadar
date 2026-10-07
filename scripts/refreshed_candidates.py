@@ -23,6 +23,14 @@ async def run():
         case['complete']=not error and total==len(jobs)==case['unique_ids'] and not case['missing_descriptions'] and not (status.get('warning') or '').startswith('Limited coverage')
         cases.append(case);print(json.dumps(case),flush=True)
     async with client(timeout=40) as x:
+        # Capture the exact employer XML that failed; do not relax identity checks.
+        try:
+            from scraper.adidas import FEED, feed_records
+            r=await request(x,'GET',FEED);r.raise_for_status()
+            (OUT/'adidas-feed.xml').write_bytes(r.content)
+            records=feed_records(r.content)
+            print(json.dumps({'company':'Adidas','status':'XML_ONLY_UNVERIFIED','xml_records':len(records)}),flush=True)
+        except Exception as exc:print('Adidas public XML probe: '+str(exc),flush=True)
         for name,origin in [('Aon','https://jobs.aon.com'),('DocuSign','https://careers.docusign.com'),('Costco','https://careers.costco.com'),('Panasonic','https://careers.na.panasonic.com')]:
             case=dict(company=name,status='UNVERIFIED_PUBLIC_PROBE');cases.append(case)
             try:
