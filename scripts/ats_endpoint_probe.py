@@ -96,6 +96,9 @@ async def run():
             r=await request(x,'GET',f'https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/chunks/{chunk}.js');r.raise_for_status();(out/f'atlassian-{chunk}.js').write_text(r.text)
         # Paths below are literal imports/API calls in captured public bundles.
         further={
+          'avalara-public-board.json':'https://api.careerpuck.com/v1/public/job-boards/avalara',
+          'tredence-job-entity.js':'https://tredence.ripplehire.com/candidate/candresource/candidate/entities/job.js',
+          'tredence-company-entity.js':'https://tredence.ripplehire.com/candidate/candresource/candidate/entities/company.js',
           'atlassian-listings.json':'https://www.atlassian.com/endpoint/careers/listings',
           'avalara-entry.js':'https://static.careerpuck.com/65c346d/assets/AppEntry-Dl47o8qd.js',
           'tredence-list-controller.js':'https://tredence.ripplehire.com/candidate/candresource/candidate/apps/candidates/controller/candidatejoblist_controller.js',
