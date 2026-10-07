@@ -84,6 +84,8 @@ async def run():
             print(json.dumps(case),flush=True)
         a=await request(x,'GET','https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/96486.js')
         (out/'atlassian-jsx.js').write_text(a.text)
+        for chunk in ('73485eb31b7223','3b3e016238baca','0773a5f9cdd7b2'):
+            r=await request(x,'GET',f'https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/chunks/{chunk}.js');r.raise_for_status();(out/f'atlassian-{chunk}.js').write_text(r.text)
     (out/'evidence.json').write_text(json.dumps(cases,indent=2))
 
 if __name__=='__main__':asyncio.run(run())

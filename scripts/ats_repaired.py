@@ -10,8 +10,8 @@ async def run():
     names={'ACKO','AMD','AXA','GitHub','DocuSign'}
     cases=[]
     for row in csv.DictReader(Path('companies/companies.csv').open()):
-        if row['name'] not in names:continue
-        company=Company(row['name'],row['careers_url'],row['ats_provider'],row['ats_identifier'],int(row['priority']))
+        if row['company_name'] not in names:continue
+        company=Company(row['company_name'],row['careers_url'],row['ats_provider'],row['ats_identifier'],int(row['priority']))
         jobs,status,error,count=await scrape(company,asyncio.Semaphore(1),asyncio.Semaphore(1))
         case=dict(company=company.name,status=status,error=error,advertised_total=count,unique_ids=len({j.external_job_id for j in jobs}),details=len(jobs),unknown_dates=sum(j.posted_at is None for j in jobs),missing_descriptions=sum(not j.description for j in jobs))
         case['complete']=not error and not (status.get('warning') or '').startswith('Limited coverage') and count==len(jobs)==case['unique_ids'] and not case['missing_descriptions']
