@@ -38,5 +38,6 @@
   },
   "reference_repository": "https://github.com/career-ops-hq/career-ops",
   "reference_commit": "3be1cdf033d54e977c9770441122c9e7cf3c823f",
-  "policy": "Secondary repository implementation is a lead only. No registry change without current employer evidence and full verification."
+  "policy": "Secondary repository implementation is a lead only. No registry change without current employer evidence and full verification.",
+  "max_assets": 64
 }

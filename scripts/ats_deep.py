@@ -18,9 +18,24 @@ from scripts.ats_detective import validate_names
 
 EXCLUDE = re.compile(r'googletagmanager|google-analytics|analytics|sentry|transcend|cookie|consent|facebook|polyfill|jquery|flickity|lottie|bootstrap', re.I)
 
+def public_references(soup, page_url):
+    """Read published links, including browser module-preload dependencies."""
+    base = soup.select_one('base[href]')
+    base_url = urljoin(page_url, base['href']) if base else page_url
+    links = [urljoin(base_url, node.get('href') or node.get('src'))
+             for node in soup.select('a[href],iframe[src],link[rel="sitemap"][href],link[rel="alternate"][href]')
+             if node.get('href') or node.get('src')]
+    assets = [urljoin(base_url, node['src']) for node in soup.select('script[src]')]
+    assets += [urljoin(base_url, node['href'])
+               for node in soup.select('link[rel="modulepreload"][href],link[rel="preload"][as="script"][href]')]
+    return list(dict.fromkeys(links)), list(dict.fromkeys(assets))
+
 async def run(manifest, output):
     registry = {c.name: c for c in load_companies() if c.enabled}
     names = validate_names(manifest['companies'], registry)
+    asset_limit = manifest.get('max_assets', 24)
+    if type(asset_limit) is not int or not 1 <= asset_limit <= 64:
+        raise ValueError('Public asset limit must be an integer from 1 to 64')
     output.mkdir(parents=True, exist_ok=True)
     gate = asyncio.Semaphore(3)
     async def investigate(name):
@@ -47,8 +62,7 @@ async def run(manifest, output):
                     p=folder/(str(len(records))+suffix);p.write_text(text);rec['artifact']=str(p.relative_to(output))
                     if suffix=='.js':return text
                     soup=BeautifulSoup(text,'html.parser');rec['title']=soup.title.get_text(' ',strip=True) if soup.title else None
-                    rec['links']=list(dict.fromkeys(urljoin(str(r.url),a.get('href') or a.get('src')) for a in soup.select('a[href],iframe[src],link[rel="sitemap"][href],link[rel="alternate"][href]') if (a.get('href') or a.get('src'))))
-                    rec['scripts']=list(dict.fromkeys(urljoin(str(r.url),s['src']) for s in soup.select('script[src]')))
+                    rec['links'], rec['scripts'] = public_references(soup, str(r.url))
                     rec['jsonld_blocks']=len(soup.select('script[type="application/ld+json"]'))
                     return soup
                 except Exception as exc:
@@ -58,13 +72,13 @@ async def run(manifest, output):
                 soup=await fetch(url)
                 if not isinstance(soup,BeautifulSoup):continue
                 source=records[-1]
-                linked=[u for u in source.get('links',[]) if urlsplit(u).scheme=='https' and not urlsplit(u).fragment and not EXCLUDE.search(u) and not urlsplit(u).path.endswith(('.css','.jpg','.png','.svg')) and any(t in u.lower() for t in ['jobs','job-board','candidate','kula.ai','rippling','greenhouse','lever.co','ashby','workday','workable','smartrecruiters','bamboohr','openings','find-your-job','search-results'])]
+                linked=[u for u in source.get('links',[]) if urlsplit(u).scheme=='https' and not urlsplit(u).fragment and not EXCLUDE.search(u) and not urlsplit(u).path.endswith(('.css','.jpg','.png','.svg')) and any(t in u.lower() for t in ['jobs','job-board','candidate','kula.ai','rippling','greenhouse','lever.co','ashby','workday','workable','smartrecruiters','bamboohr','openings','find-your-job','search-results','search-roles'])]
                 linked=list(dict.fromkeys(linked));linked.sort(key=lambda u:0 if any(t in u for t in ['job-board','kula.ai','rippling','greenhouse','lever.co','ashby','workday','workable','smartrecruiters','bamboohr','darwinbox','ripplehire']) else 1);linked=linked[:2]
                 for target in linked:await fetch(target,url)
             # Inspect only scripts actually published by fetched employer/board HTML.
             scripts=list(dict.fromkeys((u,p.get('final_url',p['url'])) for p in records.copy() for u in p.get('scripts',[]) if not EXCLUDE.search(u)))
-            scripts.sort(key=lambda v:0 if re.search(r'career|search|main\.js|app/.+page|candidate|bundle',v[0],re.I) else 1)
-            for script,parent in scripts[:24]:await fetch(script,parent)
+            scripts.sort(key=lambda v:0 if re.search(r'career|search|main[.-]|app/.+page|candidate|bundle|/ef-|/base[.-]',v[0],re.I) else 1)
+            for script,parent in scripts[:asset_limit]:await fetch(script,parent)
         case=dict(company=name,status='DISCOVERED_UNVERIFIED',pages=records,production_writes=0)
         (folder/'case.json').write_text(json.dumps(case,indent=2))
         print(json.dumps(dict(company=name,pages=len(records),successful=sum(p.get('http_status')==200 for p in records),status=case['status'])),flush=True)
