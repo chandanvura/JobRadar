@@ -33,3 +33,8 @@ class DassaultTests(unittest.TestCase):
     def test_duplicate_ids_rejected(self):
         text=xml();hit=text[text.index('<Hit>'):text.index('</Hit>')+6]
         with self.assertRaises(ValueError):listing(text.replace('</Answer>',hit+'</Answer>'),0)
+
+    def test_zero_inventory_and_xml_entity_attack(self):
+        self.assertEqual(listing('<Answer xmlns="exa:com.exalead.search.v10" nhits="0" nmatches="0" start="0" estimated="false"/>',0),(0,{}))
+        from defusedxml.common import DefusedXmlException
+        with self.assertRaises(DefusedXmlException):listing('<!DOCTYPE x [<!ENTITY secret SYSTEM "file:///etc/passwd">]><Answer>&secret;</Answer>',0)

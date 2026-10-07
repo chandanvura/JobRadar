@@ -32,7 +32,7 @@ def detail(text,item):
     job=jobs[0];org=job.get('hiringOrganization') or {}
     if (org.get('name')!='Infineon' or org.get('sameAs')!='infineon.com' or job.get('url')!=item['url']
             or clean(job.get('title')).casefold()!=clean(item['title']).casefold()):
-        raise ValueError('Infineon detail differs from its employer listing identity')
+        raise ValueError(f'Infineon detail identity mismatch: expected={item}, actual title={job.get("title")!r}, url={job.get("url")!r}, organization={org}')
     description=clean(job.get('description'))
     if not description:raise ValueError('Infineon detail omitted full job requirements')
     # PCSX exposes all locations; JobPosting may contain only one address.

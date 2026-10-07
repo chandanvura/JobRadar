@@ -26,3 +26,36 @@ class InfineonTests(unittest.TestCase):
         self.assertIsNone(result['posted']);self.assertIn('Bangalore',result['location']);self.assertIn('Hyderabad',result['location'])
         job['url']='https://other.example/123'
         with self.assertRaises(ValueError):detail(html(),item)
+
+    def test_zero_inventory_is_complete_and_unknown_total_is_rejected(self):
+        self.assertEqual(listing({'data':{'count':0,'positions':[]}},0),(0,{}))
+        with self.assertRaises(ValueError):listing({'data':{'positions':[]}},0)
+
+
+class CompleteInfineonTests(unittest.IsolatedAsyncioTestCase):
+    async def test_every_detail_is_fetched_including_non_target_city(self):
+        from unittest.mock import patch
+        import httpx
+        from scraper.infineon import InfineonCareerAdapter,BOARD
+        from scraper.models import Company
+        rows=[{'id':n,'positionUrl':f'/careers/job/{n}','name':'Engineer','locations':[city],'standardizedLocations':[]} for n,city in [(123,'Delhi'),(456,'Bangalore')]]
+        calls=[]
+        class Context:
+            async def __aenter__(self):return self
+            async def __aexit__(self,*args):return False
+        async def request(client,method,url,**kwargs):
+            calls.append(url)
+            req=httpx.Request(method,url)
+            if url==BOARD:return httpx.Response(200,text='<code id="pcsx-data">{"domain":"infineon.com"}</code>',request=req)
+            if url.endswith('/search'):
+                offset=kwargs['params']['start']
+                return httpx.Response(200,json={'data':{'count':2,'positions':rows[offset:offset+1]}},request=req)
+            row=next(r for r in rows if url.endswith('/'+str(r['id'])))
+            data={'@type':'JobPosting','title':'Engineer','description':'Full requirements','url':url,'hiringOrganization':{'name':'Infineon','sameAs':'infineon.com'}}
+            return httpx.Response(200,text='<script type="application/ld+json">'+json.dumps(data)+'</script>',request=req)
+        with patch('scraper.adapters.client',return_value=Context()),patch('scraper.adapters.request',side_effect=request):
+            jobs,count=await InfineonCareerAdapter().fetch_jobs(Company('Infineon Technologies',BOARD,'infineon','infineon.com'))
+        self.assertEqual(count,2);self.assertEqual(len(jobs),2)
+        self.assertEqual({j.external_job_id for j in jobs},{'123','456'})
+        self.assertTrue(all(j.posted_at is None for j in jobs))
+        self.assertEqual(sum('/careers/job/' in url for url in calls),2)
