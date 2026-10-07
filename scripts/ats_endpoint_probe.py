@@ -74,7 +74,7 @@ async def run():
                 case['data_main']=modules
                 if name=='Avalara current':
                     for i,script in enumerate(case['scripts']):
-                        if 'app.careerpuck.com' in script:
+                        if 'careerpuck.com' in script:
                             a=await request(x,'GET',script)
                             if a.status_code==200:(folder/f'asset-{i}.js').write_text(a.text)
                 for module in modules:
@@ -86,11 +86,13 @@ async def run():
                     for i,dep in enumerate(dict.fromkeys(deps)):
                         target=urljoin(u,dep+'.js');asset=await request(x,'GET',target);case['pages'].append(dict(url=target,status=asset.status_code))
                         if asset.status_code==200:(folder/f'dep-{i}.js').write_text(asset.text)
+                        if dep=='app' and 'candidates_app' in asset.text:
+                            target=urljoin(u,'candidates_app.js');b=await request(x,'GET',target);(folder/'candidates_app.js').write_text(b.text)
             except Exception as exc:case['blocker']=str(exc)
             print(json.dumps(case),flush=True)
         a=await request(x,'GET','https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/96486.js')
         (out/'atlassian-jsx.js').write_text(a.text)
-        for chunk in ('73485eb31b7223','3b3e016238baca','0773a5f9cdd7b2'):
+        for chunk in ('73485eb31b7223','3b3e016238baca','0773a5f9cdd7b2','b06a61cad0bd06'):
             r=await request(x,'GET',f'https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/chunks/{chunk}.js');r.raise_for_status();(out/f'atlassian-{chunk}.js').write_text(r.text)
     (out/'evidence.json').write_text(json.dumps(cases,indent=2))
 
