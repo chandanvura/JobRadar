@@ -1,0 +1,29 @@
+name: GitHub reference employer HTTP probes
+on:
+  push:
+    branches: [ats-reference/2026-10-07]
+    paths: [scripts/reference_feed_probe.py, .github/workflows/reference-feeds.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: bash scripts/verify-harness.sh python
+      - run: python -m scripts.reference_feed_probe
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '2'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: github-reference-http-evidence
+          path: artifacts/reference-feed-probes/
+          retention-days: 7
