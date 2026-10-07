@@ -718,3 +718,10 @@ ADAPTERS['adidas'] = AdidasCareerAdapter()
 
 from .thoughtspot import ThoughtSpotCareerAdapter
 ADAPTERS["thoughtspot"] = ThoughtSpotCareerAdapter()
+
+from .jibe import JibeCareerAdapter
+ADAPTERS["jibe"] = JibeCareerAdapter()
+
+from .public_career_json import PublicCareerJSONAdapter
+ADAPTERS["atlassian"] = PublicCareerJSONAdapter("atlassian")
+ADAPTERS["avalara"] = PublicCareerJSONAdapter("avalara")

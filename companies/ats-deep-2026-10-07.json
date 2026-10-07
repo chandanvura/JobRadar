@@ -1,0 +1,104 @@
+{
+  "batch": "ats-deep-2026-10-07",
+  "companies": [
+    "ACKO",
+    "AMD",
+    "AXA",
+    "Avalara",
+    "Atlassian",
+    "BigBasket",
+    "CarDekho",
+    "Clear",
+    "Costco",
+    "DocuSign",
+    "GitHub",
+    "SAS",
+    "Moneyview",
+    "Tredence",
+    "Bayer",
+    "ASML",
+    "Cargill",
+    "Deutsche Boerse Group",
+    "Emirates Group",
+    "NetApp",
+    "Happiest Minds",
+    "Orange Health Labs",
+    "Perfios",
+    "PharmEasy",
+    "Rapido",
+    "Tata 1mg",
+    "Unacademy",
+    "Darwinbox"
+  ],
+  "evidence_links": {
+    "ACKO": [
+      "https://careers.kula.ai/acko"
+    ],
+    "AMD": [],
+    "ASML": [
+      "https://www.asml.com/en/careers/find-your-job"
+    ],
+    "Atlassian": [],
+    "Avalara": [],
+    "AXA": [],
+    "Bayer": [
+      "https://talent.bayer.com/careers"
+    ],
+    "BigBasket": [
+      "https://bigbasket.darwinbox.in/ms/candidate/careers"
+    ],
+    "CarDekho": [
+      "https://cardekho.darwinbox.in/ms/candidate/606876f7e2c79/careers"
+    ],
+    "Cargill": [],
+    "Clear": [
+      "https://clear.darwinbox.in/ms/candidate/careers"
+    ],
+    "Costco": [
+      "https://careers-costco.icims.com"
+    ],
+    "Darwinbox": [
+      "https://darwinbox.com/careers",
+      "https://darwinbox.com/id/careers",
+      "https://darwinbox.com/my/careers"
+    ],
+    "Deutsche Boerse Group": [],
+    "DocuSign": [
+      "https://uscareers-docusign.icims.com/",
+      "https://canadacareers-docusign.icims.com/",
+      "https://emeacareers-docusign.icims.com/"
+    ],
+    "Emirates Group": [],
+    "GitHub": [],
+    "Happiest Minds": [
+      "https://smileshrms.darwinbox.com/ms/candidate/careers"
+    ],
+    "Moneyview": [
+      "https://moneyview.darwinbox.in/ms/candidate/careers"
+    ],
+    "NetApp": [],
+    "Orange Health Labs": [
+      "https://orangehealth.darwinbox.in/ms/candidatev2/main/careers/allJobs"
+    ],
+    "Perfios": [
+      "https://perfios.darwinbox.in/ms/candidate/careers/",
+      "https://perfios.darwinbox.in/ms/candidate/careers"
+    ],
+    "PharmEasy": [
+      "https://myhr.darwinbox.in/ms/candidate/careers"
+    ],
+    "Rapido": [
+      "https://rapido.darwinbox.in/ms/candidate/careers"
+    ],
+    "SAS": [],
+    "Tata 1mg": [
+      "https://1mg.darwinbox.in/jobs"
+    ],
+    "Tredence": [
+      "https://tredence.ripplehire.com/candidate/"
+    ],
+    "Unacademy": [
+      "https://unacademy.darwinbox.in/ms/candidate/careers"
+    ]
+  }
+}
