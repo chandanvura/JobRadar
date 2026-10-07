@@ -7,7 +7,7 @@ from scraper.main import scrape
 from scraper.models import Company
 
 async def run():
-    names={'ACKO','AMD','AXA','GitHub','DocuSign','Booking.com','Intercontinental Exchange','Principal Financial Group','Keysight Technologies','PepsiCo'}
+    names={'ACKO','AMD','AXA','GitHub','DocuSign','Booking.com','Intercontinental Exchange','Principal Financial Group','Keysight Technologies','PepsiCo','Avalara'}
     cases=[]
     for row in csv.DictReader(Path('companies/companies.csv').open()):
         if row['company_name'] not in names:continue

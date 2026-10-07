@@ -72,7 +72,7 @@ def job_location(job):
     other=[]
     for loc in job.get('additional_locations') or []:
         if isinstance(loc,dict):
-            other.append(loc.get('full_location') or display(loc.get('city'),loc.get('state'),loc.get('country')))
+            other.append(loc.get('full_location') or location_text(loc.get('city'),loc.get('state'),loc.get('country')))
         elif isinstance(loc,str):other.append(loc)
     return location_text(primary,other)
 

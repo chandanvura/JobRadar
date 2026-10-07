@@ -47,7 +47,7 @@ def test_complete_pages_all_details_and_snapshot(monkeypatch,failure):
             total=22 if failure=='changed_total' and page==2 else 21
             return httpx.Response(200,json=dict(count=total,totalCount=total,jobs=[{'data':row(i)} for i in ids]),request=httpx.Request(method,url))
         i=int(url.split('/')[-2]);detail_ids.append(i)
-        payload=dict(row(i),client_code='employer',full_location='Bengaluru, India',description='<p>Java developer requirements</p>',additional_locations=[dict(full_location='Hyderabad, India')],create_date='2026-01-01')
+        payload=dict(row(i),client_code='employer',full_location='Bengaluru, India',description='<p>Java developer requirements</p>',additional_locations=[dict(city='Hyderabad',country='India')],create_date='2026-01-01')
         if failure=='wrong_detail':payload['req_id']='Other'
         if failure=='missing_requirements':payload['description']=''
         return httpx.Response(404 if failure=='missing_detail' else 200,json=payload,request=httpx.Request(method,url))
