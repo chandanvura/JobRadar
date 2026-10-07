@@ -1,0 +1,28 @@
+name: ATS Detective candidate validation
+on:
+  push:
+    branches: [ats-detective/2026-10-07]
+    paths: [scripts/ats_candidates.py, companies/ats-candidates-2026-10-07.json, scraper/**, .github/workflows/ats-candidates.yml]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: bash scripts/verify-harness.sh python
+      - run: python -m scripts.ats_candidates
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '2'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ats-candidates-2026-10-07
+          path: artifacts/ats-candidates-2026-10-07
+          retention-days: 7
