@@ -107,6 +107,14 @@ async def run():
         for name,url in further.items():
             r=await request(x,'GET',url);(out/name).write_text(r.text)
             cases.append(dict(asset=name,url=url,http_status=r.status_code,bytes=len(r.content)))
+        # Exact public form body from entities/job.js and list-controller defaults.
+        params=dict(page=0,search='*:*',token='',source='',pagesize=10)
+        r=await request(x,'POST','https://tredence.ripplehire.com/candidate/candidatejobsearch',data={'careerSiteUrlParams':json.dumps(params)})
+        (out/'tredence-search.json').write_text(r.text)
+        cases.append(dict(asset='tredence-search.json',http_status=r.status_code,bytes=len(r.content)))
+        r=await request(x,'GET','https://careers-apac-atlassian.icims.com/jobs/26639/senior-machine-learning-systems-engineer/job')
+        (out/'atlassian-missing.html').write_text(r.text)
+        cases.append(dict(asset='atlassian-missing.html',http_status=r.status_code,bytes=len(r.content)))
     (out/'evidence.json').write_text(json.dumps(cases,indent=2))
 
 if __name__=='__main__':asyncio.run(run())
