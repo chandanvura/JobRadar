@@ -155,7 +155,7 @@
     {
       "company": "Bayer",
       "batch": 1,
-      "status": "DISCOVERED_UNVERIFIED",
+      "status": "COMPLETE_ACTIONS_PRODUCTION_PENDING",
       "pages_captured": 18,
       "evidence_sha256": "0a159d7793868b1f04e0955def9bffc3765062641dc39278e3e1ae1c406baf54",
       "entry_point": {
@@ -179,7 +179,7 @@
     {
       "company": "Aon",
       "batch": 1,
-      "status": "DISCOVERED_UNVERIFIED",
+      "status": "COMPLETE_ACTIONS_PRODUCTION_PENDING",
       "pages_captured": 12,
       "evidence_sha256": "edcd1852e97475f4f3301734953b33b39f19eac231f406aefd890cbca006ecbf",
       "entry_point": {
@@ -191,7 +191,7 @@
     {
       "company": "DocuSign",
       "batch": 1,
-      "status": "DISCOVERED_UNVERIFIED",
+      "status": "COMPLETE_ACTIONS_PRODUCTION_PENDING",
       "pages_captured": 21,
       "evidence_sha256": "23bcc58c671be5c4fba871a711c152832d2ac3bb9c94752509ad9f2958389ab8",
       "entry_point": {

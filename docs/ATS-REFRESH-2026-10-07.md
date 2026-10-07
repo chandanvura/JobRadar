@@ -6,11 +6,24 @@ Four batches of 50 were captured by standard Python HTTP in [Actions](https://gi
 
 Earlier candidate probe [37612603447](https://github.com/chandanvura/JobRadar/actions/runs/37612603447) collected Planful 12/12 unique IDs/details and Bayer 32/32 India IDs/details, with no missing descriptions. These remain candidates until current repeat probes, registry changes and focused production verification pass. Aon and DocuSign failed country-facet validation; Darwinbox and Orange Health returned 403; HubSpot returned GraphQL errors rather than a valid empty job list.
 
-The proposed registry changes replace the custom sources for Bayer and Vodafone with their officially linked India feeds. They are gated on repeated complete collection and are awaiting focused production verification. Exact old/new rows are recorded in `docs/evidence/verified-registry-changes-2026-10-07.json`.
+The proposed registry changes replace custom sources for Bayer, Aon and DocuSign with currently published India feeds. Exact old/new rows are in `docs/evidence/verified-registry-changes-2026-10-07.json`. Focused collection and production verification are release requirements; no mapping is promoted merely because a probe workflow exited successfully.
 
-At 18:28 UTC the application root and dashboard returned HTTP 200. The health endpoint returned HTTP 503 with database and ingestion configured, a fresh latest run, and status `degraded`: 698 successful companies and 2 failed. A green scheduled workflow does not mean all feeds succeeded. HubSpot remains blocked by the current official API’s upstream 404; the current Adidas XML was valid in a read-only probe and requires complete live reconciliation and production verification.
+| Case | Verified Actions inventory | Scope | Outcome before production |
+|---|---:|---|---|
+| Bayer | 33 IDs / 33 full details | India | Approved, production verification pending |
+| Aon | 23 IDs / 23 full details | India | Approved, production verification pending |
+| DocuSign | 30 IDs / 30 full details | India | Approved, production verification pending |
+| Adidas | 1,182 IDs / 1,182 full descriptions | Entire published XML, reconciled with every live JSON page | Focused production recheck pending |
+| Vodafone | Previously 360 IDs/details; latest repeat failed on a disappeared detail | India | Remains unresolved; registry unchanged |
+| Planful | 12 listed IDs/full descriptions | Entire Greenhouse listing | Candidate; no registry change |
+| HubSpot | Official GraphQL returns upstream 404 | Current published official API | Remains unresolved |
 
-Validation: 311 mocked Python tests and Bandit pass locally; Python/web CI passed at commit `19895eb`. HTTP probes execute on GitHub Actions only.
+Actions [37667272654](https://github.com/chandanvura/JobRadar/actions/runs/37667272654) intentionally failed its release gate when Vodafone became incomplete. This prevented an unverified mapping from being published. The next release gate validates Bayer, Aon, DocuSign and Adidas; it also records freshly followed official website-to-board chains. Unverified Workday behavior changes are excluded from the release; Maersk global detail completeness remains an investigation item.
+
+At 18:28 UTC the application root and dashboard returned HTTP 200. The health endpoint returned HTTP 503 with database and ingestion configured, a fresh latest run, and status `degraded`: 698 successful companies and 2 failed. A green scheduled workflow does not mean all feeds succeeded. The public jobs API also returned two valid HTTP 200 pages of 100 jobs each with a working cursor and no overlapping IDs.
+
+Validation: 308 mocked Python tests and Bandit pass locally. Python/web CI and current Actions collection are required before merge. Employer probes execute on GitHub Actions only. Missing posting fields remain unknown, and source-native multiple locations are preserved.
+
 
 | Company | Batch | Captured pages | Discovery result |
 |---|---:|---:|---|
@@ -26,10 +39,10 @@ Validation: 311 mocked Python tests and Bandit pass locally; Python/web CI passe
 | Vimeo | 1 | 17 (17 HTTP 200) | Unverified |
 | Zoom | 1 | 2 (1 HTTP 200) | Unverified |
 | Guidewire | 1 | 12 (12 HTTP 200) | Unverified |
-| Bayer | 1 | 18 (18 HTTP 200) | Unverified |
+| Bayer | 1 | 18 (18 HTTP 200) | Complete Actions; production pending |
 | FedEx | 1 | 13 (13 HTTP 200) | Unverified |
-| Aon | 1 | 12 (12 HTTP 200) | Unverified |
-| DocuSign | 1 | 21 (21 HTTP 200) | Unverified |
+| Aon | 1 | 12 (12 HTTP 200) | Complete Actions; production pending |
+| DocuSign | 1 | 21 (21 HTTP 200) | Complete Actions; production pending |
 | Cornerstone OnDemand | 1 | 17 (17 HTTP 200) | Unverified |
 | Jupiter | 1 | 5 (5 HTTP 200) | Unverified |
 | Darwinbox | 1 | 18 (18 HTTP 200) | Unverified |
