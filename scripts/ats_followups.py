@@ -26,7 +26,7 @@ async def run():
                 rows=soup.select('.iCIMS_JobsTable .row');this={}
                 for row in rows:
                     a=row.select_one('.title a[href]');href=urljoin(str(r.url),a['href']);path=urlsplit(href);match=re.match(r'/jobs/(\d+)/',path.path)
-                    if not match or path.hostname not in ('global-sas.icims.com','globalcareers-sas.icims.com'):raise ValueError('SAS listed detail does not match observed employer portals')
+                    if not match or path.hostname not in ('global-sas.icims.com','globalcareers-sas.icims.com','careers-sas.icims.com','ideasglobal-sas.icims.com'):raise ValueError('SAS listed detail does not match observed employer portals')
                     if match[1] in ids or match[1] in this:raise ValueError('SAS repeated job identifier')
                     this[match[1]]=href
                 if not this:raise ValueError('SAS omitted advertised listings')
@@ -65,7 +65,10 @@ async def run():
                     if len(parts)<3 or parts[-2]!='27600':raise ValueError('NetApp job link employer ID changed')
                 ids.update(this);case['pages'].append(dict(page=page,jobs=len(this)))
             if len(ids)!=total:raise ValueError('NetApp total does not reconcile')
-            case.update(status='LISTING_ACTIONS_DETAILS_UNVERIFIED',advertised_total=total,unique_ids=len(ids))
+            first_link=soup.select_one('#search-results-list a[data-job-id][href]')
+            detail=await request(x,'GET',urljoin(url,first_link['href']));detail.raise_for_status();(out/'netapp-first-detail.html').write_text(detail.text)
+            job=list(jsonld_objects(BeautifulSoup(detail.text,'html.parser')))
+            case.update(status='LISTING_ACTIONS_DETAILS_UNVERIFIED',advertised_total=total,unique_ids=len(ids),detail_example={k:job[0].get(k) for k in ['title','hiringOrganization','datePosted','identifier','url','jobLocation']} if job else None)
         except Exception as exc:case['blocker']=str(exc)
         print(json.dumps(case),flush=True)
     (out/'evidence.json').write_text(json.dumps(cases,indent=2))
