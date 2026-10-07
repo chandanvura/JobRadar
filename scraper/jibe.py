@@ -99,7 +99,7 @@ class JibeCareerAdapter:
                 if brand:
                     brands=data.get('filter',{}).get('brands',{}).get('all',[])
                     if not any(v.get('brand')==brand for v in brands):raise ValueError('Jibe requested brand was not published by employer')
-                    params['brands']=brand
+                    params['brand']=brand
             found={};total=None;first=None
             for page in range(1,101):
                 params['page']=page
