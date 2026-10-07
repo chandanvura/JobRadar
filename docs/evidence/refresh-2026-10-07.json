@@ -1,0 +1,2412 @@
+{
+  "discovery_run": "https://github.com/chandanvura/JobRadar/actions/runs/37611530978",
+  "baseline": {
+    "companies": 700,
+    "limited": 200,
+    "errors": 2,
+    "server_time": "2026-10-07T17:55:54.197Z"
+  },
+  "note": "Discovery evidence only. No company mapping changed based solely on these pages.",
+  "cases": [
+    {
+      "company": "Hasura",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 16,
+      "evidence_sha256": "fa5f7faeeb2d264ba9b9bc6844cee2b404d7a6ded6f9891430980b09e691e80c",
+      "entry_point": {
+        "url": "https://hasura.io/careers",
+        "final_url": "https://promptql.io/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Chargebee",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "55a3766d3c72186dc8b9e63a0bc3f33a93e96391fceb34e926627c20926e23ef",
+      "entry_point": {
+        "url": "https://www.chargebee.com/careers/",
+        "final_url": "https://www.chargebee.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Rippling",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 16,
+      "evidence_sha256": "ca29f213687088cd0217e40bbc8814a86d91abcaf4644c9d52674eecd5ced6a3",
+      "entry_point": {
+        "url": "https://www.rippling.com/careers/open-roles",
+        "final_url": "https://www.rippling.com/careers/open-roles",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "CyberArk",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "50ab81e650a463eb8f3aefe1804d27de188e541a5a38d16bf11b5ab4a9030bdb",
+      "entry_point": {
+        "url": "https://www.cyberark.com/careers/",
+        "final_url": "https://www.paloaltonetworks.com/idira",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "DataStax",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "8dbeae98c181f240fe3fbe231b6316a8c8f911f2d28610b6b7910fcc4cb34f58",
+      "entry_point": {
+        "url": "https://www.datastax.com/company/careers",
+        "final_url": "https://www.ibm.com/products/datastax",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Dynatrace",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 6,
+      "evidence_sha256": "070047adec256a1d9f964a84339cd6b6efdc7f7261c088ec4f19a4c94b05596a",
+      "entry_point": {
+        "url": "https://careers.dynatrace.com/",
+        "final_url": "https://www.dynatrace.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Exotel",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 15,
+      "evidence_sha256": "a5a600951c5655668782587ebf7d04123ec54a96621f4ae5cae20a318d6f2e71",
+      "entry_point": {
+        "url": "https://exotel.com/careers/",
+        "final_url": "https://exotel.com/about-us/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Klarna",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "f0fd03710c7f7058a6e47a1a3641930ab2af00ce385ff5dbda7b1a68eed9f7bf",
+      "entry_point": {
+        "url": "https://www.klarna.com/careers/",
+        "final_url": "https://www.klarna.com/careers/",
+        "http_status": 202
+      }
+    },
+    {
+      "company": "Planful",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 15,
+      "evidence_sha256": "3fe8701faeefaccc5f7d44b559cc28b5d53d1f1c811ed09592cb7a313fe35970",
+      "entry_point": {
+        "url": "https://planful.com/jobs/careers-list/",
+        "final_url": "https://planful.com/jobs/careers-list/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Vimeo",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "65ff2a3d9420d2b8be6d776280e2291f3d0cd49a8672f65f18778346f0e8ed52",
+      "entry_point": {
+        "url": "https://vimeo.com/careers",
+        "final_url": "https://vimeo.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Zoom",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 2,
+      "evidence_sha256": "b31bd04cfb72f3d9ec524520b024d0eb17ffa104e90c2b4d9da6e5c3acf20871",
+      "entry_point": {
+        "url": "https://careers.zoom.us/home",
+        "final_url": "https://www.careers.zoom.us/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Guidewire",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 12,
+      "evidence_sha256": "d2dac0a374db927cffbcb32a3bfdb9e7ef3a691effce893c34ae9ad20499f98e",
+      "entry_point": {
+        "url": "https://careers.guidewire.com/",
+        "final_url": "https://www.guidewire.com/about/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Bayer",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "0a159d7793868b1f04e0955def9bffc3765062641dc39278e3e1ae1c406baf54",
+      "entry_point": {
+        "url": "https://career.bayer.com/",
+        "final_url": "https://www.bayer.com/en/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "FedEx",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 13,
+      "evidence_sha256": "187dc5908770652d2743434a000251a4bba4c31b8498105e2934438d981cacc5",
+      "entry_point": {
+        "url": "https://careers.fedex.com/",
+        "final_url": "https://careers.fedex.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Aon",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 12,
+      "evidence_sha256": "edcd1852e97475f4f3301734953b33b39f19eac231f406aefd890cbca006ecbf",
+      "entry_point": {
+        "url": "https://jobs.aon.com/",
+        "final_url": "https://jobs.aon.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "DocuSign",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 21,
+      "evidence_sha256": "23bcc58c671be5c4fba871a711c152832d2ac3bb9c94752509ad9f2958389ab8",
+      "entry_point": {
+        "url": "https://careers.docusign.com/",
+        "final_url": "https://careers.docusign.com/careers-home",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Cornerstone OnDemand",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "bb809a0c08d42c9ecca7278ad5f0e82e9f66e938a4ae88f093661cd32abbe9a1",
+      "entry_point": {
+        "url": "https://www.cornerstoneondemand.com/careers/",
+        "final_url": "https://www.cornerstoneondemand.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Jupiter",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 5,
+      "evidence_sha256": "b5ecebe5f48900b4d9de299b3b9d2a8fff6c6641f340319ace5631435ddfce8b",
+      "entry_point": {
+        "url": "https://jupiter.money/careers/",
+        "final_url": "https://jupiter.money/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Darwinbox",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "a2035cd7a50f355c3bb912e16d61b4578671f37ab9ae8ee214aa7ad97de50597",
+      "entry_point": {
+        "url": "https://darwinbox.com/careers",
+        "final_url": "https://darwinbox.com/en-us/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Keka",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "cf808a2de55a5ed96eb5fa7250845116632dfbfc5dba1a31b314f78a1a526475",
+      "entry_point": {
+        "url": "https://www.keka.com/careers",
+        "final_url": "https://www.keka.com/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Kissflow",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 16,
+      "evidence_sha256": "add4f13a84972f0ae55e961185d65d8ff7fc56b57e117d398d08e33fdf7b661c",
+      "entry_point": {
+        "url": "https://careers.kissflow.com/",
+        "final_url": "https://careers.kissflow.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Orange Health Labs",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "c5667c5d3ceea1c830e54af82e30e7dc3d51b2e372820e6973115ac086a82ff7",
+      "entry_point": {
+        "url": "https://www.orangehealth.in/jobs",
+        "final_url": "https://www.orangehealth.in/jobs",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Perfios",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 19,
+      "evidence_sha256": "b52c758a4b529579c6ed346e67ae0d48bf745e8640c5967bfecaf23d8cbfb0db",
+      "entry_point": {
+        "url": "https://perfios.ai/careers/",
+        "final_url": "https://perfios.ai/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Tredence",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 9,
+      "evidence_sha256": "de313d13273f4674b2964c242f214de0a7e55189f89fa9d87a30cd4abd2c98ed",
+      "entry_point": {
+        "url": "https://www.tredence.com/careers",
+        "final_url": "https://www.tredence.com/careers/greatest-of-ai",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Unacademy",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "31e527a992c23eb4eaa72e194c01efd29fbb27ea586edb8096869d51528fd28c",
+      "entry_point": {
+        "url": "https://unacademy.com/careers",
+        "final_url": "https://unacademy.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Tata 1mg",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 8,
+      "evidence_sha256": "7295c853121c4a46a6595ee148b2f30e7c483ae0f23c054fc6aee02f3df13c51",
+      "entry_point": {
+        "url": "https://www.1mg.com/jobs",
+        "final_url": "https://www.1mg.com/jobs",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "BigBasket",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 4,
+      "evidence_sha256": "0c4e53ea2304ea02cb7dda6dec3f442979aca06152d22d7e7f35efc8813e8e4e",
+      "entry_point": {
+        "url": "https://www.bigbasket.com/careers/",
+        "final_url": "https://careers.bigbasket.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Clear",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 3,
+      "evidence_sha256": "ed9cae723168f64060c7f852fac075302b3c98a7f468bd5a8d8ff824ea2c7334",
+      "entry_point": {
+        "url": "https://www.clear.in/s/careers",
+        "final_url": "https://www.clear.in/s/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "CarDekho",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 4,
+      "evidence_sha256": "9a78c93161605e2344dd13b9ffbbecdf4a22d58d86867ad3412f153daca67e3b",
+      "entry_point": {
+        "url": "https://careers.cardekho.com/",
+        "final_url": "https://careers.cardekho.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Seclore",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "98386569510acd2d4422303bba93a60d13d337d0549b2bf125f37c222a22f203",
+      "entry_point": {
+        "url": "https://www.seclore.com/careers/",
+        "final_url": "https://www.seclore.com/about/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "WebEngage",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "dbb1bcead76b49dfcd669c9dd411aaec46d41d5a208eb97f9b0f412899768d24",
+      "entry_point": {
+        "url": "https://webengage.com/careers/",
+        "final_url": "https://webengage.com/careers/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Yellow.ai",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "03901c4e7ecbd5e9271b79af77c76290406aa6c3014c8b47c415de0f085c725b",
+      "entry_point": {
+        "url": "https://yellow.ai/careers/",
+        "final_url": "https://yellow.ai/careers/",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Yulu",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 7,
+      "evidence_sha256": "b48839aff6d3a60cb90ac59d70535b444a868d1ea5df85c7bf66505f8cbcc005",
+      "entry_point": {
+        "url": "https://www.yulu.bike/careers",
+        "final_url": "https://www.yulu.bike/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Zetwerk",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 8,
+      "evidence_sha256": "018f485ca3c5d2699dbdb3f5a0e8ecd8a08c5c3c26e4817d00d5702f4feb6148",
+      "entry_point": {
+        "url": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+        "final_url": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Navi",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "42a4b6e44be11d42996c93566419abed66ba5a2214236fe7a7bf9020d09f6117",
+      "entry_point": {
+        "url": "https://navi.com/careers",
+        "final_url": "https://navi.com/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "OfBusiness",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 11,
+      "evidence_sha256": "45cc068aede9c782156c2d7215fa034779c60a07090717569a098202202269c6",
+      "entry_point": {
+        "url": "https://www.ofbcareers.com/",
+        "final_url": "https://www.ofbcareers.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Moneyview",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "7a371d273cc68fe0f885dd5e345bff0ef7a1c25a41e388b622e89b7e4e7dc9d2",
+      "entry_point": {
+        "url": "https://moneyview.in/careers",
+        "final_url": "https://moneyview.in/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "LambdaTest",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "2a2d03b166616241738020fb399a731a8b103a9ab6bb41ac16fbef45a23a1594",
+      "entry_point": {
+        "url": "https://www.lambdatest.com/career",
+        "final_url": "https://www.testmuai.com/career/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "M2P Fintech",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "a888df63d20b189b40b74abe3a9b5bd5347a4bf13507603eb663763155759529",
+      "entry_point": {
+        "url": "https://m2pfintech.com/careers/",
+        "final_url": "https://careers.m2pfintech.com",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Khatabook",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 7,
+      "evidence_sha256": "a49d9f1be7f97a2483fc8e7eb883deec31afc29f176206932bb6d5a018d367cf",
+      "entry_point": {
+        "url": "https://khatabook.com/careers",
+        "final_url": "https://khatabook.com/hiring/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Decentro",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "def04f23d62a839b42059d0e6a988ce56beecd117183ca17dd73b625bdb81e72",
+      "entry_point": {
+        "url": "https://decentro.tech/careers",
+        "final_url": "https://decentro.tech/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Peoplebox.ai",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 13,
+      "evidence_sha256": "e6ecba81912fe8da44e86549e532ec1b832b26d696477227a86062a66f9ab718",
+      "entry_point": {
+        "url": "https://www.peoplebox.ai/careers/",
+        "final_url": "https://www.peoplebox.ai/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Sarla Aviation",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 16,
+      "evidence_sha256": "c858687eeb06aea230908dbaf8cc63b830d7b103e82e67c422f7df0447f394a9",
+      "entry_point": {
+        "url": "https://www.sarla-aviation.com/open-roles/",
+        "final_url": "https://www.sarla-aviation.com/open-roles/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Ivy Homes",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "4ef3533f4d72d965f5dc989bcf0eb63c8fb1d0b7cee4409a2dd47616858575a9",
+      "entry_point": {
+        "url": "https://ivy.homes/career",
+        "final_url": "https://ivy.homes/career",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Avaamo",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "720d3c45484fffa263ae099bf3a16754ab86187a8ebb4c556eb9827b6bd825e7",
+      "entry_point": {
+        "url": "https://avaamo.ai/careers/",
+        "final_url": "https://avaamo.ai/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Dhruva Space",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 9,
+      "evidence_sha256": "2ee9f0b3c034cd1166268fb3171fed1abda42711fa4ec98d59c1301cec3b806a",
+      "entry_point": {
+        "url": "https://www.dhruvaspace.com/careers",
+        "final_url": "https://www.dhruvaspace.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Rebel Foods",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 6,
+      "evidence_sha256": "dab2be0424fcb9651e8105090d1f51284d06ace2271f8e9aee24ed16eff3115c",
+      "entry_point": {
+        "url": "https://www.rebelfoods.com/join-our-team",
+        "final_url": "https://www.rebelfoods.com/join-our-team",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "SALT",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 14,
+      "evidence_sha256": "a8fad024a594d59db4206da185b8833c00d20935e75e3ec055eab320e3b7e03a",
+      "entry_point": {
+        "url": "https://www.salt.pe/careers",
+        "final_url": "https://www.salt.pe/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "xPay",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "5f00c6c406050d977b56b23d91302ffaafb49bf5f3e0f02d842c9afd98c0d1a2",
+      "entry_point": {
+        "url": "https://www.xpaycheckout.com/careers",
+        "final_url": "https://www.xpaycheckout.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Antropi Robotics",
+      "batch": 1,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 11,
+      "evidence_sha256": "49583185041e53a288ac188eda56de46ccc304abc207abe3a720c918c11fb8b5",
+      "entry_point": {
+        "url": "https://www.antropi.world/careers",
+        "final_url": "https://www.antropi.world/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "ADP",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "c86896e8080996b32b28819724ac34cde7eecbbc466581041de206f62ad71215",
+      "entry_point": {
+        "url": "https://jobs.adp.com/",
+        "final_url": "https://jobs.adp.com/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "ASML",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 15,
+      "evidence_sha256": "b955862db8a4488a942c8020659bec68d2a2b8e12d8cd0d805175c1954b21c08",
+      "entry_point": {
+        "url": "https://www.asml.com/en/careers",
+        "final_url": "https://www.asml.com/en/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "ASUS",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 12,
+      "evidence_sha256": "99aa9e2c161078ac2920e01c8e5074190e81927896f46c649aa77167839a5f64",
+      "entry_point": {
+        "url": "https://www.asus.com/about-asus/careers/",
+        "final_url": "https://www.asus.com/content/about-asus/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Acer",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "d648245bd2960c4d4bb4570b4f29e2896a35ea3d20e0bf70a6f44b34cf5799fc",
+      "entry_point": {
+        "url": "https://www.acer.com/corporate/en/careers",
+        "final_url": "https://www.acer.com/corporate/en/careers",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Ajio",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "314d8b331dbdecd4ebd3b163eab6a73af5f67c41269f0c8512e044e8bd866fb8",
+      "entry_point": {
+        "url": "https://careers.ril.com/",
+        "final_url": "https://careers.ril.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Angel One",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "7fe75a0c27973b32f5b91b0e8028255932709fde15c668631657e48a28b32aa4",
+      "entry_point": {
+        "url": "https://www.angelone.in/careers",
+        "final_url": "https://www.angelone.in/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Ansys",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "dddf487f5b63c143f5e22ee8d10cb9a4aee91fea70c77119b1ed6393913f53eb",
+      "entry_point": {
+        "url": "https://careers.ansys.com/",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "Apollo",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 3,
+      "evidence_sha256": "62dad6dc4a97e508ed1b21396e43499def203b5f3b014d1f9283bd195dfb9578",
+      "entry_point": {
+        "url": "https://www.apollofirst.xyz/careers2",
+        "final_url": "https://www.apollofirst.xyz/careers2",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Apollo Hospitals",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "6700682dd75fbf202891531e108df9f4d82d50dce1f99a35d7eb97e939a6639b",
+      "entry_point": {
+        "url": "https://www.apollohospitals.com/careers",
+        "final_url": "https://www.apollohospitals.com/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Apple",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 9,
+      "evidence_sha256": "c1a0668e011d3cb0a84396fa34db72ff3cca4bce3a288ccd51f4efdcc8c88e58",
+      "entry_point": {
+        "url": "https://jobs.apple.com/en-in/search",
+        "final_url": "https://jobs.apple.com/en-in/search?location=india-INDC",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Ather Energy",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "dc55d589c54ff5e588622189ab04d10c0966535b1d43d092b16dfc53a0c2ad67",
+      "entry_point": {
+        "url": "https://www.atherenergy.com/careers",
+        "final_url": "https://www.atherenergy.com/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Atlassian",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 6,
+      "evidence_sha256": "83181f5f1399cbe314e78716fda849f0ef8779fd58fd4f0334d620eb10a42872",
+      "entry_point": {
+        "url": "https://www.atlassian.com/company/careers/all-jobs",
+        "final_url": "https://www.atlassian.com/company/careers/all-jobs",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "BD",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "09369ae7a8d254cbeac009b0b8523ab66bdfebafd481f661e8ff4778dd3a11e0",
+      "entry_point": {
+        "url": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+        "final_url": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+        "http_status": 202
+      }
+    },
+    {
+      "company": "BNP Paribas",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 19,
+      "evidence_sha256": "bcc302b67a51e4bebb480db7418724f453c3353ffb31553d3195f561e2388ddf",
+      "entry_point": {
+        "url": "https://group.bnpparibas/en/careers",
+        "final_url": "https://group.bnpparibas/en/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "BP",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "d0f28847477bf235b8367249c370088e88a5196fa29af74759e7fdb47454b503",
+      "entry_point": {
+        "url": "https://www.bp.com/en/global/corporate/careers.html",
+        "final_url": "https://www.bp.com/en/global/corporate/careers.html",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Bain & Company",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 4,
+      "evidence_sha256": "a8deda673018dcf959232a334fa59492fac378e7cc589f2bc49cb95ade5a2571",
+      "entry_point": {
+        "url": "https://www.bain.com/careers/",
+        "final_url": "https://www.bain.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Best Buy",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 12,
+      "evidence_sha256": "35acc7ba2accc460c8b0c38479c50af5223615aaf22bdb058ece6c7728bbd04b",
+      "entry_point": {
+        "url": "https://jobs.bestbuy.com/bby?id=career_area",
+        "final_url": "https://jobs.bestbuy.com/bby?id=career_area",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Blackhawk Network",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "bcef46f7338c41b64fa0fb5e84eba575a41ec17a0b48133b20eb11c30c8ef003",
+      "entry_point": {
+        "url": "https://careers.blackhawknetwork.com/",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "Bounce",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "1ddef7eba26be05467499f15d31931b540bbd0591d60aa810fc1cd11c526a1e2",
+      "entry_point": {
+        "url": "https://bounceinfinity.com/pages/careers",
+        "final_url": "https://bounceinfinity.com/pages/careers",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "CBRE",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "cc7cadf8cf8cb038918ecdc6f30168f2942f430f9ff3ac4ac9451181cd66235a",
+      "entry_point": {
+        "url": "https://careers.cbre.com/en_US/careers/SearchJobs/",
+        "final_url": "https://careers.cbre.com/en_US/careers/SearchJobs/",
+        "http_status": 202
+      }
+    },
+    {
+      "company": "CGI",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 2,
+      "evidence_sha256": "9ef44844f6391a90861dbbbc85aaf75aaadf331a5461ac390c34f6ced4a56a4b",
+      "entry_point": {
+        "url": "https://www.cgi.com/en/careers-search",
+        "final_url": "https://validate.perfdrive.com/?ssa=4c83562e-f391-473e-a9bc-2cd6d555581a&ssb=23025258056&ssc=https%3A%2F%2Fcgi.njoyn.com%2FCORP%2Fxweb%2Fxweb.asp%3Fpage%3Djoblisting%26CLID%3D21001&ssi=186ce8ee-dcvu-4d3f-883d-3dac179d0724&ssk=botmanager_support@radware.com&ssm=45290578611587369100101088522719&ssn=6edc11dbc5ba3739a3b6ee75a8b8aaab5197a1a1b854-d229-4e1a-b28bf4&sso=f3207236-4e9da3981ef67e4dad1544b307ddd6e66613d93acc3669c3&ssp=25885433941791363422179137473593038&ssq=03459277113056767045671130555219790099163&ssr=NDguMjE3LjU0Ljg1&sst=JobRadar/1.2%20(+personal%20job%20monitor;%20responsible%20hourly%20polling)&ssu=&ssv=&ssw=&ssx=eyJfX3V6bWYiOiI3ZjkwMDBhMWExYjg1NC1kMjI5LTRlMWEtYjIzNi00ZTlkYTM5ODFlZjYxLTE3OTEzNzExMzAzMDUwLTAwNDgyM2JhYjBhYzc0NDQzZGQxMCIsInJkIjoibmpveW4uY29tIiwidXpteCI6IjdmYzAwMDZiOTJjYjkwLTYzYmYtNGYyYS1iZjg4LTE0NjkyNTUyOTVjYzEtMTc5MTM3MTEyOTk0MzM2Mi0wMDhhOTNlMDlkMGFmNzliOTA2MTMifQ==",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "CVS Health",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 6,
+      "evidence_sha256": "c4ede38f69dbcb95a71b0a643e08e26b72b07c65bb0983468a803f129e0b4ac0",
+      "entry_point": {
+        "url": "https://jobs.cvshealth.com/",
+        "final_url": "https://jobs.cvshealth.com/us/en/home",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Cargill",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 16,
+      "evidence_sha256": "ace4ccd93d33527997e32ea3f38ff35a544225036e5e3f6338dc41292c44f348",
+      "entry_point": {
+        "url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+        "final_url": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Cars24",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 14,
+      "evidence_sha256": "4b8c0e15b8c9917611b9b3aa74293bdc4fb22db9b7e57e2679af24627c01f900",
+      "entry_point": {
+        "url": "https://www.cars24.com/careers/",
+        "final_url": "https://www.cars24.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Caterpillar",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "65d40409819f4f9b93c6de79ca8e317989befe93c7c03b6b2eafd9a92354ee87",
+      "entry_point": {
+        "url": "https://careers.caterpillar.com/",
+        "final_url": "https://careers.caterpillar.com/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Citrix",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "29b239b5ea48d121807cfcbbc9a3a9261877168c19635aac6d2cab4b2f46cd0e",
+      "entry_point": {
+        "url": "https://www.cloud.com/careers",
+        "final_url": "https://www.cloud.com/careers",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Cleartrip",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "859ee42dfee0f81ef51bce717ca0497f774643da925d4a779e6a684fcea0e46d",
+      "entry_point": {
+        "url": "https://www.cleartrip.com/careers",
+        "final_url": "https://www.cleartrip.com/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Coforge",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 7,
+      "evidence_sha256": "bc0b08f618f3735c034c8e171f4f4bff62f435cec11d19c0269147fc77283491",
+      "entry_point": {
+        "url": "https://careers.coforge.com/",
+        "final_url": "https://careers.coforge.com/coforge/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Cognizant",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "39785a049f8216e22c58faacdc7a4cb313ad5673f8b10074319183bec95d450f",
+      "entry_point": {
+        "url": "https://careers.cognizant.com/global-en/jobs/",
+        "final_url": "https://careers.cognizant.com/global-en/jobs/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "CoinDCX",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "9bac0d1fd9c8b2199487e05881b67cc90ad503fe9a068d717b12d2c574413cf9",
+      "entry_point": {
+        "url": "https://careers.coindcx.com/",
+        "final_url": "https://coindcx.com/about-us",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Collins Aerospace",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "3f0c9faa330d7525657e63b65874d6b01cbfe9b351438966ac2de3bbbe27c488",
+      "entry_point": {
+        "url": "https://careers.rtx.com/global/en/collins-aerospace",
+        "final_url": "https://careers.rtx.com/global/en/collins-aerospace",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "ColorTokens",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "14154296b39a349cfa400c2f19ab10f3b7ddda303939ef170176037314542c5a",
+      "entry_point": {
+        "url": "https://colortokens.com/careers/",
+        "final_url": "https://colortokens.com/careers/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Costco",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 15,
+      "evidence_sha256": "3d71e1fbc9214b47a037a9a6912a2d2192b51e45644795cce9986384513dd837",
+      "entry_point": {
+        "url": "https://careers.costco.com/jobs",
+        "final_url": "https://careers.costco.com/jobs",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Credit Agricole",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 6,
+      "evidence_sha256": "6e5b790d80334005e66c4d2e5938c037a3ca20b1a50d88457e13852863051035",
+      "entry_point": {
+        "url": "https://jobs.ca-cib.com/",
+        "final_url": "https://jobs.ca-cib.com/accueil.aspx?LCID=1036",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Dassault Systemes",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "9ab9a114b3774db0c33cfd73d7b5caf250f1511806069abca0ca2b94e574fdee",
+      "entry_point": {
+        "url": "https://www.3ds.com/careers",
+        "final_url": "https://www.3ds.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Delta Air Lines",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "7692557dffac3c87646a7eb90187ba9a5e94457dd5011d55d4b388b2638973ca",
+      "entry_point": {
+        "url": "https://delta.avature.net/careers",
+        "final_url": "https://delta.avature.net/en_US/careers",
+        "http_status": 202
+      }
+    },
+    {
+      "company": "Deutsche Bank",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 11,
+      "evidence_sha256": "805532d1dac89229de5c2613f97da197b8218f227ae8b2eaaf335829ed83bcb4",
+      "entry_point": {
+        "url": "https://careers.db.com/",
+        "final_url": "https://careers.db.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Deutsche Boerse Group",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 12,
+      "evidence_sha256": "683649d2876f747389ba162c1b4ab785241c0b5baa49bf7979512e5d47546bdd",
+      "entry_point": {
+        "url": "https://careers.deutsche-boerse.com/",
+        "final_url": "https://careers.deutsche-boerse.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Deutsche Telekom",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 9,
+      "evidence_sha256": "5d2a0b686b175cc41f144493fecfec057766445318677457e4869511f4edbeaa",
+      "entry_point": {
+        "url": "https://www.telekom.com/en/careers",
+        "final_url": "https://www.telekom.com/en/telekom-as-an-employer",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Discover",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "4e9f1e10e0d61798ed60b1ccc6521954fc04fec606bd5dc0737c9bf90361dfa6",
+      "entry_point": {
+        "url": "https://jobs.discover.com/",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "Dream Sports",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 13,
+      "evidence_sha256": "edbe215bf86a5b97aea7145203783d183ef5ee81a7b52735fba1d9e346981d97",
+      "entry_point": {
+        "url": "https://www.dreamsports.group/careers/",
+        "final_url": "https://www.dreamsports.group/lifeatdreamsports",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "E2open",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 7,
+      "evidence_sha256": "36c5c5557cb6de5d56ee55bf40eba3fbe1cbbd2f7216925a6d9369e57b94b920",
+      "entry_point": {
+        "url": "https://www.e2open.com/company/careers/",
+        "final_url": "https://www.e2open.com/company/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "EPAM",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "43e7265665f12f83695e3ad754a9ca25caf430fedf02021a8cabfe9fadafb12d",
+      "entry_point": {
+        "url": "https://www.epam.com/careers/job-listings",
+        "final_url": "https://www.epam.com/careers/job-listings",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Emirates Group",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 14,
+      "evidence_sha256": "31a50b618ba4c91a894557efa400e61f0f49160d3d62cb480360790fa08985a7",
+      "entry_point": {
+        "url": "https://www.emiratesgroupcareers.com/",
+        "final_url": "https://www.emiratesgroupcareers.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Flipkart",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 3,
+      "evidence_sha256": "3e1f078bfba66d2a6085dafb12ff51fc6b2cba209ee4b8aab8d4524c5cf0edef",
+      "entry_point": {
+        "url": "https://www.flipkartcareers.com/#!/joblist",
+        "final_url": "https://www.flipkartcareers.com/#!/joblist",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Flux Auto",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 3,
+      "evidence_sha256": "60a48c2424d0690a55553acb8c40186d4596a8cf3043229b5c1ead97f3735845",
+      "entry_point": {
+        "url": "https://fluxauto.ai/careers.html",
+        "final_url": "https://fluxauto.ai/careers.html",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Fujitsu",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "c62cd15ba61293713b162257c3f4d9d99f16ac2d3bd276f9b0693be8ef047f1c",
+      "entry_point": {
+        "url": "https://www.fujitsu.com/global/about/careers/",
+        "final_url": "https://global.fujitsu/en-global/about",
+        "http_status": 429
+      }
+    },
+    {
+      "company": "Games24x7",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "a6eeb37561b3d1ebe91df02e4731d8745646ac25400c640b344c1224d637df18",
+      "entry_point": {
+        "url": "https://www.games24x7.com/careers/",
+        "final_url": "https://www.games24x7.com/careers",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Globant",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "2397f5f66e08374593797326023b49d7cf60e18ad9e0e9881487584c9ce20698",
+      "entry_point": {
+        "url": "https://career.globant.com/",
+        "final_url": "https://career.globant.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Google",
+      "batch": 2,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 4,
+      "evidence_sha256": "83934dd490607b798debea07706c1dc587a6096d1a484484111ce6f0343780b5",
+      "entry_point": {
+        "url": "https://www.google.com/about/careers/applications/jobs/results/",
+        "final_url": "https://www.google.com/about/careers/applications/jobs/results/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Grant Thornton",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 15,
+      "evidence_sha256": "916bc88c37c06500b51fe530f1451aecc35e48e90e4bf5844acc9e57b47ee12a",
+      "entry_point": {
+        "url": "https://www.grantthornton.in/careers/",
+        "final_url": "https://www.grantthornton.in/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "HARMAN",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "be92f443b260e244efb26f37e9a7c9e14e10d9440b8e5e972da647ac9b6589fc",
+      "entry_point": {
+        "url": "https://jobs.harman.com/",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "HSBC",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 5,
+      "evidence_sha256": "3c59d2177af97080ad943eb8732d91919dd46b736c8fa156deda8519cbd25f12",
+      "entry_point": {
+        "url": "https://www.hsbc.com/careers",
+        "final_url": "https://www.hsbc.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Happiest Minds",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "1ec18499313da9802f3ffb36556fcf7348277d0da1a5843c062fa213a327ac79",
+      "entry_point": {
+        "url": "https://www.happiestminds.com/careers/",
+        "final_url": "https://www.happiestminds.com",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "HashiCorp",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "76dc1764b69831ba201ac40c8d6dedce2caafd9e4237892b1eb8c7a0f55f9585",
+      "entry_point": {
+        "url": "https://www.hashicorp.com/en/careers/open-positions",
+        "final_url": "https://www.hashicorp.com/en/careers/open-positions",
+        "http_status": 429
+      }
+    },
+    {
+      "company": "Highspot",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "5ed98691350af1cf491379d5a1242835453a06f11da334ef89c663c96b03c245",
+      "entry_point": {
+        "url": "https://www.highspot.com/careers/",
+        "final_url": "https://www.highspot.com/careers/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "IBM",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "9a7c5b1e6a3196f2d023335477aa337640af2ecb09ebdbd2569950f18851b4d4",
+      "entry_point": {
+        "url": "https://www.ibm.com/careers/search",
+        "final_url": "https://www.ibm.com/careers/search",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Informatica",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "54a231e86e5cc1203348b98e5b6567d47d1500711dce57ecbe6ae28692348883",
+      "entry_point": {
+        "url": "https://informatica.gr8people.com/jobs",
+        "final_url": "https://www.salesforce.com/company/careers/jobs/?search=",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Ivanti",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "3c917d1ff31dbf5e4e966e0917c482677efbc804236fb6c80058144146d30574",
+      "entry_point": {
+        "url": "https://careers.ivanti.com/",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "Jumbotail",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 5,
+      "evidence_sha256": "d6ad144ed8c117f3c6f5c58da9ceea3b0c9a3c9e0f8233b03d23a74b2950fade",
+      "entry_point": {
+        "url": "https://jumbotail.com/careers/",
+        "final_url": "https://jumbotail.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "KreditBee",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "6ee6c448eadb17e52c863a0ef5b71a4d735ad4cf99becf98a2d0406f940b816d",
+      "entry_point": {
+        "url": "https://www.kreditbee.in/careers",
+        "final_url": "https://www.kreditbee.in/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "L&T Technology Services",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 9,
+      "evidence_sha256": "ffef9a1533f899bc72575334f3f3f8abd2386cbcf16dea22c227287e8a74ffbb",
+      "entry_point": {
+        "url": "https://www.ltts.com/careers",
+        "final_url": "https://www.ltts.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "LTIMindtree",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "ea532068f78c832d60f3f87a05407f3b15357bf638a88b1aa2ce1f5e1ac44326",
+      "entry_point": {
+        "url": "https://careers.ltimindtree.com/",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "Larsen & Toubro",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 12,
+      "evidence_sha256": "7396359396a656d60340ca000947123847a1134784254430396f70ba50086e65",
+      "entry_point": {
+        "url": "https://www.larsentoubro.com/corporate/careers/",
+        "final_url": "https://www.larsentoubro.com/corporate/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "LatentView Analytics",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "9efb4dae4474811fdcbe55c7d63e14ef48ab90a657888c176cf9404eb5b3255d",
+      "entry_point": {
+        "url": "https://www.latentview.com/careers/",
+        "final_url": "https://www.latentview.com/careers/",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "LeadSquared",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "33b3b2f9a43fcb70d9c9b13a2752ccace87c1bdf1a9bdb33779ec8fb780f9163",
+      "entry_point": {
+        "url": "https://www.leadsquared.com/careers/",
+        "final_url": "https://www.leadsquared.com/careers/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Licious",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 11,
+      "evidence_sha256": "33aff92a9a3cd233e9b305888113514baa0bd6d90ec25b63d9c4fdcb87d408d4",
+      "entry_point": {
+        "url": "https://www.licious.in/careers",
+        "final_url": "https://www.licious.in/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Lingaro",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 4,
+      "evidence_sha256": "c692479bf16b67e65681837e115687139588d5928c15f84a2780e312e6f8b6f1",
+      "entry_point": {
+        "url": "https://jobs.lever.co/lingarogroup",
+        "final_url": "https://jobs.lever.co/lingarogroup",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Lululemon",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 16,
+      "evidence_sha256": "bed10d78dab97bcf10d7fae8e8d8d74924333f6a9594eac38db4f85a7cb35fea",
+      "entry_point": {
+        "url": "https://careers.lululemon.com/",
+        "final_url": "https://careers.lululemon.com/en_US/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "MakeMyTrip",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 3,
+      "evidence_sha256": "ffb2666a43cae41af2cb6e263e7da138ab73470c6cb95c405d36ac0c92ab728f",
+      "entry_point": {
+        "url": "https://careers.makemytrip.com/",
+        "final_url": "https://careers.makemytrip.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Manhattan Associates",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "3748e3dc24623496495745401e7acbf869b1d6f66e5368ceca8c2118778e9221",
+      "entry_point": {
+        "url": "https://careers.manh.com/",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "MathWorks",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "362f78e3aa2ae6a4e14601ed1f684e3b1abd14d7763915fcaed50d053dce1cd4",
+      "entry_point": {
+        "url": "https://in.mathworks.com/company/jobs/opportunities.html",
+        "final_url": "https://in.mathworks.com/company/jobs/opportunities.html",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "McDonald's",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 15,
+      "evidence_sha256": "03c24b59e0711c5f5abf03d1e519cd44eb537aa0938599f291838198711a6fa4",
+      "entry_point": {
+        "url": "https://careers.mcdonalds.com/",
+        "final_url": "https://careers.mcdonalds.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "McKinsey & Company",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 16,
+      "evidence_sha256": "2957e09ab017e433b1407c0d14c00197aa17d33957e4d021aab72f72f91e0a65",
+      "entry_point": {
+        "url": "https://www.mckinsey.com/careers/search-jobs",
+        "final_url": "https://www.mckinsey.com/careers/search-jobs",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "MediBuddy",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "d50d490da2e7cd57340ff38514bacdc3b7a2cc857245de2c8a841fce53f1c999",
+      "entry_point": {
+        "url": "https://www.medibuddy.in/careers",
+        "final_url": "https://www.medibuddy.in/careers",
+        "http_status": 502
+      }
+    },
+    {
+      "company": "MediaTek",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "bdb5934a3214aec97f35dbdc960e4e20a1afce664275a7ac9772fff2d04efd6e",
+      "entry_point": {
+        "url": "https://corp.mediatek.com/careers",
+        "final_url": "https://corp.mediatek.com/careers",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Mercedes-Benz Research and Development India",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 2,
+      "evidence_sha256": "a53055409e0072730025cdfa84af47607d931caec50ff4d873127f78d551baf6",
+      "entry_point": {
+        "url": "https://www.mbrdi.co.in/careers",
+        "final_url": "https://www.mbrdi.co.in/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Meta",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 10,
+      "evidence_sha256": "6c00ab24f8f71a471cec7a7f926fe0197516b3bf4eb791a61edbb88deb89faae",
+      "entry_point": {
+        "url": "https://www.metacareers.com/jobs/",
+        "final_url": "https://www.metacareers.com/jobsearch/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Mitsubishi Electric",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 11,
+      "evidence_sha256": "fc30c63b7c5326db3abc841634f5967297f950080acb363c4ead62e073fcf4df",
+      "entry_point": {
+        "url": "https://www.mitsubishielectric.com/en/careers/",
+        "final_url": "https://www.mitsubishielectric.com/en/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Mobile Premier League",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "429db3c9b37043b49b665d28886b3a058c1727d0dd32597676835cebd531650f",
+      "entry_point": {
+        "url": "https://www.mpl.live/careers",
+        "final_url": "https://www.mpl.live/careers",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Mondelez International",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 8,
+      "evidence_sha256": "34946d6b45e3c96db68ccc219110680c7551362330b4f6c8b749e3141501c615",
+      "entry_point": {
+        "url": "https://careers.mondelezinternational.com/",
+        "final_url": "https://www.mondelezinternational.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Mphasis",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 10,
+      "evidence_sha256": "7620e2a27b504f742d9e5aeaabd23a3d8462dae692d19942e9bd425d357d7039",
+      "entry_point": {
+        "url": "https://careers.mphasis.com/",
+        "final_url": "https://careers.mphasis.com/home.html",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Mu Sigma",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 13,
+      "evidence_sha256": "e24acf3696ab4b70ac62a6806fa7a9f268a2e8f65e1b89cada28c7ba8ed4f47e",
+      "entry_point": {
+        "url": "https://www.mu-sigma.com/careers",
+        "final_url": "https://www.mu-sigma.com/career/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Myntra",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "384f91ebe76a85a8696f05cbd6b438d92875dc367e1cc83c95b27ba6d10e7ca6",
+      "entry_point": {
+        "url": "https://careers.myntra.com/",
+        "final_url": "https://careers.myntra.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "NEC",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "abcd55700fd46f51631988d81af33e37518a5db40e90cd8302f5fc6ad96e70c2",
+      "entry_point": {
+        "url": "https://www.nec.com/en/global/careers/",
+        "final_url": "https://www.nec.com/en/global/careers/",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "NTT DATA",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "d959232688afc78550e435f89fbb812422c0cec2d1c0c590069645ed0f2e6982",
+      "entry_point": {
+        "url": "https://careers.nttdata.com/global/en",
+        "final_url": "https://careers.nttdata.com/global/en",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Namma Yatri",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "07bbbf65657e57fce6cb1395a23420134cd17912e8f6b8d62e63903e5315fee8",
+      "entry_point": {
+        "url": "https://nammayatri.in/careers",
+        "final_url": "https://nammayatri.in/careers",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "NatWest Group",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "2b88f54d86d2f6ffd279995749016c7321d96b0eb9d54446222827d902f0878b",
+      "entry_point": {
+        "url": "https://jobs.natwestgroup.com/",
+        "final_url": "https://jobs.natwestgroup.com/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "NoBroker",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 8,
+      "evidence_sha256": "9161537c34210cee1a4e76e63cb8faacc4162cee3c00dbdeb1d15280f560ef29",
+      "entry_point": {
+        "url": "https://www.nobroker.in/careers",
+        "final_url": "https://www.nobroker.in/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "OCBC",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 6,
+      "evidence_sha256": "c77a54b19df82494627a32139734e333ad8ae6cf7e822d3bc24c3461f7610cc8",
+      "entry_point": {
+        "url": "https://www.ocbc.com/group/careers",
+        "final_url": "https://www.ocbc.com/group/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Ola",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "efd5acfcf98e4e3514666db91327f0d686e1d46887eea04946da4ddce91cfc2c",
+      "entry_point": {
+        "url": "https://www.olacabs.com/careers",
+        "final_url": "https://www.olacabs.com/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Ola Electric",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "8141179ba03fd7251592c535cc9dc94757baa00d90e98ab3b6a432a773d25569",
+      "entry_point": {
+        "url": "https://www.olaelectric.com/careers",
+        "final_url": "https://www.olaelectric.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Open Financial Technologies",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "7a04fc8f3d24a97e2d800a36f3d7a9322ae22e1086c4ff0ba4d70cadca5bebfb",
+      "entry_point": {
+        "url": "https://open.money/careers",
+        "final_url": "https://open.money/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Panasonic",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 14,
+      "evidence_sha256": "5588efcc2e4344bedeac6d2164d769765df4818f270e2779e689e759f813212c",
+      "entry_point": {
+        "url": "https://careers.na.panasonic.com/",
+        "final_url": "https://careers.na.panasonic.com/careers-home",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Pegasystems",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 5,
+      "evidence_sha256": "838d3b3283349ee8c5aceafe9e1cc0fb672402cdd37756469ff4b873adbe7374",
+      "entry_point": {
+        "url": "https://www.pega.com/about/careers",
+        "final_url": "https://www.pega.com/about/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Persistent Systems",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 8,
+      "evidence_sha256": "7982e9f274d66160733e0ff72f9af5d471f41a78fe90b4d99f52fc76a9e183f8",
+      "entry_point": {
+        "url": "https://careers.persistent.com/",
+        "final_url": "https://careers.persistent.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "PharmEasy",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 5,
+      "evidence_sha256": "c8822e957a612c5491c5968e6032dd10866e98daeb26f9aa81e10542171f5d38",
+      "entry_point": {
+        "url": "https://pharmeasy.in/careers",
+        "final_url": "https://pharmeasy.in/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Pine Labs",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "3aab43fe6eb84a03df0b3ecfdcfec0f66368ee01b1efa8a5e17cc50bb7497c85",
+      "entry_point": {
+        "url": "https://www.pinelabs.com/careers",
+        "final_url": "https://www.pinelabs.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Portea",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 4,
+      "evidence_sha256": "b1f493364d9ba66ceac0671fe0fd1708811ddd200cc2deacafa83bc3f08fad74",
+      "entry_point": {
+        "url": "https://www.portea.com/careers/",
+        "final_url": "https://www.portea.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Porter",
+      "batch": 3,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "a68ec4f20eb4d0877d36cd199bd873b8e82e1d654d5024c9fdc8941185e67255",
+      "entry_point": {
+        "url": "https://porter.in/careers",
+        "final_url": "https://porter.in/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Practo",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 2,
+      "evidence_sha256": "49b8d4ce27f9e54ebc8cc6e46fc9ee86a5b4784f47d116676943c029776f1bc7",
+      "entry_point": {
+        "url": "https://www.practo.com/company/careers",
+        "final_url": "https://practo.app.param.ai/jobs/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Providence India",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "cc208084689f09224b0240d2b193a7bba386c7eb08be392b64d67f53dc249255",
+      "entry_point": {
+        "url": "https://www.providence.in/careers",
+        "final_url": "https://www.providence.in/careers",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Ralph Lauren",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "873642c17bf88eca4c5eaea9b43a5b1f21c7d5ef701dbe106bd9fb076784cbde",
+      "entry_point": {
+        "url": "https://careers.ralphlauren.com/",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "Rapido",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 9,
+      "evidence_sha256": "993b6b4c8b1c39bb545e65042c052f1c7d8c24f61df89ed39368ad7315172108",
+      "entry_point": {
+        "url": "https://rapido.bike/Careers",
+        "final_url": "https://rapido.bike/Careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Regeneron",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "91fb9c779ca532a872900b7649e7a7554de44fcbbb2865b1c2aeb341d17739ae",
+      "entry_point": {
+        "url": "https://careers.regeneron.com/en/jobs/",
+        "final_url": "https://careers.regeneron.com/en/jobs/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Reliance Jio",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 15,
+      "evidence_sha256": "8107b48bf6dcdab7451cc337aac39eb4a7b7a83d7b829fd42d83d45756964688",
+      "entry_point": {
+        "url": "https://careers.jio.com/",
+        "final_url": "https://careers.jio.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Revolut",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "bd988b39846f94ff5c5ffe5476d39b6878cf247ba7d0d0ed7a61b4b3b8ede76f",
+      "entry_point": {
+        "url": "https://www.revolut.com/careers/",
+        "final_url": "https://www.revolut.com/careers/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Rupeek",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 19,
+      "evidence_sha256": "b0f59875636492b748f7ef56400830d525d5c5ca0f20e35a7d0f84cf553cda71",
+      "entry_point": {
+        "url": "https://rupeek.com/careers",
+        "final_url": "https://rupeek.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "SAS",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 19,
+      "evidence_sha256": "f6c2be9c1ddfdd04e5c1371e34b8de90b378d75367b6f7272ec68fb3318b7957",
+      "entry_point": {
+        "url": "https://www.sas.com/en_in/careers.html",
+        "final_url": "https://www.sas.com/en_in/careers.html",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "SLB",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 14,
+      "evidence_sha256": "ea269b3b5e49fdcc030aacedb7cc364b068fb8ff83ff585553a5f37e7df5188c",
+      "entry_point": {
+        "url": "https://careers.slb.com/",
+        "final_url": "https://careers.slb.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "SMBC",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "bb4132a0edf9af798537c8bd1f5867759b7e3c1c500a08f354407984f6b7044d",
+      "entry_point": {
+        "url": "https://www.smbcgroup.com/careers/",
+        "final_url": "https://www.smbcgroup.com/careers/",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Safe Security",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "703c7643b622ef0717dc04f7a593063673a4c9721c468425c6f06103c8ae0a5c",
+      "entry_point": {
+        "url": "https://safe.security/careers/",
+        "final_url": "https://safe.security/careers/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Scaler",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "248e1a22fc0b0761a616deb1a638a21d6401317e4f276765232c89a86d2f58cf",
+      "entry_point": {
+        "url": "https://www.scaler.com/careers/",
+        "final_url": "https://www.scaler.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Schneider Electric",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "e1c87e741a8fe5ae061b2823ed0f3bbd27d341a94d2ba053f1af1464d3abbd33",
+      "entry_point": {
+        "url": "https://www.se.com/ww/en/about-us/careers/",
+        "final_url": "https://www.se.com/ww/en/about-us/careers/",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Shiprocket",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "0c81d67263c2c163774a9902d3c2c328f007136394bb4353e262188570f764e1",
+      "entry_point": {
+        "url": "https://careers.shiprocket.in/",
+        "final_url": "https://careers.shiprocket.in/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Siemens",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 13,
+      "evidence_sha256": "30ea9df91540e0396dd3f1b896ec1b51a2808a6f3cbde255a2fc2ed015f12cfa",
+      "entry_point": {
+        "url": "https://jobs.siemens.com/careers",
+        "final_url": "https://jobs.siemens.com/en_US/externaljobs/redirect",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Simplilearn",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "4331ca50b60123573b277c2c6c9ec31bdabe55edb4f0c82d8dad08afddfcf70e",
+      "entry_point": {
+        "url": "https://www.simplilearn.com/careers",
+        "final_url": "https://www.simplilearn.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Skyroot Aerospace",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "2992cd5c3d43a366223b1f24fcd4955b839ef37b45f63e889c192c943449dfac",
+      "entry_point": {
+        "url": "https://skyroot.in/careers.html",
+        "final_url": "https://www.skyroot.in/careers.html",
+        "http_status": 404
+      }
+    },
+    {
+      "company": "Societe Generale",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 19,
+      "evidence_sha256": "3a0bfbaf06b31bb737e309c4da6704dfcc82342732640da86e7aab951cf2727c",
+      "entry_point": {
+        "url": "https://careers.societegenerale.com/en",
+        "final_url": "https://careers.societegenerale.com/en",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Sonata Software",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "90c20049ea4327e55c74a0faa4b94b1733c1980bffe67b515282b00ea7bb8efa",
+      "entry_point": {
+        "url": "https://www.sonata-software.com/careers",
+        "final_url": "https://www.sonata-software.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Sony",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 4,
+      "evidence_sha256": "deddb27218dfd62135e99f3df8e92676648adf2d3e56059b18c3ecf0127f8a5e",
+      "entry_point": {
+        "url": "https://www.sonyjobs.com/",
+        "final_url": "https://www.sonyjobs.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Splunk",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 5,
+      "evidence_sha256": "4101ed9f8153a7b8e85eedc38232b80f0a4676670b245b6c2b73651d5643682d",
+      "entry_point": {
+        "url": "https://www.splunk.com/en_us/careers.html",
+        "final_url": "https://careers.cisco.com/global/en/splunk",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Syneos Health",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "c10f86fdb46f7d398603304f4d575da8aa9d55e40d14aad64c889c15507aea8c",
+      "entry_point": {
+        "url": "https://www.syneoshealth.com/careers",
+        "final_url": "https://www.syneoshealth.com/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "TCS",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "d97d7bf213c3f627855775657baaed455f738dfce1cff4f5a57ddce2a27ac095",
+      "entry_point": {
+        "url": "https://www.tcs.com/careers/india",
+        "final_url": "https://www.tcs.com/careers/india",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Tata Digital",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 8,
+      "evidence_sha256": "3e7cb7d8301dc01818d323083d3d938ca24239ee9c7a8b163cf0550a67164944",
+      "entry_point": {
+        "url": "https://www.tatadigital.com/careers",
+        "final_url": "https://www.tataneu.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Tata Elxsi",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 7,
+      "evidence_sha256": "66393378ab758cf8554f63a55f5401ac40414381316498ca7d528a0552b103b3",
+      "entry_point": {
+        "url": "https://www.tataelxsi.com/careers",
+        "final_url": "https://www.tataelxsi.com/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Tata Technologies",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "4d9e4d1c73960869376bcf888b8b8029b5ae83bd1d29c338f3eab1930dc527c4",
+      "entry_point": {
+        "url": "https://www.tatatechnologies.com/in/careers/",
+        "final_url": "https://www.tatatechnologies.com/in/careers/",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Tech Mahindra",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "4e80954ac0c436a332765c80259df130e63db3debf62243117eef0d4e54b11c9",
+      "entry_point": {
+        "url": "https://careers.techmahindra.com/",
+        "final_url": "https://careers.techmahindra.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Teradata",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "e6e5795ed084d9f3af67fc57efb22aa411c57b906e8952d9393e0edfe99d5707",
+      "entry_point": {
+        "url": "https://careers.teradata.com/",
+        "final_url": "https://careers.teradata.com/jobs",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Tesco Bengaluru",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "accc5bcdfa50dbe1ceec669318e34be222aba29c1b97b51da14636000a2af8b9",
+      "entry_point": {
+        "url": "https://www.tescobengaluru.com/careers/",
+        "final_url": "https://www.tescobengaluru.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Tilt",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 3,
+      "evidence_sha256": "ec1796fb6de30168951f05c68e212837b91fdee36d635be7ef72524277346be5",
+      "entry_point": {
+        "url": "https://www.tilt.bike/careers",
+        "final_url": "https://www.tilt.bike/careers",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Toshiba",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 14,
+      "evidence_sha256": "55ed65079d17a65d565fc92a49af8fb5d4bfade48c7335968ea970172082963a",
+      "entry_point": {
+        "url": "https://www.global.toshiba/ww/recruit.html",
+        "final_url": "https://www.global.toshiba/ww/recruit/corporate.html",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Traveloka",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "e31200884c569a6c6101116203515b334aea04d28343c9b706081e88a6949674",
+      "entry_point": {
+        "url": "https://careers.traveloka.com/",
+        "final_url": "https://careers.traveloka.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "UBS",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 16,
+      "evidence_sha256": "df73a227da8c74c87de53275a454d8d966d61449285d166f13592e034ab42cea",
+      "entry_point": {
+        "url": "https://www.ubs.com/global/en/careers.html",
+        "final_url": "https://www.ubs.com/global/en/careers.html",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "UST",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "d49474be9c427602bc894e78decc63b892085e80b13692ba3dc6eefbbc7ea52e",
+      "entry_point": {
+        "url": "https://www.ust.com/en/careers",
+        "final_url": "https://www.ust.com/en/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Udaan",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "2f6626229f57a909af4400234e30ad8420264dfc0726e2bffd9b00199c71bc3b",
+      "entry_point": {
+        "url": "https://udaan.com/careers",
+        "final_url": null,
+        "http_status": null
+      }
+    },
+    {
+      "company": "Upstox",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "67ebc436f0065cada581fcc757357ed9946332a8a2b9b13134564ecf936011a9",
+      "entry_point": {
+        "url": "https://upstox.com/careers/",
+        "final_url": "https://upstox.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Urban Company",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 5,
+      "evidence_sha256": "9030b43e0d7e7358ac52e82c125343924a3611e50def74016a50c1d30266b1cf",
+      "entry_point": {
+        "url": "https://careers.urbancompany.com/",
+        "final_url": "https://careers.urbancompany.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Vedantu",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 6,
+      "evidence_sha256": "8aba12cfcfa52d8a7a5d5f41fd620aeb983a627c1ba328629e4dda21d02d1d8e",
+      "entry_point": {
+        "url": "https://www.vedantu.com/careers",
+        "final_url": "https://courses.vedantu.com/career-page/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Victoria's Secret",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 19,
+      "evidence_sha256": "6347de5a73a2e959fcd7cf33be61fb02f218bd6ea0e19be8739bc2604b6212e5",
+      "entry_point": {
+        "url": "https://careers.victoriassecret.com/",
+        "final_url": "https://careers.victoriassecret.com/en/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Vodafone",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 19,
+      "evidence_sha256": "69e86bc0881e648be822e1a0cf84bca35126bf735c90885bc4e0bc3848047527",
+      "entry_point": {
+        "url": "https://careers.vodafone.com/",
+        "final_url": "https://careers.vodafone.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "WTW",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 19,
+      "evidence_sha256": "55cc80889efcae53d33a5febc7c5ae065acd259768ea6f2aef47afa2c73707a7",
+      "entry_point": {
+        "url": "https://careers.wtwco.com/",
+        "final_url": "https://careers.wtwco.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Walmart Global Tech",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 12,
+      "evidence_sha256": "1c3080830ffa3a7a3a45474bafb938ab0a5c51a072e3bdb91d3105e94b7456da",
+      "entry_point": {
+        "url": "https://careers.walmart.com/technology",
+        "final_url": "https://careers.walmart.com/us/en/home/careers-areas/technology",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Wayfair",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "ee7372c341c30d47ecf36956b9047e1867fa5b7a49fe54eb4226ae20eefb3687",
+      "entry_point": {
+        "url": "https://www.wayfair.com/careers",
+        "final_url": "https://www.wayfair.com/careers",
+        "http_status": 429
+      }
+    },
+    {
+      "company": "Yubi",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "a368612d0709778334c0447cf3b020cc513ee039466ba0f53e4b0bfa015f15fe",
+      "entry_point": {
+        "url": "https://www.go-yubi.com/careers",
+        "final_url": "https://www.go-yubi.com/careers",
+        "http_status": 403
+      }
+    },
+    {
+      "company": "Zepto",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 1,
+      "evidence_sha256": "575ce83612be876a2c798d66eaa570efef406cb117396cea2ed533e5966a1747",
+      "entry_point": {
+        "url": "https://www.zepto.com/s/careers",
+        "final_url": "https://www.zepto.com/s/careers",
+        "http_status": 202
+      }
+    },
+    {
+      "company": "Zerodha",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 4,
+      "evidence_sha256": "c79503bb29877bf1471852d43ca779cfdf4c7f3ab40eb8dba4a218ec3cb9d184",
+      "entry_point": {
+        "url": "https://careers.zerodha.com/",
+        "final_url": "https://careers.zerodha.com/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Zoho",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 18,
+      "evidence_sha256": "f881bba74a0c72e8a08c2a59e509e5c02a2dada639e663f3c628b089f4af525d",
+      "entry_point": {
+        "url": "https://www.zoho.com/careers/",
+        "final_url": "https://www.zoho.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "Zomato",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 3,
+      "evidence_sha256": "6b0e23d4221fc58f1903533542868f7ceef424f054301b9f310593f3611c72b4",
+      "entry_point": {
+        "url": "https://www.zomato.com/careers",
+        "final_url": "https://www.eternal.com/careers/",
+        "http_status": 200
+      }
+    },
+    {
+      "company": "upGrad",
+      "batch": 4,
+      "status": "DISCOVERED_UNVERIFIED",
+      "pages_captured": 17,
+      "evidence_sha256": "75f29b0070b2ce492e9ced7dab79e68eabf9a65a766145ff2259e9196716d314",
+      "entry_point": {
+        "url": "https://www.upgrad.com/about/careers/",
+        "final_url": "https://www.upgrad.com/us/about/careers/",
+        "http_status": 200
+      }
+    }
+  ]
+}
