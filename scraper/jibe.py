@@ -130,7 +130,7 @@ class JibeCareerAdapter:
             async def convert(row):
                 url=f"{endpoint}/{row['slug']}/{row['language']}"
                 async with gate:r=await request(x,'GET',url)
-                if r.status_code in (404,410):raise SnapshotChanged('Jibe listed detail disappeared during collection')
+                if r.status_code in (404,410):raise SnapshotChanged(f'Jibe listed detail disappeared during collection: {url}')
                 r.raise_for_status();job=detail_record(r.json(),row,tenant)
                 countries={job.get('country')} | {v.get('country') for v in job.get('additional_locations') or [] if isinstance(v,dict)}
                 if country and country not in countries:raise ValueError('Jibe country facet includes a job with no published requested-country location')
