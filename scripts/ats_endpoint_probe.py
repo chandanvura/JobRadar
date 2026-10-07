@@ -22,6 +22,7 @@ BOARDS={
  'Tredence':'https://tredence.ripplehire.com/candidate/',
  'NetApp':'https://careers.netapp.com/search-jobs',
  'Deutsche Boerse Group':'https://careers.deutsche-boerse.com/',
+ 'Avalara current':'https://app.careerpuck.com/job-board/avalara',
 }
 
 async def run():
@@ -58,12 +59,18 @@ async def run():
                 r=await request(x,'GET',url,headers=headers);r.raise_for_status();(folder/'board.html').write_text(r.text)
                 soup=BeautifulSoup(r.text,'html.parser');case.update(bytes=len(r.content),title=soup.title.get_text() if soup.title else None,scripts=[urljoin(str(r.url),s['src']) for s in soup.select('script[src]')])
                 links=list(dict.fromkeys(urljoin(str(r.url),a['href']) for a in soup.select('a[href]')))
-                search=next((u for u in links if '/jobs/search' in u or '/search-jobs' in u and '/search-jobs' not in str(r.url)),None)
+                forms=[urljoin(str(r.url),f['action']) for f in soup.select('form[action]') if '/jobs/search' in f['action']]
+                search=next(iter(forms),None) or next((u for u in links if '/jobs/search' in u or '/search-jobs' in u and '/search-jobs' not in str(r.url)),None)
                 if search:
                     r=await request(x,'GET',search);r.raise_for_status();(folder/'search.html').write_text(r.text);case['search_url']=str(r.url)
                 # RequireJS module URL is published in data-main, not script src.
                 modules=[urljoin(str(r.url),s['data-main']) for s in soup.select('script[data-main]')]
                 case['data_main']=modules
+                if name=='Avalara current':
+                    for i,script in enumerate(case['scripts']):
+                        if 'app.careerpuck.com' in script:
+                            a=await request(x,'GET',script)
+                            if a.status_code==200:(folder/f'asset-{i}.js').write_text(a.text)
                 for module in modules:
                     u=module if module.endswith('.js') else module+'.js'
                     a=await request(x,'GET',u);case['pages'].append(dict(url=u,status=a.status_code));a.raise_for_status();(folder/'module.js').write_text(a.text)

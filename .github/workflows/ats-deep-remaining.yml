@@ -1,0 +1,32 @@
+name: ATS Detective remaining deep batches
+on:
+  push:
+    branches: [ats-detective/2026-10-07]
+    paths: [companies/ats-deep-2026-10-07-*.json, .github/workflows/ats-deep-remaining.yml]
+permissions:
+  contents: read
+jobs:
+  investigate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        batch: ['02','03','04','05']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m scripts.ats_deep --manifest companies/ats-deep-2026-10-07-${{ matrix.batch }}.json --output artifacts/ats-deep-${{ matrix.batch }}
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '2'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ats-deep-${{ matrix.batch }}
+          path: artifacts/ats-deep-${{ matrix.batch }}
+          retention-days: 3

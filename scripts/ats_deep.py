@@ -58,8 +58,8 @@ async def run(manifest, output):
                 soup=await fetch(url)
                 if not isinstance(soup,BeautifulSoup):continue
                 source=records[-1]
-                linked=[u for u in source.get('links',[]) if urlsplit(u).scheme=='https' and not urlsplit(u).fragment and not EXCLUDE.search(u) and not urlsplit(u).path.endswith(('.css','.jpg','.png','.svg')) and any(t in u.lower() for t in ['jobs','candidate','kula.ai','rippling','openings','find-your-job','search-results'])]
-                linked=list(dict.fromkeys(linked))[:2]
+                linked=[u for u in source.get('links',[]) if urlsplit(u).scheme=='https' and not urlsplit(u).fragment and not EXCLUDE.search(u) and not urlsplit(u).path.endswith(('.css','.jpg','.png','.svg')) and any(t in u.lower() for t in ['jobs','job-board','candidate','kula.ai','rippling','greenhouse','lever.co','ashby','workday','workable','smartrecruiters','bamboohr','openings','find-your-job','search-results'])]
+                linked=list(dict.fromkeys(linked));linked.sort(key=lambda u:0 if any(t in u for t in ['job-board','kula.ai','rippling','greenhouse','lever.co','ashby','workday','workable','smartrecruiters','bamboohr','darwinbox','ripplehire']) else 1);linked=linked[:2]
                 for target in linked:await fetch(target,url)
             # Inspect only scripts actually published by fetched employer/board HTML.
             scripts=list(dict.fromkeys((u,p.get('final_url',p['url'])) for p in records.copy() for u in p.get('scripts',[]) if not EXCLUDE.search(u)))
