@@ -53,7 +53,7 @@ def detail_record(payload,row,tenant):
     listed={v.strip() for v in (row.get('full_location') or '').split(';') if v.strip()}
     detailed={v.strip() for v in displayed if v.strip()}
     if payload.get('country')!=row.get('country') or listed!=detailed:
-        raise SnapshotChanged('Jibe published location set changed during collection')
+        raise SnapshotChanged(f"Jibe location discrepancy {row['slug']}: listed={sorted(listed)!r}; detailed={sorted(detailed)!r}; primary={payload.get('full_location')!r}; additional={payload.get('additional_locations')!r}")
     from .adapters import clean
     if not clean(payload.get('description')):raise ValueError('Jibe full job detail omitted employer requirements')
     return payload
