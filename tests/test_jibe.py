@@ -71,3 +71,11 @@ def test_real_public_multi_location_formats(listed,primary,additional):
     assert detail_record(detail,listing,'employer')==detail
     listing['full_location']='Another city'
     with pytest.raises(SnapshotChanged):detail_record(detail,listing,'employer')
+
+
+def test_brand_scope_is_an_identity_boundary():
+    listing=dict(row(1),brand='Booking.com')
+    detail=dict(listing,client_code='workingatbooking',description='Actual requirements',full_location='Bengaluru, India',additional_locations=[dict(city='Hyderabad',country='India')])
+    assert detail_record(detail,listing,'workingatbooking')==detail
+    detail['brand']='Booking Holdings'
+    with pytest.raises(ValueError):detail_record(detail,listing,'workingatbooking')

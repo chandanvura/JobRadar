@@ -39,7 +39,7 @@ def listing_records(payload, page, expected=None):
 def detail_record(payload,row,tenant):
     if not isinstance(payload,dict) or payload.get('client_code')!=tenant:
         raise ValueError('Jibe detail belongs to another employer tenant')
-    if any(payload.get(k)!=row.get(k) for k in ['slug','req_id','title','language']):
+    if any(payload.get(k)!=row.get(k) for k in ['slug','req_id','title','language','brand']):
         raise ValueError('Jibe detail does not match its listed job identity')
     if payload.get('internal') is not False or payload.get('searchable') is not True:
         raise SnapshotChanged('Jibe job ceased to be public during collection')
@@ -73,8 +73,10 @@ def job_location(job):
 class JibeCareerAdapter:
     async def fetch_jobs(self,company):
         from .adapters import clean,client,make_job,request
-        parts=company.ats_identifier.split('|');tenant=parts[0];country=parts[1] if len(parts)==2 else None
-        if len(parts)>2 or not re.fullmatch(r'[\w-]+',tenant) or country not in (None,'India'):
+        parts=company.ats_identifier.split('|');tenant=parts[0];scope=parts[1] if len(parts)==2 else None
+        country=scope if scope=='India' else None
+        brand=scope.removeprefix('brand=') if scope and scope.startswith('brand=') else None
+        if len(parts)>2 or not re.fullmatch(r'[\w-]+',tenant) or (scope is not None and scope!='India' and not brand):
             raise ValueError('Invalid evidence-derived Jibe employer configuration')
         parsed=urlsplit(company.careers_url)
         if parsed.scheme!='https' or parsed.username or parsed.password:raise ValueError('Jibe requires the official HTTPS employer board')
@@ -88,12 +90,16 @@ class JibeCareerAdapter:
             if 'this.http.get("/api/jobs"' not in asset.text or 'searchJobBySlug' not in asset.text:
                 raise ValueError('Jibe public script no longer verifies the registered endpoints')
             params=dict(page=1,limit=20,internal='false')
-            if country:
+            if country or brand:
                 probe=await request(x,'GET',endpoint,params=params);probe.raise_for_status();data=probe.json()
                 facets=data.get('filter',{}).get('facetList',{}).get('country',[])
-                if not any(v.get('term')==country for v in facets):
+                if country and not any(v.get('term')==country for v in facets):
                     raise ValueError('Jibe employer did not publish the requested country facet; zero is unverified')
-                params['country']=country
+                if country:params['country']=country
+                if brand:
+                    brands=data.get('filter',{}).get('brands',{}).get('all',[])
+                    if not any(v.get('brand')==brand for v in brands):raise ValueError('Jibe requested brand was not published by employer')
+                    params['brands']=brand
             found={};total=None;first=None
             for page in range(1,101):
                 params['page']=page
@@ -102,6 +108,7 @@ class JibeCareerAdapter:
                 if found.keys() & rows.keys():raise ValueError('Jibe pagination repeated a unique job ID')
                 if country and any(row.get('country')!=country for row in rows.values()):
                     raise ValueError('Jibe requested country facet returned another country')
+                if brand and any(row.get('brand')!=brand for row in rows.values()):raise ValueError('Jibe brand facet includes another employer')
                 if first is None:first=rows
                 found.update(rows)
                 if len(found)==total:break
