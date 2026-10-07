@@ -307,6 +307,21 @@ def workday_country_facets(nodes,country):
     visit(nodes)
     return countries or ({"locations":locations} if locations else {})
 
+def workday_city_facets(nodes,cities):
+    """Resolve only actual published location facet IDs for an explicit city scope."""
+    names=cities.split(';')
+    if not names or any(not re.fullmatch(r'[A-Za-z ]+',name) for name in names):
+        raise ValueError('Invalid Workday city scope')
+    pattern=re.compile(r'\b(?:'+ '|'.join(re.escape(name) for name in names)+r')\b',re.I)
+    ids=[]
+    def visit(entries):
+        for node in entries:
+            if node.get('facetParameter')=='locations':
+                ids.extend(value['id'] for value in node.get('values',[]) if value.get('id') and pattern.search(value.get('descriptor','')))
+            visit(node.get('values',[]))
+    visit(nodes)
+    return {'locations':list(dict.fromkeys(ids))} if ids else {}
+
 class WorkdayAdapter(JobSource):
     def __init__(self, complete=False):
         self.complete=complete
@@ -320,8 +335,8 @@ class WorkdayAdapter(JobSource):
             if country:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":0,"searchText":""})
                 response.raise_for_status()
-                facets=workday_country_facets(response.json().get("facets",[]),country)
-                if not facets: raise ValueError("Workday does not expose the configured country locations")
+                facets=(workday_city_facets(response.json().get("facets",[]),country.removeprefix("cities=")) if country.startswith("cities=") else workday_country_facets(response.json().get("facets",[]),country))
+                if not facets: raise ValueError("Workday does not expose the configured country/city locations")
             while offset < bound:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
@@ -738,3 +753,5 @@ from .infineon import InfineonCareerAdapter
 ADAPTERS["infineon"] = InfineonCareerAdapter()
 
 ADAPTERS["eightfold_legacy_complete"] = LegacyEightfoldCareerAdapter(complete=True)
+
+ADAPTERS["vodafone"] = InfineonCareerAdapter("Vodafone","https://jobs.vodafone.com/careers","vodafone.com","vodafone")

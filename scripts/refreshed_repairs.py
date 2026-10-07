@@ -27,11 +27,11 @@ async def run():
                         sr=await request(x,'GET',url);(OUT/f'hubspot-script-{index}.js').write_text(sr.text)
                         case['requests'].append({'url':url,'status':sr.status_code,'sha256':hashlib.sha256(sr.content).hexdigest()})
         except Exception as exc:case['blocker']=str(exc)
-        case={'company':'Maersk','scope':'complete global inventory','status':'UNVERIFIED'};evidence.append(case)
+        case={'company':'Maersk','scope':'complete published Bangalore/Bengaluru/Hyderabad location facets','status':'UNVERIFIED'};evidence.append(case)
         try:
             r=await request(x,'POST','https://maersk.wd3.myworkdayjobs.com/wday/cxs/maersk/Maersk_Careers/jobs',json={'appliedFacets':{},'limit':20,'offset':0,'searchText':''});r.raise_for_status()
             data=r.json();case['published_facets']=data.get('facets');case['india_facet']=workday_country_facets(data.get('facets',[]),'India')
-            c=Company('Maersk','https://maersk.wd3.myworkdayjobs.com/Maersk_Careers','workday_complete','maersk|Maersk_Careers',4)
+            c=Company('Maersk','https://maersk.wd3.myworkdayjobs.com/Maersk_Careers','workday_complete','maersk|Maersk_Careers|cities=Bangalore;Bengaluru;Hyderabad',4)
             jobs,status,error,total=await scrape(c,asyncio.Semaphore(1),asyncio.Semaphore(1))
             case.update(collection=status,error=error,advertised_total=total,unique_ids=len({j.external_job_id for j in jobs}),details=len(jobs),missing_descriptions=sum(not j.description for j in jobs))
             case['complete']=not error and total==len(jobs)==case['unique_ids'] and not case['missing_descriptions'] and not (status.get('warning') or '').startswith('Limited coverage')

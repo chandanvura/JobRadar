@@ -8,6 +8,7 @@ from scraper.models import Company
 
 OUT=Path('artifacts/refreshed-candidates')
 CANDIDATES=[
+    Company('Vodafone','https://jobs.vodafone.com/careers','vodafone','vodafone.com',4),
     Company('Aon','https://jobs.aon.com/jobs','jibe','aon|India',4),
     Company('DocuSign','https://careers.docusign.com/careers-home/jobs','jibe','docusign|India',4),
     Company('Planful','https://planful.com/jobs/careers-list/','greenhouse','hostanalytics',3),
@@ -22,6 +23,23 @@ async def run():
         case['complete']=not error and total==len(jobs)==case['unique_ids'] and not case['missing_descriptions'] and not (status.get('warning') or '').startswith('Limited coverage')
         cases.append(case);print(json.dumps(case),flush=True)
     async with client(timeout=40) as x:
+        for name,origin in [('Aon','https://jobs.aon.com'),('DocuSign','https://careers.docusign.com'),('Costco','https://careers.costco.com'),('Panasonic','https://careers.na.panasonic.com')]:
+            case=dict(company=name,status='UNVERIFIED_PUBLIC_PROBE');cases.append(case)
+            try:
+                r=await request(x,'GET',origin+'/api/jobs',params={'page':1,'limit':20,'internal':'false'});r.raise_for_status();data=r.json()
+                (OUT/(name+'-jibe.json')).write_text(json.dumps(data))
+                case.update(count=data.get('count'),totalCount=data.get('totalCount'),filter=data.get('filter'))
+                rows=data.get('jobs') or []
+                if rows:
+                    row=rows[0]['data'];url=origin+'/api/jobs/'+row['slug']+'/'+row['language']
+                    dr=await request(x,'GET',url);dr.raise_for_status();(OUT/(name+'-detail.json')).write_text(dr.text)
+            except Exception as exc:case['blocker']=str(exc)
+            print(json.dumps({k:v for k,v in case.items() if k!='filter'}),flush=True)
+        try:
+            r=await request(x,'GET','https://sarlaaviation.keka.com/careers/api/embedjobs/default/active/e49e9d28-c9da-4c98-9479-9c1bc14f55e6');r.raise_for_status()
+            (OUT/'sarla-keka.json').write_text(r.text)
+            print(json.dumps({'company':'Sarla Aviation','status':'UNVERIFIED_PUBLIC_PROBE','http_status':r.status_code}),flush=True)
+        except Exception as exc:print('Sarla Aviation public probe: '+str(exc),flush=True)
         for name,host in [('Darwinbox','dbx.darwinbox.in'),('Orange Health Labs','orangehealth.darwinbox.in')]:
             case=dict(company=name,status='UNVERIFIED_PUBLIC_PROBE');cases.append(case)
             try:

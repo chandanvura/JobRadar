@@ -90,3 +90,14 @@ def test_complete_workday_fetches_non_target_details_too(monkeypatch):
     monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
     jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
     assert count==len(jobs)==1 and jobs[0].location=='London'
+
+
+def test_city_scope_uses_only_published_ids_and_real_city_tokens():
+    facets=[{'facetParameter':'locationMainGroup','values':[{'facetParameter':'locations','values':[
+        {'id':'blr','descriptor':'India, Bengaluru, 560064'},
+        {'id':'bang','descriptor':'INBLR08 - Bangalore - office'},
+        {'id':'hyd','descriptor':'Hyderabad, India'},
+        {'id':'other','descriptor':'Hyderabadi department, London'},
+        {'id':'lon','descriptor':'London, United Kingdom'}]}]}]
+    assert adapters.workday_city_facets(facets,'Bangalore;Bengaluru;Hyderabad')=={'locations':['blr','bang','hyd']}
+    assert adapters.workday_city_facets(facets,'Paris')=={}
