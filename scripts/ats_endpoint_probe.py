@@ -49,7 +49,7 @@ async def run():
                 if jobs:
                     case['job_fields']=list(jobs[0]);slug=jobs[0].get('data',jobs[0]).get('slug')
                     if slug:
-                        detail=await request(x,'GET',endpoint+'/'+slug);case['pages'].append(dict(url=str(detail.url),status=detail.status_code));detail.raise_for_status();(folder/'detail.json').write_text(json.dumps(detail.json(),indent=2))
+                        detail=await request(x,'GET',endpoint+'/'+slug+'/'+jobs[0].get('data',jobs[0]).get('language','en-us'));case['pages'].append(dict(url=str(detail.url),status=detail.status_code));detail.raise_for_status();(folder/'detail.json').write_text(json.dumps(detail.json(),indent=2))
             except Exception as exc:case['blocker']=str(exc)
             print(json.dumps(case),flush=True)
         for name,url in BOARDS.items():
