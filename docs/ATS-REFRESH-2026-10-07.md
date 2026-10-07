@@ -1,12 +1,16 @@
 # Refreshed unresolved employer investigation — 7 October 2026
 
-At 17:55 UTC the production dashboard reports 700 companies, 200 Limited sources and 2 errors (HubSpot and Adidas). This is a fresh measurement, not a claim that the other 500 have globally complete feeds.
+At 18:26 UTC the production dashboard reports 700 companies, 200 Limited sources and 2 errors (HubSpot and Adidas). This is a fresh measurement, not a claim that the other 500 have globally complete feeds.
 
 Four batches of 50 were captured by standard Python HTTP in [Actions](https://github.com/chandanvura/JobRadar/actions/runs/37611530978). The evidence JSON records response status, final URLs and hashes. Discovery alone does not establish employer identity or feed completeness.
 
 Earlier candidate probe [37612603447](https://github.com/chandanvura/JobRadar/actions/runs/37612603447) collected Planful 12/12 unique IDs/details and Bayer 32/32 India IDs/details, with no missing descriptions. These remain candidates until current repeat probes, registry changes and focused production verification pass. Aon and DocuSign failed country-facet validation; Darwinbox and Orange Health returned 403; HubSpot returned GraphQL errors rather than a valid empty job list.
 
-No companies.csv changes have been made in this investigation yet.
+The proposed registry changes replace the custom sources for Bayer and Vodafone with their officially linked India feeds. They are gated on repeated complete collection and are awaiting focused production verification. Exact old/new rows are recorded in `docs/evidence/verified-registry-changes-2026-10-07.json`.
+
+At 18:28 UTC the application root and dashboard returned HTTP 200. The health endpoint returned HTTP 503 with database and ingestion configured, a fresh latest run, and status `degraded`: 698 successful companies and 2 failed. A green scheduled workflow does not mean all feeds succeeded. HubSpot remains blocked by the current official API’s upstream 404; the current Adidas XML was valid in a read-only probe and requires complete live reconciliation and production verification.
+
+Validation: 311 mocked Python tests and Bandit pass locally; Python/web CI passed at commit `19895eb`. HTTP probes execute on GitHub Actions only.
 
 | Company | Batch | Captured pages | Discovery result |
 |---|---:|---:|---|
