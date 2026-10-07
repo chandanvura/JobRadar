@@ -50,6 +50,7 @@ async def run():
             body = dict(appId='careers', scopes=['careers2'], query={'bool': {'must': []}},
                 post_filter={'term': {'field_keyword_05': 'India'}}, size=30, sort=[{'_score': 'desc'}, {'pageviews': 'desc'}],
                 lang='zz', localeSelector={}, sm={'query': '', 'lang': 'zz'},
+                _source=['_id', 'title', 'url', 'description', 'language', 'field_keyword_05', 'field_keyword_08', 'field_keyword_17', 'field_keyword_18', 'field_keyword_19'],
                 aggs={'all_countries': {'filter': {'match_all': {}}, 'aggs': {'field_keyword_05': {'terms': {'field': 'field_keyword_05', 'size': 1000}}}}})
             case['payload'] = body
             for offset in [0, 30]:
@@ -82,9 +83,9 @@ async def run():
             root = ET.fromstring(response.text)
             case['xml_root'] = root.tag
             case['xml_attributes'] = root.attrib
-            hits = root.findall('.//Hit'); case['first_page_count'] = len(hits)
+            hits = root.findall('.//{*}Hit'); case['first_page_count'] = len(hits)
             if hits:
-                fields = {m.get('name'): m.findtext(".//MetaString[@name='value']") for m in hits[0].findall('.//Meta')}
+                fields = {m.get('name'): m.findtext(".//{*}MetaString[@name='value']") for m in hits[0].findall('.//{*}Meta')}
                 case['first_record'] = fields
                 await detail(case, fields['content_cta_1_url'], 'dassault-detail', 'www.3ds.com')
             case['status'] = 'PUBLIC_PROBE_ONLY'
