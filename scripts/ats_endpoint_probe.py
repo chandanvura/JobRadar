@@ -75,7 +75,7 @@ async def run():
                         if asset.status_code==200:(folder/f'dep-{i}.js').write_text(asset.text)
             except Exception as exc:case['blocker']=str(exc)
             print(json.dumps(case),flush=True)
-    a=await request(x,'GET','https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/96486.js')
+        a=await request(x,'GET','https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/96486.js')
         (out/'atlassian-jsx.js').write_text(a.text)
     (out/'evidence.json').write_text(json.dumps(cases,indent=2))
 
