@@ -44,7 +44,7 @@ def detail_record(payload,row,tenant):
     if payload.get('internal') is not False or payload.get('searchable') is not True:
         raise SnapshotChanged('Jibe job ceased to be public during collection')
     if payload.get('country')!=row.get('country') or payload.get('full_location')!=row.get('full_location'):
-        raise SnapshotChanged('Jibe published location changed during collection')
+        raise SnapshotChanged(f"Jibe detail location differs: {row['slug']} listing={row.get('full_location')!r}/{row.get('country')!r}; detail={payload.get('full_location')!r}/{payload.get('country')!r}; additional={payload.get('additional_locations')!r}")
     from .adapters import clean
     if not clean(payload.get('description')):raise ValueError('Jibe full job detail omitted employer requirements')
     return payload
