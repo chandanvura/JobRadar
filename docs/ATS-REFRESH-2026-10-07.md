@@ -1,14 +1,14 @@
 # Refreshed unresolved employer investigation — 7 October 2026
 
-Production verification completed at 18:49 UTC after [PR #16](https://github.com/chandanvura/JobRadar/pull/16) merged. The fresh baseline at 18:46 UTC was **700 companies, 200 Limited sources and 2 errors**. Actual after-counts are **700 companies, 197 Limited sources and 1 error**. Bayer, Aon and DocuSign are now verified India feeds; Adidas’s existing feed is reverified and its error cleared. HubSpot remains the active error. These are measured portal coverage counts, not a claim that every other source has globally complete details. Raw verification metadata is in `docs/evidence/production-verification-2026-10-07.json`.
+Production verification completed at 18:49 UTC after [PR #16](https://github.com/chandanvura/JobRadar/pull/16) merged. The fresh baseline at 18:46 UTC was **700 companies, 200 Limited sources and 2 errors**. Actual after-counts are **700 companies, 197 Limited sources and 1 error**. Bayer, Aon and DocuSign are now verified India feeds; Adidas’s existing feed is reverified and its error cleared. HubSpot remains the active error. These are measured portal coverage counts, not a claim that every other source has globally complete details. Raw verification metadata is in [production verification metadata](evidence/production-verification-2026-10-07.json).
 
 Four batches of 50 were captured by standard Python HTTP in [Actions](https://github.com/chandanvura/JobRadar/actions/runs/37611530978). The evidence JSON records response status, final URLs and hashes. Discovery alone does not establish employer identity or feed completeness.
 
-Earlier candidate probe [37612603447](https://github.com/chandanvura/JobRadar/actions/runs/37612603447) collected Planful 12/12 unique IDs/details and Bayer 32/32 India IDs/details, with no missing descriptions. These remain candidates until current repeat probes, registry changes and focused production verification pass. Aon and DocuSign failed country-facet validation; Darwinbox and Orange Health returned 403; HubSpot returned GraphQL errors rather than a valid empty job list.
+Earlier candidate probe [37612603447](https://github.com/chandanvura/JobRadar/actions/runs/37612603447) collected Planful 12/12 unique IDs/details and Bayer 32/32 India IDs/details, with no missing descriptions. At that stage Bayer was only a candidate, and Aon/DocuSign failed country validation. Later probes repaired the country check and all three passed production verification. Planful remains a candidate; Darwinbox and Orange Health returned 403; HubSpot returned GraphQL errors rather than a valid empty job list.
 
-The merged registry changes replace custom sources for Bayer, Aon and DocuSign with currently published India feeds. Exact old/new rows are in `docs/evidence/verified-registry-changes-2026-10-07.json`. Focused collection and production verification are release requirements; no mapping is promoted merely because a probe workflow exited successfully.
+The merged registry changes replace custom sources for Bayer, Aon and DocuSign with currently published India feeds. Exact old/new rows are in [exact before/after CSV rows](evidence/verified-registry-changes-2026-10-07.json). Focused collection and production verification are release requirements; no mapping is promoted merely because a probe workflow exited successfully.
 
-| Case | Verified Actions inventory | Scope | Outcome before production |
+| Case | Verified Actions inventory | Scope | Current outcome |
 |---|---:|---|---|
 | Bayer | 33 IDs / 33 full details | India | Verified in production; score 15/15 |
 | Aon | 23 IDs / 23 full details | India | Verified in production; score 15/15 |
@@ -22,13 +22,13 @@ Actions [37667272654](https://github.com/chandanvura/JobRadar/actions/runs/37667
 
 At 18:28 UTC the application root and dashboard returned HTTP 200. The health endpoint returned HTTP 503 with database and ingestion configured, a fresh latest run, and status `degraded`: 698 successful companies and 2 failed. A green scheduled workflow does not mean all feeds succeeded. The public jobs API also returned two valid HTTP 200 pages of 100 jobs each with a working cursor and no overlapping IDs.
 
-Validation: 309 mocked Python tests and Bandit pass locally. Python/web CI, the complete HTTP release gate, registry synchronization and focused Adidas production verification all passed. Employer probes execute on GitHub Actions only. Missing posting fields remain unknown, and source-native multiple locations are preserved.
+To repeat the approved HTTP probes, open [Refreshed source error probes](https://github.com/chandanvura/JobRadar/actions/workflows/refreshed-repairs.yml) and run the workflow on `main`. It executes [the Python probe](../scripts/refreshed_candidates.py) on GitHub Actions and uploads the raw HTML/API evidence. Do not run employer collection locally.
 
+Validation: 309 mocked Python tests and Bandit pass locally. Python/web CI, the complete HTTP release gate, registry synchronization and focused Adidas production verification all passed. Employer probes execute on GitHub Actions only. Missing posting fields remain unknown, and source-native multiple locations are preserved.
 
 [Registry production sync](https://github.com/chandanvura/JobRadar/actions/runs/37669428907) independently collected and verified all three changed mappings in the live dashboard. [Focused Adidas verification](https://github.com/chandanvura/JobRadar/actions/runs/37669428801) independently reconciled 1,182 records and verified the live source update. [Main CI](https://github.com/chandanvura/JobRadar/actions/runs/37669428905) passed. Each newly recovered source scores 1 + 2 + 3 + 4 + 5 = **15** for official chain, employer identity, repeatable HTTP, complete scoped pagination/details, and CI plus production verification.
 
 At 18:49 UTC the health endpoint still returned HTTP 503, `stale=false`, database/ingestion configured. It reads the latest full scan (14:10 UTC, 698 successes / 2 failures); focused repairs correctly preserve that historical scan record. Current company statuses contain one active error: HubSpot. The application remains reachable, but full feed health is still degraded. All three recovered feeds currently have zero eligible roles; that is a valid complete collection, not a fabricated empty source.
-
 
 | Company | Batch | Captured pages | Discovery result |
 |---|---:|---:|---|
