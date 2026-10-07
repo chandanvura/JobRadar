@@ -79,3 +79,11 @@ def test_brand_scope_is_an_identity_boundary():
     assert detail_record(detail,listing,'workingatbooking')==detail
     detail['brand']='Booking Holdings'
     with pytest.raises(ValueError):detail_record(detail,listing,'workingatbooking')
+
+
+def test_state_only_listing_preserves_more_precise_published_detail():
+    listing=dict(row(1),city=None,full_location='California, United States; United States',country='United States')
+    detail=dict(listing,city='San Francisco',state='California',full_location='San Francisco, California',additional_locations=[dict(country='United States')],client_code='employer',description='Actual requirements')
+    assert detail_record(detail,listing,'employer')==detail
+    listing['city']='Los Angeles';listing['full_location']='Los Angeles, California; United States'
+    with pytest.raises(SnapshotChanged):detail_record(detail,listing,'employer')

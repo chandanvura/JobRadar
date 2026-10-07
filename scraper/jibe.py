@@ -46,7 +46,15 @@ def detail_record(payload,row,tenant):
     # The search UI concatenates primary and additional display locations.
     # Detail returns primary separately; reconcile those actual locations.
     def display(*parts):return ', '.join(str(v) for v in parts if v)
-    options=[{payload.get('full_location') or ''}]
+    primary={payload.get('full_location') or '',
+             display(payload.get('city'),payload.get('state'),payload.get('country')),
+             display(payload.get('city'),payload.get('state') or payload.get('country'))}
+    # A listing can expose only state/country while detail supplies the city.
+    # Accept that broader display when published city/state fields are absent or match the detail.
+    if (row.get('city') in (None,'',payload.get('city')) and
+            row.get('state') in (None,'',payload.get('state'))):
+        primary.update({display(payload.get('state'),payload.get('country')),display(payload.get('country'))})
+    options=[{v.strip() for v in primary if v.strip()}]
     for loc in payload.get('additional_locations') or []:
         if not isinstance(loc,dict):raise ValueError('Jibe additional location schema changed')
         # Employers select either region or country for their display text.
