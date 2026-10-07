@@ -10,7 +10,7 @@ from scraper.snapshot import SnapshotChanged
 
 def row(i):
     return dict(slug=str(i), req_id=f'R{i}', language='en-us', title=f'Engineer {i}', internal=False,
-                searchable=True, country='India', full_location='Bengaluru, India')
+                searchable=True, country='India', full_location='Bengaluru, India; Hyderabad, India')
 
 
 @pytest.mark.parametrize('failure', ['wrong_total','truncated','duplicate','internal','language_scope'])
@@ -47,7 +47,7 @@ def test_complete_pages_all_details_and_snapshot(monkeypatch,failure):
             total=22 if failure=='changed_total' and page==2 else 21
             return httpx.Response(200,json=dict(count=total,totalCount=total,jobs=[{'data':row(i)} for i in ids]),request=httpx.Request(method,url))
         i=int(url.split('/')[-2]);detail_ids.append(i)
-        payload=dict(row(i),client_code='employer',description='<p>Java developer requirements</p>',additional_locations=[dict(full_location='Hyderabad, India')],create_date='2026-01-01')
+        payload=dict(row(i),client_code='employer',full_location='Bengaluru, India',description='<p>Java developer requirements</p>',additional_locations=[dict(full_location='Hyderabad, India')],create_date='2026-01-01')
         if failure=='wrong_detail':payload['req_id']='Other'
         if failure=='missing_requirements':payload['description']=''
         return httpx.Response(404 if failure=='missing_detail' else 200,json=payload,request=httpx.Request(method,url))
@@ -59,3 +59,15 @@ def test_complete_pages_all_details_and_snapshot(monkeypatch,failure):
         jobs,count=asyncio.run(JibeCareerAdapter().fetch_jobs(company))
         assert count==len(jobs)==21 and set(detail_ids)==set(range(1,22)) and calls==[1,2,1]
         assert all('Hyderabad' in j.location and 'Bengaluru' in j.location and j.posted_at is None for j in jobs)
+
+
+@pytest.mark.parametrize('listed,primary,additional', [
+ ('United States; United States','United States',{'country':'United States'}),
+ ('GURUGRAM, India; BANGALORE, India','GURUGRAM, India',{'city':'BANGALORE','country':'India'}),
+ ('San Francisco, California; Seattle, Washington','San Francisco, California',{'city':'Seattle','state':'Washington','country':'United States'})])
+def test_real_public_multi_location_formats(listed,primary,additional):
+    listing=dict(row(1),full_location=listed)
+    detail=dict(listing,client_code='employer',full_location=primary,additional_locations=[additional],description='Actual requirements')
+    assert detail_record(detail,listing,'employer')==detail
+    listing['full_location']='Another city'
+    with pytest.raises(SnapshotChanged):detail_record(detail,listing,'employer')

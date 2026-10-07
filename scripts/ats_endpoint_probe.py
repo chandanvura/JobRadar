@@ -10,8 +10,8 @@ JIBE={
  'Aon':'https://jobs.aon.com/jobs',
  'Booking.com':'https://jobs.booking.com/booking/jobs',
  'Intercontinental Exchange':'https://careers.ice.com/',
- 'Keysight Technologies':'https://jobs.keysight.com/external',
- 'PepsiCo':'https://www.pepsicojobs.com/',
+ 'Keysight Technologies':'https://jobs.keysight.com/external/jobs',
+ 'PepsiCo':'https://www.pepsicojobs.com/jobs',
  'Principal Financial Group':'https://careers.principal.com/in/jobs',
  'AMD':'https://careers.amd.com/careers-home/jobs',
  'AXA':'https://careers.axa.com/jobs',
@@ -94,6 +94,16 @@ async def run():
         (out/'atlassian-jsx.js').write_text(a.text)
         for chunk in ('73485eb31b7223','3b3e016238baca','0773a5f9cdd7b2','b06a61cad0bd06'):
             r=await request(x,'GET',f'https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/chunks/{chunk}.js');r.raise_for_status();(out/f'atlassian-{chunk}.js').write_text(r.text)
+        # Paths below are literal imports/API calls in captured public bundles.
+        further={
+          'atlassian-listings.json':'https://www.atlassian.com/endpoint/careers/listings',
+          'avalara-entry.js':'https://static.careerpuck.com/65c346d/assets/AppEntry-Dl47o8qd.js',
+          'tredence-list-controller.js':'https://tredence.ripplehire.com/candidate/candresource/candidate/apps/candidates/controller/candidatejoblist_controller.js',
+          'tredence-detail-controller.js':'https://tredence.ripplehire.com/candidate/candresource/candidate/apps/candidates/controller/candidatejobdesc_controller.js',
+        }
+        for name,url in further.items():
+            r=await request(x,'GET',url);(out/name).write_text(r.text)
+            cases.append(dict(asset=name,url=url,http_status=r.status_code,bytes=len(r.content)))
     (out/'evidence.json').write_text(json.dumps(cases,indent=2))
 
 if __name__=='__main__':asyncio.run(run())

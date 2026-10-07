@@ -43,8 +43,17 @@ def detail_record(payload,row,tenant):
         raise ValueError('Jibe detail does not match its listed job identity')
     if payload.get('internal') is not False or payload.get('searchable') is not True:
         raise SnapshotChanged('Jibe job ceased to be public during collection')
-    if payload.get('country')!=row.get('country') or payload.get('full_location')!=row.get('full_location'):
-        raise SnapshotChanged(f"Jibe detail location differs: {row['slug']} listing={row.get('full_location')!r}/{row.get('country')!r}; detail={payload.get('full_location')!r}/{payload.get('country')!r}; additional={payload.get('additional_locations')!r}")
+    # The search UI concatenates primary and additional display locations.
+    # Detail returns primary separately; reconcile those actual locations.
+    displayed=[payload.get('full_location') or '']
+    for loc in payload.get('additional_locations') or []:
+        if not isinstance(loc,dict):raise ValueError('Jibe additional location schema changed')
+        displayed.append(loc.get('full_location') or ', '.join(str(v) for v in
+                         (loc.get('city'),loc.get('state') or loc.get('country')) if v))
+    listed={v.strip() for v in (row.get('full_location') or '').split(';') if v.strip()}
+    detailed={v.strip() for v in displayed if v.strip()}
+    if payload.get('country')!=row.get('country') or listed!=detailed:
+        raise SnapshotChanged('Jibe published location set changed during collection')
     from .adapters import clean
     if not clean(payload.get('description')):raise ValueError('Jibe full job detail omitted employer requirements')
     return payload
