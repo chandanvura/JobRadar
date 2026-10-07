@@ -1,0 +1,29 @@
+name: ATS Detective deep public evidence
+on:
+  push:
+    branches: [ats-detective/2026-10-07]
+    paths: [scripts/ats_deep.py, companies/ats-deep-2026-10-07.json, .github/workflows/ats-deep.yml]
+permissions:
+  contents: read
+jobs:
+  investigate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m scripts.coverage_snapshot --output artifacts/2026-10-07-before.json
+      - run: python -m scripts.ats_deep --manifest companies/ats-deep-2026-10-07.json
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '2'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ats-deep-2026-10-07
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 7
