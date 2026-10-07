@@ -13,7 +13,7 @@ PARAMS=[('lang','en'),('r','f/card_content_type/career'),('r','f/card_content_ca
 def listing(text, offset, expected=None):
     root=ET.fromstring(text)
     if root.tag!='{exa:com.exalead.search.v10}Answer' or root.get('estimated')!='false':
-        raise ValueError('Dassault search omitted an exact XML result count')
+        raise ValueError(f'Dassault search omitted an exact XML result count: {root.tag}, estimated={root.get("estimated")}')
     total=int(root.attrib['nhits'])
     if total!=int(root.attrib['nmatches']) or int(root.attrib['start'])!=offset or not 0<=total<=2000:
         raise ValueError('Dassault search returned invalid pagination')
@@ -38,14 +38,15 @@ def listing(text, offset, expected=None):
 
 def detail(text, ident, item):
     from .adapters import clean,jsonld_objects,location_text
-    jobs=list(jsonld_objects(BeautifulSoup(text,'html.parser')))
+    soup=BeautifulSoup(text,'html.parser');jobs=list(jsonld_objects(soup))
     if len(jobs)!=1:raise ValueError('Dassault detail omitted one unambiguous JobPosting')
     job=jobs[0];org=job.get('hiringOrganization') or {}
     if (str(job.get('identifier'))!=ident or org.get('name')!='Dassault Systèmes'
             or org.get('sameAs')!='https://www.3ds.com/'
             or clean(job.get('title')).casefold()!=clean(item['title']).casefold()):
         raise ValueError('Dassault detail differs from its employer and listing identity')
-    description=clean(job.get('description'))
+    body=soup.select_one('.jobdetails-body-container')
+    description=clean(str(body)) if body else ''
     if not description:raise ValueError('Dassault omitted full job requirements')
     places=job.get('jobLocation') or []
     if not isinstance(places,list):places=[places]

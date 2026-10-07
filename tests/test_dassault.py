@@ -23,7 +23,7 @@ class DassaultTests(unittest.TestCase):
 
     def test_detail_identity_and_real_unknowns(self):
         job={'@type':'JobPosting','identifier':'123','title':'Engineer','description':'Complete requirements','hiringOrganization':{'name':'Dassault Systèmes','sameAs':'https://www.3ds.com/'},'jobLocation':{'address':{'addressLocality':'Pune','addressCountry':'India'}}}
-        def html():return '<script type="application/ld+json">'+json.dumps(job)+'</script>'
+        def html():return '<script type="application/ld+json">'+json.dumps(job)+'</script><div class="jobdetails-body-container">Complete requirements</div>'
         result=detail(html(),'123',{'title':'Engineer'})
         self.assertIsNone(result['posted'])
         self.assertIn('Pune',result['location'])
