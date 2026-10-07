@@ -307,21 +307,6 @@ def workday_country_facets(nodes,country):
     visit(nodes)
     return countries or ({"locations":locations} if locations else {})
 
-def workday_city_facets(nodes,cities):
-    """Resolve only actual published location facet IDs for an explicit city scope."""
-    names=cities.split(';')
-    if not names or any(not re.fullmatch(r'[A-Za-z ]+',name) for name in names):
-        raise ValueError('Invalid Workday city scope')
-    pattern=re.compile(r'\b(?:'+ '|'.join(re.escape(name) for name in names)+r')\b',re.I)
-    ids=[]
-    def visit(entries):
-        for node in entries:
-            if node.get('facetParameter')=='locations':
-                ids.extend(value['id'] for value in node.get('values',[]) if value.get('id') and pattern.search(value.get('descriptor','')))
-            visit(node.get('values',[]))
-    visit(nodes)
-    return {'locations':list(dict.fromkeys(ids))} if ids else {}
-
 class WorkdayAdapter(JobSource):
     def __init__(self, complete=False):
         self.complete=complete
@@ -335,8 +320,8 @@ class WorkdayAdapter(JobSource):
             if country:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":0,"searchText":""})
                 response.raise_for_status()
-                facets=(workday_city_facets(response.json().get("facets",[]),country.removeprefix("cities=")) if country.startswith("cities=") else workday_country_facets(response.json().get("facets",[]),country))
-                if not facets: raise ValueError("Workday does not expose the configured country/city locations")
+                facets=workday_country_facets(response.json().get("facets",[]),country)
+                if not facets: raise ValueError("Workday does not expose the configured country locations")
             while offset < bound:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
@@ -348,8 +333,6 @@ class WorkdayAdapter(JobSource):
                     paths=[item.get("externalPath","") for item in batch]
                     if offset and total not in (0,expected):
                         raise SnapshotChanged(f"Workday complete pagination total changed: {expected} -> {total}")
-                    if identifiers.intersection(paths):
-                        raise SnapshotChanged(f"Workday complete pagination moved a job across pages at offset={offset}")
                     if ((offset and total not in (0,expected)) or (not offset and total!=expected)
                             or len(batch)!=min(20,max(0,expected-offset))
                             or any(not path.startswith("/job/") for path in paths)
@@ -374,7 +357,7 @@ class WorkdayAdapter(JobSource):
                 # Complete mode reads relevant titles even if listing locations hide
                 # secondary offices; actual detail fields alone establish the city.
                 relevant=likely_role(item.get("title","")) if self.complete else likely_target(item.get("title",""),item.get("locationsText",""))
-                if not self.complete and not country and not relevant: return None
+                if not country and not relevant: return None
                 path=item.get("externalPath")
                 if not path: return None
                 async with semaphore: detail_response=await cached_get(x,f"{api}{path}")

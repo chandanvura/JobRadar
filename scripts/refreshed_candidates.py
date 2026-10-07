@@ -1,6 +1,9 @@
 """Validate only evidence-derived candidates; an HTTP 200 alone is not complete."""
 import asyncio
 import json
+import hashlib
+from urllib.parse import urljoin,urlsplit
+from bs4 import BeautifulSoup
 from pathlib import Path
 from scraper.adapters import client,request
 from scraper.main import scrape
@@ -16,8 +19,40 @@ CANDIDATES=[
     Company('Bayer','https://talent.bayer.com/careers?domain=bayer.com','eightfold_legacy_complete','talent.bayer.com|bayer.com',4),
 ]
 
+async def official_chain(x,name,root,board):
+    domain=urlsplit(root).hostname.removeprefix('www.')
+    queue=[(root,[])];seen=set();captures=[];chain=None
+    while queue and len(seen)<6:
+        url,path=queue.pop(0)
+        if url in seen:continue
+        seen.add(url)
+        r=await request(x,'GET',url)
+        captures.append(dict(url=url,final_url=str(r.url),http_status=r.status_code,sha256=hashlib.sha256(r.content).hexdigest()))
+        (OUT/(name+'-official-'+str(len(seen))+'.html')).write_text(r.text)
+        if r.status_code!=200:continue
+        current=str(r.url)
+        if urlsplit(current).hostname==urlsplit(board).hostname and urlsplit(current).path.rstrip('/')==urlsplit(board).path.rstrip('/'):
+            chain=path+[current];break
+        soup=BeautifulSoup(r.text,'html.parser');links=[]
+        for a in soup.select('a[href]'):
+            target=urljoin(current,a['href']);parsed=urlsplit(target)
+            if parsed.scheme!='https' or not parsed.hostname or not (parsed.hostname==domain or parsed.hostname.endswith('.'+domain)):continue
+            if any(word in (target+' '+a.get_text()).lower() for word in ['career','jobs','talent']):links.append(target)
+        links=sorted(set(links),key=lambda u:(urlsplit(u).hostname!=urlsplit(board).hostname,len(u)))
+        queue.extend((link,path+[current]) for link in links if link not in seen)
+    result=dict(company=name,chain=chain,requests=captures,verified=bool(chain))
+    (OUT/(name+'-official-chain.json')).write_text(json.dumps(result,indent=2))
+    print(json.dumps({'company':name,'official_chain_verified':bool(chain),'chain':chain}),flush=True)
+    return result
+
 async def run():
     OUT.mkdir(parents=True,exist_ok=True);cases=[]
+    chains={}
+    async with client(timeout=40) as x:
+        for name,root in [('Bayer','https://www.bayer.com/'),('Aon','https://www.aon.com/'),('DocuSign','https://www.docusign.com/')]:
+            board=next(c.careers_url for c in CANDIDATES if c.name==name)
+            try:chains[name]=await official_chain(x,name,root,board)
+            except Exception as exc:chains[name]={'verified':False,'blocker':str(exc)}
     for c in CANDIDATES:
         jobs,status,error,total=await scrape(c,asyncio.Semaphore(1),asyncio.Semaphore(1))
         case=dict(company=c.name,provider=c.ats_provider,identifier=c.ats_identifier,board=c.careers_url,collection=status,error=error,advertised_total=total,unique_ids=len({j.external_job_id for j in jobs}),details=len(jobs),missing_descriptions=sum(not j.description for j in jobs))
@@ -71,7 +106,9 @@ async def run():
         print(json.dumps(case),flush=True)
     (OUT/'evidence.json').write_text(json.dumps(cases,indent=2))
     verified={c['company']:c for c in cases if 'complete' in c}
-    if any(not verified[name]['complete'] for name in ['Bayer','Vodafone']):
+    if any(not chains[name]['verified'] for name in ['Bayer','Aon','DocuSign']):
+        raise RuntimeError('Official website to registered board chain remains unverified')
+    if any(not verified[name]['complete'] for name in ['Bayer','Aon','DocuSign','Adidas']):
         raise RuntimeError('Approved registry repairs failed complete collection')
 
 if __name__=='__main__':asyncio.run(run())

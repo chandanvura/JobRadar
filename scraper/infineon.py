@@ -64,7 +64,7 @@ class InfineonCareerAdapter:
             gate=asyncio.Semaphore(3)
             async def convert(ident,item):
                 async with gate:r=await request(x,'GET',urljoin(self.board,'/api/pcsx/position_details'),params={'domain':self.domain,'position_id':ident,'hl':'en'})
-                if r.status_code in (404,410):raise SnapshotChanged('Infineon listed detail disappeared')
+                if r.status_code in (404,410):raise SnapshotChanged(f'{self.name} listed detail disappeared: position_id={ident}, status={r.status_code}')
                 r.raise_for_status();record=r.json().get('data',{})
                 from .adapters import clean,location_text,epoch_ms
                 if (str(record.get('id'))!=ident or record.get('isPrivate') or not clean(record.get('name'))

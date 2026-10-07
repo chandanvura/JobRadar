@@ -19,20 +19,39 @@
     }
   },
   {
-    "company": "Vodafone",
+    "company": "Aon",
     "before": {
-      "company_name": "Vodafone",
-      "careers_url": "https://careers.vodafone.com/",
+      "company_name": "Aon",
+      "careers_url": "https://jobs.aon.com/",
       "ats_provider": "custom",
-      "ats_identifier": "vodafone-india",
+      "ats_identifier": "aon-india",
       "priority": "4",
       "enabled": "true"
     },
     "after": {
-      "company_name": "Vodafone",
-      "careers_url": "https://jobs.vodafone.com/careers",
-      "ats_provider": "vodafone",
-      "ats_identifier": "vodafone.com",
+      "company_name": "Aon",
+      "careers_url": "https://jobs.aon.com/jobs",
+      "ats_provider": "jibe",
+      "ats_identifier": "aon|India",
+      "priority": "4",
+      "enabled": "true"
+    }
+  },
+  {
+    "company": "DocuSign",
+    "before": {
+      "company_name": "DocuSign",
+      "careers_url": "https://careers.docusign.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "docusign-india",
+      "priority": "4",
+      "enabled": "true"
+    },
+    "after": {
+      "company_name": "DocuSign",
+      "careers_url": "https://careers.docusign.com/careers-home/jobs",
+      "ats_provider": "jibe",
+      "ats_identifier": "docusign|India",
       "priority": "4",
       "enabled": "true"
     }
