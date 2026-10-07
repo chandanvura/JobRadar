@@ -2,7 +2,7 @@ name: GitHub reference employer HTTP probes
 on:
   push:
     branches: [ats-reference/2026-10-07]
-    paths: [scripts/reference_feed_probe.py, .github/workflows/reference-feeds.yml]
+    paths: [scripts/reference_feed_probe.py, .github/workflows/reference-feeds.yml, scraper/**, tests/**, companies/companies.csv]
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,9 +21,14 @@ jobs:
       - run: python -m scripts.reference_feed_probe
         env:
           JOBRADAR_DOMAIN_CONCURRENCY: '2'
+      - run: python -m scripts.ats_repaired --companies "Dassault Systemes"
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '3'
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: github-reference-http-evidence
-          path: artifacts/reference-feed-probes/
+          path: |
+            artifacts/reference-feed-probes/
+            artifacts/ats-repaired-2026-10-07/
           retention-days: 7

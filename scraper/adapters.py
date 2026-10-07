@@ -728,3 +728,6 @@ ADAPTERS["avalara"] = PublicCareerJSONAdapter("avalara")
 
 from .netapp import NetAppCareerAdapter
 ADAPTERS["netapp"] = NetAppCareerAdapter()
+
+from .dassault import DassaultCareerAdapter
+ADAPTERS["dassault"] = DassaultCareerAdapter()
