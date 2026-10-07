@@ -7,6 +7,12 @@ from bs4 import BeautifulSoup
 from scraper.adapters import client, request
 
 JIBE={
+ 'Aon':'https://jobs.aon.com/jobs',
+ 'Booking.com':'https://jobs.booking.com/booking/jobs',
+ 'Intercontinental Exchange':'https://careers.ice.com/',
+ 'Keysight Technologies':'https://jobs.keysight.com/external',
+ 'PepsiCo':'https://www.pepsicojobs.com/',
+ 'Principal Financial Group':'https://careers.principal.com/in/jobs',
  'AMD':'https://careers.amd.com/careers-home/jobs',
  'AXA':'https://careers.axa.com/jobs',
  'GitHub':'https://www.github.careers/careers-home/jobs',
@@ -44,7 +50,7 @@ async def run():
                 case['keys']=list(d);case['counts']={k:v for k,v in d.items() if isinstance(v,(int,str)) and k not in ['request_id']}
                 jobs=d.get('jobs') or [];case['jobs_on_page']=len(jobs)
                 # Public payload tells the detail slug; never guess an identifier.
-                if name in ('AMD','AXA') and any(v.get('term')=='India' for v in d.get('filter',{}).get('facetList',{}).get('country',[])):
+                if name not in ('GitHub','DocuSign','Costco','Avalara') and any(v.get('term')=='India' for v in d.get('filter',{}).get('facetList',{}).get('country',[])):
                     filtered=await request(x,'GET',endpoint,params={'page':1,'limit':20,'internal':'false','country':'India'});filtered.raise_for_status();(folder/'india.json').write_text(json.dumps(filtered.json(),indent=2));case['india_count']=filtered.json().get('count');case['india_total']=filtered.json().get('totalCount')
                 if jobs:
                     case['job_fields']=list(jobs[0]);slug=jobs[0].get('data',jobs[0]).get('slug')
