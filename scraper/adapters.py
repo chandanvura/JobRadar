@@ -718,3 +718,6 @@ ADAPTERS['adidas'] = AdidasCareerAdapter()
 
 from .thoughtspot import ThoughtSpotCareerAdapter
 ADAPTERS["thoughtspot"] = ThoughtSpotCareerAdapter()
+
+from .jibe import JibeCareerAdapter
+ADAPTERS["jibe"] = JibeCareerAdapter()
