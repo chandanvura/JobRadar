@@ -2,7 +2,7 @@ name: Refreshed source error probes
 on:
   push:
     branches: [ats-refresh/2026-10-07]
-    paths: [scripts/refreshed_repairs.py, .github/workflows/refreshed-repairs.yml]
+    paths: [scripts/refreshed_repairs.py, scripts/refreshed_candidates.py, companies/hubspot-public-queries.json, scraper/**, tests/**, .github/workflows/refreshed-repairs.yml]
   workflow_dispatch:
 permissions:
   contents: read
@@ -22,9 +22,14 @@ jobs:
           JOBRADAR_DOMAIN_CONCURRENCY: '2'
           JOBRADAR_WORKDAY_LISTING_CONCURRENCY: '2'
           JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: '3'
+      - run: python -m scripts.refreshed_candidates
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '2'
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: refreshed-source-errors
-          path: artifacts/refreshed-repairs/
+          path: |
+            artifacts/refreshed-repairs/
+            artifacts/refreshed-candidates/
           retention-days: 7

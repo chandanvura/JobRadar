@@ -69,3 +69,24 @@ def test_complete_workday_removed_relevant_detail_keeps_coverage_warning(monkeyp
     jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
     assert count==1 and len(jobs)==0
     assert 'Limited coverage' in jobs.coverage_warning
+
+
+def test_cross_page_movement_restarts_snapshot_instead_of_silently_deduplicating(monkeypatch):
+    from scraper.snapshot import SnapshotChanged
+    async def request(client,method,url,**kwargs):
+        offset=kwargs['json']['offset']
+        paths=range(20) if offset==0 else [19]
+        return httpx.Response(200,request=httpx.Request(method,url),json={'total':21,'jobPostings':[{'externalPath':f'/job/X/R{i}'} for i in paths]})
+    monkeypatch.setattr(adapters,'request',request)
+    with pytest.raises(SnapshotChanged,match='across pages'):
+        asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
+
+
+def test_complete_workday_fetches_non_target_details_too(monkeypatch):
+    async def request(client,method,url,**kwargs):
+        return httpx.Response(200,request=httpx.Request(method,url),json={'total':1,'jobPostings':[{'externalPath':'/job/X/R1','title':'Sales','locationsText':'London'}]})
+    async def detail(client,url):
+        return httpx.Response(200,request=httpx.Request('GET',url),json={'jobPostingInfo':{'jobReqId':'R1','title':'Sales','location':'London','jobDescription':'Complete sales requirements'}})
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
+    assert count==len(jobs)==1 and jobs[0].location=='London'

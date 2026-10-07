@@ -333,6 +333,8 @@ class WorkdayAdapter(JobSource):
                     paths=[item.get("externalPath","") for item in batch]
                     if offset and total not in (0,expected):
                         raise SnapshotChanged(f"Workday complete pagination total changed: {expected} -> {total}")
+                    if identifiers.intersection(paths):
+                        raise SnapshotChanged(f"Workday complete pagination moved a job across pages at offset={offset}")
                     if ((offset and total not in (0,expected)) or (not offset and total!=expected)
                             or len(batch)!=min(20,max(0,expected-offset))
                             or any(not path.startswith("/job/") for path in paths)
@@ -357,7 +359,7 @@ class WorkdayAdapter(JobSource):
                 # Complete mode reads relevant titles even if listing locations hide
                 # secondary offices; actual detail fields alone establish the city.
                 relevant=likely_role(item.get("title","")) if self.complete else likely_target(item.get("title",""),item.get("locationsText",""))
-                if not country and not relevant: return None
+                if not self.complete and not country and not relevant: return None
                 path=item.get("externalPath")
                 if not path: return None
                 async with semaphore: detail_response=await cached_get(x,f"{api}{path}")
@@ -734,3 +736,5 @@ ADAPTERS["dassault"] = DassaultCareerAdapter()
 
 from .infineon import InfineonCareerAdapter
 ADAPTERS["infineon"] = InfineonCareerAdapter()
+
+ADAPTERS["eightfold_legacy_complete"] = LegacyEightfoldCareerAdapter(complete=True)
