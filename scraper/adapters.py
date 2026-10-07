@@ -734,3 +734,7 @@ ADAPTERS["dassault"] = DassaultCareerAdapter()
 
 from .infineon import InfineonCareerAdapter
 ADAPTERS["infineon"] = InfineonCareerAdapter()
+
+ADAPTERS["eightfold_legacy_complete"] = LegacyEightfoldCareerAdapter(complete=True)
+
+ADAPTERS["vodafone"] = InfineonCareerAdapter("Vodafone","https://jobs.vodafone.com/careers","vodafone.com","vodafone")

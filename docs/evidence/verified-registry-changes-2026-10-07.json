@@ -1,0 +1,59 @@
+[
+  {
+    "company": "Bayer",
+    "before": {
+      "company_name": "Bayer",
+      "careers_url": "https://career.bayer.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "bayer-india",
+      "priority": "4",
+      "enabled": "true"
+    },
+    "after": {
+      "company_name": "Bayer",
+      "careers_url": "https://talent.bayer.com/careers?domain=bayer.com",
+      "ats_provider": "eightfold_legacy_complete",
+      "ats_identifier": "talent.bayer.com|bayer.com",
+      "priority": "4",
+      "enabled": "true"
+    }
+  },
+  {
+    "company": "Aon",
+    "before": {
+      "company_name": "Aon",
+      "careers_url": "https://jobs.aon.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "aon-india",
+      "priority": "4",
+      "enabled": "true"
+    },
+    "after": {
+      "company_name": "Aon",
+      "careers_url": "https://jobs.aon.com/jobs",
+      "ats_provider": "jibe",
+      "ats_identifier": "aon|India",
+      "priority": "4",
+      "enabled": "true"
+    }
+  },
+  {
+    "company": "DocuSign",
+    "before": {
+      "company_name": "DocuSign",
+      "careers_url": "https://careers.docusign.com/",
+      "ats_provider": "custom",
+      "ats_identifier": "docusign-india",
+      "priority": "4",
+      "enabled": "true"
+    },
+    "after": {
+      "company_name": "DocuSign",
+      "careers_url": "https://careers.docusign.com/careers-home/jobs",
+      "ats_provider": "jibe",
+      "ats_identifier": "docusign|India",
+      "priority": "4",
+      "enabled": "true"
+    }
+  }
+]

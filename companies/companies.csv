@@ -364,7 +364,7 @@ Roche,https://roche.wd3.myworkdayjobs.com/roche-ext,workday,roche|roche-ext,4,tr
 AstraZeneca,https://astrazeneca.eightfold.ai/careers,eightfold,astrazeneca.eightfold.ai|astrazeneca.com,4,true
 GSK,https://jobs.gsk.com/gb/en/,phenom,GHVGPAGB,4,true
 Sanofi,https://jobs.sanofi.com/en/location/india-jobs/2649/1269750/2,talentbrew,2649,4,true
-Bayer,https://career.bayer.com/,custom,bayer-india,4,true
+Bayer,https://talent.bayer.com/careers?domain=bayer.com,eightfold_legacy_complete,talent.bayer.com|bayer.com,4,true
 Merck Group,https://careers.emdgroup.com/us/en/,phenom,MQAEGZUS,4,true
 Eli Lilly,https://careers.lilly.com/us/en/,phenom,LILLUS,4,true
 Pfizer,https://pfizer.wd1.myworkdayjobs.com/PfizerCareers,workday,pfizer|PfizerCareers,4,true
@@ -470,7 +470,7 @@ Allianz,https://careers.allianz.com/global/en/,phenom,AISAIPGB,4,true
 Chubb,https://fa-ewgu-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2001,oracle,fa-ewgu-saasfaprod1.fa.ocs.oraclecloud.com|CX_2001,4,true
 MetLife,https://www.metlifecareers.com/en_US/ml/SearchJobs/,avature,www.metlifecareers.com,4,true
 Prudential,https://prudential.wd3.myworkdayjobs.com/prudential,workday,prudential|prudential,4,true
-Aon,https://jobs.aon.com/,custom,aon-india,4,true
+Aon,https://jobs.aon.com/jobs,jibe,aon|India,4,true
 Marsh McLennan,https://careers.marsh.com/global/en/,phenom,MAMCGLOBAL,4,true
 WTW,https://careers.wtwco.com/,custom,wtw-india,4,true
 Cigna,https://jobs.thecignagroup.com/us/en,phenom,CIGNUS,4,true
@@ -533,7 +533,7 @@ Zeta,https://jobs.lever.co/zeta,lever,zeta,5,true
 CoinDCX,https://careers.coindcx.com/,custom,coindcx-india,4,true
 Icertis,https://iaaviz.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Jobs-at-Icertis,oracle,iaaviz.fa.ocs.oraclecloud.com|Jobs-at-Icertis,4,true
 Guidewire,https://careers.guidewire.com/,custom,guidewire-india,4,true
-DocuSign,https://careers.docusign.com/,custom,docusign-india,4,true
+DocuSign,https://careers.docusign.com/careers-home/jobs,jibe,docusign|India,4,true
 Zoom,https://careers.zoom.us/home,custom,zoom-india,4,true
 Box,https://job-boards.greenhouse.io/boxinc,greenhouse,boxinc,4,true
 Dropbox,https://job-boards.greenhouse.io/dropbox,greenhouse,dropbox,4,true

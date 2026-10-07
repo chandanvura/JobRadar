@@ -1,0 +1,35 @@
+name: Refreshed source error probes
+on:
+  push:
+    branches: [ats-refresh/2026-10-07]
+    paths: [scripts/refreshed_repairs.py, scripts/refreshed_candidates.py, companies/hubspot-public-queries.json, scraper/**, tests/**, .github/workflows/refreshed-repairs.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m scripts.refreshed_repairs
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '2'
+          JOBRADAR_WORKDAY_LISTING_CONCURRENCY: '2'
+          JOBRADAR_WORKDAY_DETAIL_CONCURRENCY: '3'
+      - run: python -m scripts.refreshed_candidates
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '2'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: refreshed-source-errors
+          path: |
+            artifacts/refreshed-repairs/
+            artifacts/refreshed-candidates/
+          retention-days: 7

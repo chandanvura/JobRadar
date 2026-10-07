@@ -9,7 +9,7 @@ BOARD='https://jobs.infineon.com/careers'
 DOMAIN='infineon.com'
 
 
-def listing(data,offset,expected=None):
+def listing(data,offset,expected=None,board=BOARD):
     data=data.get('data',{});total=data.get('count');batch=data.get('positions')
     if type(total) is not int or not 0<=total<=2000 or not isinstance(batch,list):
         raise ValueError('Infineon omitted a bounded exact search total')
@@ -17,9 +17,9 @@ def listing(data,offset,expected=None):
     if not batch and offset<total or offset+len(batch)>total:raise ValueError('Infineon pagination is truncated or exceeds its total')
     rows={}
     for item in batch:
-        ident=str(item.get('id',''));url=urljoin(BOARD,item.get('positionUrl',''));parts=urlsplit(url)
+        ident=str(item.get('id',''));url=urljoin(board,item.get('positionUrl',''));parts=urlsplit(url)
         if (not ident.isdigit() or ident in rows or item.get('isPrivate')
-                or parts.scheme!='https' or parts.hostname!='jobs.infineon.com' or parts.path!='/careers/job/'+ident):
+                or parts.scheme!='https' or parts.hostname!=urlsplit(board).hostname or parts.path!='/careers/job/'+ident):
             raise ValueError('Infineon listing has an invalid employer position identity')
         rows[ident]={'url':url,'title':item.get('name',''),'locations':item.get('locations') or [],'standardizedLocations':item.get('standardizedLocations') or []}
     return total,rows
@@ -41,18 +41,21 @@ def detail(text,item):
 
 
 class InfineonCareerAdapter:
+    def __init__(self,name="Infineon Technologies",board=BOARD,domain=DOMAIN,provider="infineon"):
+        self.name=name;self.board=board;self.domain=domain;self.provider=provider
+
     async def fetch_jobs(self,company):
         from .adapters import client,request,make_job
-        if company.name!='Infineon Technologies' or company.careers_url!=BOARD or company.ats_identifier!=DOMAIN:
+        if company.name!=self.name or company.careers_url!=self.board or company.ats_identifier!=self.domain:
             raise ValueError('Unverified Infineon public source configuration')
         async with client(timeout=40) as x:
-            r=await request(x,'GET',BOARD);r.raise_for_status()
+            r=await request(x,'GET',self.board);r.raise_for_status()
             code=BeautifulSoup(r.text,'html.parser').find('code',id='pcsx-data')
-            if not code or json.loads(code.get_text()).get('domain')!=DOMAIN:
+            if not code or json.loads(code.get_text()).get('domain')!=self.domain:
                 raise ValueError('Infineon public configuration differs from its employer domain')
             async def page(offset,expected=None):
-                r=await request(x,'GET','https://jobs.infineon.com/api/pcsx/search',params={'domain':DOMAIN,'query':'','location':'India','start':offset,'sort_by':'timestamp'});r.raise_for_status()
-                return listing(r.json(),offset,expected)
+                r=await request(x,'GET',urljoin(self.board,'/api/pcsx/search'),params={'domain':self.domain,'query':'','location':'India','start':offset,'sort_by':'timestamp'});r.raise_for_status()
+                return listing(r.json(),offset,expected,self.board)
             total,first=await page(0);found=dict(first)
             while len(found)<total:
                 _,rows=await page(len(found),total)
@@ -60,12 +63,12 @@ class InfineonCareerAdapter:
                 found.update(rows)
             gate=asyncio.Semaphore(3)
             async def convert(ident,item):
-                async with gate:r=await request(x,'GET','https://jobs.infineon.com/api/pcsx/position_details',params={'domain':DOMAIN,'position_id':ident,'hl':'en'})
-                if r.status_code in (404,410):raise SnapshotChanged('Infineon listed detail disappeared')
+                async with gate:r=await request(x,'GET',urljoin(self.board,'/api/pcsx/position_details'),params={'domain':self.domain,'position_id':ident,'hl':'en'})
+                if r.status_code in (404,410):raise SnapshotChanged(f'{self.name} listed detail disappeared: position_id={ident}, status={r.status_code}')
                 r.raise_for_status();record=r.json().get('data',{})
                 from .adapters import clean,location_text,epoch_ms
                 if (str(record.get('id'))!=ident or record.get('isPrivate') or not clean(record.get('name'))
-                        or urljoin(BOARD,record.get('positionUrl',''))!=item['url'] or record.get('publicUrl')!=item['url']):
+                        or urljoin(self.board,record.get('positionUrl',''))!=item['url'] or record.get('publicUrl')!=item['url']):
                     raise ValueError('Infineon PCSX detail does not match its listed position identity')
                 description=clean(record.get('jobDescription'))
                 if not description:raise ValueError('Infineon PCSX detail omitted full requirements')
@@ -73,7 +76,7 @@ class InfineonCareerAdapter:
                 # postedTs is the published Unix posting timestamp, corroborated with JobPosting.datePosted.
                 stamp=record.get('postedTs')
                 posted=epoch_ms(stamp*1000) if isinstance(stamp,(int,float)) else None
-                return make_job(ident,job['title'],company.name,job['location'],job['description'],'infineon','company_career',item['url'],item['url'],BOARD,posting=posted)
+                return make_job(ident,job['title'],company.name,job['location'],job['description'],self.provider,'company_career',item['url'],item['url'],self.board,posting=posted)
             jobs=await asyncio.gather(*(convert(ident,item) for ident,item in found.items()))
             _,check=await page(0,total)
             if check!=first:raise SnapshotChanged('Infineon first page changed during detail collection')

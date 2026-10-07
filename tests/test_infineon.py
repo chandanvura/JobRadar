@@ -59,3 +59,32 @@ class CompleteInfineonTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual({j.external_job_id for j in jobs},{'123','456'})
         self.assertTrue(all(j.posted_at is None for j in jobs))
         self.assertEqual(sum('/position_details' in url for url in calls),2)
+
+
+class VodafoneReuseTests(unittest.IsolatedAsyncioTestCase):
+    async def test_registered_vodafone_board_fetches_all_details_and_rejects_other_employer(self):
+        from unittest.mock import patch
+        import httpx
+        from scraper.infineon import InfineonCareerAdapter
+        from scraper.models import Company
+        board='https://jobs.vodafone.com/careers'
+        adapter=InfineonCareerAdapter('Vodafone',board,'vodafone.com','vodafone')
+        employer=Company('Vodafone',board,'vodafone','vodafone.com')
+        domain='vodafone.com';calls=[]
+        class Context:
+            async def __aenter__(self):return self
+            async def __aexit__(self,*args):return False
+        async def request(client,method,url,**kwargs):
+            calls.append(url);req=httpx.Request(method,url)
+            if url==board:
+                return httpx.Response(200,text='<code id="pcsx-data">'+json.dumps({'domain':domain})+'</code>',request=req)
+            if url.endswith('/search'):
+                return httpx.Response(200,json={'data':{'count':1,'positions':[{'id':1,'name':'Sales','positionUrl':'/careers/job/1','locations':['London']}]}},request=req)
+            return httpx.Response(200,json={'data':{'id':1,'name':'Sales','positionUrl':'/careers/job/1','publicUrl':'https://jobs.vodafone.com/careers/job/1','locations':['London'],'jobDescription':'Full sales requirements'}},request=req)
+        with patch('scraper.adapters.client',return_value=Context()),patch('scraper.adapters.request',side_effect=request):
+            jobs,count=await adapter.fetch_jobs(employer)
+            self.assertEqual(count,len(jobs));self.assertEqual(count,1)
+            self.assertEqual(jobs[0].location,'London');self.assertIsNone(jobs[0].posted_at)
+            self.assertTrue(any('/position_details' in url for url in calls))
+            domain='infineon.com'
+            with self.assertRaises(ValueError):await adapter.fetch_jobs(employer)

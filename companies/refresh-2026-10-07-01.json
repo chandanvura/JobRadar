@@ -1,0 +1,99 @@
+{
+  "batch": "refresh-2026-10-07-01",
+  "max_assets": 16,
+  "companies": [
+    "Hasura",
+    "Chargebee",
+    "Rippling",
+    "CyberArk",
+    "DataStax",
+    "Dynatrace",
+    "Exotel",
+    "Klarna",
+    "Planful",
+    "Vimeo",
+    "Zoom",
+    "Guidewire",
+    "Bayer",
+    "FedEx",
+    "Aon",
+    "DocuSign",
+    "Cornerstone OnDemand",
+    "Jupiter",
+    "Darwinbox",
+    "Keka",
+    "Kissflow",
+    "Orange Health Labs",
+    "Perfios",
+    "Tredence",
+    "Unacademy",
+    "Tata 1mg",
+    "BigBasket",
+    "Clear",
+    "CarDekho",
+    "Seclore",
+    "WebEngage",
+    "Yellow.ai",
+    "Yulu",
+    "Zetwerk",
+    "Navi",
+    "OfBusiness",
+    "Moneyview",
+    "LambdaTest",
+    "M2P Fintech",
+    "Khatabook",
+    "Decentro",
+    "Peoplebox.ai",
+    "Sarla Aviation",
+    "Ivy Homes",
+    "Avaamo",
+    "Dhruva Space",
+    "Rebel Foods",
+    "SALT",
+    "xPay",
+    "Antropi Robotics"
+  ],
+  "evidence_links": {
+    "Bayer": [
+      "https://talent.bayer.com/careers"
+    ],
+    "DocuSign": [
+      "https://uscareers-docusign.icims.com/",
+      "https://canadacareers-docusign.icims.com/",
+      "https://emeacareers-docusign.icims.com/"
+    ],
+    "Darwinbox": [
+      "https://darwinbox.com/careers",
+      "https://darwinbox.com/id/careers",
+      "https://darwinbox.com/my/careers"
+    ],
+    "Orange Health Labs": [
+      "https://orangehealth.darwinbox.in/ms/candidatev2/main/careers/allJobs"
+    ],
+    "Perfios": [
+      "https://perfios.darwinbox.in/ms/candidate/careers/",
+      "https://perfios.darwinbox.in/ms/candidate/careers"
+    ],
+    "Tredence": [
+      "https://tredence.ripplehire.com/candidate/"
+    ],
+    "Unacademy": [
+      "https://unacademy.darwinbox.in/ms/candidate/careers"
+    ],
+    "Tata 1mg": [
+      "https://1mg.darwinbox.in/jobs"
+    ],
+    "BigBasket": [
+      "https://bigbasket.darwinbox.in/ms/candidate/careers"
+    ],
+    "Clear": [
+      "https://clear.darwinbox.in/ms/candidate/careers"
+    ],
+    "CarDekho": [
+      "https://cardekho.darwinbox.in/ms/candidate/606876f7e2c79/careers"
+    ],
+    "Moneyview": [
+      "https://moneyview.darwinbox.in/ms/candidate/careers"
+    ]
+  }
+}

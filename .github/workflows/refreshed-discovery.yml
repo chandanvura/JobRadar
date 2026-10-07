@@ -1,0 +1,33 @@
+name: Refreshed unresolved employer discovery
+on:
+  push:
+    branches: [ats-refresh/2026-10-07]
+    paths: [companies/refresh-2026-10-07-*.json, .github/workflows/refreshed-discovery.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        batch: ['01','02','03','04']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m scripts.ats_deep --manifest companies/refresh-2026-10-07-${{ matrix.batch }}.json --output artifacts/refresh-${{ matrix.batch }}
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '2'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: refreshed-discovery-${{ matrix.batch }}
+          path: artifacts/refresh-${{ matrix.batch }}/
+          retention-days: 7

@@ -5,6 +5,7 @@ import re
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from bs4 import BeautifulSoup
+from .snapshot import SnapshotChanged
 
 
 def career_config(text, domain):
@@ -47,6 +48,9 @@ def posted_date(text, host, domain, identifier, title):
 
 
 class LegacyEightfoldCareerAdapter:
+    def __init__(self, complete=False):
+        self.complete=complete
+
     async def fetch_jobs(self, company):
         from .adapters import cached_get, clean, client, likely_target, location_text, make_job, request
         host, domain = company.ats_identifier.split('|', 1)
@@ -79,7 +83,7 @@ class LegacyEightfoldCareerAdapter:
                 raise ValueError('Legacy Eightfold pagination repeated positions or changed during collection')
             async def convert(row):
                 location = location_text(row.get('location'), row.get('locations'))
-                if not likely_target(row.get('name', ''), location):
+                if not self.complete and not likely_target(row.get('name', ''), location):
                     return None
                 identifier = str(row['id'])
                 query = urlencode({'domain': domain, 'pid': identifier})
@@ -87,6 +91,7 @@ class LegacyEightfoldCareerAdapter:
                 async with semaphore:
                     detail = await cached_get(x, base + '/api/apply/v2/jobs/' + identifier + '?' + urlencode({'domain': domain}))
                     if detail.status_code in (404, 410):
+                        if self.complete:raise SnapshotChanged('Legacy Eightfold listed detail disappeared')
                         return None
                     detail.raise_for_status(); job = detail.json()
                     if str(job.get('id')) != identifier or job.get('isPrivate') is not False:
@@ -97,8 +102,11 @@ class LegacyEightfoldCareerAdapter:
                     page = await cached_get(x, url); page.raise_for_status()
                     posting = posted_date(page.text, host, domain, identifier, job.get('name'))
                 # t_create and t_update describe ingestion/updates, not original posting.
-                return make_job(str(job.get('ats_job_id') or identifier), job.get('name'), company.name,
+                return make_job(identifier if self.complete else str(job.get('ats_job_id') or identifier), job.get('name'), company.name,
                     location_text(job.get('location'), job.get('locations')), description,
                     'eightfold_legacy', 'company_career', url, url, company.careers_url, posting=posting)
             jobs = await asyncio.gather(*(convert(row) for row in rows))
+            if self.complete:
+                final, _ = search_page(await search(0), domain, count)
+                if final != first:raise SnapshotChanged('Legacy Eightfold first page changed during details')
         return [job for job in jobs if job], count
