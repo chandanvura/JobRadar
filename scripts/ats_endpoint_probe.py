@@ -43,8 +43,10 @@ async def run():
                 case['keys']=list(d);case['counts']={k:v for k,v in d.items() if isinstance(v,(int,str)) and k not in ['request_id']}
                 jobs=d.get('jobs') or [];case['jobs_on_page']=len(jobs)
                 # Public payload tells the detail slug; never guess an identifier.
+                if name in ('AMD','AXA') and any(v.get('term')=='India' for v in d.get('filter',{}).get('facetList',{}).get('country',[])):
+                    filtered=await request(x,'GET',endpoint,params={'page':1,'limit':20,'internal':'false','country':'India'});filtered.raise_for_status();(folder/'india.json').write_text(json.dumps(filtered.json(),indent=2));case['india_count']=filtered.json().get('count');case['india_total']=filtered.json().get('totalCount')
                 if jobs:
-                    case['job_fields']=list(jobs[0]);slug=jobs[0].get('slug')
+                    case['job_fields']=list(jobs[0]);slug=jobs[0].get('data',jobs[0]).get('slug')
                     if slug:
                         detail=await request(x,'GET',endpoint+'/'+slug);case['pages'].append(dict(url=str(detail.url),status=detail.status_code));detail.raise_for_status();(folder/'detail.json').write_text(json.dumps(detail.json(),indent=2))
             except Exception as exc:case['blocker']=str(exc)
@@ -65,8 +67,16 @@ async def run():
                 for module in modules:
                     u=module if module.endswith('.js') else module+'.js'
                     a=await request(x,'GET',u);case['pages'].append(dict(url=u,status=a.status_code));a.raise_for_status();(folder/'module.js').write_text(a.text)
+                    # Follow literal RequireJS application dependencies only.
+                    import re
+                    deps=re.findall(r'[\"\'](app|apps/[^\"\']+|entities/[^\"\']+)[\"\']',a.text)
+                    for i,dep in enumerate(dict.fromkeys(deps)):
+                        target=urljoin(u,dep+'.js');asset=await request(x,'GET',target);case['pages'].append(dict(url=target,status=asset.status_code))
+                        if asset.status_code==200:(folder/f'dep-{i}.js').write_text(asset.text)
             except Exception as exc:case['blocker']=str(exc)
             print(json.dumps(case),flush=True)
+    a=await request(x,'GET','https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/96486.js')
+        (out/'atlassian-jsx.js').write_text(a.text)
     (out/'evidence.json').write_text(json.dumps(cases,indent=2))
 
 if __name__=='__main__':asyncio.run(run())
