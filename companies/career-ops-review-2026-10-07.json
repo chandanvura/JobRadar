@@ -1,0 +1,43 @@
+{
+  "batch": "career-ops-01",
+  "companies": [
+    "IBM",
+    "Dassault Systemes",
+    "Infineon Technologies",
+    "Siemens",
+    "Schneider Electric",
+    "ASML",
+    "SAS",
+    "Deutsche Bank"
+  ],
+  "evidence_links": {
+    "IBM": [
+      "https://www.ibm.com/"
+    ],
+    "Dassault Systemes": [
+      "https://www.3ds.com/"
+    ],
+    "Infineon Technologies": [
+      "https://www.infineon.com/"
+    ],
+    "Siemens": [
+      "https://www.siemens.com/"
+    ],
+    "Schneider Electric": [
+      "https://www.se.com/"
+    ],
+    "ASML": [
+      "https://www.asml.com/"
+    ],
+    "SAS": [
+      "https://www.sas.com/"
+    ],
+    "Deutsche Bank": [
+      "https://www.db.com/"
+    ]
+  },
+  "reference_repository": "https://github.com/career-ops-hq/career-ops",
+  "reference_commit": "3be1cdf033d54e977c9770441122c9e7cf3c823f",
+  "policy": "Secondary repository implementation is a lead only. No registry change without current employer evidence and full verification.",
+  "max_assets": 64
+}

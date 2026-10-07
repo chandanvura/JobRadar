@@ -1,0 +1,734 @@
+{
+  "reference_sha": "3be1cdf033d54e977c9770441122c9e7cf3c823f",
+  "interpretation": "Static flags are triage leads, not proof of coverage or compliance. Matching provider name does not establish equal capability.",
+  "providers": [
+    {
+      "module": "4dayweek.mjs",
+      "bytes": 6330,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "a16z-speedrun-talent.mjs",
+      "bytes": 9606,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "adp-workforcenow.mjs",
+      "bytes": 21409,
+      "optional_details": true,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "agentic-jobs.mjs",
+      "bytes": 7771,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "alibaba.mjs",
+      "bytes": 7540,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "amazon.mjs",
+      "bytes": 4325,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "applitrack.mjs",
+      "bytes": 6376,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "arbeitnow.mjs",
+      "bytes": 5078,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "arbeitsagentur.mjs",
+      "bytes": 13502,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "ashby.mjs",
+      "bytes": 14856,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "avature.mjs",
+      "bytes": 12444,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "bamboohr.mjs",
+      "bytes": 11053,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "beesite.mjs",
+      "bytes": 7388,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "breezy.mjs",
+      "bytes": 6176,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "builtin.mjs",
+      "bytes": 23615,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "careerviet.mjs",
+      "bytes": 13114,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "collage.mjs",
+      "bytes": 4323,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "comeet.mjs",
+      "bytes": 5992,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "consider.mjs",
+      "bytes": 9163,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "cryptocurrencyjobs.mjs",
+      "bytes": 4199,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "csod.mjs",
+      "bytes": 11377,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "dassault.mjs",
+      "bytes": 8159,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "deutschebahn.mjs",
+      "bytes": 13024,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "echojobs.mjs",
+      "bytes": 6562,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "eightfold.mjs",
+      "bytes": 12133,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "eploy.mjs",
+      "bytes": 9884,
+      "optional_details": true,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "feishu-jobs.mjs",
+      "bytes": 8199,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "flowxtra.mjs",
+      "bytes": 5581,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "garena.mjs",
+      "bytes": 6106,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "gem.mjs",
+      "bytes": 13205,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "generalist-world.mjs",
+      "bytes": 13962,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "getonbrd.mjs",
+      "bytes": 8017,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "getro.mjs",
+      "bytes": 13716,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "glints.mjs",
+      "bytes": 7555,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "greenhouse.mjs",
+      "bytes": 10674,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "gupy.mjs",
+      "bytes": 19182,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "hackernews.mjs",
+      "bytes": 7632,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "hecklerkoch.mjs",
+      "bytes": 3778,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "higheredjobs.mjs",
+      "bytes": 5560,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "himalayas.mjs",
+      "bytes": 4459,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "hiringroom.mjs",
+      "bytes": 7355,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "ibm.mjs",
+      "bytes": 4827,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "icims.mjs",
+      "bytes": 12235,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "itviec.mjs",
+      "bytes": 11639,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "jazzhr.mjs",
+      "bytes": 11034,
+      "optional_details": true,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "jibeapply.mjs",
+      "bytes": 6376,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "jobbankca.mjs",
+      "bytes": 12362,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "jobicy.mjs",
+      "bytes": 2849,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "jobspresso.mjs",
+      "bytes": 3757,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "jobstreet.mjs",
+      "bytes": 9656,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "jobvite.mjs",
+      "bytes": 17924,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "join.mjs",
+      "bytes": 4521,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "joinup.mjs",
+      "bytes": 3178,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "justjoin.mjs",
+      "bytes": 4313,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "landingjobs.mjs",
+      "bytes": 5030,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "larajobs.mjs",
+      "bytes": 4499,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "lever.mjs",
+      "bytes": 3847,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "local-parser.mjs",
+      "bytes": 10649,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "manfred.mjs",
+      "bytes": 8923,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "meituan.mjs",
+      "bytes": 7161,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "mokahr.mjs",
+      "bytes": 14223,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "mycareersfuture.mjs",
+      "bytes": 9866,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "neogov.mjs",
+      "bytes": 7593,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "nodesk.mjs",
+      "bytes": 4622,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "nofluffjobs.mjs",
+      "bytes": 5389,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "occ.mjs",
+      "bytes": 12564,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "oraclecloud.mjs",
+      "bytes": 12007,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "peoplesoft.mjs",
+      "bytes": 44691,
+      "optional_details": true,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "personio.mjs",
+      "bytes": 10246,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "phenom.mjs",
+      "bytes": 12640,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "pinpoint.mjs",
+      "bytes": 6857,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "prevueaps.mjs",
+      "bytes": 10392,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "pythonorg.mjs",
+      "bytes": 5836,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "radancy.mjs",
+      "bytes": 25236,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "recruitee.mjs",
+      "bytes": 12297,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "redrover.mjs",
+      "bytes": 5547,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "remoteok.mjs",
+      "bytes": 1904,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "remotive.mjs",
+      "bytes": 1875,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "remotli.mjs",
+      "bytes": 14118,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "rheinmetall.mjs",
+      "bytes": 6260,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "rippling.mjs",
+      "bytes": 9303,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "schoolspring.mjs",
+      "bytes": 8041,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "senjob.mjs",
+      "bytes": 9075,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "smartrecruiters.mjs",
+      "bytes": 10130,
+      "optional_details": true,
+      "pagination_cap": true,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "softgarden.mjs",
+      "bytes": 5421,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "solidjobs.mjs",
+      "bytes": 3423,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "startup-jobs.mjs",
+      "bytes": 12751,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "successfactors.mjs",
+      "bytes": 20155,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "taleo.mjs",
+      "bytes": 12430,
+      "optional_details": true,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "teamtailor.mjs",
+      "bytes": 7024,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "telegram-channel.mjs",
+      "bytes": 24358,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "tencent.mjs",
+      "bytes": 5094,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "thehub.mjs",
+      "bytes": 8032,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "themuse.mjs",
+      "bytes": 7442,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "tkms.mjs",
+      "bytes": 7703,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "torre.mjs",
+      "bytes": 10355,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "ultipro.mjs",
+      "bytes": 21748,
+      "optional_details": true,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "vdab.mjs",
+      "bytes": 14187,
+      "optional_details": true,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "weworkremotely.mjs",
+      "bytes": 4604,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "workable.mjs",
+      "bytes": 11921,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "workday.mjs",
+      "bytes": 61935,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": true
+    },
+    {
+      "module": "workingnomads.mjs",
+      "bytes": 1724,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "wttj.mjs",
+      "bytes": 11362,
+      "optional_details": false,
+      "pagination_cap": false,
+      "jobradar_provider_registered": false
+    },
+    {
+      "module": "yourator.mjs",
+      "bytes": 9188,
+      "optional_details": false,
+      "pagination_cap": true,
+      "jobradar_provider_registered": false
+    }
+  ]
+}
