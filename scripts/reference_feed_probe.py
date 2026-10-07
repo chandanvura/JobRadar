@@ -116,6 +116,12 @@ async def run():
                     if not domain or not re.fullmatch(r'[\w.-]+', domain): raise ValueError('Published domain missing')
                     result = await capture(case, 'GET', 'https://jobs.infineon.com/api/pcsx/search', 'infineon-search', params={'domain': domain, 'query': '', 'location': 'India', 'start': 0, 'sort_by': 'timestamp'})
                     case['search_response'] = result.json()
+                    positions = result.json()['data']['positions']
+                    if positions:
+                        identifier = str(positions[0]['id'])
+                        dr = await capture(case, 'GET', 'https://jobs.infineon.com/api/pcsx/position_details', 'infineon-detail-api', params={'domain': domain, 'position_id': identifier, 'hl': 'en'})
+                        case['sample_detail_api'] = dr.json()
+                        await detail(case, urljoin(str(page.url), positions[0]['positionUrl']), 'infineon-detail', 'jobs.infineon.com')
                 case['status'] = 'PUBLIC_PROBE_ONLY'
             except Exception as exc: case['blocker'] = type(exc).__name__ + ': ' + str(exc)[:300]
             print(json.dumps({k: v for k, v in case.items() if k in ['company', 'status', 'blocker', 'search_url']}), flush=True)

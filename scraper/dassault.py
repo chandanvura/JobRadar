@@ -1,6 +1,6 @@
 """Published Dassault career XML and complete first-party JobPosting details."""
 import asyncio
-import xml.etree.ElementTree as ET
+from defusedxml import ElementTree as ET
 from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 from .snapshot import SnapshotChanged
