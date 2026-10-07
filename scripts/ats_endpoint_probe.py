@@ -108,8 +108,15 @@ async def run():
             r=await request(x,'GET',url);(out/name).write_text(r.text)
             cases.append(dict(asset=name,url=url,http_status=r.status_code,bytes=len(r.content)))
         # Exact public form body from entities/job.js and list-controller defaults.
-        params=dict(page=0,search='*:*',token='',source='',pagesize=10)
-        r=await request(x,'POST','https://tredence.ripplehire.com/candidate/candidatejobsearch',data={'careerSiteUrlParams':json.dumps(params)})
+        tc=BeautifulSoup((out/'Tredence'/'board.html').read_text(),'html.parser')
+        token=tc.select_one('#token')['value'];source=tc.select_one('#source')['value']
+        lang_response=await request(x,'GET','https://tredence.ripplehire.com/candidate/getcompanylang',params={'token':token,'source':source})
+        (out/'tredence-company-language.json').write_text(lang_response.text)
+        language=lang_response.json().get('companyDefaultLang') if lang_response.status_code==200 else None
+        params={'page':0,'search':'*:*','token':token,'source':source,'pagesize':10}
+        form={'careerSiteUrlParams':json.dumps(params)}
+        if language:form['lang']=language
+        r=await request(x,'POST','https://tredence.ripplehire.com/candidate/candidatejobsearch',data=form)
         (out/'tredence-search.json').write_text(r.text)
         cases.append(dict(asset='tredence-search.json',http_status=r.status_code,bytes=len(r.content)))
         r=await request(x,'GET','https://careers-apac-atlassian.icims.com/jobs/26639/senior-machine-learning-systems-engineer/job')

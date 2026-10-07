@@ -26,3 +26,5 @@ jobs:
           name: ats-repaired-2026-10-07
           path: artifacts/ats-repaired-2026-10-07
           retention-days: 7
+
+# Full harness scans all scripts, including read-only discovery probes.
