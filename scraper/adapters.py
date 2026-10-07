@@ -725,3 +725,6 @@ ADAPTERS["jibe"] = JibeCareerAdapter()
 from .public_career_json import PublicCareerJSONAdapter
 ADAPTERS["atlassian"] = PublicCareerJSONAdapter("atlassian")
 ADAPTERS["avalara"] = PublicCareerJSONAdapter("avalara")
+
+from .netapp import NetAppCareerAdapter
+ADAPTERS["netapp"] = NetAppCareerAdapter()
