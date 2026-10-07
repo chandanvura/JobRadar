@@ -12,12 +12,30 @@ from scraper.models import Company
 OUT=Path('artifacts/refreshed-candidates')
 CANDIDATES=[
     Company('Adidas','https://careers.adidas-group.com/','adidas','https://careers.adidas-group.com/jobs/feed.xml',4),
-    Company('Vodafone','https://jobs.vodafone.com/careers','vodafone','vodafone.com',4),
     Company('Aon','https://jobs.aon.com/jobs','jibe','aon|India',4),
     Company('DocuSign','https://careers.docusign.com/careers-home/jobs','jibe','docusign|India',4),
     Company('Planful','https://planful.com/jobs/careers-list/','greenhouse','hostanalytics',3),
     Company('Bayer','https://talent.bayer.com/careers?domain=bayer.com','eightfold_legacy_complete','talent.bayer.com|bayer.com',4),
 ]
+
+def published_career_links(soup,current,domain):
+    # Contentful navigation is published inside Next's JSON, not necessarily anchors.
+    links=[(a['href'],a.get_text()) for a in soup.select('a[href]')]
+    def walk(value):
+        if isinstance(value,dict):
+            if isinstance(value.get('href'),str):links.append((value['href'],value.get('name','')))
+            for child in value.values():walk(child)
+        elif isinstance(value,list):
+            for child in value:walk(child)
+    for script in soup.select('script[type="application/json"]'):
+        try:walk(json.loads(script.get_text()))
+        except (ValueError,RecursionError):continue
+    found=set()
+    for href,label in links:
+        target=urljoin(current,href);parsed=urlsplit(target)
+        if parsed.scheme!='https' or not parsed.hostname or not (parsed.hostname==domain or parsed.hostname.endswith('.'+domain)):continue
+        if any(word in (target+' '+str(label)).lower() for word in ['career','jobs','talent']):found.add(target)
+    return found
 
 async def official_chain(x,name,root,board):
     domain=urlsplit(root).hostname.removeprefix('www.')
@@ -33,13 +51,11 @@ async def official_chain(x,name,root,board):
         current=str(r.url)
         if urlsplit(current).hostname==urlsplit(board).hostname and urlsplit(current).path.rstrip('/')==urlsplit(board).path.rstrip('/'):
             chain=path+[current];break
-        soup=BeautifulSoup(r.text,'html.parser');links=[]
-        for a in soup.select('a[href]'):
-            target=urljoin(current,a['href']);parsed=urlsplit(target)
-            if parsed.scheme!='https' or not parsed.hostname or not (parsed.hostname==domain or parsed.hostname.endswith('.'+domain)):continue
-            if any(word in (target+' '+a.get_text()).lower() for word in ['career','jobs','talent']):links.append(target)
-        links=sorted(set(links),key=lambda u:(urlsplit(u).hostname!=urlsplit(board).hostname,len(u)))
+        soup=BeautifulSoup(r.text,'html.parser')
+        links=published_career_links(soup,current,domain)
+        links=sorted(links,key=lambda u:(urlsplit(u).hostname!=urlsplit(board).hostname,len(u)))
         queue.extend((link,path+[current]) for link in links if link not in seen)
+        queue.sort(key=lambda item:(urlsplit(item[0]).hostname!=urlsplit(board).hostname,len(item[0])))
     result=dict(company=name,chain=chain,requests=captures,verified=bool(chain))
     (OUT/(name+'-official-chain.json')).write_text(json.dumps(result,indent=2))
     print(json.dumps({'company':name,'official_chain_verified':bool(chain),'chain':chain}),flush=True)
