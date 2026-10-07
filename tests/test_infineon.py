@@ -50,12 +50,12 @@ class CompleteInfineonTests(unittest.IsolatedAsyncioTestCase):
             if url.endswith('/search'):
                 offset=kwargs['params']['start']
                 return httpx.Response(200,json={'data':{'count':2,'positions':rows[offset:offset+1]}},request=req)
-            row=next(r for r in rows if url.endswith('/'+str(r['id'])))
+            row=next(r for r in rows if str(r['id'])==kwargs['params']['position_id'])
             data={'@type':'JobPosting','title':'Engineer','description':'Full requirements','url':url,'hiringOrganization':{'name':'Infineon','sameAs':'infineon.com'}}
-            return httpx.Response(200,text='<script type="application/ld+json">'+json.dumps(data)+'</script>',request=req)
+            return httpx.Response(200,json={'data':{'id':row['id'],'name':row['name'],'locations':row['locations'],'jobDescription':'Full requirements','positionUrl':row['positionUrl'],'publicUrl':'https://jobs.infineon.com'+row['positionUrl']}},request=req)
         with patch('scraper.adapters.client',return_value=Context()),patch('scraper.adapters.request',side_effect=request):
             jobs,count=await InfineonCareerAdapter().fetch_jobs(Company('Infineon Technologies',BOARD,'infineon','infineon.com'))
         self.assertEqual(count,2);self.assertEqual(len(jobs),2)
         self.assertEqual({j.external_job_id for j in jobs},{'123','456'})
         self.assertTrue(all(j.posted_at is None for j in jobs))
-        self.assertEqual(sum('/careers/job/' in url for url in calls),2)
+        self.assertEqual(sum('/position_details' in url for url in calls),2)

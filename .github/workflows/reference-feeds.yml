@@ -21,7 +21,7 @@ jobs:
       - run: python -m scripts.reference_feed_probe
         env:
           JOBRADAR_DOMAIN_CONCURRENCY: '2'
-      - run: python -m scripts.ats_repaired --companies "Dassault Systemes" "Infineon Technologies"
+      - run: python -m scripts.ats_repaired --companies "Infineon Technologies"
         env:
           JOBRADAR_DOMAIN_CONCURRENCY: '3'
       - uses: actions/upload-artifact@v7

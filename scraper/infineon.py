@@ -60,11 +60,19 @@ class InfineonCareerAdapter:
                 found.update(rows)
             gate=asyncio.Semaphore(3)
             async def convert(ident,item):
-                async with gate:r=await request(x,'GET',item['url'])
+                async with gate:r=await request(x,'GET','https://jobs.infineon.com/api/pcsx/position_details',params={'domain':DOMAIN,'position_id':ident,'hl':'en'})
                 if r.status_code in (404,410):raise SnapshotChanged('Infineon listed detail disappeared')
-                r.raise_for_status();job=detail(r.text,item)
-                # The published timestamp has no zone: preserve its date, without inventing UTC time.
-                posted=job['posted'][:10] if isinstance(job['posted'],str) else None
+                r.raise_for_status();record=r.json().get('data',{})
+                from .adapters import clean,location_text,epoch_ms
+                if (str(record.get('id'))!=ident or record.get('isPrivate') or not clean(record.get('name'))
+                        or urljoin(BOARD,record.get('positionUrl',''))!=item['url'] or record.get('publicUrl')!=item['url']):
+                    raise ValueError('Infineon PCSX detail does not match its listed position identity')
+                description=clean(record.get('jobDescription'))
+                if not description:raise ValueError('Infineon PCSX detail omitted full requirements')
+                job=dict(title=record['name'],description=description,location=location_text(record.get('locations'),record.get('standardizedLocations'),record.get('location')))
+                # postedTs is the published Unix posting timestamp, corroborated with JobPosting.datePosted.
+                stamp=record.get('postedTs')
+                posted=epoch_ms(stamp*1000) if isinstance(stamp,(int,float)) else None
                 return make_job(ident,job['title'],company.name,job['location'],job['description'],'infineon','company_career',item['url'],item['url'],BOARD,posting=posted)
             jobs=await asyncio.gather(*(convert(ident,item) for ident,item in found.items()))
             _,check=await page(0,total)
