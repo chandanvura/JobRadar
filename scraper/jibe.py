@@ -45,16 +45,16 @@ def detail_record(payload,row,tenant):
         raise SnapshotChanged('Jibe job ceased to be public during collection')
     # The search UI concatenates primary and additional display locations.
     # Detail returns primary separately; reconcile those actual locations.
-    from .adapters import location_text
+    def display(*parts):return ', '.join(str(v) for v in parts if v)
     options=[{payload.get('full_location') or ''}]
     for loc in payload.get('additional_locations') or []:
         if not isinstance(loc,dict):raise ValueError('Jibe additional location schema changed')
         # Employers select either region or country for their display text.
         # Match only strings built from the actual published address fields.
         rendered={loc.get('full_location') or '',
-                  location_text(loc.get('city'),loc.get('state'),loc.get('country')),
-                  location_text(loc.get('city'),loc.get('state') or loc.get('country')),
-                  location_text(loc.get('city'),loc.get('country'))}
+                  display(loc.get('city'),loc.get('state'),loc.get('country')),
+                  display(loc.get('city'),loc.get('state') or loc.get('country')),
+                  display(loc.get('city'),loc.get('country'))}
         options.append({v.strip() for v in rendered if v.strip()})
     listed={v.strip() for v in (row.get('full_location') or '').split(';') if v.strip()}
     if (payload.get('country')!=row.get('country') or
@@ -72,7 +72,7 @@ def job_location(job):
     other=[]
     for loc in job.get('additional_locations') or []:
         if isinstance(loc,dict):
-            other.append(loc.get('full_location') or location_text(loc.get('city'),loc.get('state'),loc.get('country')))
+            other.append(loc.get('full_location') or display(loc.get('city'),loc.get('state'),loc.get('country')))
         elif isinstance(loc,str):other.append(loc)
     return location_text(primary,other)
 
