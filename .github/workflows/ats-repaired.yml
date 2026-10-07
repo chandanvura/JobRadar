@@ -17,7 +17,7 @@ jobs:
           cache: pip
       - run: pip install -r requirements-dev.txt
       - run: bash scripts/verify-harness.sh python
-      - run: python -m scripts.ats_repaired
+      - run: python -m scripts.ats_repaired --companies NetApp
         env:
           JOBRADAR_DOMAIN_CONCURRENCY: '2'
       - uses: actions/upload-artifact@v7

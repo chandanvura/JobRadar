@@ -6,8 +6,9 @@ from pathlib import Path
 from scraper.main import scrape
 from scraper.models import Company
 
-async def run():
-    names={'ACKO','AMD','AXA','GitHub','Booking.com','Intercontinental Exchange','Principal Financial Group','Keysight Technologies','PepsiCo','Avalara'}
+async def run(selected=None):
+    names=selected or {'ACKO','AMD','AXA','GitHub','Booking.com','Intercontinental Exchange','Principal Financial Group','Keysight Technologies','PepsiCo','Avalara'}
+    if not 1<=len(names)<=50:raise ValueError('Probe batch must contain 1 to 50 companies')
     cases=[]
     for row in csv.DictReader(Path('companies/companies.csv').open()):
         if row['company_name'] not in names:continue
@@ -20,4 +21,9 @@ async def run():
     (output/'evidence.json').write_text(json.dumps(cases,indent=2))
     if len(cases)!=len(names) or not all(c['complete'] for c in cases):raise RuntimeError('Complete repaired feeds have not all passed')
 
-if __name__=='__main__':asyncio.run(run())
+if __name__=='__main__':
+    import argparse
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--companies',nargs='+')
+    args=parser.parse_args()
+    asyncio.run(run(set(args.companies) if args.companies else None))
