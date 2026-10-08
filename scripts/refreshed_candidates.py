@@ -39,6 +39,10 @@ def published_career_links(soup,current,domain):
 
 async def official_chain(x,name,root,board):
     domain=urlsplit(root).hostname.removeprefix('www.')
+    target=urlsplit(board)
+    def priority(url):
+        parsed=urlsplit(url)
+        return (parsed.hostname!=target.hostname, parsed.path.rstrip('/')!=target.path.rstrip('/'), len(url))
     queue=[(root,[])];seen=set();captures=[];chain=None
     while queue and len(seen)<6:
         url,path=queue.pop(0)
@@ -53,9 +57,9 @@ async def official_chain(x,name,root,board):
             chain=path+[current];break
         soup=BeautifulSoup(r.text,'html.parser')
         links=published_career_links(soup,current,domain)
-        links=sorted(links,key=lambda u:(urlsplit(u).hostname!=urlsplit(board).hostname,len(u)))
+        links=sorted(links,key=priority)
         queue.extend((link,path+[current]) for link in links if link not in seen)
-        queue.sort(key=lambda item:(urlsplit(item[0]).hostname!=urlsplit(board).hostname,len(item[0])))
+        queue.sort(key=lambda item:priority(item[0]))
     result=dict(company=name,chain=chain,requests=captures,verified=bool(chain))
     (OUT/(name+'-official-chain.json')).write_text(json.dumps(result,indent=2))
     print(json.dumps({'company':name,'official_chain_verified':bool(chain),'chain':chain}),flush=True)

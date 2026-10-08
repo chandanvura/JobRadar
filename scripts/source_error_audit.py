@@ -86,6 +86,8 @@ async def public_candidates(output):
             planful['error'] = type(exc).__name__ + ': ' + str(exc)
         (output / 'Planful-case.json').write_text(json.dumps(planful, indent=2))
         print(json.dumps(planful), flush=True)
+        if planful['status'] != 'COMPLETE_ACTIONS_NOT_PRODUCTION' or not macquarie['verified']:
+            raise RuntimeError('Proposed employer repairs failed their current official identity or complete feed checks')
 
 
 async def run(candidates_only=False):
