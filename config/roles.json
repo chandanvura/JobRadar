@@ -78,7 +78,8 @@
       "patterns": [
         "\\b(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|dotnet|c#|ruby|php) (?:full[ -]?stack |back[ -]?end |software |application )?(?:developer|engineer|intern)\\b",
         "\\bback[ -]?end (?:software |application )?(?:developer|engineer|intern)\\b",
-        "\\bsoftware engineer\\s*(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|back[ -]?end)\\b"
+        "\\bsoftware engineer\\s*(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|back[ -]?end)\\b",
+        "(?<!\\w)\\.net (?:software |full stack )?(?:developer|engineer|intern)\\b"
       ],
       "titles": [
         "Java Developer",

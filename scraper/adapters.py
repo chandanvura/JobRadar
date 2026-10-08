@@ -308,6 +308,19 @@ def workday_country_facets(nodes,country):
     visit(nodes)
     return countries or ({"locations":locations} if locations else {})
 
+def workday_city_facets(nodes):
+    """Use only employer-published location IDs; never search guessed city strings."""
+    found=[]
+    def visit(entries):
+        for node in entries:
+            if node.get("facetParameter")=="locations":
+                found.extend(value["id"] for value in node.get("values",[]) if value.get("id")
+                             and re.search(r"\b(?:bangalore|bengaluru|hyderabad)\b", value.get("descriptor", ""), re.I))
+            visit(node.get("values", []))
+    visit(nodes)
+    return {"locations":list(dict.fromkeys(found))} if found else {}
+
+
 class WorkdayAdapter(JobSource):
     def __init__(self, complete=False, all_details=False):
         if all_details and not complete:
@@ -318,7 +331,7 @@ class WorkdayAdapter(JobSource):
     async def fetch_jobs(self,c):
         origin,tenant,site=workday_config(c); api=f"{origin}/wday/cxs/{tenant}/{site}"
         async with client() as x:
-            postings=[]; offset=0; facets={}; expected=None; identifiers=set()
+            postings=[]; offset=0; facets={}; expected=None; identifiers=set(); advertised=None; duplicate_paths=False
             bound=2000 if self.complete else 1000
             country=c.ats_identifier.split("|")[2] if len(c.ats_identifier.split("|"))>2 else None
             if country:
@@ -329,6 +342,16 @@ class WorkdayAdapter(JobSource):
             while offset < bound:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
+                if offset==0 and not facets and not self.complete:
+                    published=workday_city_facets(page.get("facets",[]))
+                    if published:
+                        facets=published
+                        continue
+                if offset==0: advertised=page.get("total")
+                if not self.complete:
+                    paths=[item.get("externalPath", "") for item in batch]
+                    duplicate_paths=duplicate_paths or len(set(paths))!=len(paths) or bool(identifiers.intersection(paths))
+                    identifiers.update(paths)
                 if self.complete:
                     total=page.get("total")
                     if not isinstance(total,int) or isinstance(total,bool) or total<0 or total>bound:
@@ -360,7 +383,7 @@ class WorkdayAdapter(JobSource):
             async def convert(item):
                 # Complete mode reads relevant titles even if listing locations hide
                 # secondary offices; actual detail fields alone establish the city.
-                relevant=likely_role(item.get("title","")) if self.complete else likely_target(item.get("title",""),item.get("locationsText",""))
+                relevant=likely_role(item.get("title","")) if self.complete or facets else likely_target(item.get("title",""),item.get("locationsText",""))
                 if not country and not relevant and not self.all_details: return None
                 path=item.get("externalPath")
                 if not path: return None
@@ -397,7 +420,14 @@ class WorkdayAdapter(JobSource):
         if self.complete:
             warning=f"Limited coverage: {len(missing)} relevant Workday details disappeared during collection" if missing else None
             return JobBatch(jobs,warning),len(postings)
-        return jobs,len(postings)
+        warnings=[]
+        if isinstance(advertised,int) and advertised>len(postings):
+            warnings.append(f"collected {len(postings)} of {advertised} advertised Workday listings")
+        if duplicate_paths:
+            warnings.append("Workday listing pagination repeated records")
+        unique=list({job.external_job_id:job for job in jobs}.values())
+        warning="Limited coverage: "+"; ".join(warnings) if warnings else None
+        return JobBatch(unique,warning),len(postings)
 
 def jobvite_config(c):
     parsed=urlparse(c.careers_url)

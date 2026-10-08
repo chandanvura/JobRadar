@@ -2,12 +2,10 @@
 import ast
 import asyncio
 from collections import Counter
-from dataclasses import replace
 import json
 import os
 from pathlib import Path
 import re
-from scraper.adapters import ADAPTERS
 from scraper.main import load_companies, fetch_company_jobs
 from scraper.normalization import TARGET_CITIES, enrich
 
@@ -42,9 +40,6 @@ async def main():
     reports = []
     for name in names:
         company = registry[name]
-        # Verify country-scoped complete pagination for the reported missed HPE role.
-        if name == 'HPE':
-            company = replace(company, ats_provider='workday_complete', ats_identifier='hpe|Jobsathpe|India')
         try:
             jobs, total = await fetch_company_jobs(company)
             enriched = [enrich(job, company.priority) for job in jobs]
