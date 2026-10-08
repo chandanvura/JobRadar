@@ -28,6 +28,13 @@ def public_references(soup, page_url):
     assets = [urljoin(base_url, node['src']) for node in soup.select('script[src]')]
     assets += [urljoin(base_url, node['href'])
                for node in soup.select('link[rel="modulepreload"][href],link[rel="preload"][as="script"][href]')]
+    # Keka's published wrapper fetches a same-origin career-portal HTML document.
+    # Read literal one-argument GET URLs only; never execute scripts or infer paths.
+    for node in soup.select('script:not([src])'):
+        for path in re.findall(r'''\bfetch\(\s*["']([^"']+)["']\s*\)''', node.get_text()):
+            target = urljoin(base_url, path)
+            if urlsplit(target).netloc == urlsplit(page_url).netloc:
+                links.append(target)
     return list(dict.fromkeys(links)), list(dict.fromkeys(assets))
 
 async def run(manifest, output):
@@ -50,7 +57,7 @@ async def run(manifest, output):
                 rec=dict(url=url,linked_from=linked_from)
                 records.append(rec)
                 try:
-                    r=await request(x,'GET',url)
+                    r=await request(x,'GET',url,headers={'Accept':'text/html,application/xhtml+xml'})
                     rec.update(final_url=str(r.url),http_status=r.status_code,content_type=r.headers.get('content-type'),sha256=hashlib.sha256(r.content).hexdigest())
                     if r.status_code!=200:return None
                     if len(r.content)>8_000_000:
@@ -72,7 +79,7 @@ async def run(manifest, output):
                 soup=await fetch(url)
                 if not isinstance(soup,BeautifulSoup):continue
                 source=records[-1]
-                linked=[u for u in source.get('links',[]) if urlsplit(u).scheme=='https' and not urlsplit(u).fragment and not EXCLUDE.search(u) and not urlsplit(u).path.endswith(('.css','.jpg','.png','.svg')) and any(t in u.lower() for t in ['jobs','job-board','candidate','kula.ai','rippling','greenhouse','lever.co','ashby','workday','workable','smartrecruiters','bamboohr','openings','find-your-job','search-results','search-roles'])]
+                linked=[u for u in source.get('links',[]) if urlsplit(u).scheme=='https' and not urlsplit(u).fragment and not EXCLUDE.search(u) and not urlsplit(u).path.endswith(('.css','.jpg','.png','.svg')) and any(t in u.lower() for t in ['jobs','job-board','candidate','careerportal','kula.ai','rippling','greenhouse','lever.co','ashby','workday','workable','smartrecruiters','bamboohr','openings','find-your-job','search-results','search-roles'])]
                 linked=list(dict.fromkeys(linked));linked.sort(key=lambda u:0 if any(t in u for t in ['job-board','kula.ai','rippling','greenhouse','lever.co','ashby','workday','workable','smartrecruiters','bamboohr','darwinbox','ripplehire']) else 1);linked=linked[:2]
                 for target in linked:await fetch(target,url)
             # Inspect only scripts actually published by fetched employer/board HTML.
