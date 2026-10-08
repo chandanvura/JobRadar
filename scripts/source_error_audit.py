@@ -1,4 +1,5 @@
 """Read-only Actions capture of current errors, without changing source mappings."""
+import argparse
 import asyncio
 import json
 import re
@@ -50,10 +51,23 @@ async def public_candidates(output):
                       for node in soup.select('script[src],iframe[src],a[href]')]
             embeds = [url for url in embeds if urlsplit(url).hostname in {'boards.greenhouse.io', 'job-boards.greenhouse.io'} and parse_qs(urlsplit(url).query).get('for')]
             tenants = {parse_qs(urlsplit(url).query)['for'][0] for url in embeds}
+            if not tenants:
+                # Modern employer pages publish the feed in linked client bundles.
+                assets = []
+                for index, node in enumerate(soup.select('script[src]')[:24]):
+                    url = urljoin(str(response.url), node['src'])
+                    if urlsplit(url).hostname != urlsplit(board).hostname:
+                        continue
+                    asset = await adapters.request(client, 'GET', url)
+                    asset.raise_for_status()
+                    (output / f'Planful-script-{index}.js').write_text(asset.text)
+                    assets.append(asset.text)
+                tenants = set(re.findall(r'https://boards-api\.greenhouse\.io/v1/boards/([\w.-]+)/jobs', '\n'.join(assets)))
             if len(tenants) != 1:
                 raise ValueError('No unique employer-published Greenhouse tenant')
             tenant = tenants.pop()
-            branding = await adapters.request(client, 'GET', embeds[0])
+            branding_url = embeds[0] if embeds else f'https://boards-api.greenhouse.io/v1/boards/{tenant}'
+            branding = await adapters.request(client, 'GET', branding_url)
             branding.raise_for_status()
             (output / 'Planful-board.html').write_text(branding.text)
             if 'planful' not in BeautifulSoup(branding.text, 'html.parser').get_text(' ', strip=True).lower():
@@ -70,9 +84,12 @@ async def public_candidates(output):
         print(json.dumps(planful), flush=True)
 
 
-async def run():
+async def run(candidates_only=False):
     output = Path('artifacts/source-error-audit')
     output.mkdir(parents=True, exist_ok=True)
+    if candidates_only:
+        await public_candidates(output)
+        return
     company = next(c for c in load_companies() if c.name == 'Macquarie Group')
     records = []
     original = adapters.request
@@ -112,4 +129,6 @@ async def run():
 
 
 if __name__ == '__main__':
-    asyncio.run(run())
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--candidates-only', action='store_true')
+    asyncio.run(run(parser.parse_args().candidates_only))

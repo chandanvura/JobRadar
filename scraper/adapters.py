@@ -644,15 +644,20 @@ def job_like_url(url,base_host):
 
 class CustomCareerAdapter(JobSource):
     async def fetch_jobs(self,c):
+        async def discovered_feed(detected):
+            provider,identifier,board_url=detected
+            indexed=Company(c.name,board_url if provider in {"workday","oracle"} else c.careers_url,provider,identifier,c.priority,c.enabled)
+            jobs,total=await ADAPTERS[provider].fetch_jobs(indexed)
+            # A published ATS link is a lead, not proof of employer identity or scope.
+            warning=getattr(jobs,"coverage_warning",None) or "Limited coverage: autodiscovered board identity and scope await verification"
+            return JobBatch(jobs,coverage_warning=warning),total
+
         async with client(timeout=float(os.getenv("JOBRADAR_CUSTOM_TIMEOUT","12"))) as x:
             listing=await request(x,"GET",c.careers_url); listing.raise_for_status()
             soup=BeautifulSoup(listing.text,"html.parser")
             detected=discover_ats(soup,str(listing.url))
             if detected:
-                provider,identifier,board_url=detected
-                source_url=board_url if provider in {"workday","oracle"} else c.careers_url
-                indexed=Company(c.name,source_url,provider,identifier,c.priority,c.enabled)
-                return await ADAPTERS[provider].fetch_jobs(indexed)
+                return await discovered_feed(detected)
             urls=[]; seen={str(listing.url)}; base_host=(urlparse(str(listing.url)).hostname or "").lower()
             for link in soup.find_all("a",href=True):
                 url=urljoin(str(listing.url),link["href"]); parsed=urlparse(url)
@@ -670,9 +675,7 @@ class CustomCareerAdapter(JobSource):
                 if response is None or response.status_code!=200: continue
                 detected=discover_ats(BeautifulSoup(response.text,"html.parser"),str(response.url))
                 if detected:
-                    provider,identifier,board_url=detected
-                    indexed=Company(c.name,board_url if provider in {"workday","oracle"} else c.careers_url,provider,identifier,c.priority,c.enabled)
-                    return await ADAPTERS[provider].fetch_jobs(indexed)
+                    return await discovered_feed(detected)
             for url,response in zip([str(listing.url),*urls],responses):
                 if response is None or response.status_code!=200: continue
                 for item in jsonld_objects(BeautifulSoup(response.text,"html.parser")):

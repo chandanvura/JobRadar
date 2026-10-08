@@ -19,7 +19,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m scripts.coverage_snapshot --output artifacts/source-audit-before.json
       - run: python -m scripts.ats_deep --manifest companies/source-audit-2026-10-08.json --output artifacts/source-audit
-      - run: python -m scripts.source_error_audit
+      - run: python -m scripts.source_error_audit --candidates-only
         env:
           JOBRADAR_DOMAIN_CONCURRENCY: '1'
       - uses: actions/upload-artifact@v7
