@@ -5,7 +5,7 @@
     "errors": 1
   },
   "release_run": 37797177914,
-  "status": "COMPLETE_ACTIONS_NOT_PRODUCTION",
+  "status": "COMPLETE_ACTIONS_AND_PRODUCTION",
   "companies": [
     {
       "company": "Upstox",
@@ -21,7 +21,7 @@
     },
     {
       "company": "Kissflow",
-      "status": "COMPLETE_ACTIONS_NOT_PRODUCTION"
+      "status": "COMPLETE_ACTIONS_AND_PRODUCTION"
     },
     {
       "company": "Atlassian",
@@ -615,5 +615,46 @@
       "http_status": 200,
       "sha256": "5e737732ca181968db1d3370b86028ec79db73341961fb4b4245dad62a8f6837"
     }
-  ]
+  ],
+  "production_run": 37797956774,
+  "production": {
+    "server_time": "2026-10-08T15:06:22.552Z",
+    "counts": {
+      "companies": 700,
+      "limited": 207,
+      "errors": 1
+    },
+    "source": {
+      "name": "Kissflow",
+      "careers_url": "https://careers.kissflow.com/",
+      "ats_provider": "kissflow",
+      "last_checked_at": "2026-10-08T15:04:34.456428+00:00",
+      "last_success_at": "2026-10-08T15:04:36.424130+00:00",
+      "error_count": 0,
+      "jobs_found": 2,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "No roles with a published target-city location returned"
+    },
+    "health_http_status": 503,
+    "health": {
+      "ok": false,
+      "pipeline_ok": true,
+      "scan_ok": false,
+      "database": true,
+      "ingestion_configured": true,
+      "latest_run": {
+        "finished_at": "2026-10-08T11:09:25.508180+00:00",
+        "status": "degraded",
+        "companies_checked": 700,
+        "companies_successful": 697,
+        "companies_failed": 3,
+        "companies_empty": 12,
+        "jobs_scanned": 164061,
+        "candidate_jobs": 3406
+      },
+      "run_age_hours": 3.949298333333333,
+      "stale": false
+    }
+  }
 }

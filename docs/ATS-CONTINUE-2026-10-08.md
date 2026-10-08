@@ -4,7 +4,7 @@ Fresh Actions baseline: 700 employers, 208 limited sources and one source error.
 
 | Employer | Current evidence | Decision |
 |---|---|---|
-| Kissflow | Official homepage publishes careers.kissflow.com; static Open Positions contains two unique roles; the published listing module only hides the list on detail pages and styles full descriptions. Both canonical detail identities, titles, locations, experience labels and complete requirements reconcile. Final list is unchanged. | Complete Actions release gate passed; production verification pending. |
+| Kissflow | Official homepage publishes careers.kissflow.com; static Open Positions contains two unique roles; the published listing module only hides the list on detail pages and styles full descriptions. Both canonical detail identities, titles, locations, experience labels and complete requirements reconcile. Final list is unchanged. | Complete Actions release gate and independent live production verification passed. |
 | Upstox | Current employer careers script publishes service.upstox.com/content/open/v1/jobs/ and the exact Darwinbox detail URL. The response supplies 61 records, of which 23 have post_on_careers_page=1, matching the page's 23 openings. | Full requirements are absent from this response; do not substitute generated summaries or creation/update timestamps for requirements/publication dates. Registry unchanged. |
 | Jumbotail | Official static careers list publishes 15 role cards. Five distinct engineering titles reuse the same Software Development Engineer detail URL. | Role identity and detail scope remain unresolved; do not collapse different titles to claim completeness. Registry unchanged. |
 | Dynatrace | Official career host redirects to the current employer-domain careers area and links its jobs page. HTTP HTML contains dynamic zero placeholders. | A rendered zero is not an authoritative empty inventory. Current complete list endpoint remains unverified; registry unchanged. |
@@ -21,4 +21,12 @@ before: Kissflow,https://careers.kissflow.com/,custom,kissflow,4,true
 after:  Kissflow,https://careers.kissflow.com/,kissflow,kissflow,4,true
 ```
 
-Validation: 380 Python regression/fault tests passed; Bandit and Python dependency audit passed. The release gate reads the actual complete feed through the production adapter. Run `python -m scripts.kissflow_probe` on GitHub Actions to repeat it. Existing registry synchronization will verify the one changed source after merge; focused historical scan health is preserved. No eligibility policy change or warning suppression is introduced.
+Validation: 380 Python regression/fault tests passed; Bandit and Python dependency audit passed. The release gate reads the actual complete feed through the production adapter. Run `python -m scripts.kissflow_probe` on GitHub Actions to repeat it. No eligibility policy change or warning suppression is introduced.
+
+## Verified production result
+
+Merged in [PR 26](https://github.com/chandanvura/JobRadar/pull/26), commit `ca21185f93292f014aad74dfd65f31bc7980b5f8`. Python and web PR validation passed in [37797505196](https://github.com/chandanvura/JobRadar/actions/runs/37797505196); main validation passed in [37797699372](https://github.com/chandanvura/JobRadar/actions/runs/37797699372).
+
+The [live registry verification](https://github.com/chandanvura/JobRadar/actions/runs/37797699311) collected both roles and verified exactly one source update in the portal. Independent read-only [production verification](https://github.com/chandanvura/JobRadar/actions/runs/37797956774) then confirmed, at 15:06:22 UTC, **700 companies / 207 limited sources / one error**, compared with 208 limited before this release. Kissflow reports the new provider, two jobs, zero candidate/eligible jobs and zero errors; its remaining informational message explains the absence of published target-city roles, without a limited-coverage warning.
+
+The original target of 25 limited sources remains unfinished. Upstox, Jumbotail, Dynatrace and Atlassian remain unresolved for the concrete reasons above. HubSpot remains the separate error. Production ingestion and the database are healthy and the scan is fresh, while aggregate health truthfully stays HTTP 503 because the earlier full scan was degraded. This focused repair does not rewrite full-scan history. The independent counts, selected-source status and health response are preserved in the evidence JSON.
