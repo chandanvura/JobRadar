@@ -106,10 +106,11 @@ def test_stale_but_available_database_allows_recovery(event):
     assert not scan_gate.should_scan({**health, "ingestion_configured": False}, event, now)
 
 
-def test_source_degradation_does_not_lock_out_manual_recovery_or_due_scheduled_scan():
+@pytest.mark.parametrize('status', ['degraded', 'partial'])
+def test_source_degradation_does_not_lock_out_manual_recovery_or_due_scheduled_scan(status):
     now=datetime(2026,10,8,8,tzinfo=timezone.utc)
     health={'ok':False,'stale':False,'database':True,'ingestion_configured':True,
-            'latest_run':{'status':'degraded','finished_at':'2026-10-08T07:00:00Z'}}
+            'latest_run':{'status':status,'finished_at':'2026-10-08T07:00:00Z'}}
     assert scan_gate.should_scan(health,'workflow_dispatch',now)
     assert not scan_gate.should_scan(health,'schedule',now)
     health['latest_run']['finished_at']='2026-10-08T04:00:00Z'

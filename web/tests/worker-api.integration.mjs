@@ -29,12 +29,37 @@ try {
   assert.equal((await request('/api/ingest',{run})).status,200);
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);
   assert.equal((await request('/api/ingest',{run:{...run,seen_job_keys:Array(50001).fill('x')}})).status,413);
+  // Malformed finalization must neither retire jobs nor record a completed scan.
+  const previousRuns=(await db.prepare('SELECT * FROM scraper_runs').all()).results;
+  for(const change of [
+    {seen_job_keys:undefined},{seen_job_keys:null},{seen_job_keys:'not-an-array'},
+    {seen_job_keys:[null]},{seen_job_keys:['']},
+    {successful_companies:undefined},{successful_companies:[{}]},
+  ])assert.equal((await request('/api/ingest',{run:{...run,...change}})).status,400);
+  assert.equal((await request('/api/ingest',{run:{...run,successful_companies:Array(1001).fill('Example')}})).status,413);
+  assert.equal((await request('/api/ingest',{jobs:[{...job,external_job_id:'REQ-2'},{...job,application_url:'javascript:invalid'}],run:{...run,seen_job_keys:[]}})).status,400);
+  assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);
+  assert.deepEqual((await db.prepare('SELECT * FROM scraper_runs').all()).results,previousRuns);
+  assert.equal((await db.prepare('SELECT count(*) AS total FROM jobs').first()).total,1);
   for(let attempt=0;attempt<2;attempt++)assert.equal((await request('/api/notifications',{company:'example',ats_provider:'workday',external_job_id:'REQ-1',status:'sent'})).status,200);
   assert.equal((await db.prepare('SELECT notifications_sent FROM scraper_runs').first()).notifications_sent,1);
   const results=await Promise.all([request('/api/ingest',{jobs:[job]}),request('/api/ingest',{jobs:[job]})]);
   assert.ok(results.every(r=>r.status===200));
   assert.equal((await db.prepare('SELECT count(*) AS total FROM jobs').first()).total,1);
   assert.equal((await request('/api/health')).status,200);
+  assert.equal((await (await request('/api/health')).json()).pipeline_ok,true);
+  for(const status of ['partial','degraded','failed']){
+    await db.prepare('UPDATE scraper_runs SET status=?').bind(status).run();
+    const response=await request('/api/health');assert.equal(response.status,503);
+    const health=await response.json();assert.equal(health.pipeline_ok,true);assert.equal(health.scan_ok,false);
+  }
+  await db.prepare("UPDATE scraper_runs SET status='success'").run();
+  for(const finished of ['invalid-date',new Date(Date.now()+60_000).toISOString(),new Date(Date.now()-6*3600_000).toISOString()]){
+    await db.prepare('UPDATE scraper_runs SET finished_at=?').bind(finished).run();
+    const response=await request('/api/health');assert.equal(response.status,503);
+    const health=await response.json();assert.equal(health.pipeline_ok,false);assert.equal(health.stale,true);
+  }
+  await db.prepare('UPDATE scraper_runs SET finished_at=?').bind(new Date().toISOString()).run();
   const beforeRegistryRun = await db.prepare('SELECT * FROM scraper_runs').all();
   assert.equal((await request('/api/ingest',{companies:[{name:'New source',careers_url:'https://new.test/careers',ats_provider:'custom',ats_identifier:'new-source',priority:4,warning:'Awaiting first scheduled scan'}]})).status,200);
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);
@@ -42,6 +67,9 @@ try {
   assert.equal((await db.prepare('SELECT last_checked_at FROM companies WHERE name=?').bind('New source').first()).last_checked_at,null);
   const live=await (await request('/api/dashboard')).json();assert.equal(live.jobs.length,1);assert.equal(live.data_mode,undefined);
   const page=await (await request('/api/jobs?after=0')).json();assert.equal(page.jobs.length,1);assert.equal(page.next_cursor,null);
+  // An explicit empty successful manifest is authoritative and can retire jobs.
+  assert.equal((await request('/api/ingest',{run:{...run,seen_job_keys:[]}})).status,200);
+  assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,0);
   assert.equal((await (await request('/api/dashboard?source=backup')).json()).data_mode,'backup');
   await db.prepare('DROP TABLE scraper_runs').run();
   assert.equal((await request('/api/health')).status,503);

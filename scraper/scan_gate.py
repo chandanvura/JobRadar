@@ -6,7 +6,7 @@ from scraper.watchdog import minutes_since_scan
 
 def should_scan(health, event, now=None):
     recoverable_scan = (
-        (health.get("stale") is True or (health.get("latest_run") or {}).get("status") == "degraded")
+        (health.get("stale") is True or (health.get("latest_run") or {}).get("status") in {"degraded", "partial"})
         and health.get("database") is True
         and health.get("ingestion_configured") is True
     )

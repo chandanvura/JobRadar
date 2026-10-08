@@ -52,8 +52,15 @@ async function ingest(request:Request,env:Env){
   if(!payload || typeof payload!=="object" || Array.isArray(payload) || (payload.jobs!==undefined && !Array.isArray(payload.jobs)) || (payload.companies!==undefined && !Array.isArray(payload.companies)) || (payload.run!==undefined && (!payload.run || typeof payload.run!=="object" || Array.isArray(payload.run))))return json({error:"Invalid ingestion payload"},400);
   if((payload.jobs?.length||0)>2000 || (payload.companies?.length||0)>1000 || (Array.isArray(payload.run?.seen_job_keys) && payload.run.seen_job_keys.length>50000))return json({error:"Ingestion payload exceeds supported limits"},413);
   if(payload.jobs?.some(job=>!job || typeof job!=="object" || Array.isArray(job)) || payload.companies?.some(company=>!company || typeof company!=="object" || Array.isArray(company)))return json({error:"Invalid ingestion record"},400);
+  // A missing manifest is not an authoritative empty scan. Reject before any writes.
+  if(payload.run){
+    const {successful_companies:companies,seen_job_keys:keys}=payload.run;
+    if(!Array.isArray(companies)||!Array.isArray(keys)||companies.some(value=>typeof value!=="string"||!value.trim())||keys.some(value=>typeof value!=="string"||!value.trim()))return json({error:"Finalization requires explicit company and job manifests"},400);
+    if(companies.length>1000)return json({error:"Finalization company manifest exceeds supported limits"},413);
+  }
   const incoming=Array.isArray(payload.jobs)?payload.jobs:[];const companyUpdates=Array.isArray(payload.companies)?payload.companies:[];const errors:string[]=[];const validJobs:RecordValue[]=[];
   for(const j of incoming){const ats=textValue(j.ats_provider),external=textValue(j.external_job_id),title=textValue(j.title),company=textValue(j.company);if(!ats||!external||!title||!company||!safeUrl(j.application_url)||!safeUrl(j.career_page_url)||!safeUrl(j.job_url)){errors.push(`${company||"unknown"}/${external||"missing-id"}: invalid required field`);continue}validJobs.push(j)}
+  if(payload.run&&errors.length)return json({error:"Rejected jobs prevent scan finalization",rejected:errors.length,errors:errors.slice(0,20)},400);
   const existence=validJobs.length?await env.DB.batch(validJobs.map(j=>env.DB.prepare("SELECT id FROM jobs WHERE company=? COLLATE NOCASE AND ats_provider=? AND external_job_id=?").bind(textValue(j.company),textValue(j.ats_provider),textValue(j.external_job_id)))):[];
   const newJobs=validJobs.filter((_,i)=>!existence[i]?.results?.length);
   const newExternalIds=newJobs.map(j=>textValue(j.external_job_id));
@@ -82,7 +89,16 @@ async function recordNotification(request:Request,env:Env){
   const recorded=await env.DB.prepare("INSERT INTO notifications (job_id,channel,status,error) VALUES (?,'telegram',?,?) ON CONFLICT(job_id,channel) DO UPDATE SET status=excluded.status,error=excluded.error,sent_at=CURRENT_TIMESTAMP WHERE notifications.status IS NOT excluded.status OR notifications.error IS NOT excluded.error").bind(job.id,status,nullableText(body.error)?.slice(0,300)||null).run();if(status==="sent" && recorded.meta.changes>0)await env.DB.prepare("UPDATE scraper_runs SET notifications_sent=notifications_sent+1 WHERE id=(SELECT MAX(id) FROM scraper_runs)").run();return json({ok:true});
 }
 
-async function health(env:Env){const run=await env.DB.prepare("SELECT finished_at,status,companies_checked,companies_successful,companies_failed,companies_empty,jobs_scanned,candidate_jobs FROM scraper_runs ORDER BY id DESC LIMIT 1").first<RecordValue>();const age=run?.finished_at?(Date.now()-Date.parse(String(run.finished_at)))/3600000:null;const ok=Boolean(env.DB)&&Boolean(env.JOBRADAR_INGEST_SECRET)&&age!==null&&age<5&&numberValue(run?.companies_failed)===0;return json({ok,database:Boolean(env.DB),ingestion_configured:Boolean(env.JOBRADAR_INGEST_SECRET),latest_run:run,run_age_hours:age,stale:age===null||age>=5},ok?200:503)}
+async function health(env:Env){
+  const run=await env.DB.prepare("SELECT finished_at,status,companies_checked,companies_successful,companies_failed,companies_empty,jobs_scanned,candidate_jobs FROM scraper_runs ORDER BY id DESC LIMIT 1").first<RecordValue>();
+  const elapsed=run?.finished_at?(Date.now()-Date.parse(String(run.finished_at)))/3600000:null;
+  const age=elapsed!==null&&Number.isFinite(elapsed)?elapsed:null;
+  const stale=age===null||age<0||age>=5;
+  const pipelineOk=Boolean(env.DB)&&Boolean(env.JOBRADAR_INGEST_SECRET)&&!stale;
+  const scanOk=run?.status==="success"&&numberValue(run?.companies_failed)===0;
+  const ok=pipelineOk&&scanOk;
+  return json({ok,pipeline_ok:pipelineOk,scan_ok:scanOk,database:Boolean(env.DB),ingestion_configured:Boolean(env.JOBRADAR_INGEST_SECRET),latest_run:run,run_age_hours:age,stale},ok?200:503);
+}
 
 const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<Response>{
   const url=new URL(request.url);
