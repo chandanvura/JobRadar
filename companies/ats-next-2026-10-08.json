@@ -1,6 +1,6 @@
 {
   "batch": "ats-next-2026-10-08",
-  "max_assets": 32,
+  "max_assets": 64,
   "companies": [
     "HubSpot",
     "BrowserStack",

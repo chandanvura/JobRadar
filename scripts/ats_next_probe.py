@@ -63,6 +63,7 @@ async def run():
                 if not artifact.endswith('.html'):continue
                 text=(ROOT/artifact).read_text()
                 soup=BeautifulSoup(text,'html.parser')
+                page.setdefault('links',[]).extend(page.get('scripts',[]))
                 found=adapters.discover_ats(soup,page['final_url'])
                 if found and found[0]=='workday':
                     detected.append(found);page.setdefault('links',[]).append(found[2])
@@ -84,6 +85,25 @@ async def run():
                     if not isinstance(jobs,list) or payload.get('errors'):raise ValueError('Official HubSpot jobs backend did not return a usable inventory')
                     result.update(status='PUBLIC_LIST_REQUIRES_DETAIL_VERIFICATION',advertised_total=len(jobs))
                 else:
+                    if name=='Southwest Airlines':
+                        # Read only literal career links from scripts linked by the official root.
+                        published=[]
+                        for source in pages.copy():
+                            artifact=source.get('artifact','')
+                            if not artifact.endswith('.js') or urlsplit(source['url']).hostname!='www.southwest.com':continue
+                            text=(ROOT/artifact).read_text()
+                            links=re.findall(r'https://[^\s\"\'<>\\]+',text)
+                            careers=[url for url in links if urlsplit(url).hostname=='careers.southwestair.com']
+                            source.setdefault('links',[]).extend(careers)
+                            published.extend(careers)
+                        for url in list(dict.fromkeys(published))[:3]:
+                            response=await capture(client,'GET',url)
+                            if response.status_code!=200:continue
+                            soup=BeautifulSoup(response.text,'html.parser')
+                            links=[urljoin(str(response.url),a['href']) for a in soup.select('a[href]')]
+                            found=adapters.discover_ats(soup,str(response.url))
+                            if found and found[0]=='workday':links.append(found[2]);detected.append(found)
+                            pages.append({'url':url,'final_url':str(response.url),'links':links})
                     if not detected:
                         for url,parent in list(dict.fromkeys(job_links))[:2]:
                             response=await capture(client,'GET',url);response.raise_for_status()
@@ -101,7 +121,8 @@ async def run():
                     official_root=manifest['evidence_links'][name][0]
                     chain=chain_to_board(pages,official_root,board)
                     if not chain:raise ValueError('Official root to this exact Workday board link chain is incomplete')
-                    company=Company(name,board,'workday_complete',tenant_site+'|India')
+                    scope=tenant_site+'|India' if name in {'Vanguard','Southwest Airlines'} else tenant_site
+                    company=Company(name,board,'workday_all',scope)
                     jobs,total=await fetch_company_jobs(company)
                     unique=len({job.external_job_id for job in jobs})
                     warning=getattr(jobs,'coverage_warning',None)
