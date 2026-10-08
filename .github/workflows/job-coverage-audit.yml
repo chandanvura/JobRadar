@@ -1,0 +1,40 @@
+name: Read-only job coverage audit
+on:
+  push:
+    branches: ['coverage-audit/**']
+    paths: ['scraper/**', 'config/**', 'scripts/audit_job_coverage.py', '.github/workflows/job-coverage-audit.yml']
+  workflow_dispatch:
+    inputs:
+      companies:
+        description: 'JSON array of 1–20 enabled employer names'
+        default: '["HPE","IBM","Microsoft","Cisco","Accenture","SAP"]'
+        required: true
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Preserve production classifier for the comparison
+        run: |
+          mkdir -p artifacts
+          git show 1b10baf978eb05b97678c23fddff0ecf1c52baa3:scraper/normalization.py > artifacts/baseline-normalization.py
+      - name: Compare real employer details without publishing or sending notifications
+        run: python -m scripts.audit_job_coverage
+        env:
+          JOBRADAR_BASELINE_FILE: artifacts/baseline-normalization.py
+          JOBRADAR_AUDIT_COMPANIES: ${{ inputs.companies || '["HPE","IBM","Microsoft","Cisco","Accenture","SAP"]' }}
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: job-coverage-audit
+          path: artifacts/job-coverage
+          retention-days: 7

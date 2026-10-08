@@ -57,8 +57,7 @@ test('internship product area is isolated and uses explicit board filters',async
 test('unknown experience jobs have a separate review area and no alert eligibility',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
  assert.match(source,/\["Needs Review", AlertTriangle\]/);
- assert.match(source,/active === "Needs Review" && \(isInternship\(j\)/);
- assert.match(source,/"Posting date not verified within 24 hours"\]\.includes\(j\.eligibility_reason\)/);
+ assert.match(source,/matchesCareerView\(j, active/);
  assert.match(source,/never trigger automatic alerts/);
 });
 
@@ -121,8 +120,8 @@ test('buyer-facing experience leads with the trust promise and hides operations'
 });
 test('simple discovery keeps advanced controls progressive and default jobs actionable',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
- assert.match(source,/const reviewView = \["Needs Review", "Internships"\]\.includes\(active\)/);
- assert.match(source,/\["Dashboard", "Recommended"\]\.includes\(active\) && !j\.is_eligible/);
+ assert.match(source,/const reviewView = active === "Needs Review"/);
+ assert.match(source,/matchesCareerView\(j, active/);
  assert.match(source,/aria-expanded=\{showExplore\}/);
  assert.match(source,/Browse by role/);
  assert.match(source,/aria-expanded=\{showMoreFilters\}/);

@@ -1,4 +1,7 @@
 "use client";
+import { createJobSearchIndex } from "@/lib/job-search";
+import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
+import { defaultFreshness, matchesCareerView, verifiedView } from "@/lib/job-view";
 import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { hiringManagerDraft } from "@/lib/job-search-strategy";
@@ -310,14 +313,7 @@ const defaultPreferences: SearchPreferences = {
   locations: ["Bengaluru", "Hyderabad"],
 };
 const TARGET_CITIES = ["Bengaluru", "Hyderabad"];
-const DEFAULT_JOB_TITLES = [
-  "Software Engineer", "Associate Software Engineer", "Graduate Engineer Trainee",
-  "Java Developer", "Backend Engineer", "Full Stack Developer", "Python Developer",
-  "Golang Developer", "Data Engineer", "DevOps Engineer", "Site Reliability Engineer",
-  "Platform Engineer", "Cloud Engineer", "Infrastructure Engineer", "Production Engineer",
-  "Systems Engineer", "Linux Engineer", "Build and Release Engineer", "SDET",
-  "QA Automation Engineer", "Security Engineer", "Technical Support Engineer",
-];
+const DEFAULT_JOB_TITLES = SUGGESTED_JOB_TITLES;
 const OFFICIAL_ATS_DOMAINS = "site:myworkdayjobs.com OR site:greenhouse.io OR site:lever.co OR site:icims.com OR site:jobs.jobvite.com OR site:ashbyhq.com OR site:smartrecruiters.com";
 const AGGREGATOR_DOMAINS = [
   ["LinkedIn", "site:linkedin.com/jobs/view"],
@@ -382,7 +378,7 @@ function DashboardContent() {
   const [active, setActive] = useState<string>(initialView),
     [location, setLocation] = useState("All cities"),
     [freshness, setFreshness] = useState(() =>
-      ["Dashboard", "Recommended", "Ultra Fresh"].includes(initialView()) ? "24 hours" : "Any date"
+      defaultFreshness(initialView())
     ),
     [role, setRole] = useState("All roles"),
     [ats, setAts] = useState("All ATS"),
@@ -469,7 +465,7 @@ function DashboardContent() {
       const found = labelBySlug.get(window.location.hash.slice(1));
       if (found) {
         setActive(found);
-        setFreshness(["Dashboard", "Recommended", "Ultra Fresh"].includes(found) ? "24 hours" : "Any date");
+        setFreshness(defaultFreshness(found));
       }
     };
     window.addEventListener("hashchange", syncHash);
@@ -544,7 +540,7 @@ function DashboardContent() {
   }, []);
   const navigate = (label: string) => {
     setActive(label);
-    setFreshness(["Dashboard", "Recommended", "Ultra Fresh"].includes(label) ? "24 hours" : "Any date");
+    setFreshness(defaultFreshness(label));
     setMobile(false);
     history.pushState(null, "", `#${slug(label)}`);
     window.dispatchEvent(new HashChangeEvent("hashchange"));
@@ -598,6 +594,7 @@ function DashboardContent() {
   );
   const [rankingNow, setRankingNow] = useState(() => Date.now());
   useEffect(() => {setRankingNow(Date.now());}, [data]);
+  useEffect(() => { const timer=window.setInterval(() => setRankingNow(Date.now()), 60000); return () => window.clearInterval(timer); }, []);
   const ranking = useMemo(() => {
     const now = rankingNow;
     const feedback = feedbackByFamily(Object.values(tracking));
@@ -607,18 +604,18 @@ function DashboardContent() {
       return [trackingKey(job), {match, priority: opportunity.score + (feedback.get(job.role_category) || 0)}];
     }));
   }, [mergedJobs, preferences, tracking, rankingNow]);
+  const searchIndex = useMemo(() => createJobSearchIndex(mergedJobs), [mergedJobs]);
+  const searchScores = useMemo(() => searchIndex.search(deferredQuery), [searchIndex, deferredQuery]);
   const filtered = useMemo(() => {
-    const reviewView = ["Needs Review", "Internships"].includes(active);
+    const reviewView = active === "Needs Review";
     const result = mergedJobs.filter((j) => {
-      const track = jobTracking(j),
-        q =
-          `${j.title} ${j.company} ${j.skills} ${j.role_category} ${j.ats_provider}`.toLowerCase(),
-        match = ranking.get(trackingKey(j))!.match;
-      if (deferredQuery && !q.includes(deferredQuery.toLowerCase())) return false;
+      const track = jobTracking(j), match = ranking.get(trackingKey(j))!.match;
+      if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, postingStillCurrent(j))) return false;
+      if (deferredQuery && !searchScores.has(j)) return false;
       if (active === "Internships" && !isInternship(j)) return false;
       if (active === "Internships" && !technicalInternshipRole(j)) return false;
       if (active === "Fresher Roles" && !fresherRole(j)) return false;
-      if (active === "Needs Review" && (isInternship(j) || /\b(?:senior|staff|principal|lead|manager|experienced)\b/i.test(j.title) || !["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason))) return false;
+
       if (
         active !== "Internships" &&
         !["Saved", "Applications"].includes(active) &&
@@ -646,8 +643,7 @@ function DashboardContent() {
           !match.skillMatch
         )
           return false;
-        if (!["All Jobs", "Internships"].includes(active) && match.experienceMatch === false) return false;
-        if (match.experienceMatch === null && !reviewView && !["All Jobs", "Latest Jobs", "DevOps & Cloud", "Software Engineering", "Java / Backend"].includes(active)) return false;
+
       }
       if (
         !["Saved", "Applications"].includes(active) &&
@@ -665,14 +661,13 @@ function DashboardContent() {
         !reviewView &&
         active !== "Saved" &&
         active !== "Applications" &&
-        ["Dashboard", "Recommended", "Ultra Fresh"].includes(active) &&
+        verifiedView(active) &&
         !postingStillCurrent(j)
       )
         return false;
       if (active !== "Saved" && active !== "Applications" && !j.is_active)
         return false;
-      if (["Dashboard", "Recommended"].includes(active) && !j.is_eligible)
-        return false;
+
       if (active === "Ultra Fresh") {
         const age = freshnessAge(j);
         if (age === null || age >= 3 || j.posted_precision === "day")
@@ -707,7 +702,7 @@ function DashboardContent() {
         const age = freshnessAge(j);
         if (
           freshness === "24 hours" &&
-          !["Dashboard", "Recommended", "Ultra Fresh"].includes(active) &&
+          !verifiedView(active) &&
           !postingStillCurrent(j)
         ) return false;
         if (
@@ -724,7 +719,9 @@ function DashboardContent() {
       return true;
     });
     const compare = (a: ApiJob, b: ApiJob) =>
-      sort === "Newest posting"
+      deferredQuery && (searchScores.get(b) || 0) !== (searchScores.get(a) || 0)
+        ? (searchScores.get(b) || 0) - (searchScores.get(a) || 0)
+        : sort === "Newest posting"
         ? (freshnessAge(a) ?? 999) - (freshnessAge(b) ?? 999)
         : sort === "Recently discovered" || (active === "Latest Jobs" && sort === "Best match")
           ? new Date(b.first_seen_at).getTime() -
@@ -737,13 +734,14 @@ function DashboardContent() {
     result.sort(compare);
     // Saved/application views retain each original source and tracking identity.
     const unique = ["Saved", "Applications"].includes(active) ? result : groupDuplicateJobs(result).map(group => group.job).sort(compare);
-    const ordered = sort === "Best match" && active !== "Latest Jobs"
+    const ordered = !deferredQuery && sort === "Best match" && active !== "Latest Jobs"
       ? diversifyFeed(unique, job => ranking.get(trackingKey(job))!.priority) : unique;
-    return active === "Dashboard" ? ordered.slice(0, 20) : ordered;
+    return ordered;
   }, [
     mergedJobs,
     jobTracking,
     deferredQuery,
+    searchScores,
     location,
     ats,
     role,
@@ -779,7 +777,7 @@ function DashboardContent() {
         (location === "All cities" || j.normalized_location.includes(location)) &&
         (role === "All roles" || j.role_category === role) &&
         (ats === "All ATS" || j.ats_provider === ats) &&
-        (!deferredQuery || `${j.title} ${j.company} ${j.skills} ${j.role_category} ${j.ats_provider}`.toLowerCase().includes(deferredQuery.toLowerCase())) &&
+        (!deferredQuery || searchScores.has(j)) &&
         (matchMode !== "Exact" || ((!preferences.titles.length || personalMatch(j, preferences).titleMatch) &&
           (!preferences.skills.length || personalMatch(j, preferences).skillMatch))),
     ).slice(0, 20),
@@ -833,7 +831,7 @@ function DashboardContent() {
     setLocation(
       preferences.locations.length === 1 ? preferences.locations[0] : "All cities",
     );
-    setFreshness(["Dashboard", "Recommended", "Ultra Fresh"].includes(active) ? "24 hours" : "Any date");
+    setFreshness(defaultFreshness(active));
     setRole("All roles");
     setAts("All ATS");
     setSort("Best match");
@@ -940,11 +938,11 @@ function DashboardContent() {
           >
             <Menu />
           </button>
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[.18em] text-muted-foreground">
               Your career workspace
             </p>
-            <h1 key={active} className="radar-view-title text-xl font-black">{active}</h1>
+            <h1 key={active} className="radar-view-title truncate text-xl font-black">{active}</h1>
           </div>
           <div className="ml-auto hidden w-80 md:block">
             <SearchBox
@@ -953,7 +951,7 @@ function DashboardContent() {
               placeholder={
                 active === "Companies"
                   ? "Search companies or ATS..."
-                  : "Search jobs, skills, companies..."
+                  : "Title, company, skills or requirements…"
               }
             />
           </div>
@@ -977,11 +975,11 @@ function DashboardContent() {
               placeholder={
                 active === "Companies"
                   ? "Search companies or ATS..."
-                  : "Search jobs, skills, companies..."
+                  : "Title, company, skills or requirements…"
               }
             />
           </div>
-          {showWelcome && (
+          {showWelcome && showJobs && (
             <WelcomeCard
               setup={() => dismissWelcome(true)}
               dismiss={() => dismissWelcome(false)}
@@ -1024,7 +1022,7 @@ function DashboardContent() {
                         ? "Checking live jobs…"
                         : ["Dashboard", "Recommended"].includes(active) && !filtered.length && reviewPreview.length
                           ? `${reviewPreview.length} roles to review`
-                          : `${filtered.length} ${active === "Internships" ? "internships" : "jobs"} in this view`}
+                          : `${filtered.length} ${active === "Internships" ? (filtered.length === 1 ? "internship" : "internships") : (filtered.length === 1 ? "job" : "jobs")} in this view`}
                     </h2>
                     <p className="mt-2 text-sm text-white/80">
                       {preferences.locations.join(" + ")} ·{" "}
@@ -1053,11 +1051,11 @@ function DashboardContent() {
                   value={location}
                   setValue={setLocation}
                 />
-                <Pills
+                {active !== "Needs Review" && <Pills
                   items={["Any date", "3 hours", "6 hours", "24 hours"]}
                   value={freshness}
                   setValue={setFreshness}
-                />
+                />}
                 <Button
                   variant="outline"
                   aria-expanded={showMoreFilters}
@@ -1080,7 +1078,7 @@ function DashboardContent() {
                   Clear
                 </button>
                 <span className="ml-auto text-xs font-bold text-muted-foreground">
-                  {visibleJobs.length} results
+                  {visibleJobs.length} matches / {currentJobs.filter(j => j.is_active).length} active listings
                 </span>
                 {showMoreFilters && (
                   <div className="flex w-full flex-wrap items-center gap-3 border-t border-border px-2 pt-3">
@@ -1096,15 +1094,7 @@ function DashboardContent() {
                       className="h-10 rounded-xl border bg-card px-3 text-xs font-bold"
                     >
                       <option>All roles</option>
-                      <option>DevOps</option>
-                      <option>Cloud</option>
-                      <option>SRE</option>
-                      <option>Platform</option>
-                      <option>Infrastructure / Operations</option>
-                      <option>Software Engineering</option>
-                      <option>Java / Backend</option>
-                      <option>Quality Engineering</option>
-                      <option>Technical Support</option>
+                      {ROLE_FAMILIES.map(family => <option key={family}>{family}</option>)}
                     </select>
                     <select
                       aria-label="ATS filter"
@@ -1156,6 +1146,22 @@ function DashboardContent() {
                   Sorted by when JobRadar first discovered each active listing. Employer posting dates may be older or unavailable; check the date shown on each card.
                 </section>
               )}
+              {active === "Dashboard" && (
+                <section className="radar-coverage mb-5 rounded-2xl border border-border bg-card p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-sm font-semibold">Your {preferences.experienceMin}–{preferences.experienceMax} YOE search</h3>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{filtered.length} matching listings from {data?.companies.length || 0} employer sources. Older postings and unknown experience stay visible for review. Freshness is a filter, not a reason to lose an active opening.</p>
+                    </div>
+                    <Button variant="outline" onClick={() => navigate("All Jobs")} className="rounded-xl">Browse full catalogue <ExternalLink size={14} /></Button>
+                  </div>
+                </section>
+              )}
+              {active === "Recommended" && (
+                <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-4 text-sm text-info">
+                  This view only shows confirmed matches posted within 24 hours. <button className="font-bold underline" onClick={() => navigate("Dashboard")}>Browse all current experience-matched leads</button> to include older postings and requirements to verify.
+                </section>
+              )}
               {active === "All Jobs" && (
                 <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
                   All active target-city listings, including roles outside your experience range. Review each card’s eligibility reason before applying.
@@ -1165,7 +1171,7 @@ function DashboardContent() {
                 <section className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5">
                   <h3 className="font-black text-warning">Date or experience needs verification</h3>
                   <p className="mt-1 text-sm leading-6 text-warning/80">
-                    These active postings lack a verified 24-hour date or an experience range. They stay separate from confirmed matches and never trigger automatic alerts. Check the official description before applying.
+                    These active postings need a date, experience or eligibility check. They stay separate from confirmed matches and never trigger automatic alerts. Check the official description before applying.
                   </p>
                 </section>
               )}
@@ -1186,6 +1192,7 @@ function DashboardContent() {
                   </p>
                 </section>
               )}
+              {!visibleJobs.length && currentJobs.length > 0 && <section className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 text-sm"><p>There are {currentJobs.filter(j => j.is_active).length} active listings in the catalogue. Your current search or filters returned no matches.</p><Button variant="outline" onClick={() => { clearQuickFilters(); navigate("All Jobs"); }}>Reset filters and browse all</Button></section>}
               <JobList
                 now={rankingNow}
                 jobs={visibleJobs}
@@ -1482,6 +1489,7 @@ function SearchBox({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className="h-10 rounded-xl bg-muted pl-10"
+        aria-label={placeholder.includes("companies or ATS") ? "Search companies" : "Search job catalogue"}
         placeholder={placeholder}
       />
     </div>

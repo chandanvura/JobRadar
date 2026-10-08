@@ -1,3 +1,4 @@
+import { classifyRoleTitle } from "./role-taxonomy.ts";
 import { RANKING_CONFIG as config } from "./ranking-config.ts";
 export type MatchJob = {
   title: string; role_category: string; skills: string; experience_min: number | null;
@@ -15,15 +16,8 @@ const aliases: Record<string, string> = {'k8s':'kubernetes', 'amazon web service
 export const normalizeSkill = (value: string) => aliases[value.toLowerCase().trim()] || value.toLowerCase().trim();
 const parsedSkills = (value: string) => {try {const v: unknown = JSON.parse(value); return Array.isArray(v) ? [...new Set(v.filter((x): x is string => typeof x === 'string').map(normalizeSkill))] : [];} catch {return [];}};
 const overlap = (a: string[], b: string[]) => a.filter(x => b.includes(x));
-export function roleFamily(title: string) {
-  if (/\b(dev\s*ops|devsecops|build.{0,5}release)\b/i.test(title)) return 'DevOps';
-  if (/\b(sre|site reliability|production engineer)\b/i.test(title)) return 'SRE';
-  if (/\bcloud\b/i.test(title)) return 'Cloud';
-  if (/\bplatform\b/i.test(title)) return 'Platform';
-  if (/\b(java|backend|back.end|spring)\b/i.test(title)) return 'Java / Backend';
-  if (/\b(software|sde|swe|full.stack|frontend)\b/i.test(title)) return 'Software Engineering';
-  return 'Other';
-}
+export function roleFamily(title: string) { return classifyRoleTitle(title); }
+
 export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => job.experience_min === null && job.experience_max === null ? null : (job.experience_min ?? 0) <= p.experienceMax && (job.experience_max ?? Infinity) >= p.experienceMin;
 // Relevance is independent of source, age and alert eligibility. Preferences are
 // a desired experience range, not a claim about the candidate's actual experience.
@@ -67,7 +61,7 @@ export function opportunityPriority(job: MatchJob, p: MatchPreferences, now = Da
   const sourceQuality = config.sourceQuality[job.ats_provider || ''] ?? config.defaultSourceQuality;
   const jobQuality = (job.title ? 25 : 0) + (job.normalized_location ? 25 : 0) + (job.application_url?.startsWith('https://') ? 25 : 0) + (job.experience_min !== null ? 25 : 0);
   const applicationEase = job.application_url?.startsWith('https://') ? 100 : 0;
-  const score = job.is_active === 0 ? 0 : Math.round(clamp(match.score * config.opportunity.match + freshness.score * config.opportunity.freshness + sourceQuality * config.opportunity.source + jobQuality * config.opportunity.quality + applicationEase * config.opportunity.ease - (/\b(staff|principal|lead|manager|director|architect)\b/i.test(job.title) ? config.leadershipTitlePenalty : 0)));
+  const score = job.is_active === 0 ? 0 : Math.round(clamp(match.score * config.opportunity.match + freshness.score * config.opportunity.freshness + sourceQuality * config.opportunity.source + jobQuality * config.opportunity.quality + applicationEase * config.opportunity.ease - (/\b(staff|principal|lead|manager|director|architect)\b/i.test(job.title.replace(/member of technical staff/gi,"technical contributor")) ? config.leadershipTitlePenalty : 0)));
   return {score, freshness, sourceQuality, jobQuality};
 }
 // Bounded category feedback cannot overwhelm relevance; rejected applications

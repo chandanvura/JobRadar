@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "roles": [
+    {
+      "family": "DevOps",
+      "patterns": [
+        "\\bdev\\s*(?:sec\\s*)?ops\\b",
+        "\\b(?:build (?:and )?release|release|deployment|configuration management) (?:engineer|developer|specialist)\\b"
+      ],
+      "titles": [
+        "DevOps Engineer",
+        "DevSecOps Engineer",
+        "Build and Release Engineer"
+      ]
+    },
+    {
+      "family": "SRE",
+      "patterns": [
+        "\\b(?:site reliability|sre|production engineer|reliability software)\\b"
+      ],
+      "titles": [
+        "Site Reliability Engineer",
+        "Production Engineer"
+      ]
+    },
+    {
+      "family": "Security Engineering",
+      "patterns": [
+        "\\b(?:cyber\\s*security|information security|application security|cloud security|security|soc|penetration testing|vulnerability) (?:engineer|developer|analyst|specialist|intern)\\b"
+      ],
+      "titles": [
+        "Security Engineer",
+        "SOC Analyst",
+        "Cybersecurity Analyst"
+      ]
+    },
+    {
+      "family": "Cloud",
+      "patterns": [
+        "\\b(?:cloud|cloudops)\\b.{0,45}\\b(?:engineer(?:ing)?|developer|associate|specialist|consultant|analyst|intern|operations)\\b",
+        "\\bcloudops\\b"
+      ],
+      "titles": [
+        "Cloud Developer",
+        "Cloud Engineer",
+        "Cloud Support Associate",
+        "Cloud Developer Platform",
+        "AI/ML Cloud Developer"
+      ]
+    },
+    {
+      "family": "Platform",
+      "patterns": [
+        "\\bplatform (?:software |development )?(?:engineer|developer|intern)\\b"
+      ],
+      "titles": [
+        "Platform Developer",
+        "Platform Engineer"
+      ]
+    },
+    {
+      "family": "Data / Business Analysis",
+      "patterns": [
+        "\\b(?:data|business|systems?|business systems?|business intelligence|bi|reporting|analytics|technology) analyst\\b",
+        "\\b(?:data analytics|business analytics)\\b.{0,15}\\b(?:associate|intern|specialist)\\b"
+      ],
+      "titles": [
+        "Data Analyst",
+        "Business Analyst",
+        "Systems Analyst",
+        "BI Analyst"
+      ]
+    },
+    {
+      "family": "Infrastructure / Operations",
+      "patterns": [
+        "\\b(?:infrastructure|linux|unix|network|systems?|storage|database|datacenter|data center|it operations) (?:software |automation |operations |support |cloud )?(?:engineer|developer|administrator|analyst|intern)\\b",
+        "\\bsoftware engineer\\s*(?:infrastructure|systems?)\\b",
+        "\\b(?:dba|network operations|noc analyst|it administrator|sysadmin)\\b"
+      ],
+      "titles": [
+        "Systems Engineer",
+        "Network Engineer",
+        "Database Administrator",
+        "Infrastructure Automation Engineer",
+        "Linux Administrator"
+      ]
+    },
+    {
+      "family": "Java / Backend",
+      "patterns": [
+        "\\b(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|dotnet|c#|ruby|php) (?:full[ -]?stack |back[ -]?end |software |application )?(?:developer|engineer|intern)\\b",
+        "\\bback[ -]?end (?:software |application )?(?:developer|engineer|intern)\\b",
+        "\\bsoftware engineer\\s*(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|back[ -]?end)\\b",
+        "(?<!\\w)\\.net (?:software |full stack )?(?:developer|engineer|intern)\\b"
+      ],
+      "titles": [
+        "Java Developer",
+        "Backend Engineer",
+        "Python Developer",
+        "Golang Developer",
+        "Node.js Developer",
+        ".NET Developer",
+        "C# Developer"
+      ]
+    },
+    {
+      "family": "AI / Data Science",
+      "patterns": [
+        "\\b(?:ai|ml|ai ml|aiml|machine learning|deep learning|generative ai|genai|nlp|computer vision) (?:software |research )?(?:engineer|developer|scientist|researcher|intern)\\b",
+        "\\b(?:data|applied|research) scientist\\b"
+      ],
+      "titles": [
+        "Machine Learning Engineer",
+        "Data Scientist",
+        "AI Engineer",
+        "Applied Scientist"
+      ]
+    },
+    {
+      "family": "Data Engineering",
+      "patterns": [
+        "\\b(?:data|analytics|etl|big data|data platform|data warehouse|database|business intelligence|bi) (?:engineer|developer|intern)\\b"
+      ],
+      "titles": [
+        "Data Engineer",
+        "ETL Developer",
+        "BI Developer",
+        "Analytics Engineer"
+      ]
+    },
+    {
+      "family": "Embedded / Hardware",
+      "patterns": [
+        "\\b(?:embedded|firmware|hardware|vlsi|asic|rtl|fpga|silicon|physical design|digital design|design verification) (?:systems? |software |design |validation )?(?:engineer|developer|intern)\\b"
+      ],
+      "titles": [
+        "Embedded Software Engineer",
+        "Firmware Developer",
+        "Design Verification Engineer",
+        "RTL Design Engineer"
+      ]
+    },
+    {
+      "family": "Quality Engineering",
+      "patterns": [
+        "\\b(?:qa|quality assurance|quality|software test|test automation|automation test|software quality|validation|verification) (?:automation |software )?(?:engineer|developer|associate|analyst|intern)\\b",
+        "\\b(?:sdet|software development engineer in test|software test(?:er|ing)|test engineer|automation tester)\\b"
+      ],
+      "titles": [
+        "SDET",
+        "QA Automation Engineer",
+        "Test Engineer",
+        "Software Tester",
+        "Software Development Engineer in Test"
+      ]
+    },
+    {
+      "family": "Technical Support",
+      "patterns": [
+        "\\b(?:application|production|technical|product|software|it|desktop|helpdesk|service desk) support (?:engineer|associate|analyst|specialist|intern)\\b",
+        "\\b(?:support engineer|service desk analyst|help desk analyst|technical support)\\b"
+      ],
+      "titles": [
+        "Technical Support Engineer",
+        "Application Support Analyst",
+        "Service Desk Analyst"
+      ]
+    },
+    {
+      "family": "Technical Consulting",
+      "patterns": [
+        "\\b(?:technical|technology|it|implementation|integration|erp|sap|salesforce|servicenow|oracle|application|package|packaged application) (?:associate |software )?(?:consultant|developer|engineer|specialist|analyst)\\b"
+      ],
+      "titles": [
+        "Associate Technical Consultant",
+        "SAP Developer",
+        "Salesforce Developer",
+        "ServiceNow Developer",
+        "Integration Engineer"
+      ]
+    },
+    {
+      "family": "Software Engineering",
+      "patterns": [
+        "\\b(?:software|applications?|front[ -]?end|full[ -]?stack|mobile|android|ios|web|ui|ux|react|angular|javascript|typescript|c\\+\\+|c) (?:development |application |systems? )?(?:engineer(?:ing)?|developer|programmer|intern)\\b",
+        "\\b(?:sde|swe|sw engineer|programmer analyst|member of technical staff|technical staff member)\\b",
+        "\\b(?:graduate )?engineer trainee\\b",
+        "^get(?:\\s|$)"
+      ],
+      "titles": [
+        "Software Engineer",
+        "Associate Software Engineer",
+        "Graduate Engineer Trainee",
+        "Software Development Engineer",
+        "Programmer Analyst",
+        "Member of Technical Staff",
+        "Frontend Developer",
+        "Full Stack Developer",
+        "React Developer",
+        "C++ Developer",
+        "Android Developer"
+      ]
+    }
+  ]
+}

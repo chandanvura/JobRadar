@@ -40,7 +40,7 @@ A justified discovery repair is implemented in `scripts/ats_deep.py`: parse modu
 
 `companies.csv` has no changes in this review. Coverage stays unresolved until complete feed and focused production verification pass. The static provider comparison is `ats-detective/career-ops-provider-comparison.json`; flags are triage hints, not claims of supported employers.
 
-Reproduce in GitHub Actions with `.github/workflows/career-ops-review.yml`, using `companies/career-ops-review-2026-10-07.json`. All employer collection uses standard Python HTTP; no AI API, browser, proxy or continuous server is required.
+Reproduce in GitHub Actions with `docs/archive/workflows/career-ops-review.yml`, using `companies/career-ops-review-2026-10-07.json`. All employer collection uses standard Python HTTP; no AI API, browser, proxy or continuous server is required.
 
 The repaired capture passed in https://github.com/chandanvura/JobRadar/actions/runs/37584678951. IBM: 47/48 requests returned 200; Dassault: 67/67; Infineon: 57/57; Siemens: 22/22; Schneider: 17/18; ASML: 16/16; SAS: 34/34; Deutsche Bank: 16/16. Counts include public assets and navigation, not job listings. Public response hashes and linked-source provenance are preserved in `ats-detective/career-ops-evidence-2026-10-07.json`. Raw HTML/JS remains in the seven-day Actions artifact.
 
