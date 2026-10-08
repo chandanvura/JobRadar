@@ -20,7 +20,7 @@ jobs:
       - run: python -m scripts.ats_deep --manifest companies/ats-next-2026-10-08.json --output artifacts/next-evidence
         env:
           JOBRADAR_DOMAIN_CONCURRENCY: '1'
-      - run: python -m scripts.ats_next_probe
+      - run: python -m scripts.ats_next_probe --verify BrowserStack Remitly Vanguard
         env:
           JOBRADAR_DOMAIN_CONCURRENCY: '1'
       - uses: actions/upload-artifact@v7

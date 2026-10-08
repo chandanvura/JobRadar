@@ -13,3 +13,14 @@ def test_unrelated_or_unlinked_board_does_not_pass_and_cycles_terminate():
            {'url':'https://official.test/careers','links':['https://official.test/']},
            {'url':'https://jobs.wd1.myworkdayjobs.com/External','links':[]}]
     assert chain_to_board(pages,'https://official.test/','https://jobs.wd1.myworkdayjobs.com/External') is None
+
+
+def test_release_gate_requires_every_selected_employer_to_be_complete():
+    import pytest
+    from scripts.ats_next_probe import verify_results
+    results = [{'company': 'Verified', 'status': 'COMPLETE_ACTIONS_NOT_PRODUCTION'},
+               {'company': 'Blocked', 'status': 'UNRESOLVED'}]
+    verify_results(results, ['Verified'])
+    for selected in (['Blocked'], ['Missing'], ['Verified', 'Blocked']):
+        with pytest.raises(ValueError, match='remain unresolved'):
+            verify_results(results, selected)

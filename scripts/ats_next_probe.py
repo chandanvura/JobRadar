@@ -1,4 +1,5 @@
 """Read-only Actions validation from captured official HTML; no guessed boards."""
+import argparse
 import asyncio
 import hashlib
 import json
@@ -40,7 +41,15 @@ def chain_to_board(pages, root_url, board_url):
     return None
 
 
-async def run():
+def verify_results(results, required):
+    """Fail release validation for any selected employer without a complete feed."""
+    by_name = {result['company']: result for result in results}
+    failed = [name for name in required if by_name.get(name, {}).get('status') != 'COMPLETE_ACTIONS_NOT_PRODUCTION']
+    if failed:
+        raise ValueError('Selected feeds remain unresolved: ' + ', '.join(failed))
+
+
+async def run(required=()):
     OUT.mkdir(parents=True,exist_ok=True)
     evidence=json.loads((ROOT/'evidence.json').read_text())
     manifest=json.loads(Path('companies/ats-next-2026-10-08.json').read_text())
@@ -137,6 +146,10 @@ async def run():
         result['responses']=records;results.append(result)
         print(json.dumps({key:value for key,value in result.items() if key!='responses'}),flush=True)
     (OUT/'evidence.json').write_text(json.dumps(results,indent=2))
+    verify_results(results, required)
 
 
-if __name__=='__main__':asyncio.run(run())
+if __name__=='__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--verify', nargs='+', default=[], help='Employer names required to pass the release gate')
+    asyncio.run(run(parser.parse_args().verify))
