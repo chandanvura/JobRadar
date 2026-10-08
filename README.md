@@ -137,7 +137,7 @@ The reliability path uses deterministic checks and retries. Free hosted AI servi
 
 ## Cost protection
 
-The system avoids paid APIs, proxies, browsers, and continuously running servers. D1 ingestion uses conditional upserts: unchanged companies and jobs cause zero row writes, while a compact final manifest deactivates only jobs actually missing from a successful scan. Code pushes deploy safely but never start a full discovery scan automatically. Monitor Actions duration and Cloudflare requests/database usage while expanding the company registry.
+The system avoids paid APIs, proxies, browsers, and continuously running servers. D1 ingestion uses conditional upserts: unchanged job records cause zero row writes; company check timestamps refresh on each scan, while a compact final manifest deactivates only jobs actually missing from a successful scan. Code pushes deploy safely but never start a full discovery scan automatically. Monitor Actions duration and Cloudflare requests/database usage while expanding the company registry.
 
 ### Free D1 outage fallback
 

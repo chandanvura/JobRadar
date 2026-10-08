@@ -30,7 +30,7 @@ def test_identity_and_mutating_total():
     with pytest.raises(ValueError):detail_record(dict(row(1),client_code='other',description='Requirements'),row(1),'employer')
 
 
-@pytest.mark.parametrize('failure', [None,'duplicate_page','changed_total','missing_detail','changed_first','wrong_detail','missing_requirements'])
+@pytest.mark.parametrize('failure', [None,'duplicate_page','changed_total','missing_detail','changed_first','changed_publication','wrong_detail','missing_requirements'])
 def test_complete_pages_all_details_and_snapshot(monkeypatch,failure):
     calls=[];detail_ids=[]
     async def request(client,method,url,**kwargs):
@@ -45,7 +45,10 @@ def test_complete_pages_all_details_and_snapshot(monkeypatch,failure):
             if failure=='duplicate_page' and page==2:ids=[1]
             if failure=='changed_first' and len(calls)==3:ids[-1]=99
             total=22 if failure=='changed_total' and page==2 else 21
-            return httpx.Response(200,json=dict(count=total,totalCount=total,jobs=[{'data':row(i)} for i in ids]),request=httpx.Request(method,url))
+            records=[{'data':row(i)} for i in ids]
+            if failure=='changed_publication' and len(calls)==3:
+                records[0]['data']['posted_date']='2026-10-08T12:00:00Z'
+            return httpx.Response(200,json=dict(count=total,totalCount=total,jobs=records),request=httpx.Request(method,url))
         i=int(url.split('/')[-2]);detail_ids.append(i)
         payload=dict(row(i),client_code='employer',full_location='Bengaluru, India',description='<p>Java developer requirements</p>',additional_locations=[dict(city='Hyderabad',country='India')],create_date='2026-01-01')
         if failure=='wrong_detail':payload['req_id']='Other'
@@ -106,3 +109,21 @@ def test_country_scope_uses_published_location_countries_and_rejects_absent_coun
     assert captured[0].get('country') is None and all(p.get('country')=='India' for p in captured[1:])
     published='United States'
     with pytest.raises(ValueError,match='country facet'):asyncio.run(JibeCareerAdapter().fetch_jobs(c))
+
+
+def test_import_metadata_serializer_change_is_not_a_job_snapshot_change(monkeypatch):
+    requests=0
+    async def request(client,method,url,**kwargs):
+        nonlocal requests
+        req=httpx.Request(method,url)
+        if url.endswith('/careers-home/jobs'):
+            return httpx.Response(200,text='<script>window._jibe = {"cid":"employer"};</script><script src="https://app.jibecdn.com/prod/search/v/main.js"></script>',request=req)
+        if 'jibecdn' in url:return httpx.Response(200,text='this.http.get("/api/jobs" searchJobBySlug',request=req)
+        if url.endswith('/api/jobs'):
+            requests+=1
+            data=dict(row(1),meta_data={'client_code':'employer','last_mod':'2026-10-07T09:45:02+0000' if requests==1 else '2026-10-07T09:45:02.870+00:00'})
+            return httpx.Response(200,json={'count':1,'totalCount':1,'jobs':[{'data':data}]},request=req)
+        return httpx.Response(200,json=dict(row(1),client_code='employer',description='Actual requirements',full_location='Bengaluru, India',additional_locations=[{'city':'Hyderabad','country':'India'}]),request=req)
+    monkeypatch.setattr(adapters,'request',request)
+    jobs,count=asyncio.run(JibeCareerAdapter().fetch_jobs(Company('Employer','https://official.test/careers-home/jobs','jibe','employer')))
+    assert count==len(jobs)==1 and requests==2

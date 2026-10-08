@@ -34,7 +34,7 @@ def test_eightfold_current_search_pages_details_and_original_dates(monkeypatch, 
     monkeypatch.setattr(adapters,'client',lambda **kwargs:Client())
     monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',cached)
     jobs,count=asyncio.run(EightfoldCareerAdapter().fetch_jobs(Company('Example','https://example.eightfold.ai/careers','eightfold','example.eightfold.ai|example.com')))
-    assert calls==[0,1] and count==2 and len(jobs)==2
+    assert calls==[0,1,0] and count==2 and len(jobs)==2
     assert jobs[0].posted_at==expected
     assert jobs[0].description=='Java; 0-2 years'
     assert jobs[0].job_url.endswith('?domain=example.com')

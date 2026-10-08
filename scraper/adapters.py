@@ -744,3 +744,5 @@ from .keka import KekaCareerAdapter
 ADAPTERS['keka'] = KekaCareerAdapter()
 
 ADAPTERS["vodafone"] = InfineonCareerAdapter("Vodafone","https://jobs.vodafone.com/careers","vodafone.com","vodafone")
+
+ADAPTERS["eightfold_complete"] = EightfoldCareerAdapter(complete=True)
