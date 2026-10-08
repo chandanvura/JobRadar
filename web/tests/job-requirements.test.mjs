@@ -50,3 +50,12 @@ test('actual HPE education abbreviations and preferred-experience headings are e
  assert.deepEqual(r.preferredSkills.map(x=>x.value).sort(),['Docker','Kubernetes']);
  assert.ok(![...r.requiredSkills,...r.preferredSkills,...r.mentionedSkills].some(x=>x.value==='Java'));
 });
+
+test('empty Dashboard never bypasses filters and Recommended review fallback deduplicates sources',async()=>{
+ const {visibleCareerJobs}=await import('../lib/job-view.ts');
+ const base={title:'Cloud Developer',normalized_location:'Bengaluru',ats_provider:'workday',external_job_id:'1',application_url:'https://hpe.wd5.myworkdayjobs.com/Jobsathpe/job/Bengaluru/Cloud-Developer_1',is_active:1,is_eligible:0,role_category:'Cloud',company:'HPE'};
+ const alias={...base,company:'Juniper Networks'};
+ assert.deepEqual(visibleCareerJobs('Dashboard',[],[base,alias]),[]);
+ assert.equal(visibleCareerJobs('Recommended',[],[base,alias]).length,1);
+ assert.deepEqual(visibleCareerJobs('Recommended',[base],[alias]),[base]);
+});
