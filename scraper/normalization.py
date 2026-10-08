@@ -1,6 +1,10 @@
 import re
+import json
+from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from .models import Job
+from .requirements import candidate_text
+from .source_ownership import correct_board_owner
 from .roles import classify_role, NON_TECHNICAL
 
 INTERNSHIP_ROLE_PATTERNS = {
@@ -12,7 +16,8 @@ INTERNSHIP_ROLE_PATTERNS = {
     "Java / Backend": r"\bjava\b|\bback[ -]?end\b|\bspring\b",
     "Software Engineering": r"\bsoftware\b|\bdeveloper\b|\bengineering\b|\bsde\b|\btechnology\b|\btechnical\b",
 }
-SKILLS=["AWS","Azure","GCP","Linux","Docker","Kubernetes","Terraform","Jenkins","CI/CD","GitHub Actions","Argo CD","Ansible","Git","Helm","Bash","Python","Java","Spring Boot","Spring","REST API","Microservices","Kafka","SQL","PostgreSQL","MySQL","Redis","Prometheus","Grafana","ELK","Elasticsearch","Splunk","Datadog"]
+SKILL_RULES=json.loads((Path(__file__).parents[1]/'config/skills.json').read_text())
+SKILLS=list(SKILL_RULES)
 MAX_JOB_AGE_HOURS = 24
 MAX_EXPERIENCE_YEARS = 3
 TARGET_CITIES = {"Bengaluru", "Hyderabad"}
@@ -77,12 +82,11 @@ def extract_experience(text: str):
         lo,hi,kind=max(constraints,key=lambda x:(x[0],float("inf") if x[1] is None else x[1]))
         if kind=="lower": return lo,None,f"{lo:g}+"
         return lo,hi,f"{lo:g}–{hi:g}" if lo!=hi else f"{lo:g}"
-    if junior:return 0.0,1.0,"Fresher"
+    if junior:return 0.0,None,"Fresher"
     return None,None,"Unknown"
 
 def skill_present(skill: str, corpus: str):
-    aliases={"CI/CD":r"\bci\s*/?\s*cd\b","REST API":r"\brest(?:ful)?\s+apis?\b","Spring":r"\bspring\b(?!\s+boot)","Git":r"\bgit\b(?!hub)","ELK":r"\belk\b","Kubernetes":r"\b(?:kubernetes|k8s)\b","AWS":r"\b(?:aws|amazon web services)\b","Spring Boot":r"\bspring\s*boot\b","PostgreSQL":r"\b(?:postgresql|postgres)\b","GitHub Actions":r"\b(?:github actions|gha)\b"}
-    return bool(re.search(aliases.get(skill,rf"(?<![a-z0-9]){re.escape(skill.lower())}(?![a-z0-9])"),corpus,re.I))
+    return bool(re.search(SKILL_RULES.get(skill,rf"(?<![a-z0-9]){re.escape(skill.lower())}(?![a-z0-9])"),corpus,re.I))
 
 def posted_age_hours(posted_at):
     if not posted_at:
@@ -96,10 +100,11 @@ def posted_age_hours(posted_at):
         return None
 
 def enrich(job: Job, company_priority: int=3):
+    correct_board_owner(job)
     job.normalized_title,job.role_category=classify_title(job.title,job.description); job.normalized_location,job.city=normalize_location(job.location)
     job.employment_type=classify_employment_type(job.title,job.description)
-    job.experience_min,job.experience_max,job.experience_label=extract_experience(f"{job.title}\n{job.description}")
-    corpus=f"{job.title} {job.description}".lower(); job.skills=[s for s in SKILLS if skill_present(s,corpus)]
+    job.experience_min,job.experience_max,job.experience_label=extract_experience(candidate_text(job.description, include_preferred=False))
+    corpus=f"{job.title} {candidate_text(job.description)}".lower(); job.skills=[s for s in SKILLS if skill_present(s,corpus)]
     age=posted_age_hours(job.posted_at)
     reported=job.reported_age_hours
     employer_says_today=bool(job.posted_label and re.search(r"\b(?:posted\s+)?today\b",job.posted_label,re.I))
@@ -115,14 +120,14 @@ def enrich(job: Job, company_priority: int=3):
     leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
     explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|qa engineer|sdet|support engineer)\s*(?:i|1)\b",job.title,re.I))
     if job.experience_min is None and explicit_entry_title:
-        job.experience_min,job.experience_max,job.experience_label=0.0,3.0,"Entry-level title"
-        experience_ok=True
+        job.experience_label="Entry-level title — experience unverified"
+        experience_ok=False
     if job.city not in TARGET_CITIES: reason="Outside target cities"
     elif leadership: reason="Leadership-level title"
     elif job.role_category=="Other": reason="Role outside target list"
     elif job.employment_type=="Internship" and not recent: reason="Posting date not verified within 24 hours"
     elif job.employment_type=="Internship": reason="Eligible"
-    elif job.experience_min is None and job.experience_max is None: reason="Experience not stated — verify"
+    elif job.experience_min is None and job.experience_max is None: reason="Entry-level title — experience unverified" if explicit_entry_title else "Experience not stated — verify"
     elif not experience_ok: reason="Experience exceeds 0–3 YOE policy"
     elif not recent: reason="Posting date not verified within 24 hours"
     else: reason="Eligible"

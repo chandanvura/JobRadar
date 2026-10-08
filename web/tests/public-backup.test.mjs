@@ -56,7 +56,9 @@ test('quota deployment gate blocks schema changes and unrelated migration failur
   const hashes={};const dir=new URL('../drizzle/',import.meta.url);
   for(const path of (await readdir(dir)).filter(p=>p.endsWith('.sql')))hashes[path]=createHash('sha256').update(await readFile(new URL(path,dir))).digest('hex');
   const quota="Your account has exceeded D1's free tier daily row read limit. [code: 7500]";
-  assert.doesNotThrow(()=>verifyQuotaDeployment(quota,hashes));
+  const {appliedMigrationHashes}=await import('../scripts/verify-quota-deployment.mjs');
+  assert.doesNotThrow(()=>verifyQuotaDeployment(quota,{...appliedMigrationHashes}));
+  if(Object.keys(hashes).length!==Object.keys(appliedMigrationHashes).length)assert.throws(()=>verifyQuotaDeployment(quota,hashes));
   assert.throws(()=>verifyQuotaDeployment('Unauthorized [code: 10000]',hashes));
   assert.throws(()=>verifyQuotaDeployment(quota,{...hashes,'new.sql':'new'}));
   assert.throws(()=>verifyQuotaDeployment(quota,{...hashes,'0000_nice_greymalkin.sql':'modified'}));

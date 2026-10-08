@@ -1,3 +1,4 @@
+import {boardAttribution} from './source-ownership.ts';
 /** Presentation-only grouping: retain every source record and private tracking ID. */
 export type FeedJob = {company: string; title: string; normalized_location: string; ats_provider: string; external_job_id: string; application_url: string; description?: string; is_eligible: number; is_active: number; role_category: string};
 export function canonicalApplyUrl(value: string) {
@@ -21,11 +22,12 @@ export function groupDuplicateJobs<T extends FeedJob>(jobs: T[]) {
   const groups: {job: T; sources: T[]}[] = [];
   const ids = new Map<string, number>(), urls = new Map<string, number>(), fingerprints = new Map<string, number[]>();
   for (const job of jobs) {
-    const company = normalized(job.company);
+    const company = normalized(boardAttribution(job).employer);
     // External IDs belong to an employer/provider namespace, never globally.
     const id = job.external_job_id ? `${company}\u001f${job.ats_provider}\u001f${job.external_job_id}` : null;
     const canonical = canonicalApplyUrl(job.application_url);
-    const url = canonical ? `${company}\u001f${canonical}` : null;
+    const requisition = canonical && ((new URL(canonical).hostname === 'jobs.lever.co' && new URL(canonical).pathname.split('/').filter(Boolean).length >= 2) || /\/(?:job|jobs|position|positions)\/.+/i.test(new URL(canonical).pathname) || /(?:gh_jid|jobId|requisitionId)=/i.test(canonical));
+    const url = canonical && requisition ? canonical : null;
     const fingerprint = `${company}\u001f${normalized(job.title)}\u001f${normalized(job.normalized_location.replace(/bangalore/gi, 'Bengaluru'))}`;
     let index = (id ? ids.get(id) : undefined) ?? (url ? urls.get(url) : undefined);
     if (index === undefined && job.description && job.description.length >= 200) {
@@ -41,7 +43,7 @@ export function groupDuplicateJobs<T extends FeedJob>(jobs: T[]) {
       fingerprints.set(fingerprint, [...(fingerprints.get(fingerprint) || []), index]);
     }
     const group = groups[index]; group.sources.push(job);
-    if (job.is_active > group.job.is_active || (job.is_active === group.job.is_active && job.is_eligible > group.job.is_eligible)) group.job = job;
+    if (job.is_active > group.job.is_active || (job.is_active === group.job.is_active && (job.is_eligible > group.job.is_eligible || (job.is_eligible === group.job.is_eligible && job.company === boardAttribution(job).employer && group.job.company !== boardAttribution(group.job).employer)))) group.job = job;
     if (id) ids.set(id, index);
     if (url) urls.set(url, index);
   }

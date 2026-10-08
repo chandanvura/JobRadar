@@ -1,4 +1,6 @@
 /** Local BM25 retrieval: all query terms may match different fields, in any order. */
+import {candidateClauses,requirementsFor} from './job-requirements.ts';
+import {boardAttribution} from './source-ownership.ts';
 import {classifyRoleTitle} from './role-taxonomy.ts';
 export type SearchableJob={title:string;company:string;skills:string;role_category:string;normalized_location?:string;description?:string|null;ats_provider?:string};
 const normalize=(value:string)=>value.normalize('NFKC').toLowerCase()
@@ -26,7 +28,7 @@ function oneEdit(a:string,b:string) {
 function createLexicalJobSearchIndex<T extends SearchableJob>(jobs:T[]) {
   const postings=new Map<string,Map<number,number>>(), lengths:number[]=[], texts:string[]=[];
   jobs.forEach((job,id)=>{
-    const fields:[[string,number],...Array<[string,number]>]=[[job.title,5],[job.company,4],[job.skills,3],[job.role_category,3],[job.normalized_location||'',2],[job.ats_provider||'',1],[job.description?.slice(0,12000)||'',.6]];
+    const fields:[[string,number],...Array<[string,number]>]=[[job.title,5],[boardAttribution({...job,application_url:(job as T & {application_url?:string}).application_url||''}).employer,4],[job.description ? (()=>{const r=requirementsFor(job);return [...r.requiredSkills,...r.preferredSkills,...r.mentionedSkills].map(x=>x.value).join(' ');})() : job.skills,3],[job.role_category,3],[job.normalized_location||'',2],[job.ats_provider||'',1],[candidateClauses(job.description?.slice(0,12000)||'').map(clause=>clause.text).join(' '),.6]];
     const frequencies=new Map<string,number>();let length=0;
     fields.forEach(([text,weight])=>tokens(text).forEach(token=>{frequencies.set(token,(frequencies.get(token)||0)+weight);length++;}));
     lengths[id]=length;texts[id]=normalize(fields.map(([text])=>text).join(' '));

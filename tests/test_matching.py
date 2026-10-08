@@ -51,7 +51,8 @@ def test_title_classification():
 
 def test_explicit_entry_title_can_fill_missing_experience_without_opening_generic_roles():
     entry=enrich(sample(title="Associate Software Engineer",location="Hyderabad",description="Build reliable services"))
-    assert entry.is_eligible and entry.experience_label == "Entry-level title"
+    assert not entry.is_eligible and entry.experience_label == "Entry-level title — experience unverified"
+    assert entry.experience_min is None and entry.experience_max is None
     generic=enrich(sample(title="Software Engineer",location="Bengaluru",description="Build reliable services"))
     assert not generic.is_eligible and generic.eligibility_reason == "Experience not stated — verify"
     outside=enrich(sample(title="Associate Software Engineer",location="Pune",description="Build reliable services"))
@@ -97,7 +98,7 @@ def test_real_world_experience_phrases():
     assert extract_experience("Up to 3 years of work experience")[:2] == (0.0,3.0)
     assert extract_experience("1-2 years in Java; minimum 5 years overall")[:2] == (5.0,None)
     assert extract_experience("Minimum 2 years and maximum 3 years of experience")[:2] == (2.0,3.0)
-    assert extract_experience("No prior experience required")[:2] == (0.0,1.0)
+    assert extract_experience("No prior experience required")[:2] == (0.0,None)
     assert extract_experience("One year of professional experience")[:2] == (1.0,1.0)
     assert extract_experience("Less than three years experience")[:2] == (0.0,3.0)
     assert extract_experience("Early career software engineer")[2] == "Fresher"
@@ -386,7 +387,7 @@ def test_skill_aliases_and_plural_graduate_requirements():
     job=enrich(sample(description="Fresh graduates welcome. Work with k8s, Amazon Web Services, springboot, postgres and GHA."))
     assert job.is_eligible
     assert {"Kubernetes","AWS","Spring Boot","PostgreSQL","GitHub Actions"}.issubset(job.skills)
-    assert extract_experience("Freshers welcome")[:2] == (0.0,1.0)
+    assert extract_experience("Freshers welcome")[:2] == (0.0,None)
 
 def test_nontechnical_apprenticeships_are_not_software_roles():
     assert classify_title("Talent Acquisition Coordinator Trainee_Non-Technical Graduate Apprentice - India UHR")[1] == "Other"
