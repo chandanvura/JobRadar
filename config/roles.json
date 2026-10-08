@@ -10,7 +10,8 @@
       "titles": [
         "DevOps Engineer",
         "DevSecOps Engineer",
-        "Build and Release Engineer"
+        "Build and Release Engineer",
+        "Release Engineer"
       ]
     },
     {
@@ -45,7 +46,8 @@
         "Cloud Engineer",
         "Cloud Support Associate",
         "Cloud Developer Platform",
-        "AI/ML Cloud Developer"
+        "AI/ML Cloud Developer",
+        "Cloud Operations Engineer"
       ]
     },
     {
@@ -76,14 +78,17 @@
       "patterns": [
         "\\b(?:infrastructure|linux|unix|network|systems?|storage|database|datacenter|data center|it operations) (?:software |automation |operations |support |cloud )?(?:engineer|developer|administrator|analyst|intern)\\b",
         "\\bsoftware engineer\\s*(?:infrastructure|systems?)\\b",
-        "\\b(?:dba|network operations|noc analyst|it administrator|sysadmin)\\b"
+        "\\b(?:dba|network operations|noc analyst|it administrator|sysadmin)\\b",
+        "\\bnoc (?:engineer|analyst)\\b"
       ],
       "titles": [
         "Systems Engineer",
         "Network Engineer",
         "Database Administrator",
         "Infrastructure Automation Engineer",
-        "Linux Administrator"
+        "Linux Administrator",
+        "Infrastructure Engineer",
+        "NOC Engineer"
       ]
     },
     {
@@ -92,7 +97,8 @@
         "\\b(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|dotnet|c#|ruby|php) (?:full[ -]?stack |back[ -]?end |software |application )?(?:developer|engineer|intern)\\b",
         "\\bback[ -]?end (?:software |application )?(?:developer|engineer|intern)\\b",
         "\\bsoftware engineer\\s*(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|back[ -]?end)\\b",
-        "(?<!\\w)\\.net (?:software |full stack )?(?:developer|engineer|intern)\\b"
+        "(?<!\\w)\\.net (?:software |full stack )?(?:developer|engineer|intern)\\b",
+        "\\bapi (?:developer|engineer)\\b"
       ],
       "titles": [
         "Java Developer",
@@ -101,7 +107,8 @@
         "Golang Developer",
         "Node.js Developer",
         ".NET Developer",
-        "C# Developer"
+        "C# Developer",
+        "API Developer"
       ]
     },
     {
@@ -164,7 +171,9 @@
       "titles": [
         "Technical Support Engineer",
         "Application Support Analyst",
-        "Service Desk Analyst"
+        "Service Desk Analyst",
+        "Production Support Engineer",
+        "Application Support Engineer"
       ]
     },
     {
@@ -177,7 +186,9 @@
         "SAP Developer",
         "Salesforce Developer",
         "ServiceNow Developer",
-        "Integration Engineer"
+        "Integration Engineer",
+        "Integration Developer",
+        "Application Developer"
       ]
     },
     {
@@ -186,7 +197,8 @@
         "\\b(?:software|applications?|front[ -]?end|full[ -]?stack|mobile|android|ios|web|ui|ux|react|angular|javascript|typescript|c\\+\\+|c) (?:development |application |systems? )?(?:engineer(?:ing)?|developer|programmer|intern)\\b",
         "\\b(?:sde|swe|sw engineer|programmer analyst|member of technical staff|technical staff member)\\b",
         "\\b(?:graduate )?engineer trainee\\b",
-        "^get(?:\\s|$)"
+        "^get(?:\\s|$)",
+        "\\btrainee (?:software |application )?developer\\b"
       ],
       "titles": [
         "Software Engineer",
@@ -199,8 +211,19 @@
         "Full Stack Developer",
         "React Developer",
         "C++ Developer",
-        "Android Developer"
+        "Android Developer",
+        "Software Engineer I",
+        "Graduate Software Engineer",
+        "Trainee Developer",
+        "Mobile Developer",
+        "iOS Developer"
       ]
     }
+  ],
+  "review_titles": [
+    "Engineer I",
+    "Associate Engineer",
+    "Technology Associate",
+    "Automation Engineer"
   ]
 }
