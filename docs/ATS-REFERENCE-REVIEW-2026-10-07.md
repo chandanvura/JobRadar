@@ -25,7 +25,7 @@ Snapshots inspected: JobSpy `655ec04663b798742704f1038262b631cd1988f2`, Career O
 | Infineon Technologies | infineon.com careers → jobs.infineon.com/careers; PCSX config domain infineon.com; detail identifies Infineon | India search advertises 165 records; actual positionUrl links; full detail JSON and matching public JobPosting | Validate every PCSX detail and its returned ID, positionUrl and publicUrl; HTML JobPosting titles can be stale. PCSX postedTs is a Unix posting timestamp, corroborated against the first public JobPosting |
 | Siemens | Official jobs.siemens.com board now redirects to current Avature externaljobs; actual SearchJobs and JobDetail links | Public first page reports `999+`, six actual result links | Capped global total is incomplete. Derive a published geographic facet before implementing a complete feed |
 
-Executable evidence probe: `python -m scripts.reference_feed_probe`. Execute employer HTTP exclusively on GitHub Actions through `.github/workflows/reference-feeds.yml`. Raw public responses, hashes and request metadata are retained in its seven-day artifact. Probe success means evidence capture, not a recovered feed.
+Executable evidence probe: `python -m scripts.reference_feed_probe`. Execute employer HTTP exclusively on GitHub Actions through `docs/archive/workflows/reference-feeds.yml`. Raw public responses, hashes and request metadata are retained in its seven-day artifact. Probe success means evidence capture, not a recovered feed.
 
 Complete-feed gate: `python -m scripts.ats_repaired --companies "Infineon Technologies"`. This requires exact advertised totals, unique IDs, every detail, no missing requirements and no coverage warning. No production write occurs in either probe.
 
