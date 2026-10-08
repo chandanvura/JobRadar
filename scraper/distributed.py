@@ -34,7 +34,7 @@ async def run_worker(index,count,output):
     candidates=[job for job in all_jobs if job.city in TARGET_CITIES and job.role_category!="Other"]
     jobs=[]
     for job in candidates:
-        item=job.as_dict(); item["description"]=item.get("description","")[:4000]; jobs.append(item)
+        item=job.as_dict(); item["description"]=item.get("description","")[:12000]; jobs.append(item)
     artifact={
         "version":ARTIFACT_VERSION,"shard_index":index,"shard_count":count,
         "started_at":started,"finished_at":now(),"sources":len(owned),

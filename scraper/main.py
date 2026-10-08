@@ -252,7 +252,7 @@ async def main():
     if bypass:headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
     payload_jobs=[]
     for job in candidates:
-        item=job.as_dict(); item["description"]=item.get("description","")[:4000]; payload_jobs.append(item)
+        item=job.as_dict(); item["description"]=item.get("description","")[:12000]; payload_jobs.append(item)
     result=await ingest_scan(endpoint,headers,payload_jobs,statuses,run)
     alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
     alert_jobs=[job for job in eligible if (source_job_key(job) in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]

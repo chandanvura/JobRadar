@@ -88,7 +88,7 @@ async def refresh_repairs(companies, updates):
         for job in rows:
             if job.city not in TARGET_CITIES or job.role_category == "Other": continue
             item = job.as_dict()
-            item["description"] = item.get("description", "")[:4000]
+            item["description"] = item.get("description", "")[:12000]
             jobs.append(item)
         print(f"Verified repaired feed: {status['name']}: {count} listings")
     return jobs, checked

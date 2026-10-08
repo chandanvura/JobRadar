@@ -1,7 +1,8 @@
+import {requirementsFor, experienceUnverified} from './job-requirements.ts';
 import { classifyRoleTitle } from "./role-taxonomy.ts";
 import { RANKING_CONFIG as config } from "./ranking-config.ts";
 export type MatchJob = {
-  title: string; role_category: string; skills: string; experience_min: number | null;
+  description?:string; experience_label?:string; title: string; role_category: string; skills: string; experience_min: number | null;
   experience_max: number | null; is_eligible: number; relevance_score: number;
   posted_at: string | null; posted_label: string | null; reported_age_hours: number | null;
   last_seen_at?: string; first_seen_at?: string; posted_precision?: string;
@@ -18,7 +19,7 @@ const parsedSkills = (value: string) => {try {const v: unknown = JSON.parse(valu
 const overlap = (a: string[], b: string[]) => a.filter(x => b.includes(x));
 export function roleFamily(title: string) { return classifyRoleTitle(title); }
 
-export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => job.experience_min === null && job.experience_max === null ? null : (job.experience_min ?? 0) <= p.experienceMax && (job.experience_max ?? Infinity) >= p.experienceMin;
+export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => experienceUnverified(job) || (job.experience_min === null && job.experience_max === null) ? null : (job.experience_min ?? 0) <= p.experienceMax && (job.experience_max ?? Infinity) >= p.experienceMin;
 // Relevance is independent of source, age and alert eligibility. Preferences are
 // a desired experience range, not a claim about the candidate's actual experience.
 export function personalMatch(job: MatchJob, p: MatchPreferences) {
@@ -27,11 +28,15 @@ export function personalMatch(job: MatchJob, p: MatchPreferences) {
   const exactTitle = p.titles.some(x => job.title.toLowerCase() === x.toLowerCase().trim());
   const family = p.titles.some(x => roleFamily(x) !== 'Other' && roleFamily(x) === job.role_category);
   const titleFit = !p.titles.length ? 75 : exactTitle ? 100 : Math.max(family ? 85 : 0, preferredWords.length ? titleHits.length / preferredWords.length * 100 : 0);
-  const jobSkills = parsedSkills(job.skills), userSkills = new Set(p.skills.map(normalizeSkill));
+  const requirements=requirementsFor(job);
+  const structured=[...requirements.requiredSkills,...requirements.preferredSkills,...requirements.mentionedSkills];
+  const jobSkills = job.description ? [...new Set(structured.map(item=>normalizeSkill(item.value)))] : parsedSkills(job.skills), userSkills = new Set(p.skills.map(normalizeSkill));
   const matchedSkills = jobSkills.filter(x => userSkills.has(x));
   const missingSkills = jobSkills.filter(x => !userSkills.has(x));
-  // The feed contains extracted skills, not a verified must-have/preferred split.
-  const skillFit = !p.skills.length || !jobSkills.length ? 50 : matchedSkills.length / jobSkills.length * 100;
+  // Explicit candidate requirements carry more weight than preferences and mentions.
+  // Unknown wording remains a ranking signal, never a hard eligibility gate.
+  const weight=(skill:string)=>requirements.requiredSkills.some(item=>normalizeSkill(item.value)===skill)?2:requirements.preferredSkills.some(item=>normalizeSkill(item.value)===skill)?1:.5;
+  const skillFit = !p.skills.length || !jobSkills.length ? 50 : matchedSkills.reduce((sum,skill)=>sum+weight(skill),0) / jobSkills.reduce((sum,skill)=>sum+weight(skill),0) * 100;
   const exp = experienceCompatible(job, p);
   const gap = Math.max(0, (job.experience_min ?? 0) - p.experienceMax, p.experienceMin - (job.experience_max ?? Infinity));
   const experienceFit = exp === null ? 40 : exp ? Math.max(40, 100 - Math.max(0, (job.experience_max ?? p.experienceMax) - p.experienceMax) * config.experienceExcessPenalty - Math.max(0, (job.experience_min ?? 0) - p.experienceMin) * config.experienceMinimumPenalty) : Math.max(0, 40 - gap * 20);

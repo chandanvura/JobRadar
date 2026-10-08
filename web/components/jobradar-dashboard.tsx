@@ -62,6 +62,9 @@ import { feedbackByFamily, opportunityPriority, personalMatch } from "@/lib/job-
 import { diversifyFeed, groupDuplicateJobs } from "@/lib/job-feed";
 import { fresherRole, internshipRole as isInternship, technicalInternshipRole } from "@/lib/job-sections";
 
+import {requirementsFor, normalizeExperience} from "@/lib/job-requirements";
+import {boardAttribution} from "@/lib/source-ownership";
+
 type ApiJob = {
   description?: string;
   id: number;
@@ -381,6 +384,7 @@ function DashboardContent() {
     [freshness, setFreshness] = useState(() =>
       defaultFreshness(initialView())
     ),
+    [workMode, setWorkMode] = useState("All arrangements"),
     [role, setRole] = useState("All roles"),
     [ats, setAts] = useState("All ATS"),
     [query, setQuery] = useState(""),
@@ -567,7 +571,7 @@ function DashboardContent() {
       writePrivate("jobradar-tracking-v2", JSON.stringify(next));
       return next;
     });
-  const currentJobs = useMemo(() => data?.jobs || [], [data?.jobs]);
+  const currentJobs = useMemo(() => (data?.jobs || []).map(normalizeExperience), [data?.jobs]);
   const mergedJobs = useMemo(() => {
     const map = new Map(currentJobs.map((j) => [trackingKey(j), j]));
     Object.values(tracking).forEach((t) => {
@@ -614,6 +618,7 @@ function DashboardContent() {
       const track = jobTracking(j), match = ranking.get(trackingKey(j))!.match;
       if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, postingStillCurrent(j))) return false;
       if (deferredQuery && !searchScores.has(j)) return false;
+      if (workMode !== "All arrangements" && requirementsFor(j).workMode !== workMode) return false;
       if (active === "Internships" && !isInternship(j)) return false;
       if (active === "Internships" && !technicalInternshipRole(j)) return false;
       if (active === "Fresher Roles" && !fresherRole(j)) return false;
@@ -746,6 +751,7 @@ function DashboardContent() {
     searchScores,
     location,
     ats,
+    workMode,
     role,
     active,
     freshness,
@@ -835,6 +841,7 @@ function DashboardContent() {
     );
     setFreshness(defaultFreshness(active));
     setRole("All roles");
+    setWorkMode("All arrangements");
     setAts("All ATS");
     setSort("Best match");
     setMatchMode("Recommended");
@@ -1097,6 +1104,9 @@ function DashboardContent() {
                     >
                       <option>All roles</option>
                       {ROLE_FAMILIES.map(family => <option key={family}>{family}</option>)}
+                    </select>
+                    <select aria-label="Work arrangement filter" value={workMode} onChange={e=>setWorkMode(e.target.value)} className="h-10 rounded-xl border bg-card px-3 text-xs font-bold">
+                      {["All arrangements","Remote","Hybrid","Onsite","Unknown","Conflicting"].map(mode=><option key={mode}>{mode}</option>)}
                     </select>
                     <select
                       aria-label="ATS filter"
@@ -1758,6 +1768,8 @@ function JobCard({
 }) {
   const [details, setDetails] = useState(false),
     match = personalMatch(job, preferences),
+    requirements = requirementsFor(job),
+    attribution = boardAttribution(job),
     opportunity = opportunityPriority(job, preferences, now, match),
     skills = parseSkills(job.skills),
     age = freshnessAge(job),
@@ -1824,8 +1836,9 @@ function JobCard({
             <div>
               <h3 className="text-xl font-semibold tracking-[-.025em]">{job.title}</h3>
               <p className="mt-1 text-sm font-semibold text-muted-foreground">
-                {job.company}
+                {attribution.employer}
               </p>
+              {attribution.note && <p className="mt-1 text-xs text-muted-foreground">{attribution.note}</p>}
               <div className="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <MapPin size={14} />
@@ -1835,6 +1848,7 @@ function JobCard({
                   <BriefcaseBusiness size={14} />
                   {job.experience_label}
                 </span>
+                <span>Work arrangement: {requirements.workMode === "Unknown" ? "Not stated" : requirements.workMode}</span>
                 <span>{postingText(job)}</span>
               </div>
             </div>
@@ -1901,7 +1915,7 @@ function JobCard({
               Apply now <ExternalLink size={15} />
             </a>
             <a
-              href={job.career_page_url}
+              href={attribution.careerUrl || job.career_page_url}
               target="_blank"
               rel="noreferrer"
               className="flex h-11 items-center justify-center gap-2 rounded-xl border text-xs font-black"
@@ -1964,6 +1978,20 @@ function JobCard({
       </div>
       {details && (
         <div className="grid gap-4 border-t bg-muted p-5 md:grid-cols-2">
+          <div className="md:col-span-2 rounded-xl border bg-card p-4">
+            <h4 className="font-bold">Requirements to check before applying</h4>
+            <p className="mt-1 text-xs text-muted-foreground">Extracted employer statements. Your education and graduation year have not been verified.</p>
+            <dl className="mt-3 grid gap-3 text-sm md:grid-cols-2">
+              {([
+                ["Required skills", requirements.requiredSkills],
+                ["Preferred skills", requirements.preferredSkills],
+                ["Education / alternatives", requirements.education],
+                ["Graduation years mentioned", requirements.batches],
+              ] as const).map(([label, values]) => <div key={label}><dt className="font-semibold">{label}</dt><dd>{values.length ? values.map(item => <details key={item.value} className="mt-1"><summary className="cursor-pointer">{item.value}</summary><p className="mt-1 text-xs text-muted-foreground">{item.evidence}</p></details>) : "Not stated clearly — review listing"}</dd></div>)}
+            </dl>
+            {requirements.skillConflicts.length > 0 && <p className="mt-2 text-xs text-warning">Conflicting skill wording: {requirements.skillConflicts.join(", ")} — verify.</p>}
+            <p className="mt-3 text-xs">Work arrangement: {requirements.workMode}. {requirements.workModeEvidence.join(" · ")}</p>
+          </div>
           {job.description && (
             <div className="md:col-span-2">
               <h4 className="font-bold">Employer description</h4>

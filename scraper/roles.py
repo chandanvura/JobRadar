@@ -3,6 +3,7 @@ import json
 import re
 import unicodedata
 from pathlib import Path
+from .requirements import candidate_clauses
 
 TAXONOMY = json.loads((Path(__file__).resolve().parents[1] / 'config/roles.json').read_text())
 ROLE_PATTERNS = {role['family']: '|'.join(role['patterns']) for role in TAXONOMY['roles']}
@@ -27,7 +28,9 @@ def classify_role(title, description=''):
     # Ambiguous employer labels are not enough on their own. Require multiple
     # distinct technical signals from the actual requirements, not a company bio.
     if AMBIGUOUS_TITLE.search(clean):
-        evidence = {match.group(0).casefold() for match in TECHNICAL_EVIDENCE.finditer(description)}
+        qualified = '\n'.join(clause for clause, section in candidate_clauses(description)
+                             if section != 'unspecified' or re.search(r'\b(?:develop|build|design|implement|maintain|programming|coding|must|required|proficiency|experience with|experience using|using)\b', clause, re.I))
+        evidence = {match.group(0).casefold() for match in TECHNICAL_EVIDENCE.finditer(qualified)}
         if len(evidence) >= 2:
             return clean, 'Software Engineering'
     return clean, 'Other'
