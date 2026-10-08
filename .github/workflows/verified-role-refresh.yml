@@ -1,0 +1,28 @@
+name: Refresh audited technical role feeds
+on:
+  push:
+    branches: ['coverage-refresh/2026-10-08']
+    paths: ['.github/workflows/verified-role-refresh.yml']
+permissions:
+  contents: read
+concurrency:
+  group: jobradar-free-tier-scan
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Verify collector and refresh only live-audited complete feeds
+        run: |
+          python -m pytest -q
+          python -m scripts.sync_company_registry
+        env:
+          JOBRADAR_REPAIR_COMPANIES: '["HPE","Microsoft","Cisco","SAP"]'
+          JOBRADAR_VERIFY_SOURCE_UPDATES: 'true'
+          JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}
