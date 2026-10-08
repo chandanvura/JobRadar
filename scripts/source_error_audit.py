@@ -17,6 +17,10 @@ async def public_candidates(output):
     from scripts import refreshed_candidates
     refreshed_candidates.OUT.mkdir(parents=True, exist_ok=True)
     async with adapters.client(timeout=40) as client:
+        macquarie = await refreshed_candidates.official_chain(
+            client, 'Macquarie', 'https://www.macquarie.com/',
+            'https://recruitment.macquarie.com/en_US/careers/SearchJobs')
+        (output / 'Macquarie-chain.json').write_text(json.dumps(macquarie, indent=2))
         hubspot = {'company': 'HubSpot', 'status': 'UNRESOLVED'}
         try:
             case = next(c for c in json.loads(Path('artifacts/source-audit/evidence.json').read_text())['cases'] if c['company'] == 'HubSpot')
@@ -62,15 +66,15 @@ async def public_candidates(output):
                     asset.raise_for_status()
                     (output / f'Planful-script-{index}.js').write_text(asset.text)
                     assets.append(asset.text)
-                tenants = set(re.findall(r'https://boards-api\.greenhouse\.io/v1/boards/([\w.-]+)/jobs', '\n'.join(assets)))
+                tenants = set(re.findall(r'https://boards-api\.greenhouse\.io/v1/boards/([\w.-]+)/(?:jobs|offices|departments)', '\n'.join(assets)))
             if len(tenants) != 1:
                 raise ValueError('No unique employer-published Greenhouse tenant')
             tenant = tenants.pop()
-            branding_url = embeds[0] if embeds else f'https://boards-api.greenhouse.io/v1/boards/{tenant}'
+            branding_url = f'https://boards-api.greenhouse.io/v1/boards/{tenant}'
             branding = await adapters.request(client, 'GET', branding_url)
             branding.raise_for_status()
             (output / 'Planful-board.html').write_text(branding.text)
-            if 'planful' not in BeautifulSoup(branding.text, 'html.parser').get_text(' ', strip=True).lower():
+            if branding.json().get('name', '').strip().casefold() != 'planful':
                 raise ValueError('Linked board does not identify Planful')
             jobs, total = await fetch_company_jobs(Company('Planful', board, 'greenhouse', tenant))
             if getattr(jobs, 'coverage_warning', None) or total != len(jobs) or len({j.external_job_id for j in jobs}) != total or any(not j.description for j in jobs):
