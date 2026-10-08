@@ -96,7 +96,8 @@ class AvatureCareerAdapter:
                         raise ValueError('Avature public listing changed or omitted records during pagination')
                     return batch
                 for batch in await asyncio.gather(*(page(offset) for offset in range(end, total, end))):
-                    if found.keys() & batch.keys(): raise ValueError('Avature pagination repeated a public job')
+                    if found.keys() & batch.keys():
+                        raise SnapshotChanged('Avature pagination repeated a public job across valid pages')
                     found.update(batch)
             if len(found) != total: raise ValueError('Avature listing did not match its complete result count')
             check = await request(x, 'GET', company.careers_url); check.raise_for_status()

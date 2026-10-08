@@ -59,7 +59,7 @@ async def fetch_company_jobs(company,attempts=3):
             return await ADAPTERS[company.ats_provider].fetch_jobs(company)
         except SnapshotChanged as exc:
             # Discard the entire attempt. Two full snapshots at most; malformed
-            # schemas, duplicates, missing details and caps are never retried.
+            # pages, duplicates within a page, missing details and caps are never retried.
             last=exc
             if attempt >= min(attempts,2)-1:
                 raise

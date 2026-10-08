@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
-from scraper.adapters import ADAPTERS, client, request
+from scraper.adapters import client, request
 from scraper.career_widgets import kula_records
 from scraper.main import scrape
 from scraper.models import Company
