@@ -2,10 +2,11 @@ import asyncio
 import json
 
 import httpx
+import pytest
 from bs4 import BeautifulSoup
 
 from scraper import adapters
-from scraper.models import Company
+from scraper.models import Company, JobBatch
 
 
 def test_embedded_boards_escaped_scripts_and_data_links():
@@ -49,8 +50,26 @@ def test_custom_source_discovers_board_on_secondary_official_page(monkeypatch):
     monkeypatch.setattr(adapters, 'request', get)
     monkeypatch.setattr(adapters, 'cached_get', detail)
     monkeypatch.setitem(adapters.ADAPTERS, 'lever', Feed())
-    assert asyncio.run(adapters.CustomCareerAdapter().fetch_jobs(Company('Example', 'https://employer.test/careers', 'custom', 'example'))) == ([], 42)
+    jobs, total = asyncio.run(adapters.CustomCareerAdapter().fetch_jobs(Company('Example', 'https://employer.test/careers', 'custom', 'example')))
+    assert jobs == [] and total == 42
+    assert 'identity and scope await verification' in jobs.coverage_warning
     assert len(calls) == 1
+
+
+@pytest.mark.parametrize('warning', [None, 'Limited coverage: missing advertised details'])
+def test_autodiscovered_board_never_silences_identity_or_feed_warnings(monkeypatch, warning):
+    async def request(client, method, url, **kwargs):
+        return httpx.Response(200, text='<iframe src="https://jobs.lever.co/example"></iframe>', request=httpx.Request(method, url))
+
+    class Feed:
+        async def fetch_jobs(self, company):
+            return JobBatch([], coverage_warning=warning), 42
+
+    monkeypatch.setattr(adapters, 'request', request)
+    monkeypatch.setitem(adapters.ADAPTERS, 'lever', Feed())
+    jobs, total = asyncio.run(adapters.CustomCareerAdapter().fetch_jobs(Company('Example', 'https://employer.test/careers', 'custom', 'example')))
+    assert jobs == [] and total == 42
+    assert jobs.coverage_warning == (warning or 'Limited coverage: autodiscovered board identity and scope await verification')
 
 
 def test_custom_jobs_preserve_secondary_locations_and_url_identity(monkeypatch):

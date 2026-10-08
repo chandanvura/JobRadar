@@ -1,0 +1,30 @@
+name: Current unresolved source audit
+on:
+  push:
+    branches: [ats-audit/2026-10-08]
+    paths: [companies/source-audit-2026-10-08.json, scripts/source_error_audit.py, scraper/**, .github/workflows/source-audit.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  errors:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m scripts.coverage_snapshot --output artifacts/source-audit-before.json
+      - run: python -m scripts.ats_deep --manifest companies/source-audit-2026-10-08.json --output artifacts/source-audit
+      - run: python -m scripts.source_error_audit --candidates-only
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '1'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: current-source-error-audit
+          path: artifacts/
+          retention-days: 7

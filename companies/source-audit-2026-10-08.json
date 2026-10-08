@@ -1,0 +1,9 @@
+{
+  "batch": "source-errors-2026-10-08",
+  "companies": ["HubSpot", "Macquarie Group"],
+  "max_assets": 32,
+  "evidence_links": {
+    "HubSpot": ["https://www.hubspot.com/", "https://www.hubspot.com/careers", "https://www.hubspot.com/careers/jobs"],
+    "Macquarie Group": ["https://www.macquarie.com/", "https://www.macquarie.com/in/en/careers.html"]
+  }
+}

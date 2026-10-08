@@ -1,4 +1,4 @@
-import concurrent.futures,csv,json,re,urllib.parse,urllib.request,urllib.robotparser
+import concurrent.futures,json,re,urllib.parse,urllib.request,urllib.robotparser
 from bs4 import BeautifulSoup
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]

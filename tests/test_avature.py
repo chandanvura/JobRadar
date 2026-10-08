@@ -112,3 +112,41 @@ def test_avature_final_snapshot_detects_same_total_reordering(monkeypatch):
         asyncio.run(AvatureCareerAdapter().fetch_jobs(
             Company('Employer', 'https://careers.example/jobs', 'avature', 'careers.example')))
     assert len(calls) == 2
+
+
+@pytest.mark.parametrize('always_changed', [False, True])
+def test_overlapping_valid_pages_restart_whole_snapshot_once(monkeypatch, always_changed):
+    import asyncio
+    import httpx
+    from scraper import adapters, main
+    from scraper.models import Company
+    from scraper.snapshot import SnapshotChanged
+    attempts = []
+
+    async def request(client, method, url, **kwargs):
+        if 'jobOffset=1' in url:
+            identifier = 1 if always_changed or len(attempts) == 1 else 2
+            text = page([identifier]).replace('1-1 of 2 jobs', '2-2 of 2 jobs')
+        else:
+            attempts.append(url)
+            text = page([1]) + '<a class="paginationNextLink" href="/jobs?jobRecordsPerPage=1&amp;jobOffset=1">Next</a>'
+        return httpx.Response(200, request=httpx.Request('GET', url), text=text)
+
+    async def detail(client, url):
+        return httpx.Response(200, request=httpx.Request('GET', url), text='<article class="article--details"><div class="article__header">Description and Requirements</div><div class="article__content">Java, zero to two years experience</div></article>')
+
+    async def sleep(seconds):
+        pass
+
+    monkeypatch.setattr(adapters, 'request', request)
+    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(main.asyncio, 'sleep', sleep)
+    company = Company('Employer', 'https://careers.example/jobs', 'avature', 'careers.example')
+    if always_changed:
+        with pytest.raises(SnapshotChanged, match='across valid pages'):
+            asyncio.run(main.fetch_company_jobs(company))
+        assert len(attempts) == 2
+    else:
+        jobs, total = asyncio.run(main.fetch_company_jobs(company))
+        assert total == 2 and {job.external_job_id for job in jobs} == {'1', '2'}
+        assert len(attempts) == 3  # Restart plus the final page-one verification.
