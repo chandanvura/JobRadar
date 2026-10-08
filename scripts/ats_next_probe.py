@@ -113,7 +113,10 @@ async def run(required=()):
                             found=adapters.discover_ats(soup,str(response.url))
                             if found and found[0]=='workday':links.append(found[2]);detected.append(found)
                             pages.append({'url':url,'final_url':str(response.url),'links':links})
-                    if not detected:
+                    # A configured board alone is not ownership evidence. Follow
+                    # owned career details until the official root actually reaches it.
+                    if not detected or not any(chain_to_board(pages, manifest['evidence_links'][name][0], url)
+                                               for _, _, url in detected):
                         for url,parent in list(dict.fromkeys(job_links))[:2]:
                             response=await capture(client,'GET',url);response.raise_for_status()
                             soup=BeautifulSoup(response.text,'html.parser')
