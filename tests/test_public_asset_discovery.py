@@ -4,6 +4,17 @@ from bs4 import BeautifulSoup
 from scripts.ats_deep import public_references
 
 
+def test_literal_portal_fetch_does_not_follow_post_or_external_requests():
+    soup = BeautifulSoup('''<script>
+      fetch('/ats/documents/tenant/careerportal/published.html');
+      fetch('/write', {method: 'POST'});
+      fetch('https://external.example.com/collect');
+      fetch(dynamicPath);
+    </script>''', 'html.parser')
+    links, _ = public_references(soup, 'https://employer.keka.com/careers')
+    assert links == ['https://employer.keka.com/ats/documents/tenant/careerportal/published.html']
+
+
 def test_module_preloads_are_evidence_even_without_script_tags():
     soup = BeautifulSoup('''<link rel="modulepreload" href="/core/jobs-123.js">
         <link rel="preload" as="script" href="/core/search-456.js">

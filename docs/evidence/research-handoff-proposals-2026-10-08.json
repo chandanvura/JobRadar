@@ -1,0 +1,1967 @@
+{
+  "source_file": "Pasted text(20261008-105356).txt",
+  "source_sha256": "606225c9645b53641a3eb63387aad29b243736c5e06f105cfc89f29834217072",
+  "note": "Reported claims from user-supplied source discovery; not independent engineering verification. Original citation IDs are unavailable in this thread. No mapping is authorized by this evidence file alone.",
+  "companies": [
+    {
+      "company": "Acer",
+      "reported_website": "https://www.acer.com",
+      "reported_careers": "https://www.acer.com/corporate/en/careers",
+      "reported_board": "Not established",
+      "reported_platform": "Acer regional careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow current India/global vacancy-search link",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "ADP",
+      "reported_website": "https://www.adp.com",
+      "reported_careers": "https://jobs.adp.com/en/",
+      "reported_board": "Same",
+      "reported_platform": "Employer careers; Happydance front end observed",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Discover/verify list-detail requests",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Ajio",
+      "reported_website": "https://www.ajio.com",
+      "reported_careers": "https://careers.ril.com/",
+      "reported_board": "Not established",
+      "reported_platform": "Reliance Industries careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Prove Reliance Retail/AJIO scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Angel One",
+      "reported_website": "https://www.angelone.in",
+      "reported_careers": "https://www.angelone.in/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Count, IDs and details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Ansys",
+      "reported_website": "https://www.ansys.com",
+      "reported_careers": "https://careers.ansys.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted; platform not re-proven",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Determine whether Synopsys has additional/replacement scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Antropi Robotics",
+      "reported_website": "https://www.antropi.world",
+      "reported_careers": "https://www.antropi.world/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Inspect listing data/count",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Apollo",
+      "reported_website": "https://www.apollofirst.xyz",
+      "reported_careers": "https://www.apollofirst.xyz/careers2",
+      "reported_board": "https://wellfound.com/l/2zaSeM",
+      "reported_platform": "Wellfound",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Test Wellfound HTTP scope/completeness",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Apollo Hospitals",
+      "reported_website": "https://www.apollohospitals.com",
+      "reported_careers": "https://www.apollohospitals.com/corporate/careers/index.html",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow Job Search to final board and determine group scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Apple",
+      "reported_website": "https://www.apple.com",
+      "reported_careers": "https://jobs.apple.com/en-in/search",
+      "reported_board": "Same",
+      "reported_platform": "Apple Jobs/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile filters/counts/IDs/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "ASML",
+      "reported_website": "https://www.asml.com",
+      "reported_careers": "https://www.asml.com/en/careers",
+      "reported_board": "https://www.asml.com/en/careers/find-your-job",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Establish stable list/detail HTTP and India scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "ASUS",
+      "reported_website": "https://www.asus.com",
+      "reported_careers": "https://careers.asus.com/work-at-asus",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "ASUS Careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow job search to final board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Ather Energy",
+      "reported_website": "https://www.atherenergy.com",
+      "reported_careers": "https://careers.atherenergy.com/",
+      "reported_board": "https://careers.atherenergy.com/jobs",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Discover underlying list data",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Atlassian",
+      "reported_website": "https://www.atlassian.com",
+      "reported_careers": "https://www.atlassian.com/company/careers",
+      "reported_board": "https://www.atlassian.com/company/careers/all-jobs",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile list/detail calls",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Avaamo",
+      "reported_website": "https://avaamo.ai",
+      "reported_careers": "https://avaamo.ai/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Complete-count/detail validation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Bain & Company",
+      "reported_website": "https://www.bain.com",
+      "reported_careers": "https://www.bain.com/careers/",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow Find a role/search",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "BD",
+      "reported_website": "https://www.bd.com",
+      "reported_careers": "https://bd.jobs/",
+      "reported_board": "https://bd.jobs/locations/bengaluru-ind/jobs/",
+      "reported_platform": "Employer jobs site",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile other India locations/pagination",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Best Buy",
+      "reported_website": "https://www.bestbuy.com",
+      "reported_careers": "https://jobs.bestbuy.com/",
+      "reported_board": "https://jobs.bestbuy.com/bby?id=career_area",
+      "reported_platform": "Employer jobs portal",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Identify search endpoint and India coverage",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "BigBasket",
+      "reported_website": "https://www.bigbasket.com",
+      "reported_careers": "https://www.bigbasket.com/careers/",
+      "reported_board": "https://careers.bigbasket.com/",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile jobs/pages/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Blackhawk Network",
+      "reported_website": "https://blackhawknetwork.com",
+      "reported_careers": "https://blackhawknetwork.com/careers/",
+      "reported_board": "https://careers.blackhawknetwork.com/",
+      "reported_platform": "Regional employer board",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Capture APAC target/ATS with standard HTTP",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "BNP Paribas",
+      "reported_website": "https://group.bnpparibas",
+      "reported_careers": "https://group.bnpparibas/en/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filter/count reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Bounce",
+      "reported_website": "https://bounceinfinity.com",
+      "reported_careers": "https://bounceinfinity.com/pages/careers",
+      "reported_board": "Not established",
+      "reported_platform": "Unknown",
+      "reported_status": "UNRESOLVED",
+      "remaining_check": "Find current employer-published jobs source",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "BP",
+      "reported_website": "https://www.bp.com",
+      "reported_careers": "https://www.bp.com/en/global/corporate/careers.html",
+      "reported_board": "BP `careers/jobs-at-bp` job/search pages",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Identify stable search calls/India scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "CarDekho",
+      "reported_website": "https://www.cardekho.com",
+      "reported_careers": "https://careers.cardekho.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile role scope/IDs",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Cargill",
+      "reported_website": "https://www.cargill.com",
+      "reported_careers": "https://careers.cargill.com/",
+      "reported_board": "https://careers.cargill.com/en/DTD-Careers-Bengaluru",
+      "reported_platform": "Employer careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile India-wide locations/paging",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Cars24",
+      "reported_website": "https://www.cars24.com",
+      "reported_careers": "https://www.cars24.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Confirm listing mechanism/completeness",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Caterpillar",
+      "reported_website": "https://www.caterpillar.com",
+      "reported_careers": "https://careers.caterpillar.com/en/",
+      "reported_board": "Same",
+      "reported_platform": "Employer careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/counts/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "CBRE",
+      "reported_website": "https://www.cbre.com",
+      "reported_careers": "https://careers.cbre.com/",
+      "reported_board": "https://careers.cbre.com/en_US/careers/SearchJobs/",
+      "reported_platform": "Avature-style; not re-proven",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Probe normal HTTP; establish platform from published assets",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "CGI",
+      "reported_website": "https://www.cgi.com",
+      "reported_careers": "https://www.cgi.com/en/careers-search",
+      "reported_board": "https://clients.njoyn.com/CORP/xweb/xweb.asp?page=joblisting&CLID=21001",
+      "reported_platform": "Njoyn",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile Njoyn paging/details/India",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Chargebee",
+      "reported_website": "https://www.chargebee.com",
+      "reported_careers": "https://www.chargebee.com/careers/",
+      "reported_board": "https://in.linkedin.com/company/chargebee/jobs/",
+      "reported_platform": "LinkedIn Jobs",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Prefer employer-published alternative if one appears",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Citrix",
+      "reported_website": "https://www.cloud.com",
+      "reported_careers": "https://www.cloud.com/careers",
+      "reported_board": "Same/current parent landing",
+      "reported_platform": "Cloud Software Group careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Re-establish Citrix-specific source under parent",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Clear",
+      "reported_website": "https://www.clear.in",
+      "reported_careers": "https://www.clear.in/s/careers",
+      "reported_board": "https://clear.darwinbox.in/",
+      "reported_platform": "Darwinbox",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Capture exact candidate path/list calls",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Cleartrip",
+      "reported_website": "https://www.cleartrip.com",
+      "reported_careers": "https://careers.cleartrip.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Count/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Coforge",
+      "reported_website": "https://www.coforge.com",
+      "reported_careers": "https://careers.coforge.com/",
+      "reported_board": "https://careers.coforge.com/coforge/",
+      "reported_platform": "Employer portal",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Determine list/detail endpoint",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Cognizant",
+      "reported_website": "https://www.cognizant.com",
+      "reported_careers": "https://careers.cognizant.com/global-en/",
+      "reported_board": "https://careers.cognizant.com/global-en/jobs/",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/pagination/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "CoinDCX",
+      "reported_website": "https://coindcx.com",
+      "reported_careers": "https://coindcx.com/opportunities",
+      "reported_board": "https://coindcx.com/opportunities/openings",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Replace stale source; reconcile jobs",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Collins Aerospace",
+      "reported_website": "https://www.rtx.com/collinsaerospace",
+      "reported_careers": "https://careers.rtx.com/global/en/collins-aerospace",
+      "reported_board": "Same subsidiary careers scope",
+      "reported_platform": "RTX careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Prove Collins filter covers all jobs",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "ColorTokens",
+      "reported_website": "https://colortokens.com",
+      "reported_careers": "https://colortokens.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile roles/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Cornerstone OnDemand",
+      "reported_website": "https://www.cornerstoneondemand.com",
+      "reported_careers": "https://www.cornerstoneondemand.com/careers/",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow open-role link",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Costco",
+      "reported_website": "https://www.costco.com",
+      "reported_careers": "https://careers.costco.com/",
+      "reported_board": "https://careers.costco.com/jobs",
+      "reported_platform": "Employer jobs portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Verify accessibility and India applicability",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Credit Agricole",
+      "reported_website": "https://www.ca-cib.com",
+      "reported_careers": "https://jobs.ca-cib.com/",
+      "reported_board": "Same",
+      "reported_platform": "Cr\u00e9dit Agricole CIB career portal",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India scope/paging/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "CVS Health",
+      "reported_website": "https://www.cvshealth.com",
+      "reported_careers": "https://jobs.cvshealth.com/",
+      "reported_board": "https://jobs.cvshealth.com/us/en/home",
+      "reported_platform": "Employer jobs site",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Establish India/GCC scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "CyberArk",
+      "reported_website": "https://www.cyberark.com",
+      "reported_careers": "https://www.cyberark.com/careers/",
+      "reported_board": "Palo Alto Networks Careers; exact final search not captured",
+      "reported_platform": "Parent careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Capture exact PANW board/filter",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Darwinbox",
+      "reported_website": "https://darwinbox.com",
+      "reported_careers": "https://darwinbox.com/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Capture direct openings board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Dassault Systemes",
+      "reported_website": "https://www.3ds.com",
+      "reported_careers": "https://www.3ds.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Dassault custom board",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Re-run dedicated adapter reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "DataStax",
+      "reported_website": "https://www.ibm.com/products/datastax",
+      "reported_careers": "https://www.ibm.com/careers/search",
+      "reported_board": "IBM Careers; DataStax-specific filter not established",
+      "reported_platform": "IBM Careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Determine distinguishable DataStax scope in IBM Careers",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Decentro",
+      "reported_website": "https://decentro.tech",
+      "reported_careers": "https://decentro.tech/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Roles/count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Delta Air Lines",
+      "reported_website": "https://www.delta.com",
+      "reported_careers": "Delta corporate careers",
+      "reported_board": "https://delta.avature.net/careers",
+      "reported_platform": "Avature",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Validate Avature requests with Python HTTP",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Deutsche Bank",
+      "reported_website": "https://www.db.com",
+      "reported_careers": "https://careers.db.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/counts/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Deutsche Boerse Group",
+      "reported_website": "https://www.deutsche-boerse.com",
+      "reported_careers": "https://careers.deutsche-boerse.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India scope/list reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Deutsche Telekom",
+      "reported_website": "https://www.telekom.com",
+      "reported_careers": "https://www.telekom.com/en/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow jobs CTA/final ATS",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Dhruva Space",
+      "reported_website": "https://www.dhruvaspace.com",
+      "reported_careers": "https://www.dhruvaspace.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "IDs/count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Discover",
+      "reported_website": "https://www.discover.com",
+      "reported_careers": "https://jobs.discover.com/",
+      "reported_board": "Same",
+      "reported_platform": "Discover Careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reproduce search and India scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Dream Sports",
+      "reported_website": "https://www.dreamsports.group",
+      "reported_careers": "https://www.dreamsports.group/careers/",
+      "reported_board": "Not established",
+      "reported_platform": "Employer culture/careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Find current Dream Sports/Dream11 published board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Dynatrace",
+      "reported_website": "https://www.dynatrace.com",
+      "reported_careers": "https://www.dynatrace.com/careers/",
+      "reported_board": "https://www.dynatrace.com/careers/jobs/",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Inspect list data/count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "E2open",
+      "reported_website": "https://www.e2open.com",
+      "reported_careers": "https://www.e2open.com/company/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/follow published board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Emirates Group",
+      "reported_website": "https://www.theemiratesgroup.com",
+      "reported_careers": "https://www.emiratesgroupcareers.com/",
+      "reported_board": "Same",
+      "reported_platform": "Emirates Group Careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Counts/paging/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "EPAM",
+      "reported_website": "https://www.epam.com",
+      "reported_careers": "https://www.epam.com/careers/job-listings",
+      "reported_board": "Same",
+      "reported_platform": "Employer careers/custom",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Probe with Actions HTTP",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Exotel",
+      "reported_website": "https://exotel.com",
+      "reported_careers": "https://exotel.com/about-us/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Role-count/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "FedEx",
+      "reported_website": "https://www.fedex.com",
+      "reported_careers": "https://careers.fedex.com/",
+      "reported_board": "Same",
+      "reported_platform": "FedEx Careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/pagination/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Flipkart",
+      "reported_website": "https://www.flipkart.com",
+      "reported_careers": "https://www.flipkartcareers.com/",
+      "reported_board": "https://www.flipkartcareers.com/#!/joblist",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Revalidate joblist HTTP calls/paging",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Flux Auto",
+      "reported_website": "https://fluxauto.ai",
+      "reported_careers": "https://fluxauto.ai/careers.html",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Complete role/detail check",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Fujitsu",
+      "reported_website": "https://www.fujitsu.com",
+      "reported_careers": "https://www.fujitsu.com/in/about/careers/",
+      "reported_board": "https://www.jobs.global.fujitsu.com/",
+      "reported_platform": "SAP SuccessFactors-style",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "List pagination/count reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Games24x7",
+      "reported_website": "https://www.games24x7.com",
+      "reported_careers": "https://www.games24x7.com/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and inspect applications",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Globant",
+      "reported_website": "https://www.globant.com",
+      "reported_careers": "https://career.globant.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/paging/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Google",
+      "reported_website": "https://about.google",
+      "reported_careers": "Google Careers",
+      "reported_board": "https://www.google.com/about/careers/applications/jobs/results/",
+      "reported_platform": "Google Careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Programmatic pagination/detail verification",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Grant Thornton",
+      "reported_website": "https://www.grantthornton.in",
+      "reported_careers": "https://www.grantthornton.in/careers/",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow vacancies; preserve member-firm scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Guidewire",
+      "reported_website": "https://www.guidewire.com",
+      "reported_careers": "https://careers.guidewire.com/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and determine ATS",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Happiest Minds",
+      "reported_website": "https://www.happiestminds.com",
+      "reported_careers": "https://www.happiestminds.com/careers/",
+      "reported_board": "Not established",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Find current employer-published openings board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "HARMAN",
+      "reported_website": "https://www.harman.com",
+      "reported_careers": "https://jobs.harman.com/",
+      "reported_board": "Same",
+      "reported_platform": "HARMAN Jobs",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Probe standard HTTP",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "HashiCorp",
+      "reported_website": "https://www.hashicorp.com",
+      "reported_careers": "https://www.hashicorp.com/en/careers/open-positions",
+      "reported_board": "https://www.ibm.com/careers/search?q=hashicorp",
+      "reported_platform": "IBM Careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Validate filter completeness",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Hasura",
+      "reported_website": "https://hasura.io",
+      "reported_careers": "https://hasura.io/careers",
+      "reported_board": "https://promptql.io/careers",
+      "reported_platform": "PromptQL careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Determine final job board/feed",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Highspot",
+      "reported_website": "https://www.highspot.com",
+      "reported_careers": "https://www.highspot.com/careers/",
+      "reported_board": "Seismic Careers; exact job search not captured",
+      "reported_platform": "Seismic parent careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Capture Seismic board/filter and legacy scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "HSBC",
+      "reported_website": "https://www.hsbc.com",
+      "reported_careers": "https://www.hsbc.com/careers",
+      "reported_board": "Same career property",
+      "reported_platform": "Employer careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Capture exact search calls/India scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "IBM",
+      "reported_website": "https://www.ibm.com",
+      "reported_careers": "https://www.ibm.com/careers",
+      "reported_board": "https://www.ibm.com/careers/search",
+      "reported_platform": "IBM Careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/IDs/counts",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Informatica",
+      "reported_website": "https://www.informatica.com",
+      "reported_careers": "https://informatica.gr8people.com/jobs",
+      "reported_board": "Current post-acquisition source not established",
+      "reported_platform": "Legacy Gr8 People; Salesforce parent",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Resolve Salesforce-era source before adapter repair",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Ivanti",
+      "reported_website": "https://www.ivanti.com",
+      "reported_careers": "https://careers.ivanti.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and identify ATS",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Ivy Homes",
+      "reported_website": "https://ivy.homes",
+      "reported_careers": "https://ivy.homes/career",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Inspect underlying data/count",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Jumbotail",
+      "reported_website": "https://jumbotail.com",
+      "reported_careers": "https://jumbotail.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Stable IDs/full detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Jupiter",
+      "reported_website": "https://jupiter.money",
+      "reported_careers": "https://jupiter.money/careers/",
+      "reported_board": "https://jupiter.keka.com/careers",
+      "reported_platform": "Keka",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Keka list/detail/pagination testing",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Keka",
+      "reported_website": "https://www.keka.com",
+      "reported_careers": "https://www.keka.com/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow openings CTA",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Khatabook",
+      "reported_website": "https://khatabook.com",
+      "reported_careers": "https://khatabook.com/hiring/",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Resolve complete job list/applications",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Kissflow",
+      "reported_website": "https://kissflow.com",
+      "reported_careers": "https://careers.kissflow.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Count/ID/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Klarna",
+      "reported_website": "https://www.klarna.com",
+      "reported_careers": "https://www.klarna.com/careers/",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow search CTA",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "KreditBee",
+      "reported_website": "https://www.kreditbee.in",
+      "reported_careers": "https://www.kreditbee.in/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Inspect HTML/JS/application links",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "L&T Technology Services",
+      "reported_website": "https://www.ltts.com",
+      "reported_careers": "https://www.ltts.com/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow jobs links and prove LTTS-only scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "LambdaTest",
+      "reported_website": "https://www.lambdatest.com",
+      "reported_careers": "https://www.lambdatest.com/career",
+      "reported_board": "https://www.testmuai.com/career/",
+      "reported_platform": "TestMu AI careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile roles/feed and old identifiers",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Larsen & Toubro",
+      "reported_website": "https://www.larsentoubro.com",
+      "reported_careers": "https://www.larsentoubro.com/corporate/careers/",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Resolve business-unit boards/scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "LatentView Analytics",
+      "reported_website": "https://www.latentview.com",
+      "reported_careers": "https://www.latentview.com/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and identify ATS",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "LeadSquared",
+      "reported_website": "https://www.leadsquared.com",
+      "reported_careers": "https://www.leadsquared.com/careers/",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow openings CTA",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Licious",
+      "reported_website": "https://www.licious.in",
+      "reported_careers": "https://www.licious.in/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Resolve openings source",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Lingaro",
+      "reported_website": "https://lingarogroup.com",
+      "reported_careers": "https://jobs.lever.co/lingarogroup",
+      "reported_board": "Same",
+      "reported_platform": "Lever",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Re-prove employer\u2192Lever tenant link",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "LTIMindtree",
+      "reported_website": "https://www.ltimindtree.com",
+      "reported_careers": "https://careers.ltimindtree.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry HTTP",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Lululemon",
+      "reported_website": "https://corporate.lululemon.com",
+      "reported_careers": "https://careers.lululemon.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/establish India scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "M2P Fintech",
+      "reported_website": "https://m2pfintech.com",
+      "reported_careers": "https://m2pfintech.com/careers/",
+      "reported_board": "https://careers.m2pfintech.com/",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Complete-count/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "MakeMyTrip",
+      "reported_website": "https://www.makemytrip.com",
+      "reported_careers": "https://careers.makemytrip.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and identify list mechanism",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Manhattan Associates",
+      "reported_website": "https://www.manh.com",
+      "reported_careers": "https://careers.manh.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and determine ATS",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "MathWorks",
+      "reported_website": "https://www.mathworks.com",
+      "reported_careers": "https://in.mathworks.com/company/jobs/opportunities.html",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Paging/details/counts",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "McDonald's",
+      "reported_website": "https://www.mcdonalds.com",
+      "reported_careers": "https://careers.mcdonalds.com/",
+      "reported_board": "Same global site",
+      "reported_platform": "McDonald\u2019s Careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Identify employer entity covering India tech roles",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "McKinsey & Company",
+      "reported_website": "https://www.mckinsey.com",
+      "reported_careers": "https://www.mckinsey.com/careers",
+      "reported_board": "https://www.mckinsey.com/careers/search-jobs",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filter/count/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "MediaTek",
+      "reported_website": "https://corp.mediatek.com",
+      "reported_careers": "https://corp.mediatek.com/careers",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and capture actual openings",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "MediBuddy",
+      "reported_website": "https://www.medibuddy.in",
+      "reported_careers": "https://www.medibuddy.in/careers",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and follow application links",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Mercedes-Benz Research and Development India",
+      "reported_website": "https://www.mbrdi.co.in",
+      "reported_careers": "https://www.mbrdi.co.in/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Capture openings board/ATS",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Meta",
+      "reported_website": "https://about.meta.com",
+      "reported_careers": "https://www.metacareers.com/",
+      "reported_board": "https://www.metacareers.com/jobs/",
+      "reported_platform": "Meta Careers/custom",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Respectfully probe standard HTTP; no feed claim",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Mitsubishi Electric",
+      "reported_website": "https://www.mitsubishielectric.com",
+      "reported_careers": "https://www.mitsubishielectric.com/en/careers/",
+      "reported_board": "India board not captured",
+      "reported_platform": "Regional careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow India link/entity",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Mobile Premier League",
+      "reported_website": "https://www.mpl.live",
+      "reported_careers": "https://www.mpl.live/careers",
+      "reported_board": "Not established",
+      "reported_platform": "Unknown",
+      "reported_status": "UNRESOLVED",
+      "remaining_check": "Locate current employer-published hiring source",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Mondelez International",
+      "reported_website": "https://www.mondelezinternational.com",
+      "reported_careers": "https://careers.mondelezinternational.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/establish India search",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Moneyview",
+      "reported_website": "https://moneyview.in",
+      "reported_careers": "https://moneyview.in/careers",
+      "reported_board": "https://moneyview.darwinbox.in/ms/candidate/careers",
+      "reported_platform": "Darwinbox",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Inspect list/detail calls and counts",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Mphasis",
+      "reported_website": "https://www.mphasis.com",
+      "reported_careers": "https://careers.mphasis.com/",
+      "reported_board": "https://careers.mphasis.com/home.html",
+      "reported_platform": "Employer portal/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India/search/paging details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Mu Sigma",
+      "reported_website": "https://www.mu-sigma.com",
+      "reported_careers": "https://www.mu-sigma.com/career/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile complete roles",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Myntra",
+      "reported_website": "https://www.myntra.com",
+      "reported_careers": "https://careers.myntra.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry current official portal",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Namma Yatri",
+      "reported_website": "https://nammayatri.in",
+      "reported_careers": "https://nammayatri.in/careers",
+      "reported_board": "Not established",
+      "reported_platform": "Unknown",
+      "reported_status": "UNRESOLVED",
+      "remaining_check": "Find Namma Yatri/Juspay-published hiring source and entity scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "NatWest Group",
+      "reported_website": "https://www.natwestgroup.com",
+      "reported_careers": "https://jobs.natwestgroup.com/",
+      "reported_board": "Same",
+      "reported_platform": "NatWest Group Jobs",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India paging/count/detail validation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Navi",
+      "reported_website": "https://navi.com",
+      "reported_careers": "https://navi.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listing/count/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "NEC",
+      "reported_website": "https://www.nec.com",
+      "reported_careers": "https://www.nec.com/en/global/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/follow India-specific routes",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "NoBroker",
+      "reported_website": "https://www.nobroker.in",
+      "reported_careers": "https://www.nobroker.in/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Complete listing/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "NTT DATA",
+      "reported_website": "https://www.nttdata.com",
+      "reported_careers": "https://careers.nttdata.com/global/en",
+      "reported_board": "Same",
+      "reported_platform": "Phenom per repo mapping; assets not re-proven",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconfirm platform; India filters/counts",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "OCBC",
+      "reported_website": "https://www.ocbc.com",
+      "reported_careers": "https://www.ocbc.com/group/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow Search Jobs/final platform",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "OfBusiness",
+      "reported_website": "https://www.ofbusiness.com",
+      "reported_careers": "https://www.ofbcareers.com/",
+      "reported_board": "Same",
+      "reported_platform": "Dedicated careers site",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "IDs/details/counts",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Ola",
+      "reported_website": "https://www.olacabs.com",
+      "reported_careers": "https://www.olacabs.com/careers",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry current Ola Cabs source",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Ola Electric",
+      "reported_website": "https://www.olaelectric.com",
+      "reported_careers": "https://www.olaelectric.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listing/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Open Financial Technologies",
+      "reported_website": "https://open.money",
+      "reported_careers": "https://open.money/company/careers",
+      "reported_board": "https://openfinancial.keka.com/careers/",
+      "reported_platform": "Keka",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Keka list/detail/count validation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Orange Health Labs",
+      "reported_website": "https://www.orangehealth.in",
+      "reported_careers": "https://www.orangehealth.in/jobs",
+      "reported_board": "https://orangehealth.darwinbox.in/ms/candidatev2/main/careers/allJobs",
+      "reported_platform": "Darwinbox",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile list calls/counts/IDs",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Panasonic",
+      "reported_website": "https://www.panasonic.com/in",
+      "reported_careers": "https://www.lsin.panasonic.com/career",
+      "reported_board": "No all-Panasonic India board established",
+      "reported_platform": "Multiple group/entity sites",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Determine intended Panasonic entity/board set",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Pegasystems",
+      "reported_website": "https://www.pega.com",
+      "reported_careers": "https://www.pega.com/about/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow Open roles/search",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Peoplebox.ai",
+      "reported_website": "https://www.peoplebox.ai",
+      "reported_careers": "https://www.peoplebox.ai/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Count/details/IDs",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Perfios",
+      "reported_website": "https://perfios.ai",
+      "reported_careers": "https://perfios.ai/careers/",
+      "reported_board": "https://perfios.darwinbox.in/ms/candidate/careers/",
+      "reported_platform": "Darwinbox",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "List/detail/count reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Persistent Systems",
+      "reported_website": "https://www.persistent.com",
+      "reported_careers": "https://careers.persistent.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry from Actions",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "PharmEasy",
+      "reported_website": "https://pharmeasy.in",
+      "reported_careers": "https://pharmeasy.in/careers/",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Resolve listings/application board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Pine Labs",
+      "reported_website": "https://www.pinelabs.com",
+      "reported_careers": "https://www.pinelabs.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Portea",
+      "reported_website": "https://www.portea.com",
+      "reported_careers": "https://www.portea.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listings/application targets",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Porter",
+      "reported_website": "https://porter.in",
+      "reported_careers": "https://porter.in/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listings/IDs/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Practo",
+      "reported_website": "https://www.practo.com",
+      "reported_careers": "https://www.practo.com/company/careers",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/follow ATS links",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Providence India",
+      "reported_website": "https://www.providence.in",
+      "reported_careers": "https://www.providence.in/careers",
+      "reported_board": "Same",
+      "reported_platform": "India subsidiary careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry preserving Providence India scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Ralph Lauren",
+      "reported_website": "https://corporate.ralphlauren.com",
+      "reported_careers": "https://careers.ralphlauren.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/India filter",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Rapido",
+      "reported_website": "https://rapido.bike",
+      "reported_careers": "https://rapido.bike/Careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Full list/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Rebel Foods",
+      "reported_website": "https://www.rebelfoods.com",
+      "reported_careers": "https://www.rebelfoods.com/join-our-team",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Complete openings/application check",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Regeneron",
+      "reported_website": "https://www.regeneron.com",
+      "reported_careers": "https://careers.regeneron.com/",
+      "reported_board": "https://careers.regeneron.com/en/jobs/",
+      "reported_platform": "Employer jobs/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India scope/paging/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Reliance Jio",
+      "reported_website": "https://www.jio.com",
+      "reported_careers": "https://careers.jio.com/",
+      "reported_board": "Same",
+      "reported_platform": "Jio Careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Search/list reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Revolut",
+      "reported_website": "https://www.revolut.com",
+      "reported_careers": "https://www.revolut.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Rippling",
+      "reported_website": "https://www.rippling.com",
+      "reported_careers": "https://www.rippling.com/careers",
+      "reported_board": "https://www.rippling.com/careers/open-roles",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Count/paging/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Rupeek",
+      "reported_website": "https://rupeek.com",
+      "reported_careers": "https://rupeek.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listing/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Safe Security",
+      "reported_website": "https://safe.security",
+      "reported_careers": "https://safe.security/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and identify board/ATS",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "SALT",
+      "reported_website": "https://www.salt.pe",
+      "reported_careers": "https://www.salt.pe/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listings/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Sarla Aviation",
+      "reported_website": "https://www.sarla-aviation.com",
+      "reported_careers": "https://www.sarla-aviation.com/open-roles/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "IDs/details/counts",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "SAS",
+      "reported_website": "https://www.sas.com",
+      "reported_careers": "https://www.sas.com/en_in/careers.html",
+      "reported_board": "Same careers property",
+      "reported_platform": "SAS careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Capture final search calls/counts",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Scaler",
+      "reported_website": "https://www.scaler.com",
+      "reported_careers": "https://www.scaler.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listings/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Schneider Electric",
+      "reported_website": "https://www.se.com",
+      "reported_careers": "https://www.se.com/ww/en/about-us/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/follow jobs board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Seclore",
+      "reported_website": "https://www.seclore.com",
+      "reported_careers": "https://www.seclore.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and determine ATS",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Shiprocket",
+      "reported_website": "https://www.shiprocket.in",
+      "reported_careers": "https://careers.shiprocket.in/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Count/IDs/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Siemens",
+      "reported_website": "https://www.siemens.com",
+      "reported_careers": "https://jobs.siemens.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Siemens Jobs",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and inspect published list calls",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Simplilearn",
+      "reported_website": "https://www.simplilearn.com",
+      "reported_careers": "https://www.simplilearn.com/careers",
+      "reported_board": "https://www.simplilearn.com/job-openings",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Discover evidence-backed HTTP list source",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Skyroot Aerospace",
+      "reported_website": "https://skyroot.in",
+      "reported_careers": "https://skyroot.in/careers.html",
+      "reported_board": "Same",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and capture applications",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "SLB",
+      "reported_website": "https://www.slb.com",
+      "reported_careers": "https://careers.slb.com/",
+      "reported_board": "https://careers.slb.com/job-listing",
+      "reported_platform": "SLB Careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/count/paging/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "SMBC",
+      "reported_website": "https://www.smbcgroup.com",
+      "reported_careers": "https://careers.smbcgroup.com/",
+      "reported_board": "https://careers.smbcgroup.com/smbc ; https://careers.smbcgroup.com/smbc/viewalljobs/",
+      "reported_platform": "SAP SuccessFactors-style",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India coverage and regional-board combination",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Societe Generale",
+      "reported_website": "https://www.societegenerale.com",
+      "reported_careers": "https://careers.societegenerale.com/en",
+      "reported_board": "Same",
+      "reported_platform": "Employer careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/paging/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Sonata Software",
+      "reported_website": "https://www.sonata-software.com",
+      "reported_careers": "https://www.sonata-software.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Complete listings/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Sony",
+      "reported_website": "https://www.sony.com",
+      "reported_careers": "https://www.sonyjobs.com/",
+      "reported_board": "Same",
+      "reported_platform": "Sony Jobs/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Splunk",
+      "reported_website": "https://www.splunk.com",
+      "reported_careers": "https://www.splunk.com/en_us/careers.html",
+      "reported_board": "https://careers.cisco.com/global/en/splunk",
+      "reported_platform": "Cisco Careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Validate filter completeness/India",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Syneos Health",
+      "reported_website": "https://www.syneoshealth.com",
+      "reported_careers": "https://www.syneoshealth.com/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow search/current opportunities",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Tata 1mg",
+      "reported_website": "https://www.1mg.com",
+      "reported_careers": "https://www.1mg.com/jobs",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "IDs/count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Tata Digital",
+      "reported_website": "https://www.tatadigital.com",
+      "reported_careers": "https://www.tatadigital.com/careers",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/capture board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Tata Elxsi",
+      "reported_website": "https://www.tataelxsi.com",
+      "reported_careers": "https://www.tataelxsi.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Roles/locations/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Tata Technologies",
+      "reported_website": "https://www.tatatechnologies.com",
+      "reported_careers": "https://www.tatatechnologies.com/in/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and find openings portal",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "TCS",
+      "reported_website": "https://www.tcs.com",
+      "reported_careers": "https://www.tcs.com/careers/india",
+      "reported_board": "Same careers property",
+      "reported_platform": "TCS custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Capture/reconcile current downstream search/apply source",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Tech Mahindra",
+      "reported_website": "https://www.techmahindra.com",
+      "reported_careers": "https://careers.techmahindra.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Paging/IDs/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Teradata",
+      "reported_website": "https://www.teradata.com",
+      "reported_careers": "https://careers.teradata.com/",
+      "reported_board": "https://careers.teradata.com/jobs",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Tesco Bengaluru",
+      "reported_website": "https://www.tescobengaluru.com",
+      "reported_careers": "https://www.tescobengaluru.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "India subsidiary careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile actual listing mechanism",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Tilt",
+      "reported_website": "https://www.tilt.bike",
+      "reported_careers": "https://www.tilt.bike/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listings/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Toshiba",
+      "reported_website": "https://www.global.toshiba",
+      "reported_careers": "https://www.global.toshiba/ww/recruit.html",
+      "reported_board": "India board not established",
+      "reported_platform": "Corporate recruitment directory",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Identify India entity/board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Traveloka",
+      "reported_website": "https://www.traveloka.com",
+      "reported_careers": "https://careers.traveloka.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India scope/paging/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Tredence",
+      "reported_website": "https://www.tredence.com",
+      "reported_careers": "https://www.tredence.com/careers/greatest-of-ai",
+      "reported_board": "Same career area",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Confirm all openings/application targets",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "UBS",
+      "reported_website": "https://www.ubs.com",
+      "reported_careers": "https://www.ubs.com/global/en/careers.html",
+      "reported_board": "Same careers property",
+      "reported_platform": "Employer careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Capture current jobs-search and India scope",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Udaan",
+      "reported_website": "https://udaan.com",
+      "reported_careers": "https://udaan.com/careers",
+      "reported_board": "Not established",
+      "reported_platform": "Unknown",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Find employer-published replacement",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Unacademy",
+      "reported_website": "https://unacademy.com",
+      "reported_careers": "https://unacademy.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listings/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "upGrad",
+      "reported_website": "https://www.upgrad.com",
+      "reported_careers": "https://www.upgrad.com/about/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/follow board redirects",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Upstox",
+      "reported_website": "https://upstox.com",
+      "reported_careers": "https://upstox.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reproduce 22/22, all IDs/details, alternate-board check",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Urban Company",
+      "reported_website": "https://www.urbancompany.com",
+      "reported_careers": "https://careers.urbancompany.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Inspect HTML/linked assets with standard HTTP",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "UST",
+      "reported_website": "https://www.ust.com",
+      "reported_careers": "https://www.ust.com/en/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Follow job-search links",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Vedantu",
+      "reported_website": "https://www.vedantu.com",
+      "reported_careers": "https://www.vedantu.com/careers",
+      "reported_board": "https://courses.vedantu.com/career-page/",
+      "reported_platform": "Employer-controlled career page",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Reconcile roles/application links",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Victoria's Secret",
+      "reported_website": "https://www.victoriassecretandco.com",
+      "reported_careers": "https://careers.victoriassecret.com/",
+      "reported_board": "https://careers.victoriassecret.com/en",
+      "reported_platform": "Employer career portal",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India/GCC scope, counts/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Vimeo",
+      "reported_website": "https://vimeo.com",
+      "reported_careers": "https://vimeo.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Open-role count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Vodafone",
+      "reported_website": "https://www.vodafone.com",
+      "reported_careers": "https://careers.vodafone.com/",
+      "reported_board": "Same",
+      "reported_platform": "Vodafone Careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India entity filters/paging",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Walmart Global Tech",
+      "reported_website": "https://tech.walmart.com",
+      "reported_careers": "https://careers.walmart.com/technology",
+      "reported_board": "Same technology careers area",
+      "reported_platform": "Walmart Careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Prove Global Tech India scope/list API",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Wayfair",
+      "reported_website": "https://www.wayfair.com",
+      "reported_careers": "https://www.aboutwayfair.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Bengaluru/India filters, counts/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "WebEngage",
+      "reported_website": "https://webengage.com",
+      "reported_careers": "https://webengage.com/careers/",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry/current openings board",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "WTW",
+      "reported_website": "https://www.wtwco.com",
+      "reported_careers": "https://careers.wtwco.com/",
+      "reported_board": "Same",
+      "reported_platform": "WTW Careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India filters/pagination/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "xPay",
+      "reported_website": "https://www.xpaycheckout.com",
+      "reported_careers": "https://www.xpaycheckout.com/careers",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Locations/list/detail reconciliation",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Yellow.ai",
+      "reported_website": "https://yellow.ai",
+      "reported_careers": "https://yellow.ai/career/",
+      "reported_board": "Final \u201cExplore open positions\u201d target not followed",
+      "reported_platform": "Employer careers/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Capture final target/list feed",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Yubi",
+      "reported_website": "https://www.go-yubi.com",
+      "reported_careers": "https://www.go-yubi.com/careers",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry and follow openings",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Yulu",
+      "reported_website": "https://www.yulu.bike",
+      "reported_careers": "https://www.yulu.bike/careers",
+      "reported_board": "Not separately resolved",
+      "reported_platform": "Employer careers",
+      "reported_status": "PARTIAL",
+      "remaining_check": "Inspect HTML/JS/application targets",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Zepto",
+      "reported_website": "https://www.zepto.com",
+      "reported_careers": "https://www.zepto.com/s/careers",
+      "reported_board": "Same configured source",
+      "reported_platform": "Employer careers",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Retry; do not substitute aggregators",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Zerodha",
+      "reported_website": "https://zerodha.com",
+      "reported_careers": "https://careers.zerodha.com/",
+      "reported_board": "Same",
+      "reported_platform": "Employer portal",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Probe standard HTTP/linked assets",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Zetwerk",
+      "reported_website": "https://www.zetwerk.com",
+      "reported_careers": "https://www.zetwerk.com/en-us/about-zetwerk/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Listings/IDs/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Zoho",
+      "reported_website": "https://www.zoho.com",
+      "reported_careers": "https://www.zoho.com/careers/",
+      "reported_board": "Same",
+      "reported_platform": "Employer-hosted/custom",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "India locations/count/details",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Zomato",
+      "reported_website": "https://www.eternal.com",
+      "reported_careers": "https://www.zomato.com/careers",
+      "reported_board": "https://www.eternal.com/careers/",
+      "reported_platform": "Eternal parent careers",
+      "reported_status": "VERIFIED_OFFICIAL_BOARD",
+      "remaining_check": "Prove Zomato-only filtering/exclude sibling brands as needed",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    },
+    {
+      "company": "Zoom",
+      "reported_website": "https://www.zoom.com",
+      "reported_careers": "https://careers.zoom.us/home",
+      "reported_board": "https://careers.zoom.us/home",
+      "reported_platform": "Zoom Careers/custom",
+      "reported_status": "BLOCKED",
+      "remaining_check": "Follow latest Zoom open-roles target and test standard HTTP",
+      "engineering_status": "UNVERIFIED_RESEARCH_LEAD"
+    }
+  ]
+}

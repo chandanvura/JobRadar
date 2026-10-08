@@ -1,0 +1,33 @@
+name: Research handoff public HTTP evidence
+on:
+  push:
+    branches: [research-handoff/2026-10-08]
+    paths: [companies/research-handoff-2026-10-08-01.json, .github/workflows/research-handoff.yml, scripts/ats_deep.py, scripts/research_keka_probe.py, scraper/keka.py, companies/companies.csv]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  investigate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m scripts.coverage_snapshot --output artifacts/handoff-before.json
+      - run: python -m scripts.ats_deep --manifest companies/research-handoff-2026-10-08-01.json --output artifacts/research-handoff
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '1'
+      - run: python -m scripts.research_keka_probe
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '1'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: research-handoff-2026-10-08-01
+          path: artifacts/
+          retention-days: 7
+          if-no-files-found: warn
