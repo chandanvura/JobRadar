@@ -41,7 +41,7 @@ def test_unhealthy_gate_never_starts_expensive_scan(event, health):
 
 def test_freshness_boundary_and_manual_refresh():
     now = datetime(2026, 10, 4, 4, tzinfo=timezone.utc)
-    for stamp, expected in [('2026-10-04T00:30:00Z', True), ('2026-10-04T00:30:01Z', False)]:
+    for stamp, expected in [('2026-10-04T03:45:00Z', True), ('2026-10-04T03:45:01Z', False)]:
         health = {'ok': True, 'latest_run': {'finished_at': stamp}}
         assert scan_gate.should_scan(health, 'schedule', now) is expected
         assert scan_gate.should_scan(health, 'workflow_dispatch', now)
@@ -110,7 +110,7 @@ def test_stale_but_available_database_allows_recovery(event):
 def test_source_degradation_does_not_lock_out_manual_recovery_or_due_scheduled_scan(status):
     now=datetime(2026,10,8,8,tzinfo=timezone.utc)
     health={'ok':False,'stale':False,'database':True,'ingestion_configured':True,
-            'latest_run':{'status':status,'finished_at':'2026-10-08T07:00:00Z'}}
+            'latest_run':{'status':status,'finished_at':'2026-10-08T07:50:00Z'}}
     assert scan_gate.should_scan(health,'workflow_dispatch',now)
     assert not scan_gate.should_scan(health,'schedule',now)
     health['latest_run']['finished_at']='2026-10-08T04:00:00Z'
@@ -118,3 +118,9 @@ def test_source_degradation_does_not_lock_out_manual_recovery_or_due_scheduled_s
     for change in [{'quota_exhausted':True},{'database':False},{'ingestion_configured':False}]:
         assert not scan_gate.should_scan(dict(health,**change),'workflow_dispatch',now)
     assert not scan_gate.should_scan(dict(health,latest_run={'status':'unknown'}),'workflow_dispatch',now)
+
+
+@pytest.mark.parametrize('finished', ['2026-10-08T09:09:00Z', '2026-10-08T11:09:25Z'])
+def test_manual_refresh_does_not_skip_next_four_hour_schedule(finished):
+    health={'ok':True,'latest_run':{'finished_at':finished}}
+    assert scan_gate.should_scan(health,'schedule',datetime(2026,10,8,12,7,tzinfo=timezone.utc))

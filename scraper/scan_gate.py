@@ -15,7 +15,10 @@ def should_scan(health, event, now=None):
     if event == "workflow_dispatch":
         return True
     age = minutes_since_scan(health, now)
-    return age is None or age >= 210
+    # Suppress only an immediately repeated refresh. A 210-minute window
+    # can skip the next four-hour slot after a manual scan and leave a
+    # nearly eight-hour gap; keep the six scheduled daily opportunities.
+    return age is None or age >= 15
 
 
 def main():
