@@ -50,3 +50,10 @@ test('role expansion does not admit unrelated jobs from employer boilerplate',()
  assert.ok(index.search('HPE cloud developer').has(cloud));
  assert.ok(!index.search('HPE cloud developer').has(hardware));
 });
+
+test("generic entry titles are searchable suggestions without assumed technical classification",()=>{
+ for(const title of taxonomy.review_titles){
+  assert.ok(SUGGESTED_JOB_TITLES.includes(title));
+  assert.equal(classifyRoleTitle(title),"Other");
+ }
+});

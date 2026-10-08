@@ -61,3 +61,10 @@ def test_workday_short_or_capped_listing_is_not_reported_complete(monkeypatch):
     company=Company('Example','https://example.wd1.myworkdayjobs.com/Jobs','workday','example|Jobs')
     jobs,total=asyncio.run(adapters.WorkdayAdapter().fetch_jobs(company))
     assert total==1 and 'Limited coverage' in jobs.coverage_warning
+
+
+@pytest.mark.parametrize("title", TAXONOMY["review_titles"])
+def test_generic_added_titles_need_technical_requirements(title):
+    assert adapters.likely_role(title)
+    assert classify_title(title, "General business operations")[1] == "Other"
+    assert classify_title(title, "Develop software using Java and SQL")[1] == "Software Engineering"
