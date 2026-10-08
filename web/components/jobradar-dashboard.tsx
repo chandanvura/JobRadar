@@ -1,5 +1,6 @@
 "use client";
 import { createJobSearchIndex } from "@/lib/job-search";
+import { fitPreferenceModel } from "@/lib/preference-model";
 import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
 import { defaultFreshness, matchesCareerView, verifiedView } from "@/lib/job-view";
 import { loadPublicCatalog } from "@/lib/public-catalog";
@@ -595,15 +596,16 @@ function DashboardContent() {
   const [rankingNow, setRankingNow] = useState(() => Date.now());
   useEffect(() => {setRankingNow(Date.now());}, [data]);
   useEffect(() => { const timer=window.setInterval(() => setRankingNow(Date.now()), 60000); return () => window.clearInterval(timer); }, []);
+  const preferenceModel = useMemo(() => fitPreferenceModel(Object.values(tracking), preferences), [tracking, preferences]);
   const ranking = useMemo(() => {
     const now = rankingNow;
     const feedback = feedbackByFamily(Object.values(tracking));
     return new Map(mergedJobs.map(job => {
       const match = personalMatch(job, preferences);
       const opportunity = opportunityPriority(job, preferences, now, match);
-      return [trackingKey(job), {match, priority: opportunity.score + (feedback.get(job.role_category) || 0)}];
+      return [trackingKey(job), {match, priority: opportunity.score + (preferenceModel.trained ? preferenceModel.boost(job) : (feedback.get(job.role_category) || 0))}];
     }));
-  }, [mergedJobs, preferences, tracking, rankingNow]);
+  }, [mergedJobs, preferences, tracking, rankingNow, preferenceModel]);
   const searchIndex = useMemo(() => createJobSearchIndex(mergedJobs), [mergedJobs]);
   const searchScores = useMemo(() => searchIndex.search(deferredQuery), [searchIndex, deferredQuery]);
   const filtered = useMemo(() => {
@@ -1152,6 +1154,7 @@ function DashboardContent() {
                     <div>
                       <h3 className="text-sm font-semibold">Your {preferences.experienceMin}–{preferences.experienceMax} YOE search</h3>
                       <p className="mt-1 text-xs leading-5 text-muted-foreground">{filtered.length} matching listings from {data?.companies.length || 0} employer sources. Older postings and unknown experience stay visible for review. Freshness is a filter, not a reason to lose an active opening.</p>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{preferenceModel.trained ? `Personal ranking adapts to ${preferenceModel.samples} saved, applied and ignored choices in this browser.` : "Save jobs you like and mark unwanted jobs Ignored. Personal ranking adapts once it has enough examples of both."} Your choices stay private in this browser.</p>
                     </div>
                     <Button variant="outline" onClick={() => navigate("All Jobs")} className="rounded-xl">Browse full catalogue <ExternalLink size={14} /></Button>
                   </div>

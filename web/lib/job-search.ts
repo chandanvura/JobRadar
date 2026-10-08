@@ -22,7 +22,7 @@ function oneEdit(a:string,b:string) {
   }
   return edits+(i<a.length||j<b.length?1:0)<=1;
 }
-export function createJobSearchIndex<T extends SearchableJob>(jobs:T[]) {
+function createLexicalJobSearchIndex<T extends SearchableJob>(jobs:T[]) {
   const postings=new Map<string,Map<number,number>>(), lengths:number[]=[], texts:string[]=[];
   jobs.forEach((job,id)=>{
     const fields:[[string,number],...Array<[string,number]>]=[[job.title,5],[job.company,4],[job.skills,3],[job.role_category,3],[job.normalized_location||'',2],[job.ats_provider||'',1],[job.description?.slice(0,12000)||'',.6]];
@@ -59,5 +59,47 @@ export function createJobSearchIndex<T extends SearchableJob>(jobs:T[]) {
       if(!scores.size)return new Map();
     }
     return new Map([...(scores||[])].filter(([id])=>phrases.every(phrase=>texts[id].includes(phrase))).sort((a,b)=>b[1]-a[1]).map(([id,score])=>[jobs[id],score]));
+  }};
+}
+
+// Related concepts supplement exact retrieval; company/city/skill terms remain
+// in every alternate query. Quoted phrases request literal search exclusively.
+const concepts: Array<[RegExp, string[]]> = [
+  [/\bcloud developer\b/i, ['cloud engineer', 'cloud platform engineer']],
+  [/\bcloud engineer\b/i, ['cloud developer', 'cloud infrastructure engineer']],
+  [/\bdevops engineer\b/i, ['devsecops engineer', 'build release engineer']],
+  [/\breliability engineering\b/i, ['site reliability engineer']],
+  [/\bcontainer orchestration\b/i, ['kubernetes']],
+  [/\binfrastructure as code\b/i, ['terraform', 'cloudformation']],
+  [/\bcontinuous delivery\b/i, ['ci cd', 'release engineer']],
+  [/\bprogrammer analyst\b/i, ['software engineer', 'application developer']],
+];
+export function createJobSearchIndex<T extends SearchableJob>(jobs:T[]) {
+  const index=createLexicalJobSearchIndex(jobs);
+  return {search(query:string):Map<T,number> {
+    const bounded=query.slice(0,300), literal=index.search(bounded);
+    if(!bounded.trim() || bounded.includes('"'))return literal;
+    const alternatives=new Set<string>(), titlePatterns:RegExp[]=[];
+    for(const [pattern,replacements] of concepts) {
+      if(pattern.test(bounded)) {
+        titlePatterns.push(pattern);
+        for(const replacement of replacements)alternatives.add(bounded.replace(pattern,replacement));
+      }
+    }
+    if(!alternatives.size)return literal;
+    // Weighted reciprocal rank fusion avoids comparing unlike score scales.
+    // Exact matches receive the strongest vote; related concepts only supplement.
+    const scores=new Map<T,number>();
+    const fuse=(results:Map<T,number>,weight:number)=>{
+      let rank=0;
+      for(const job of results.keys())scores.set(job,(scores.get(job)||0)+weight/(60+(++rank)));
+    };
+    fuse(literal,1);
+    for(const alternative of [...alternatives].slice(0,4))fuse(index.search(alternative),.35/alternatives.size);
+    const titleEvidence=(job:T)=>titlePatterns.some(pattern=>pattern.test(job.title))?1:0;
+    // Protect actual requested titles from descriptions that merely mention them.
+    const ordered=[...scores].sort((a,b)=>titleEvidence(b[0])-titleEvidence(a[0])||b[1]-a[1]);
+    // Consumers sort by numeric scores; encode the same title-evidence tier.
+    return new Map(ordered.map(([job,score])=>[job,titleEvidence(job)+score]));
   }};
 }
