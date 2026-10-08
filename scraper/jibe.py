@@ -144,5 +144,13 @@ class JibeCareerAdapter:
             jobs=await asyncio.gather(*(convert(row) for row in found.values()))
             params['page']=1;r=await request(x,'GET',endpoint,params=params);r.raise_for_status()
             _,check=listing_records(r.json(),1,total)
-            if check!=first:raise SnapshotChanged('Jibe first public page changed during complete detail scan')
+            # Principal alternates importer metadata timestamp serialization
+            # (seconds/+0000 versus milliseconds/+00:00) with identical job data.
+            # Compare every public job field; analytics/importer metadata is not
+            # job identity, location, visibility, publication or requirements.
+            def public_rows(rows):
+                return {key: {field: value for field, value in row.items() if field != 'meta_data'}
+                        for key, row in rows.items()}
+            if public_rows(check)!=public_rows(first):
+                raise SnapshotChanged('Jibe first public page changed during complete detail scan')
         return jobs,len(found)
