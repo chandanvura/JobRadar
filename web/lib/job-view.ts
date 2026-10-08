@@ -1,3 +1,5 @@
+import {groupDuplicateJobs} from './job-feed.ts';
+import type {FeedJob} from './job-feed.ts';
 import {experienceUnverified} from './job-requirements.ts';
 import {internshipRole} from './job-sections.ts';
 export type ViewJob={title:string;is_active:number;is_eligible:number;experience_min:number|null;experience_max:number|null;experience_label?:string;employment_type?:string|null;eligibility_reason:string};
@@ -16,4 +18,9 @@ export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,
   if(!known&&senior(job.title))return false;
   if(view==='Needs Review')return !job.is_eligible;
   return true;
+}
+
+export function visibleCareerJobs<T extends FeedJob>(view:string,filtered:T[],review:T[]) {
+ // Dashboard already includes review leads; a fallback would bypass its filters.
+ return view==='Recommended'&&!filtered.length?groupDuplicateJobs(review).map(group=>group.job):filtered;
 }

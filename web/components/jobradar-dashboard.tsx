@@ -2,7 +2,7 @@
 import { createJobSearchIndex } from "@/lib/job-search";
 import { fitPreferenceModel } from "@/lib/preference-model";
 import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
-import { defaultFreshness, matchesCareerView, verifiedView } from "@/lib/job-view";
+import { defaultFreshness, matchesCareerView, verifiedView, visibleCareerJobs } from "@/lib/job-view";
 import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { hiringManagerDraft } from "@/lib/job-search-strategy";
@@ -776,7 +776,7 @@ function DashboardContent() {
   const eligible = currentJobs.filter(
       (j) => j.is_eligible && j.is_active && postingStillCurrent(j) && !isInternship(j),
     ),
-    reviewPreview = currentJobs.filter(
+    reviewPreview = groupDuplicateJobs(currentJobs.filter(
       (j) => j.is_active && !isInternship(j) &&
         !/\b(?:senior|staff|principal|lead|manager|experienced)\b/i.test(j.title) &&
         ["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason) &&
@@ -785,10 +785,11 @@ function DashboardContent() {
         (location === "All cities" || j.normalized_location.includes(location)) &&
         (role === "All roles" || j.role_category === role) &&
         (ats === "All ATS" || j.ats_provider === ats) &&
+        (workMode === "All arrangements" || requirementsFor(j).workMode === workMode) &&
         (!deferredQuery || searchScores.has(j)) &&
         (matchMode !== "Exact" || ((!preferences.titles.length || personalMatch(j, preferences).titleMatch) &&
           (!preferences.skills.length || personalMatch(j, preferences).skillMatch))),
-    ).slice(0, 20),
+    )).map(group=>group.job).slice(0, 20),
     internships = currentJobs.filter(
       (j) => j.is_active && technicalInternshipRole(j),
     ),
@@ -849,7 +850,7 @@ function DashboardContent() {
   };
   const showJobs = jobViews.has(active),
     companySearch = active === "Companies" ? deferredQuery : "";
-  const visibleJobs = ["Dashboard", "Recommended"].includes(active) && !filtered.length ? reviewPreview : filtered;
+  const visibleJobs = visibleCareerJobs(active, filtered, reviewPreview);
   const navGroup = (title: string, items: Set<string>) => (
     <div className="mb-4">
       <p className="mb-1 px-4 text-[10px] font-black uppercase tracking-[.18em] text-muted-foreground">
@@ -1029,7 +1030,7 @@ function DashboardContent() {
                     <h2 className="text-3xl font-semibold tracking-[-.045em] md:text-5xl">
                       {loading
                         ? "Checking live jobs…"
-                        : ["Dashboard", "Recommended"].includes(active) && !filtered.length && reviewPreview.length
+                        : active === "Recommended" && !filtered.length && reviewPreview.length
                           ? `${reviewPreview.length} roles to review`
                           : `${filtered.length} ${active === "Internships" ? (filtered.length === 1 ? "internship" : "internships") : (filtered.length === 1 ? "job" : "jobs")} in this view`}
                     </h2>
@@ -1044,7 +1045,7 @@ function DashboardContent() {
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    <Metric value={active === "Internships" ? internshipUltra.length : ["Dashboard", "Recommended"].includes(active) && !filtered.length ? reviewPreview.length : ultra.length} label={["Dashboard", "Recommended"].includes(active) && !filtered.length ? "Review leads" : "Verified < 3h"} />
+                    <Metric value={active === "Internships" ? internshipUltra.length : active === "Recommended" && !filtered.length ? reviewPreview.length : ultra.length} label={active === "Recommended" && !filtered.length ? "Review leads" : "Verified < 3h"} />
                     <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Bengaluru")).length} label="Bengaluru" />
                     <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Hyderabad")).length} label="Hyderabad" />
                   </div>
@@ -1197,7 +1198,7 @@ function DashboardContent() {
             <Loading />
           ) : showJobs ? (
             <>
-              {["Dashboard", "Recommended"].includes(active) && !filtered.length && reviewPreview.length > 0 && (
+              {active === "Recommended" && !filtered.length && reviewPreview.length > 0 && (
                 <section className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5">
                   <h3 className="font-black text-warning">No verified 24-hour matches right now</h3>
                   <p className="mt-1 text-sm leading-6 text-warning/80">
