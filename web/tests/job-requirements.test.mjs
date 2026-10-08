@@ -16,6 +16,7 @@ test('required, preferred and unclassified skills retain clause evidence and omi
 });
 test('missing, negative and conflicting requirements stay uncertain',()=>{
  assert.equal(extractRequirements('Benefits: Remote learning and Java workshops.').workMode,'Unknown');
+ assert.equal(extractRequirements('Requirements: Must be able to debug services.').education.length,0);
  assert.equal(extractRequirements('Not remote. Onsite position.').workMode,'Onsite');
  const r=extractRequirements('Required Skills: Java. Preferred Skills: Java. Remote or onsite position.');
  assert.deepEqual(r.skillConflicts,['Java']);assert.equal(r.requiredSkills.length,0);
