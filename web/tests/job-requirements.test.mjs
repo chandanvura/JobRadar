@@ -42,3 +42,11 @@ test('explicit required skills carry more rank weight than preferences',()=>{
  const p={titles:[],skills:['Java'],experienceMin:0,experienceMax:3};
  assert.ok(personalMatch(j,p).components.skills > personalMatch(j,{...p,skills:['AWS']}).components.skills);
 });
+
+test('actual HPE education abbreviations and preferred-experience headings are extracted',()=>{
+ const r=extractRequirements('What you need to bring: Education: BE or MS in Computer Science, or equivalent technical degree. Proficiency in Python, Go, or other languages. Preferred Experience: Familiarity with Docker. Experience with Kubernetes. What We Can Offer You: Learn Java.');
+ assert.deepEqual(r.education.map(x=>x.value),['BE','MS']);
+ assert.deepEqual(r.requiredSkills.map(x=>x.value).sort(),['Go','Python']);
+ assert.deepEqual(r.preferredSkills.map(x=>x.value).sort(),['Docker','Kubernetes']);
+ assert.ok(![...r.requiredSkills,...r.preferredSkills,...r.mentionedSkills].some(x=>x.value==='Java'));
+});
