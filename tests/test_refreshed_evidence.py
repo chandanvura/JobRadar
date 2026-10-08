@@ -25,6 +25,3 @@ def test_official_chain_prioritizes_exact_published_board_over_login_links(monke
     result = asyncio.run(refreshed_candidates.official_chain(None, 'Employer', root, board))
     assert result['verified'] and result['chain'] == calls
     assert calls == [root, 'https://jobs.employer.test/careers', board]
-
-
-
