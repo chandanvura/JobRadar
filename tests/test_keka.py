@@ -74,7 +74,7 @@ def test_changed_snapshot_fails_instead_of_returning_partial_jobs(monkeypatch):
         asyncio.run(KekaCareerAdapter().fetch_jobs(COMPANY))
 
 
-@pytest.mark.parametrize('payload', [{}, [ROW, ROW], [{**ROW, 'id': True}], [{**ROW, 'description': ''}]])
+@pytest.mark.parametrize('payload', [{}, [ROW, ROW], [{**ROW, 'id': True}], [{**ROW, 'description': ''}], [{**ROW, 'description': '<p> </p>'}]])
 def test_malformed_or_duplicate_inventory_is_not_empty_success(payload):
     with pytest.raises(ValueError):
         listing_records(payload)

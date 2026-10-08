@@ -60,7 +60,7 @@ async def run():
                 if not isinstance(jobs, list) or len(jobs) > 200:
                     raise ValueError('Listing shape or bounded detail limit changed')
                 ids = [j['id'] for j in jobs]
-                if len(ids) != len(set(ids)):
+                if any(type(i) is not int or i <= 0 for i in ids) or len(ids) != len(set(ids)):
                     raise ValueError('Duplicate listing IDs')
                 case.update(endpoint=endpoint, records=len(jobs), unique_ids=len(set(ids)),
                             widget_sha256=hashlib.sha256(r.content).hexdigest(), details=[])

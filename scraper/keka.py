@@ -37,13 +37,14 @@ def widget_configuration(text, board, expected):
 
 
 def listing_records(payload):
+    from .adapters import clean
     if not isinstance(payload, list) or len(payload) > 500:
         raise ValueError('Keka full listing schema or bounded scan limit changed')
     records = {}
     for row in payload:
         if (not isinstance(row, dict) or type(row.get('id')) is not int or row['id'] <= 0 or
                 row['id'] in records or not isinstance(row.get('title'), str) or not row['title'].strip() or
-                not isinstance(row.get('description'), str) or not row['description'].strip() or
+                not isinstance(row.get('description'), str) or not clean(row['description']) or
                 not isinstance(row.get('jobLocations'), list)):
             raise ValueError('Keka listing has duplicate IDs or malformed full records')
         for location in row['jobLocations']:
