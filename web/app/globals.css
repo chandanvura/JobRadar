@@ -26,7 +26,7 @@
 
 :root {
   color-scheme: light;
-  --hero: #123f2c;
+  --hero: #132c35;
   --success: #176440;
   --success-soft: #e3f3e9;
   --warning: #854d0e;
@@ -35,23 +35,23 @@
   --danger-soft: #fef2f2;
   --info: #5b21b6;
   --info-soft: #f5f3ff;
-  --background: #f5f7f8;
-  --foreground: #17211c;
+  --background: #f3f5f7;
+  --foreground: #16252e;
   --card: #ffffff;
-  --card-foreground: #171717;
+  --card-foreground: #16252e;
   --popover: #ffffff;
   --popover-foreground: #171717;
-  --primary: #155d3a;
+  --primary: #17654d;
   --primary-foreground: #fafafa;
   --secondary: #f5f5f5;
   --secondary-foreground: #171717;
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
+  --muted: #eef2f4;
+  --muted-foreground: #5c6b76;
   --accent: #f5f5f5;
   --accent-foreground: #171717;
   --destructive: #e7000b;
-  --border: #e5e5e5;
-  --input: #e5e5e5;
+  --border: #dce4e8;
+  --input: #dce4e8;
   --ring: #72a78a;
   --chart-1: #f54900;
   --chart-2: #009689;
@@ -59,8 +59,8 @@
   --chart-4: #ffb900;
   --chart-5: #fe9a00;
   --radius: 0.8rem;
-  --sidebar: #fafafa;
-  --sidebar-foreground: #171717;
+  --sidebar: #f9fbfc;
+  --sidebar-foreground: #16252e;
   --sidebar-primary: #171717;
   --sidebar-primary-foreground: #fafafa;
   --sidebar-accent: #f5f5f5;
@@ -71,9 +71,9 @@
 
 html[data-theme="dark"] {
   color-scheme: dark;
-  --background: #0b1220;
+  --background: #0b141b;
   --foreground: #e8eef7;
-  --card: #121e30;
+  --card: #13212b;
   --card-foreground: #e8eef7;
   --popover: #17263b;
   --popover-foreground: #e8eef7;
@@ -88,14 +88,14 @@ html[data-theme="dark"] {
   --border: #30435c;
   --input: #30435c;
   --ring: #73deb0;
-  --sidebar: #0e1929;
+  --sidebar: #0e1a23;
   --sidebar-foreground: #e8eef7;
   --sidebar-primary: #73deb0;
   --sidebar-primary-foreground: #09291f;
   --sidebar-accent: #203b39;
   --sidebar-accent-foreground: #b7f4d6;
   --sidebar-border: #30435c;
-  --hero: #123d36;
+  --hero: #173b3d;
   --success: #8ae7bc;
   --success-soft: #173c35;
   --warning: #f7d58a;
@@ -228,4 +228,65 @@ html[data-theme="dark"] { --surface-shadow: 0 6px 24px -12px rgb(0 0 0 / .5); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* A quiet workspace with a strong editorial hierarchy. */
+.radar-brand > div:first-child {
+  border-radius: 14px;
+  background: var(--foreground);
+  color: var(--card);
+}
+.radar-drawer { box-shadow: 8px 0 40px -32px rgb(15 35 46 / .18); }
+.radar-shell nav { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.radar-shell nav button[aria-current="page"] {
+  background: var(--foreground);
+  color: var(--background);
+  box-shadow: 0 3px 8px -4px rgb(12 37 44 / .3);
+}
+.radar-topbar { background: color-mix(in srgb, var(--background) 88%, transparent); }
+.radar-view-title { letter-spacing: -.035em; font-weight: 650; }
+.radar-content { padding-top: 26px; }
+.radar-welcome { border-top: 3px solid var(--primary); }
+.radar-welcome h2 { max-width: 16ch; }
+.radar-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background-image: none;
+  box-shadow: 0 10px 28px -20px rgb(13 41 50 / .5);
+}
+.radar-hero::before {
+  content: "";
+  position: absolute;
+  width: 460px;
+  height: 460px;
+  right: -130px;
+  top: -245px;
+  border: 1px solid rgb(183 236 209 / .17);
+  border-radius: 50%;
+  box-shadow: 0 0 0 55px rgb(183 236 209 / .045), 0 0 0 110px rgb(183 236 209 / .025);
+  pointer-events: none;
+}
+.radar-hero > div { position: relative; }
+.radar-hero h2 { max-width: 23ch; text-wrap: balance; }
+.radar-hero .grid > div { border-radius: 14px; background: rgb(255 255 255 / .065); border: 1px solid rgb(255 255 255 / .1); }
+.radar-filterbar { box-shadow: 0 2px 10px -8px rgb(12 37 44 / .16); }
+.radar-job-card { border-radius: 20px; }
+.radar-job-card h3 { line-height: 1.35; text-wrap: pretty; overflow-wrap: anywhere; }
+.radar-job-priority { background: color-mix(in srgb, var(--muted) 65%, var(--card)); }
+.radar-shell table th { color: var(--muted-foreground); font-size: 10px; letter-spacing: .06em; }
+.radar-shell table td { padding-top: 16px; padding-bottom: 16px; }
+.radar-shell table tbody tr:hover { background: var(--muted); }
+.radar-shell :is(h1, h2, h3) { scroll-margin-top: 100px; }
+@media (max-width: 639px) {
+  .radar-content { padding-top: 18px; }
+  .radar-topbar { gap: 12px; }
+  .radar-topbar > div > p { display: none; }
+  .radar-view-title { font-size: 18px; }
+  .radar-topbar > button:last-child { font-size: 0; width: 38px; padding: 0; }
+  .radar-topbar > button:last-child svg { width: 16px; }
+  .radar-hero { padding: 24px; }
+  .radar-hero h2 { font-size: 32px; }
+  .radar-job-card > div > div:first-child { padding: 20px; }
+  .radar-job-priority { min-width: 0; }
 }

@@ -113,11 +113,9 @@ test('company registry contains one active source per company name',async()=>{
 });
 test('buyer-facing experience leads with the trust promise and hides operations',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
- assert.match(source,/EARLY-CAREER OPPORTUNITY RADAR/);
- assert.match(source,/Skip stale reposts\. Find verified roles where you can actually apply\./);
- assert.match(source,/official employer career pages/);
- assert.match(source,/Evidence before recommendation/);
- assert.match(source,/Private by default/);
+ assert.match(source,/Good opportunities\. Clear evidence\./);
+ assert.match(source,/employer sources/);
+ assert.match(source,/private application tracking/);
  assert.match(source,/aria-expanded=\{showOperations\}/);
  assert.match(source,/System & privacy/);
 });
