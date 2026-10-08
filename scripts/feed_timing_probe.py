@@ -26,7 +26,7 @@ async def main():
             # Follow only actual first-party published career links; save blocks as evidence.
             async with adapters.client(timeout=30) as client:
                 queue=[roots[company.name]];seen=set()
-                while queue and len(seen)<3:
+                while queue and len(seen)<4:
                     current=queue.pop(0)
                     if current in seen:continue
                     seen.add(current)
@@ -34,12 +34,15 @@ async def main():
                         page=await capture(client,'GET',current)
                         if page.status_code!=200:continue
                         for anchor in BeautifulSoup(page.text,'html.parser').select('a[href]'):
-                            target=urljoin(str(page.url),anchor['href'])
+                            target=urljoin(str(page.url),anchor['href']).split('#',1)[0]
                             host=urlsplit(target).hostname or ''
                             if (urlsplit(target).scheme=='https' and
                                 any(host==domain or host.endswith('.'+domain) for domain in ('lamresearch.com','principal.com','hubspot.com')) and
                                 ('career' in target.lower() or 'career' in anchor.get_text().lower()) and target not in seen):
-                                queue.append(target)
+                                if host!=urlsplit(roots[company.name]).hostname or '/careers/jobs' in target:
+                                    queue.insert(0,target)
+                                else:
+                                    queue.append(target)
                     except Exception as exc:
                         records.append(dict(url=current,error=type(exc).__name__))
             jobs,count=await fetch_company_jobs(company)
