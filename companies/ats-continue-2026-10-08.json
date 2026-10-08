@@ -1,0 +1,12 @@
+{
+  "batch": "ats-continue-2026-10-08",
+  "max_assets": 16,
+  "companies": ["Upstox", "Dynatrace", "Jumbotail", "Kissflow", "Atlassian"],
+  "evidence_links": {
+    "Upstox": ["https://upstox.com/"],
+    "Dynatrace": ["https://www.dynatrace.com/"],
+    "Jumbotail": ["https://jumbotail.com/"],
+    "Kissflow": ["https://kissflow.com/"],
+    "Atlassian": ["https://www.atlassian.com/", "https://www.atlassian.com/company/careers"]
+  }
+}
