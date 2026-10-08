@@ -89,3 +89,18 @@ test('optional custom domain preserves existing routes and workers.dev; rejects 
   await assert.rejects(promisify(execFile)(process.execPath,[script,'--patch-build'],{cwd:dir,env:{...env,JOBRADAR_CUSTOM_DOMAIN:'https://example.com/path'}}));
  }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+
+test('explicit read 5xx falls back; client errors and health retain original status',async()=>{
+  for(const status of [500,502,503,504]){
+    const response=await publicRead(req('/api/dashboard'),assets,async()=>new Response('outage',{status}),{});
+    assert.equal(response.status,200);assert.equal(response.headers.get('X-JobRadar-Data-Mode'),'backup');
+    assert.equal((await response.json()).data_mode,'backup');
+  }
+  for(const status of [400,401,403,404]){
+    const response=await publicRead(req('/api/dashboard'),assets,async()=>new Response('original',{status}),{});
+    assert.equal(response.status,status);assert.equal(await response.text(),'original');
+  }
+  const health=await publicRead(req('/api/health'),assets,async()=>new Response('degraded',{status:503}),{});
+  assert.equal(health.status,503);assert.equal(await health.text(),'degraded');
+});
