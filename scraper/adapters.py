@@ -766,3 +766,5 @@ ADAPTERS["vodafone"] = InfineonCareerAdapter("Vodafone","https://jobs.vodafone.c
 ADAPTERS["eightfold_complete"] = EightfoldCareerAdapter(complete=True)
 
 ADAPTERS["workday_all"] = WorkdayAdapter(complete=True, all_details=True)
+from .kissflow import KissflowCareerAdapter
+ADAPTERS['kissflow'] = KissflowCareerAdapter()

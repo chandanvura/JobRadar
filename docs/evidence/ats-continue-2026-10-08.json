@@ -1,0 +1,619 @@
+{
+  "baseline": {
+    "companies": 700,
+    "limited": 208,
+    "errors": 1
+  },
+  "release_run": 37797177914,
+  "status": "COMPLETE_ACTIONS_NOT_PRODUCTION",
+  "companies": [
+    {
+      "company": "Upstox",
+      "status": "UNRESOLVED_FULL_REQUIREMENTS"
+    },
+    {
+      "company": "Dynatrace",
+      "status": "UNRESOLVED_DYNAMIC_INVENTORY"
+    },
+    {
+      "company": "Jumbotail",
+      "status": "UNRESOLVED_ROLE_IDENTITY"
+    },
+    {
+      "company": "Kissflow",
+      "status": "COMPLETE_ACTIONS_NOT_PRODUCTION"
+    },
+    {
+      "company": "Atlassian",
+      "status": "UNRESOLVED_COMPLETE_FEED"
+    }
+  ],
+  "release": {
+    "company": "Kissflow",
+    "status": "COMPLETE_ACTIONS_NOT_PRODUCTION",
+    "official_chain": [
+      "https://kissflow.com/",
+      "https://careers.kissflow.com/"
+    ],
+    "listed": 2,
+    "unique_ids": 2,
+    "full_descriptions": 2,
+    "scope": "All roles in employer-published static Open Positions list",
+    "published_total_type": "Static role cards; no separate numeric API total",
+    "jobs": [
+      {
+        "id": "solution-advisor",
+        "title": "Solution Advisor",
+        "location": "Delhi&Mumbai",
+        "description_length": 3969,
+        "posting": null,
+        "url": "https://careers.kissflow.com/solution-advisor"
+      },
+      {
+        "id": "client-director",
+        "title": "Client Director",
+        "location": "Chennai&Delhi&Mumbai",
+        "description_length": 2484,
+        "posting": null,
+        "url": "https://careers.kissflow.com/client-director"
+      }
+    ],
+    "responses": [
+      {
+        "url": "https://kissflow.com/",
+        "method": "GET",
+        "status": 200,
+        "sha256": "32334f97c8cf5bbe1f2d15f5cffa466b86617f5d0c7a44de329f4699a4cd59f6",
+        "artifact": "0.body"
+      },
+      {
+        "url": "https://careers.kissflow.com/",
+        "method": "GET",
+        "status": 200,
+        "sha256": "5a9dfda2e79db195aeb3319f310cda98e9d713678ec297faf276b5abf2af6690",
+        "artifact": "1.body"
+      },
+      {
+        "url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/90901159027/1741431075522/module_Career_job_list.min.js",
+        "method": "GET",
+        "status": 200,
+        "sha256": "986b9ef78fa40daf7f1e0aeb4d933be4b9b0202e1278d275f75a4c7bdc80f1ae",
+        "artifact": "2.body"
+      },
+      {
+        "url": "https://careers.kissflow.com/solution-advisor",
+        "method": "GET",
+        "status": 200,
+        "sha256": "d4f184261ae34b4813a6a1e89100c31b58755ea1ebad65f2fa2cda003a337d91",
+        "artifact": "3.body"
+      },
+      {
+        "url": "https://careers.kissflow.com/client-director",
+        "method": "GET",
+        "status": 200,
+        "sha256": "09a5c03d14589464b6306c0a55a9cceb5396c58fdcac2825d97f7108d4d35393",
+        "artifact": "4.body"
+      },
+      {
+        "url": "https://careers.kissflow.com/",
+        "method": "GET",
+        "status": 200,
+        "sha256": "5a9dfda2e79db195aeb3319f310cda98e9d713678ec297faf276b5abf2af6690",
+        "artifact": "5.body"
+      }
+    ]
+  },
+  "captures": [
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/careers/",
+      "final_url": "https://upstox.com/careers/",
+      "http_status": 200,
+      "title": "Careers – Latest Opening at Upstox",
+      "sha256": "fe07c74e94267e43203b41338802daffc4746156adc1e0947506ddff92b68388"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/",
+      "final_url": "https://upstox.com/",
+      "http_status": 200,
+      "title": "Trade & Invest: Online Share Market Trading App in India | Upstox",
+      "sha256": "2c1f779ceeb7d95123d5e44f9b22a3a57fa0d41805dfa644681a2334291cd1b8"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/main-app-018d050811d51adb.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/main-app-018d050811d51adb.js",
+      "http_status": 200,
+      "sha256": "2b41c46bc9504a99ff19c1bbe82befc20fd6599003fddf2b55dae8b8512c10fa"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/app/careers/page-6ce457ecd18886a2.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/app/careers/page-6ce457ecd18886a2.js",
+      "http_status": 200,
+      "sha256": "712387b7084301a4b081c8eab1301a04f25bf50b3ec3a41e7255659ef616c2e3"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/fd9d1056-4e0a9e6625d06f28.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/fd9d1056-4e0a9e6625d06f28.js",
+      "http_status": 200,
+      "sha256": "b8bddf9481d859d648e1e050f8322eb3defe3dd3f9bd13f4c44dd6f2ecf5ab80"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/117-4389b1f4965739fe.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/117-4389b1f4965739fe.js",
+      "http_status": 200,
+      "sha256": "200acedbff825bf0c64cda9473208f2edcc312b192826618e640b56ec9dafeda"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/221-f278bb8c75fbfc9e.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/221-f278bb8c75fbfc9e.js",
+      "http_status": 200,
+      "sha256": "f752aebfc0e26675669c6c498a4f9eebeaedac409b6aaea755bf887ddd4b963f"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/878-e2da50f4459b414f.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/878-e2da50f4459b414f.js",
+      "http_status": 200,
+      "sha256": "2195666a8f5150d22a6c6ef4d8d6a856b2e670ea820020deff0aef4f78e6c3b2"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/267-fdcc5ef94639378f.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/267-fdcc5ef94639378f.js",
+      "http_status": 200,
+      "sha256": "c160ba50658bec28123a3cb73aa8ae0dc4f7dd7153d911fa0b01476efddcfd96"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/699-b5e20c2267d60663.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/699-b5e20c2267d60663.js",
+      "http_status": 200,
+      "sha256": "d37282add75b7239aa75ddd863b2695b97d6cfda2b1a7ffcf6fc326550500be6"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/736-e83028f8b14e3fa4.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/736-e83028f8b14e3fa4.js",
+      "http_status": 200,
+      "sha256": "4db0d275a6830cb062c49bc9ea0fd27297d3196b828ccffa875173071348d264"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/80-7104ef4aeabc529f.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/80-7104ef4aeabc529f.js",
+      "http_status": 200,
+      "sha256": "6981f0c913f97aca72338110767a8f83f8e241b54eef5804879730b8d5f3a347"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/app/layout-ef4890420d5ce2ac.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/app/layout-ef4890420d5ce2ac.js",
+      "http_status": 200,
+      "sha256": "a8835be61d41caddb12c5e6c2950a1daa4acd1d4dadba65db3bfc238a5371e7c"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/162-5a2f5e30a6646844.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/162-5a2f5e30a6646844.js",
+      "http_status": 200,
+      "sha256": "cf75cb0214293e712e3d434921d7940600aa9ea5ae271f364d19034e105380ec"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/648-30094193f411d09d.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/648-30094193f411d09d.js",
+      "http_status": 200,
+      "sha256": "a66f3a0aa0a974cb2a4f2592edc87171997f31a9fc57c773abbd9f1cebae1c37"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/79-9ca9bb161738b614.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/79-9ca9bb161738b614.js",
+      "http_status": 200,
+      "sha256": "cb3d484179bbb75a70cab656b2486d0174cad66c036ba3c766e6d8a186d79ba3"
+    },
+    {
+      "company": "Upstox",
+      "url": "https://upstox.com/marketing-page-assets/_next/static/chunks/app/page-2cc6450eb9ece3a1.js",
+      "final_url": "https://upstox.com/marketing-page-assets/_next/static/chunks/app/page-2cc6450eb9ece3a1.js",
+      "http_status": 200,
+      "sha256": "4f594a129fc01d65bc2787b8dd4840ccc0a97a4abca004ab0ca8283b6c7e6225"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://careers.dynatrace.com/",
+      "final_url": "https://www.dynatrace.com/careers/",
+      "http_status": 200,
+      "title": "Home | Dynatrace Careers",
+      "sha256": "27ec55989667735df7ab67d390d9881fc3618b400df5387988211974e137e1ca"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/careers/jobs/",
+      "final_url": "https://www.dynatrace.com/careers/jobs/",
+      "http_status": 200,
+      "title": "Job Overview | Dynatrace Careers",
+      "sha256": "3fb4bc45d16c87d07ac7264ee16c14fb00dc419a76bb1abe459ccb95eb1c4ed4"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/",
+      "final_url": "https://www.dynatrace.com/",
+      "http_status": 200,
+      "title": "Dynatrace | Observability built for the age of AI",
+      "sha256": "fb9067e8d673539e316336077042986e67762abb6af526a51330960d8fd44b40"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/vendors/components/cb-main/components/cb-main-blocks/components/cb-main-content/components/o-custome/47e6c44e.c87ff6d.js",
+      "final_url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/vendors/components/cb-main/components/cb-main-blocks/components/cb-main-content/components/o-custome/47e6c44e.c87ff6d.js",
+      "http_status": 200,
+      "sha256": "6193ef53116232695b7f9b91cabbf27c5bf57fe76bac04b96b169eb77d4c31e2"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/vendors/components/cb-main/components/cb-main-blocks/components/cb-main-content/components/o-custome/47e6c44e.6d32e67.modern.js",
+      "final_url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/vendors/components/cb-main/components/cb-main-blocks/components/cb-main-content/components/o-custome/47e6c44e.6d32e67.modern.js",
+      "http_status": 200,
+      "sha256": "d9455112c58d80965020882967f29fcd4081fade55a8ce0015a2c930bb9becb0"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/warthog/2026-10-08T14:53:06-67225aa/_astro/Default.astro_astro_type_script_index_0_lang.Dp9Mlfvx.js",
+      "final_url": "https://www.dynatrace.com/_deployments/warthog/2026-10-08T14:53:06-67225aa/_astro/Default.astro_astro_type_script_index_0_lang.Dp9Mlfvx.js",
+      "http_status": 200,
+      "sha256": "9798370f67986e66d0ed6ffc57b669fe573b340fff2a3ae7426f9fb020727ebb"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/warthog/2026-10-08T14:53:06-67225aa/_astro/Dynatrace.astro_astro_type_script_index_0_lang.CrK5Szn5.js",
+      "final_url": "https://www.dynatrace.com/_deployments/warthog/2026-10-08T14:53:06-67225aa/_astro/Dynatrace.astro_astro_type_script_index_0_lang.CrK5Szn5.js",
+      "http_status": 200,
+      "sha256": "ccf471573166aa0c6e407f2ebb9fcb52402dd6305367d4ff360c80934eff08d8"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/warthog/2026-10-08T14:53:06-67225aa/_astro/Hotjar.astro_astro_type_script_index_0_lang.BRfJhEQj.js",
+      "final_url": "https://www.dynatrace.com/_deployments/warthog/2026-10-08T14:53:06-67225aa/_astro/Hotjar.astro_astro_type_script_index_0_lang.BRfJhEQj.js",
+      "http_status": 200,
+      "sha256": "e92c8a964192b5343afb0b5fd15aff0342902126741fa6fdb0d3a963102d05dc"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/warthog/2026-10-08T14:53:06-67225aa/_astro/Global.astro_astro_type_script_index_0_lang.CwHCfU0C.js",
+      "final_url": "https://www.dynatrace.com/_deployments/warthog/2026-10-08T14:53:06-67225aa/_astro/Global.astro_astro_type_script_index_0_lang.CwHCfU0C.js",
+      "http_status": 200,
+      "sha256": "8adac9118fcf921eb1f8a6197acaf97cbab6fa012c16175d565a69437393455e"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/static/1791468032/state.js",
+      "final_url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/static/1791468032/state.js",
+      "http_status": 200,
+      "sha256": "e21f3f2dbc7d1de82a6d0a89514b9b13a3043f886a06dd93e5373810253af1fa"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/app/7119c29.js",
+      "final_url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/app/7119c29.js",
+      "http_status": 200,
+      "sha256": "a48bd69055864e52ae6c618a2fbde943ccf3dc4b634af41f05ed42e8242bcf61"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/app/0db1606.modern.js",
+      "final_url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/app/0db1606.modern.js",
+      "http_status": 200,
+      "sha256": "eabc2dd4d3fa7169cf9eb7cee5ab42898698ba0e4089de424a0afca2dddff002"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/pages/_.b048b1b.js",
+      "final_url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/pages/_.b048b1b.js",
+      "http_status": 200,
+      "sha256": "841a376572cede63a4fe15e01a6c8086fc6e49ead684f1861eba6a58224f43b6"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/pages/_.8a37d7e.modern.js",
+      "final_url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/pages/_.8a37d7e.modern.js",
+      "http_status": 200,
+      "sha256": "dc1368cda6950a88e3c05cf347c90feb6bf1c06d3b4f3deaa43e25bd83bacc53"
+    },
+    {
+      "company": "Dynatrace",
+      "url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/vendors/components/amplify-cards-speaker-modal/components/amplify-container-agenda/components/amplif/b559f3bc.8a923e7.js",
+      "final_url": "https://www.dynatrace.com/_deployments/hedgehog/2026-10-08T13:18:40-f11ccfa/_nuxt/chunk/vendors/components/amplify-cards-speaker-modal/components/amplify-container-agenda/components/amplif/b559f3bc.8a923e7.js",
+      "http_status": 200,
+      "sha256": "202745fc698a79c3c0f399577d63f11d69593ed2c134d82328f86b7653c6de9f"
+    },
+    {
+      "company": "Jumbotail",
+      "url": "https://jumbotail.com/careers/",
+      "final_url": "https://jumbotail.com/careers/",
+      "http_status": 200,
+      "title": "Careers – Jumbotail",
+      "sha256": "8cbb421bc817f72aefb4579b3ceadba5d5e87c26aea45cac4b82bf67ce679a83"
+    },
+    {
+      "company": "Jumbotail",
+      "url": "https://jumbotail.com/",
+      "final_url": "https://jumbotail.com/",
+      "http_status": 200,
+      "title": "Jumbotail – Jumbotail is India’s leading B2B Marketplace and New Retail Platform for food and grocery. JaiJawan, JaiKisan, JaiDukaan",
+      "sha256": "954069231b4444a83261030ac5417283050462b5cdbde3f31abee19853bfe531"
+    },
+    {
+      "company": "Jumbotail",
+      "url": "https://jumbotail.com/wp-content/themes/foundry/style/js/plugins.js",
+      "final_url": "https://jumbotail.com/wp-content/themes/foundry/style/js/plugins.js",
+      "http_status": 200,
+      "sha256": "a616c727b9b696b9a62bbe272e4a47c2262585d6f6250db325f2eda6a5a89cd4"
+    },
+    {
+      "company": "Jumbotail",
+      "url": "https://jumbotail.com/wp-content/themes/foundry/style/js/parallax.js",
+      "final_url": "https://jumbotail.com/wp-content/themes/foundry/style/js/parallax.js",
+      "http_status": 200,
+      "sha256": "21de8e1533b8c51f218f1dcd2d4d3756fa657bb602c9089933574d6fadf7ddaa"
+    },
+    {
+      "company": "Jumbotail",
+      "url": "https://jumbotail.com/wp-content/themes/foundry/style/js/scripts.js",
+      "final_url": "https://jumbotail.com/wp-content/themes/foundry/style/js/scripts.js",
+      "http_status": 200,
+      "sha256": "a996efb728cbcb2639dc5a1c4330afced39fadb8799099555086be63db6e472c"
+    },
+    {
+      "company": "Jumbotail",
+      "url": "https://jumbotail.com/wp-content/plugins/js_composer/assets/js/dist/js_composer_front.min.js",
+      "final_url": "https://jumbotail.com/wp-content/plugins/js_composer/assets/js/dist/js_composer_front.min.js",
+      "http_status": 200,
+      "sha256": "95a91e047817247386ced0e355c8870ddad9ed1190c6cf8492155d0d172b3cac"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/",
+      "final_url": "https://careers.kissflow.com/",
+      "http_status": 200,
+      "title": "Careers - Kissflow",
+      "sha256": "5a9dfda2e79db195aeb3319f310cda98e9d713678ec297faf276b5abf2af6690"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://kissflow.com/",
+      "final_url": "https://kissflow.com/",
+      "http_status": 200,
+      "title": "Kissflow | Build Custom Enterprise Apps Fast with AI & Low-Code",
+      "sha256": "32334f97c8cf5bbe1f2d15f5cffa466b86617f5d0c7a44de329f4699a4cd59f6"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hubfs/hub_generated/template_assets/1/78967544184/1791460472658/template_tracking.min.js",
+      "final_url": "https://careers.kissflow.com/hubfs/hub_generated/template_assets/1/78967544184/1791460472658/template_tracking.min.js",
+      "http_status": 200,
+      "sha256": "08bce0257f99f6a1a282be05f7f2f101ecbe640b171a47a2bbd3a9ce15ba8d31"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hubfs/hub_generated/template_assets/1/104938036380/1791460468655/template_careers-signup.min.js",
+      "final_url": "https://careers.kissflow.com/hubfs/hub_generated/template_assets/1/104938036380/1791460468655/template_careers-signup.min.js",
+      "http_status": 200,
+      "sha256": "f1d84031dceffe6bb47280e973c3fb581cc3d90c63476afbb7c89b6968f54600"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hubfs/hub_generated/template_assets/1/80321189488/1791460471962/template_kfscript.min.js",
+      "final_url": "https://careers.kissflow.com/hubfs/hub_generated/template_assets/1/80321189488/1791460471962/template_kfscript.min.js",
+      "http_status": 200,
+      "sha256": "8eef0120adb513ccaa1f467c27103148dac820c554269645e576fe90dade307c"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hs/hsstatic/content-cwv-embed/static-1.1293/embed.js",
+      "final_url": "https://careers.kissflow.com/hs/hsstatic/content-cwv-embed/static-1.1293/embed.js",
+      "http_status": 200,
+      "sha256": "cb5224674e43d02db0037517f4aa29ba5ce9ddd0672e513cc7289714ba657522"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hs/hsstatic/cos-i18n/static-1.53/bundles/project.js",
+      "final_url": "https://careers.kissflow.com/hs/hsstatic/cos-i18n/static-1.53/bundles/project.js",
+      "http_status": 200,
+      "sha256": "8da927b6b1240ffca4323fbb2a12c8e5abb541040965c2bc5b7d09a2eb963b02"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/159230974024/1785835866588/module_top-header-brand-kf7.min.js",
+      "final_url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/159230974024/1785835866588/module_top-header-brand-kf7.min.js",
+      "http_status": 200,
+      "sha256": "1027c55450dcb86a575eb543f80c7fadd7c8b1eb73c4d44cc3efadbf9e29d264"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/215333216949/1785303018109/module_transformations-megamenu-new.min.js",
+      "final_url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/215333216949/1785303018109/module_transformations-megamenu-new.min.js",
+      "http_status": 200,
+      "sha256": "f26df72866ed1fd4e1a113365f2b2eedcbd96bed02945f25283649485425c9d4"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/90901159027/1741431075522/module_Career_job_list.min.js",
+      "final_url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/90901159027/1741431075522/module_Career_job_list.min.js",
+      "http_status": 200,
+      "sha256": "986b9ef78fa40daf7f1e0aeb4d933be4b9b0202e1278d275f75a4c7bdc80f1ae"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/79576121697/1790689984219/module_work-platform-demo-popup-module-common.min.js",
+      "final_url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/79576121697/1790689984219/module_work-platform-demo-popup-module-common.min.js",
+      "http_status": 200,
+      "sha256": "71a33b739840007833d6fbb8d748b63d3f09b1dddeb2b18450d76f8e6440ebb3"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/144457700145/1755167589281/module_gdpr.min.js",
+      "final_url": "https://careers.kissflow.com/hubfs/hub_generated/module_assets/1/144457700145/1755167589281/module_gdpr.min.js",
+      "http_status": 200,
+      "sha256": "91246a67f126cdbe933a68f5d758e9cd4b5ab88bce8aa9cd0b7200ce46da124d"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hs/scriptloader/20215080.js",
+      "final_url": "https://careers.kissflow.com/hs/scriptloader/20215080.js",
+      "http_status": 200,
+      "sha256": "1cd00ad65024b0517d37e9293540ffc8ac6a4363d05e4fcffa1b4e6dcfd47c5e"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://careers.kissflow.com/hs/hsstatic/HubspotToolsMenu/static-1.640/js/index.js",
+      "final_url": "https://careers.kissflow.com/hs/hsstatic/HubspotToolsMenu/static-1.640/js/index.js",
+      "http_status": 200,
+      "sha256": "670ef6db4f8e2233eb56c1409f31fcf8717c356f884ce7d39f84952c8c641d69"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://kissflow.com/hs/hsstatic/cos-i18n/static-1.53/bundles/project.js",
+      "final_url": "https://kissflow.com/hs/hsstatic/cos-i18n/static-1.53/bundles/project.js",
+      "http_status": 200,
+      "sha256": "8da927b6b1240ffca4323fbb2a12c8e5abb541040965c2bc5b7d09a2eb963b02"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js",
+      "final_url": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js",
+      "http_status": 200,
+      "sha256": "c212f4b505a86352aed62b24a8f16f999f821ecbe6456c7f3c8a04bc87968782"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://js.hsforms.net/forms/v2.js",
+      "final_url": "https://js.hsforms.net/forms/v2.js",
+      "http_status": 200,
+      "sha256": "9cadedc13a758fe119834653efb1b2db8aa66e00975f2c67b600c92104d00851"
+    },
+    {
+      "company": "Kissflow",
+      "url": "https://js.hs-scripts.com/20215080.js",
+      "final_url": "https://js.hs-scripts.com/20215080.js",
+      "http_status": 200,
+      "sha256": "1cd00ad65024b0517d37e9293540ffc8ac6a4363d05e4fcffa1b4e6dcfd47c5e"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://www.atlassian.com/company/careers/all-jobs",
+      "final_url": "https://www.atlassian.com/company/careers/all-jobs",
+      "http_status": 200,
+      "title": "Atlassian Jobs: View Listings for Open Positions | Atlassian",
+      "sha256": "25269a5e10940a35250fbe5a45b5d34a8352ad7e8649afdb40f636cc89920564"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://www.atlassian.com/zh/company/careers/all-jobs",
+      "final_url": "https://www.atlassian.com/zh/company/careers/all-jobs",
+      "http_status": 200,
+      "title": "Atlassian Jobs: View Listings for Open Positions | Atlassian",
+      "sha256": "f49ac5194da6bf6650cf4efe9651ea69e6136a76e5433af25e482e22f97053a9"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://www.atlassian.com/",
+      "final_url": "https://www.atlassian.com/",
+      "http_status": 200,
+      "title": "Collaboration software for software, IT and business teams | Atlassian",
+      "sha256": "3a5624cc1627b333694e8cb4e0331430e8a6a087e353927391bb69d99b8d9b76"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://www.atlassian.com/company/careers",
+      "final_url": "https://www.atlassian.com/company/careers",
+      "http_status": 200,
+      "title": "Atlassian Careers: Join the Team | Atlassian",
+      "sha256": "d09b6529895b81e22a669cf593ea6d711bc3ddd4d3bceb47687e1b12884a2251"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://www.atlassian.com/company/careers/all-jobs?team=Product%20Management&location=&search=",
+      "final_url": "https://www.atlassian.com/company/careers/all-jobs?team=Product%20Management&location=&search=",
+      "http_status": 200,
+      "title": "Atlassian Jobs: View Listings for Open Positions | Atlassian",
+      "sha256": "25269a5e10940a35250fbe5a45b5d34a8352ad7e8649afdb40f636cc89920564"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/main.js?cdnVersion=3707",
+      "final_url": "https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/main.js?cdnVersion=3707",
+      "http_status": 200,
+      "sha256": "c6c59c47791f8f02c1710efe4e8aadddc1da6989eff4bb6632019ad576ce2798"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/head.js?cdnVersion=3707",
+      "final_url": "https://wac-cdn.atlassian.com/static/master/11535/assets/build/js/head.js?cdnVersion=3707",
+      "http_status": 200,
+      "sha256": "2182195101342081f2916b02a412cb03988aee8852b31f65a1be79e5aba5653f"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://www.recaptcha.net/recaptcha/api.js?render=6Le9VxMnAAAAALKRlj8jmKwUYmFTZWcF0y4o9QeD",
+      "final_url": "https://www.recaptcha.net/recaptcha/api.js?render=6Le9VxMnAAAAALKRlj8jmKwUYmFTZWcF0y4o9QeD",
+      "http_status": 200,
+      "sha256": "c1d68a16bbda2c80831f57ae78b48cd79dfe3d495e6dac6c7fd4ddbdc3ed1143"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://atl-onetrust-wrapper.atlassian.com/assets/atl-onetrust-wrapper.min.js",
+      "final_url": "https://atl-onetrust-wrapper.atlassian.com/assets/atl-onetrust-wrapper.min.js",
+      "http_status": 200,
+      "sha256": "ffd3d6c5f1d3d729fab95d439b79ca44d9adea01ff02260fa307768e00010c61"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/404.f0275b59.js",
+      "final_url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/404.f0275b59.js",
+      "http_status": 200,
+      "sha256": "51942c8b5fdb38c46e77b95420cc6d876c1358a3672468c077c108ae54d025a9"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/404.runtime.e42e7483.js",
+      "final_url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/404.runtime.e42e7483.js",
+      "http_status": 200,
+      "sha256": "3eafd419ab3433d80f3bfc98bbe61da9f407046b00e404c470d73278d8c0da34"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/view.4c1fbd43.js",
+      "final_url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/view.4c1fbd43.js",
+      "http_status": 200,
+      "sha256": "1cb87ae3d11be66beb5e2040054df682e732aec04479b925695133e8f4f82921"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/view.runtime.0053772b.js",
+      "final_url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/view.runtime.0053772b.js",
+      "http_status": 200,
+      "sha256": "9c8ba8bb853babc5f44618b860012999e7d27a50fefca90c5ab8c200618ff358"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/language-selector.139729d8.js",
+      "final_url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/language-selector.139729d8.js",
+      "http_status": 200,
+      "sha256": "effac35224007c2da372e13501b5edbf74a02bfd7068acf860af4f1cae51ee82"
+    },
+    {
+      "company": "Atlassian",
+      "url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/language-selector.e225792f.js",
+      "final_url": "https://wac-web.prod-east.frontend.public.atl-paas.net/assets/language-selector.e225792f.js",
+      "http_status": 200,
+      "sha256": "5e737732ca181968db1d3370b86028ec79db73341961fb4b4245dad62a8f6837"
+    }
+  ]
+}
