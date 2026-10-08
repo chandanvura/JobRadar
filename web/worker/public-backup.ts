@@ -5,7 +5,12 @@ export async function publicRead(request: Request, assets: Assets, live: () => P
   // Writes and health checks never receive a stale success response.
   if (request.method !== 'GET' || !['/api/dashboard', '/api/jobs'].includes(url.pathname)) return live();
   try {
-    if (url.searchParams.get('source') !== 'backup') return await live();
+    if (url.searchParams.get('source') !== 'backup') {
+      const response = await live();
+      if (response.status < 500) return response;
+      // An explicit server failure has the same fallback behavior as a rejected read.
+      await response.body?.cancel();
+    }
   } catch {
     // The packaged catalog survives cold starts and does not query D1.
   }
