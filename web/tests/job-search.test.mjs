@@ -44,3 +44,9 @@ test('concept retrieval finds requirements even without literal wording',()=>{
  assert.ok(index.search('HPE infrastructure as code').has(infra));
  assert.ok(index.search('HPE container orchestration').size===0);
 });
+test('role expansion does not admit unrelated jobs from employer boilerplate',()=>{
+ const cloud=job('Cloud Developer'),hardware=job('ASIC Engineer','HPE','Our company works with cloud engineers worldwide.');
+ const index=createJobSearchIndex([cloud,hardware]);
+ assert.ok(index.search('HPE cloud developer').has(cloud));
+ assert.ok(!index.search('HPE cloud developer').has(hardware));
+});

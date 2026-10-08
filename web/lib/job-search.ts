@@ -1,4 +1,5 @@
 /** Local BM25 retrieval: all query terms may match different fields, in any order. */
+import {classifyRoleTitle} from './role-taxonomy.ts';
 export type SearchableJob={title:string;company:string;skills:string;role_category:string;normalized_location?:string;description?:string|null;ats_provider?:string};
 const normalize=(value:string)=>value.normalize('NFKC').toLowerCase()
   .replace(/hewlett[ -]+packard enterprise/g,'hpe').replace(/amazon web services/g,'aws')
@@ -95,7 +96,14 @@ export function createJobSearchIndex<T extends SearchableJob>(jobs:T[]) {
       for(const job of results.keys())scores.set(job,(scores.get(job)||0)+weight/(60+(++rank)));
     };
     fuse(literal,1);
-    for(const alternative of [...alternatives].slice(0,4))fuse(index.search(alternative),.35/alternatives.size);
+    for(const alternative of [...alternatives].slice(0,4)) {
+      const family=classifyRoleTitle(alternative);
+      const matches=index.search(alternative);
+      // A role expansion needs an actual corresponding title/category. Generic
+      // employer boilerplate mentioning cloud engineers is not role evidence.
+      const related=family==='Other'?matches:new Map([...matches].filter(([job])=>job.role_category===family||classifyRoleTitle(job.title)===family));
+      fuse(related,.35/alternatives.size);
+    }
     const titleEvidence=(job:T)=>titlePatterns.some(pattern=>pattern.test(job.title))?1:0;
     // Protect actual requested titles from descriptions that merely mention them.
     const ordered=[...scores].sort((a,b)=>titleEvidence(b[0])-titleEvidence(a[0])||b[1]-a[1]);
