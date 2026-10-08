@@ -18,10 +18,10 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
-      - name: Verify collector and refresh only live-audited complete feeds
-        run: |
-          python -m pytest -q
-          python -m scripts.sync_company_registry
+      - name: Verify collector independently of live selection
+        run: python -m pytest -q
+      - name: Refresh only live-audited complete feeds
+        run: python -m scripts.sync_company_registry
         env:
           JOBRADAR_REPAIR_COMPANIES: '["HPE","Microsoft","Cisco","SAP"]'
           JOBRADAR_VERIFY_SOURCE_UPDATES: 'true'
