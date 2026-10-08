@@ -1,0 +1,2688 @@
+{
+  "baseline": {
+    "companies": 700,
+    "limited": 211,
+    "errors": 1,
+    "server_time": "2026-10-08T13:57:58.107Z"
+  },
+  "csv_changes": [
+    {
+      "company": "BrowserStack",
+      "before": "BrowserStack,https://www.browserstack.com/careers,custom,browserstack,5,true",
+      "after": "BrowserStack,https://browserstack.wd3.myworkdayjobs.com/External,workday_all,browserstack|External,5,true"
+    },
+    {
+      "company": "Vanguard",
+      "before": "Vanguard,https://www.vanguardjobs.com/,custom,vanguard-india,4,true",
+      "after": "Vanguard,https://vanguard.wd5.myworkdayjobs.com/vanguard_external,workday_all,vanguard|vanguard_external|India,4,true"
+    },
+    {
+      "company": "Remitly",
+      "before": "Remitly,https://careers.remitly.com/,custom,remitly-india,4,true",
+      "after": "Remitly,https://remitly.wd5.myworkdayjobs.com/Remitly_Careers,workday_all,remitly|Remitly_Careers,4,true"
+    }
+  ],
+  "cases": [
+    {
+      "company": "HubSpot",
+      "status": "UNRESOLVED",
+      "endpoint": "https://wtcfns.hubspot.com/careers/graphql",
+      "errors": [
+        {
+          "message": "404: Not Found",
+          "locations": [
+            {
+              "line": 8,
+              "column": 5
+            }
+          ],
+          "path": [
+            "jobs"
+          ],
+          "extensions": {
+            "code": "INTERNAL_SERVER_ERROR",
+            "response": {
+              "url": "",
+              "status": 404,
+              "statusText": "Not Found",
+              "body": {
+                "status": 404,
+                "error": "Job not found"
+              }
+            },
+            "exception": {
+              "stacktrace": [
+                "Error: 404: Not Found",
+                "    at JobsApi.errorFromResponse (/var/task/node_modules/apollo-datasource-rest/dist/RESTDataSource.js:75:21)",
+                "    at JobsApi.didReceiveResponse (/var/task/node_modules/apollo-datasource-rest/dist/RESTDataSource.js:45:30)",
+                "    at /var/task/node_modules/apollo-datasource-rest/dist/RESTDataSource.js:142:39",
+                "    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)",
+                "    at async filterJobs (/var/task/functions/graphql/resolvers.js:35:20)",
+                "    at async Object.jobs (/var/task/functions/graphql/resolvers.js:166:20)"
+              ]
+            }
+          }
+        }
+      ],
+      "jobs_is_list": false,
+      "error": "ValueError: Official HubSpot jobs backend did not return a usable inventory",
+      "responses": [
+        {
+          "url": "https://wtcfns.hubspot.com/careers/graphql",
+          "method": "POST",
+          "payload": {
+            "operationName": "Jobs",
+            "query": "\n  query Jobs($departmentIds: [Int]\n    $officeIds: [Int]\n    $languages: [String]\n    $roleTypes: [String]\n    $searchQuery: String\n  ) {\n    jobs(departmentIds: $departmentIds\n      officeIds: $officeIds\n      languages: $languages\n      roleTypes: $roleTypes\n      searchQuery: $searchQuery\n    ) {\n      id\n      title\n      department {\n        name\n        id\n      }\n      office {\n        id,\n        location\n      }\n      location {\n        name\n      }\n    }\n  }\n",
+            "variables": {}
+          },
+          "status": 200,
+          "sha256": "1a13dda55f0e27c9f2b3cb2c2f9f28c3f7522050c6da6afc4c9ac8f858f60534",
+          "artifact": "HubSpot-0.body"
+        }
+      ],
+      "actions_run": "https://github.com/chandanvura/JobRadar/actions/runs/37788473143",
+      "artifact_id": 11555646297,
+      "score_before_production": 0
+    },
+    {
+      "company": "BrowserStack",
+      "status": "COMPLETE_ACTIONS_NOT_PRODUCTION",
+      "official_chain": [
+        "https://www.browserstack.com/",
+        "www.browserstack.com/careers",
+        "browserstack.wd3.myworkdayjobs.com/External"
+      ],
+      "board": "https://browserstack.wd3.myworkdayjobs.com/External",
+      "identifier": "browserstack|External",
+      "advertised_total": 33,
+      "details": 33,
+      "unique_ids": 33,
+      "unknown_dates": 33,
+      "unknown_locations": 0,
+      "missing_descriptions": 0,
+      "responses": [
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "cc6aa6718ad9cd9c3893346f8a8485b41a53b8591895dc9ed776f1c683a77503",
+          "artifact": "BrowserStack-0.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 20,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "193d7191c6d84d92db4d4db951885c88886cd928957dabe32c541d54004b2923",
+          "artifact": "BrowserStack-1.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "cc6aa6718ad9cd9c3893346f8a8485b41a53b8591895dc9ed776f1c683a77503",
+          "artifact": "BrowserStack-2.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai---WFO/Engineering-Manager_JR103577",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b205023f4ddc781ed9b6781b869c8b95a0df639958b789ae38d21152daee1d4b",
+          "artifact": "BrowserStack-3.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Renewals-Specialist_JR103520",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "59757b0c37a961b283cd3d629b591915758b8ea133a286b008a24c494ee18d72",
+          "artifact": "BrowserStack-4.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Business-Development-Representative_JR103711",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "9b33cb09a8ed7f102de1ec50568f04e38186c7da471ef28a2a50d33271959418",
+          "artifact": "BrowserStack-5.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Senior-Account-Manager---Enterprise-Sales_JR103726-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "bc78b03c1eac03e4c4b81336afe5ce481b0fd20ab50393b428561fd4153cffdc",
+          "artifact": "BrowserStack-6.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/SrLead-Manager---Growth_JR103576",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "50d8c9f59b019fed1731c3442b0d7bb1bda33d169d6bd3b773bf7e20ee4be859",
+          "artifact": "BrowserStack-7.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Engineering-Manager_JR103738-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "04dac9244ea07b4b93a28aa67878fd19d40ab602e987fc6198ccf898fbf0a437",
+          "artifact": "BrowserStack-8.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/Senior-Associate---Marketing_JR103591",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a1e7f492df529fdea68138628e47d587ead3a0a976f7409c8c0737fedfa9bc4b",
+          "artifact": "BrowserStack-9.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Account-Manager---Strategic-Sales_JR103457",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "999b5cf66cc0ff06813adbd72adc111d6eb74ef565c40ae8c7dc357499790329",
+          "artifact": "BrowserStack-10.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Account-Manager---Strategic-Sales_JR103720-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fe44bc1ff0a8fc22cf5ec5a3d543c80cecf573244aa00668430b93216ec8c6af",
+          "artifact": "BrowserStack-11.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Business-Development-Representative_JR103616",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3714cc4b5ac2b980e9721b24670fb0ecaba9049c47a15cafa2432e1c58d2b363",
+          "artifact": "BrowserStack-12.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Senior-Account-Manager---Enterprise-Sales_JR103645",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7731022368e98ccbc928c6b4c7d0a0fca0eb16f4f461399790bf5ec11a1cce4c",
+          "artifact": "BrowserStack-13.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Account-Manager---Strategic-Sales_JR103721",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "788c65874c8e5413a674fe0ba9fc4f556a7f1c309328e185f65c2c4a8d52ac3f",
+          "artifact": "BrowserStack-14.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Engineering-Manager_JR103661",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "48809e7596de4a7d2d03525eb15c6310703a28832924686248c885a84e1ef6d3",
+          "artifact": "BrowserStack-15.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/Senior-Lead---Strategy_JR103691",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3bcfa50be2dfcba43a4146184c0e488da4dbab99d1b0fb8fc6a47e334cd70bf1",
+          "artifact": "BrowserStack-16.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Account-Manager---Strategic-Sales_JR103728",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "95b27c9dbf5503d77eb73c1ec9c648dadef2e377cf09c2e193ed0f8b81655914",
+          "artifact": "BrowserStack-17.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Team-Lead---Sales-Development_JR103678",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "763438d9e02f112bc684c66616aac5503c91c626da0bd831aa1d2e5831bb6ac9",
+          "artifact": "BrowserStack-18.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Renewals-Specialist_JR103517",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fe4251be768bf5490eab65f7b6489b1e61020944fa823d8169cc90e7eeca0949",
+          "artifact": "BrowserStack-19.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Sales-Development-Representative_JR103474",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a52e16a081c75c20ac2fa96fce87cf5840d5cf68789b541f9fbc332e049dab65",
+          "artifact": "BrowserStack-20.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Account-Manager---Strategic-Sales_JR103301",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "67e5ef1001843965a6303fc0e2192cd7479e130fbc20a7d50064c204f5b0ebee",
+          "artifact": "BrowserStack-21.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Sales-Development-Representative_JR103516",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "748cd4f71339656e265bf7b7b92b4172e7ff7a9bbd0f68268b3ed123b7939a19",
+          "artifact": "BrowserStack-22.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Dublin/Engineer---Datacenter-Operations_JR103703",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e4dd5520d1c1273934e5b954ab1e4dff86d61e2dd7e740314b2f18c00d2d94b5",
+          "artifact": "BrowserStack-23.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/Associate---Deal-Desk--Night-Shift-_JR103615",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "141d290e7a21554c7b7100389c08319ebae8886c2ca2e77dd01c932a6ad02e86",
+          "artifact": "BrowserStack-24.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Account-Manager---Strategic-Sales_JR103459",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a2008c61f47c7f78c664289fcae19e6944037631f61f8d94dc014e3c1139eb4e",
+          "artifact": "BrowserStack-25.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Sales-Development-Representative_JR103515",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f440aa268adf48678f438305752a5dc6df7324d1befafc90e4e863ae43f0d5c9",
+          "artifact": "BrowserStack-26.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/Senior-Associate---Strategy---Operations_JR103702-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f25bdded7c5f6da1bf444da0ebbb4f607478d49327530482f57b6d4142e0ce06",
+          "artifact": "BrowserStack-27.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/Lead---SEO_JR103686",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "1e8a601ef7d37881b92edb511353c2647da88b8a88ac504831080e7e5c805ead",
+          "artifact": "BrowserStack-28.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/Compliance-Senior-Analyst_JR103653",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a38ec96ae371a207b0f9f390adc22c2e5462dd46d172e9d0c53900a1203521cb",
+          "artifact": "BrowserStack-29.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/India-Remote/Engineering-Manager_JR103665",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3bda5ff6ca41cf1066a0dc75b651ef91034f71a52b431dcb9ce1f5e4a414a7ce",
+          "artifact": "BrowserStack-30.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/Events-Marketing_JR103633",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "bdb04858ed923115926b2316f896cd4a88819a3d8a7f9fb536f8edc5946bc6de",
+          "artifact": "BrowserStack-31.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/SrLead-Manager---Growth_JR103574",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "cef96862cd90b7be5c29548203eef7ad7d6116834ad17a2f64ee31b1ba5e15ae",
+          "artifact": "BrowserStack-32.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai---WFO/Engineering-Manager_JR103565",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "50348242b91a9d83262553160a93cc7df60cf726e629bae4d9629db86df16655",
+          "artifact": "BrowserStack-33.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/Mumbai-Remote/Senior-Associate---Marketing_JR103617",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a21439885f46d15fbd00f63977e0ba584428fa89ffb5d9b00330334e1df87e1d",
+          "artifact": "BrowserStack-34.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/job/San-Francisco-Bay-Remote/Enterprise-Account-Manager_JR103209",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ac2d3b7245769d12c9729855f9068c5b22accdbe91c412c0f40662a2fdafc7da",
+          "artifact": "BrowserStack-35.body"
+        },
+        {
+          "url": "https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "cc6aa6718ad9cd9c3893346f8a8485b41a53b8591895dc9ed776f1c683a77503",
+          "artifact": "BrowserStack-36.body"
+        }
+      ],
+      "actions_run": "https://github.com/chandanvura/JobRadar/actions/runs/37788473143",
+      "artifact_id": 11555646297,
+      "score_before_production": 10
+    },
+    {
+      "company": "Remitly",
+      "status": "COMPLETE_ACTIONS_NOT_PRODUCTION",
+      "official_chain": [
+        "https://www.remitly.com/",
+        "careers.remitly.com",
+        "careers.remitly.com/job/23970447/senior-financial-crimes-intelligence-analyst-sydney-au",
+        "remitly.wd5.myworkdayjobs.com/Remitly_Careers/job/Sydney-Australia/Senior-Financial-Crimes-Intelligence-Analyst_R_106999/apply"
+      ],
+      "board": "https://remitly.wd5.myworkdayjobs.com/Remitly_Careers",
+      "identifier": "remitly|Remitly_Careers",
+      "advertised_total": 155,
+      "details": 155,
+      "unique_ids": 155,
+      "unknown_dates": 155,
+      "unknown_locations": 0,
+      "missing_descriptions": 0,
+      "responses": [
+        {
+          "url": "https://careers.remitly.com/job/23970447/senior-financial-crimes-intelligence-analyst/",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3d8edfc03ff0a22b9ddafdcda5d5b1fa7960fad11eba8ea666143e9ea67290b4",
+          "artifact": "Remitly-0.body"
+        },
+        {
+          "url": "https://careers.remitly.com/job/23970447/senior-financial-crimes-intelligence-analyst-sydney-au/",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "4e29e8fea659208d59570b3863bbe12900eb51e759f4de4a30a2bcbe11cbc131",
+          "artifact": "Remitly-1.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "ea9a8f7486b0a832226db0458935857ed827cfda70e18ee57a929918a7d22a13",
+          "artifact": "Remitly-2.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 20,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "a1774194938b3eb8316b13a0248afa518b54bb001c3dbdb6bf3199735b5fd024",
+          "artifact": "Remitly-3.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 40,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "d8b5768950ef08c5bcaa5c838b401f30c8be07494cd5c562c3c30763b85b0979",
+          "artifact": "Remitly-4.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 60,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "8d2b591d0795d30e74c84db592431253750ab4c3040804344160ac449eb385b5",
+          "artifact": "Remitly-5.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 80,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "e32424566f76d79c1aa947ffc70fab91c303630709ee85c8a61c5e4749155a3e",
+          "artifact": "Remitly-6.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 100,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "b06ae506fa12f39cbcee6467396cfed8847e6aeb3e74478e28f2b62451671665",
+          "artifact": "Remitly-7.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 120,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "d4e16c4c30bde3c11f34bd907ca9c809ba1a88a4cf0253f518e6565be4f2bfb8",
+          "artifact": "Remitly-8.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 140,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "e16dae01afe53da3a723bf7f792ad79cdbfd05b32587601b0ef09a4e7843b549",
+          "artifact": "Remitly-9.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "ea9a8f7486b0a832226db0458935857ed827cfda70e18ee57a929918a7d22a13",
+          "artifact": "Remitly-10.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Senior-Manager--Credit-Strategy_R_107007",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "14e157468dbf57847a2bca0cfe4fa9c17e3c7c4dcdf0c2457b2ef63ac3985ff6",
+          "artifact": "Remitly-11.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Senior-Manager--Concierge-Experience_R_106255",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "95f058a134a35e62e5ec80a10ad12a8c148b1f4bb97ddfd91c8e5976c9bffed5",
+          "artifact": "Remitly-12.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Director--Offline-Customer-Acquisition_R_107014",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "485d44617e3c95e6716b5b2f8eb50fee7b6217f723bea0cc06b9c491823a1928",
+          "artifact": "Remitly-13.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Philippines-and-Vietnam-Business-Development-Account-Manager_R_106986",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b77234022be98446be24e6ba21ee5f4eef3b839802a2a6bc0f52adec853e6614",
+          "artifact": "Remitly-14.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Security-Engineer_R_106836",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e37a79ccf66d36de4f51986c4febda7fbdb2e8122e68a979dca30a198b790545",
+          "artifact": "Remitly-15.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Sydney-Australia/Senior-Financial-Crimes-Intelligence-Analyst_R_106999",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "bc7273d1ffb0f49deab11b1629ebfb3d7b72b749edf159d409af046a449b48b7",
+          "artifact": "Remitly-16.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Team-Manager--Learning---Development--L-D-_R_107009-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "cf0dd6f1af846484571d8ef8cb4a931bf9ca38512efb015555472c8cdf9ece68",
+          "artifact": "Remitly-17.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Full-Stack-Software-Engineer--Remitly-Business_R_106615",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "de527b4d1c107327560faea505eb2c730809c93cb7a830c86fcac40bde77fdb8",
+          "artifact": "Remitly-18.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/People-Business-Partner_R_106688",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3ec001a0237003e0af1ff28491afd4ddce200d9b68d0816e12676272e2587da5",
+          "artifact": "Remitly-19.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Product-Designer_R_106913-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d48209f0de2fbce1053a82bebd2156b27912215e8c0a97085c43993b3b6a7140",
+          "artifact": "Remitly-20.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Engineer--Globalization_R_106982",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "beb1336ce351717dfc6948c1b79e851865d3c250aa9bc9233c34274b5131c042",
+          "artifact": "Remitly-21.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Enterprise-Risk-Management-Manager_R_106997",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7f6b04806d1c56e671929d52f3d2250e270ba90bed9720601041fe1a616a7af1",
+          "artifact": "Remitly-22.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Financial-Crimes-Compliance-Data-Analyst_R_106825",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "370e6ae9721c303b4a147a097da18587e7daa752af7013164e16b7ec76b862eb",
+          "artifact": "Remitly-23.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Software-Engineer--High-Value-Send_R_106940-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "41f911c0bb86e2a5dd2368e23d17c946d7876cdca2590e17215e9bf2f73fdd7b",
+          "artifact": "Remitly-24.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Senior-Auditor--IT-Audit_R_106504",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "63019a9beae0c20755e78ad460e774a498602cf6b7e3ababb04a1c5bb15c6b48",
+          "artifact": "Remitly-25.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Product-Manager_R_106886",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3f2746b1f4807a4523d6f3eb50025c2f18e866d9029ea0ad79d83a69bdd15ecd",
+          "artifact": "Remitly-26.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Financial-Crimes-Intelligence-Analyst_R_106996",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "220b23fe2df90cbafc2ae8d4d6b290d00672abe277d4f771b454152fab71cb45",
+          "artifact": "Remitly-27.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Software-Development-Engineer--Core-Transfer-Experience_R_106938",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "9a33d480a66439b295c192010f7bdfb26edac19d6be59e659936f6ada384784f",
+          "artifact": "Remitly-28.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Engineer--Remitly-Business_R_106634",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "bd0789d955ef9c14320457b88b484a32f2ae8b29a3d67269ea0be9684bf76507",
+          "artifact": "Remitly-29.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Staff-Software-Engineer_R_106424",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b8d30380fb4aa4978dbeacffdc059da4bd03e03dbee94b90649eac172bf2d907",
+          "artifact": "Remitly-30.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Product-Analyst_R_106531",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "77918942a86b626af7918c7197c16c9c2646c40621f9187b1ed74089c7fbec2c",
+          "artifact": "Remitly-31.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-People-Partner_R_106883",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "2f07595099750df42673107b23a569a6746e802b078856456009bf6f0c2d1593",
+          "artifact": "Remitly-32.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Senior-Engineering-Manager--Remitly-Global-Card_R_106826-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "51d26a07995f5bac5649468b34d925fb643fdf7cea7ebd681d6d611e846a0081",
+          "artifact": "Remitly-33.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Staff-Software-Development-Engineer--Remitly-Business_R_106876",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ed6f6ed6a3d62efcb1e069dd1c59635de03fe3465da0f7e68ba2ae1ad1e827c1",
+          "artifact": "Remitly-34.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Analytics-Engineer-II_R_106973",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "5111b4addd7b25ad78363da0757aa2575c4521dab07802dacbf4ae1f2d0e49be",
+          "artifact": "Remitly-35.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Principal-Product-Manager--Debit-Card_R_106686",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "5f86adfe07ae0c5aa0a5958f54b08bdcc811f2650a330bad599fbeba2af42ac8",
+          "artifact": "Remitly-36.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-AI-Software-Engineer--High-Value-Send_R_106188-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6e5528fbdced88b7c151dbe02867d8ca487a5dff8cfea8e0dedad8bc3243ee40",
+          "artifact": "Remitly-37.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Program-Manager--Identity---Trust_R_106948",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "4ffaed31a7d2c0863002421358604d1c90b8fc41c4b2c9decc3ee7594232ad02",
+          "artifact": "Remitly-38.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Staff-Software-Development-Engineer_R_106969",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fc4152116570e832eccd60db4755551419a9ee25e048e1e60ee4aa6d0455ba2c",
+          "artifact": "Remitly-39.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Mexico-City-Mexico/Compliance-Officer--Mexcio_R_106974",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "56459201619dab2ad4b6e285bed0d227ad2ad1412265474dba11615d8bf9532a",
+          "artifact": "Remitly-40.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/AI-Native-Software-Engineer-II_R_106995",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b37eeabe607b8ae48e5266028e830db43f0a006b30d33945e34da67dbbdbb1af",
+          "artifact": "Remitly-41.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Compliance-Lead--STAR-Operations_R_106959",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7eb65a083c8dc145cf5c79a86e70c25a2a7773662fe561f8615232a7cfb6fa29",
+          "artifact": "Remitly-42.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Fintech-B2B-Operations-Manager_R_106784",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "00368e2b470a756eee9d4b8fde75bafd5f160e3b58a0fa2a2e113c870dc5e406",
+          "artifact": "Remitly-43.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Development-Engineer_R_106968",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "9be0b35e7724765cbf0dd6bffe1a2d61d88acaf5970199983e798e756e965314",
+          "artifact": "Remitly-44.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Intern_R_106984",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ddcea9f94aaf6441843b1702435073a28e4c0400b6f8cd9fa46133463e7daf32",
+          "artifact": "Remitly-45.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Head-of-Global-Transaction-Monitoring_R_106980",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "03d519ad19365b7e69d6be33944b043a7b41bb2764ffbdce363cb205efe6e350",
+          "artifact": "Remitly-46.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Senior-Product-Manager--Global-Expansion-Customer-Experience---GTM_R_106958",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "86df37350c199728718b5e58dbe62ba6a5d08e4b8bf55256a9e3ef0ab941f4c1",
+          "artifact": "Remitly-47.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/London-United-Kingdom/Marketing-Project-Manager_R_106764",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d91a5732264129c96f866494ca3768ef4035b21e0972a07be3bbc85d36656bd5",
+          "artifact": "Remitly-48.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Development-Engineer--Post-Submit-Experience_R_106953",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "aed7557cf664184cb9037c7440ceb8ab40c2cc6df0b93c8b25be470ebbbdbaf3",
+          "artifact": "Remitly-49.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Facilities-Administrator_R_106916",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "26c9dce94fd431aad98d2a927b0cb0ff4fdd5a25d2b0cfd4e84873fe4250b66e",
+          "artifact": "Remitly-50.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Principal-Product-Manager--Head-of-Global-Expansion--Remitly-Global-Card-_R_106957-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "dc9cf425a6a90445e6bda28b8f55c57bb62ca05a4f6d4f51ed5cf54823534a99",
+          "artifact": "Remitly-51.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/London-United-Kingdom/Head-of-Global-Transaction-Monitoring--UK-based-_R_106981",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a5220361e78492ca572ee44f72e86d17299cbf62e55071f0e965a04e4c105feb",
+          "artifact": "Remitly-52.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/AI-Native-Software-Engineer_R_106966",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e5bbb391f9637a77c0eea649a9b42955336cb54022daa90a740c40ed436303fa",
+          "artifact": "Remitly-53.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Senior-Program-Manager--Technical---Multiproduct---New-Initiatives_R_106919",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "eeaf0be37ba32e700c5d8b819ce1f6753268cc5300406412683d7eeca2001da4",
+          "artifact": "Remitly-54.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Product-Designer--US---Canada-Regional-Experience_R_106550",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "191098142f4a915099832b1c21e1312e61024096f81f3af3bd7de54e13ece22f",
+          "artifact": "Remitly-55.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Development-Engineer--IHUB_R_106850",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "4ec78a57c52f96e72b5f05802839a48ad0a317d5bf75f359b60f12ebf7cf0cf0",
+          "artifact": "Remitly-56.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Development-Engineer--Money-Platform_R_106932",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ffed657a2001b7f4f2b312b50e90912a3d1c0311dc338998476f8035260f3abc",
+          "artifact": "Remitly-57.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Staff-AI-Native-Software-Engineer_R_106993",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c923c5cfb4e3e069afcf55aab2a34be3f753126cb32fae097cfce5ce117c8135",
+          "artifact": "Remitly-58.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Treasury-Shared-Services-Analyst-II_R_106889",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "2855d180fc5a6185edb0a4304675d1e1217804d9eb669f78b0a6344ab3c9319e",
+          "artifact": "Remitly-59.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Head-of-Global-Risk-Mining---Strategic-Investigations_R_106954",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d1c3499e9d4146cc8f6e6c24914dc1b04bfcae1586fd7d193c33cbd747a062de",
+          "artifact": "Remitly-60.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/People-Operations-Partner--Benefits---6-months-contract-_R_106914",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "73fb76a02c8473d30074d9cea3185795688fdc3f157cd0abf6def534f56aec52",
+          "artifact": "Remitly-61.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-People-Compliance-Manager_R_106907",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "02f6d34ce8cc3ccfa36f8810c10f00186c0965d0ad724450a5ab311c5c4489d6",
+          "artifact": "Remitly-62.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Engineer--Site-Reliability_R_106908",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "2c3c43f4dbbf9b68ac4a46f5a958c04a66ad5232dc5bba5e8f4b9b3238e02453",
+          "artifact": "Remitly-63.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Software-Engineer_R_106682",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b9e0426914bebd123763b7591ad98353475235c05a84e15980846bf2be220307",
+          "artifact": "Remitly-64.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Program-Manager--Sanctions-Compliance_R_106899-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "12e110e34b8e625e94d9141989c8e1bb42fa34a012359271cbfff8432d702b35",
+          "artifact": "Remitly-65.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Brand-Strategist_R_106909",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ee10f70984fa2dbac8bc694414d6e669ea7e1178ec3d7359a84819cf8067bb99",
+          "artifact": "Remitly-66.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Software-Development-Engineer--SDE3----Customer-Data-Platform_R_106847",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "959d1d8b073627151c51ab83db07fc3ee366778ce9c5a1b62c5235bfdf9c94a2",
+          "artifact": "Remitly-67.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/SEO---AEO-Manager--High-Value-Senders--Contract-_R_106857",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "83e047d7355238a84ad1454c711d00b74e4ad50e70bfc478d9601ae3c13b8b8c",
+          "artifact": "Remitly-68.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Sourcing-Manager_R_106792",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a86c2c12535494b1a76d951fdf069f7acbd4417934c8e8c191e3f99374c5d1d4",
+          "artifact": "Remitly-69.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Counsel--Corporate_R_106901",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8a0e3b3766727947bdef2cf03f97836eac1619a6ca7acd87f5746f1945d9e9c5",
+          "artifact": "Remitly-70.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Senior-Product-Marketing-Manager_R_106906",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e073ad441d6c036aa561cf00b7fd6a1e87c2e48ec13000035cdaa04d935dbfe8",
+          "artifact": "Remitly-71.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Product-Analyst_R_106894",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8701918c00513c460518f4a13bacda3ef1f8d32b5888e7588e9c70dba22cbab2",
+          "artifact": "Remitly-72.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Mexico-City-Mexico/Senior-Payments-Counsel--Mexico_R_106604",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c32d242a760801044078743ff93c2e6e08580a336ca44fb2789c2e62c2574697",
+          "artifact": "Remitly-73.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Senior-Accountant_R_106720",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c91235452882b133c22304e4d9d734b087cba93932c4d72a041300ce02495944",
+          "artifact": "Remitly-74.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Team-Manager--Financial-Accounts--B2B-_R_105897",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "9d6f614051f6ca106df1147c68ea706d35688156a74d63bd18381652e2f0f72b",
+          "artifact": "Remitly-75.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Principal-Product-Manager--Borrow---Remitly-Financial-Services_R_106680-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b4f3c528197f3b555e90f37c5e224ec7906ec053509aafa697f7e6aeed4110d9",
+          "artifact": "Remitly-76.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Senior-Accountant_R_106869",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "acf7730b0a8609c9042eb44d9dd40e2765e951b5721dc2dc798d4617f66cd32d",
+          "artifact": "Remitly-77.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Risk-Investigator--For-Pooling-_R_101422",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "59ad9d7a1697510bda07d1821b18d1ddf033978a8285eace998ae138135f2f1c",
+          "artifact": "Remitly-78.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Senior-Auditor--IT-Audit_R_106461",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "311155cb4cf92418c8c71d49928b8101f2984905d41ea67d1be960f6a177d6be",
+          "artifact": "Remitly-79.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Senior-Product-Designer--Remitly-Card_R_106848",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7aa726216d23fa312d8efaae3c55691ea1633a8cf252b95a006d99562cf5db6e",
+          "artifact": "Remitly-80.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Senior-Fullstack-Software-Development-Engineer_R_106722-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f09f0946072bbc4326dd45f91a45d5d49099a4a57288164a88df3e599a325636",
+          "artifact": "Remitly-81.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Senior-Program-Manager--Outsourced-Operations_R_106453",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6f2d4fb6cdfad6c30567e585ba93833434335cdb03d87108fca48c812860d274",
+          "artifact": "Remitly-82.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Software-Development-Engineer-II_R_106568",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "68474af6af30e60739e13a91ac13523af4228986d25b76f0133a52af8f2f511e",
+          "artifact": "Remitly-83.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Product-Manager_R_106292",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e9b263ecd4506fa0a89de4a5d5010d72d2049ed40287a0c494b561b19248c3b5",
+          "artifact": "Remitly-84.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Growth-Marketer_R_106577-2",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "61e4ab9bfe9c09d626bd6e3f84cc101eafa8f10545b86ddddf39beb9f4a0dc67",
+          "artifact": "Remitly-85.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Senior-Product-Compliance-Manager_R_106307-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e0e0094d5ff5b2601a11beedb7c48795ec4823fab25c48c999c709a42054ed85",
+          "artifact": "Remitly-86.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Manager--Global-License-and-Examination-Management_R_106841",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "5704ba8d591561757c2b01342c93269214a2d6f87b82ff7140543018ef69eda9",
+          "artifact": "Remitly-87.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Counsel--New-Product-Initiatives_R_106884",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fab3bb4ebdae0a4d4c9481b31e181c0b8eba123bc2b800a46821c4fb0dd2f02c",
+          "artifact": "Remitly-88.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Product-Manager--Remitly-Business_R_106845",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "26114cdb4b380f444c4c63331bd5c1198b8859bc92e94823214d8e1907388413",
+          "artifact": "Remitly-89.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Staff-Software-Engineer--Core-Transfer-Experience_R_106420",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "aa7c18d140da827f2cdcbecd62f29c05b55999827fcd3c47369989cbe99df869",
+          "artifact": "Remitly-90.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/HR-Specialist_R_106320",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "879b398920b4511aa22cb34965cf5ce0ea6f741d090827ec2eb7ae8565e89307",
+          "artifact": "Remitly-91.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/CPT-Team-Manager--Customer-Success_R_102559",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "592f5cc4f13dd8b561998258b84ea74a817e13ea7bb4a604b5ba01b7eec258eb",
+          "artifact": "Remitly-92.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-AI-Native-Software-Engineer_R_106842",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "9818fe84045d8ef46fb8b3387a012ff8363ff0b6dd20b3303c77c0694189acd8",
+          "artifact": "Remitly-93.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/AI-Native-Software-Engineer-II_R_106843",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "041a470925ec8411871e79c13f4771744d342064dea8e33f811276fadb664893",
+          "artifact": "Remitly-94.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Engineer_R_106829",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "060bab59548001afb1ff563be49550af15f7a919890cd241fcb6e82d1efb6135",
+          "artifact": "Remitly-95.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Head-of-Growth-Marketing---Remitly-Business_R_105822-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f1617b5fdffc4ae74e7112b0013f30bd151eb190f9cae89c180b2698501bfa20",
+          "artifact": "Remitly-96.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-AI-Native-Software-Engineer_R_106614",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c850a03f80a1a55ca3ad956281e9e7b7232b3f9699ada7445ad3f059f2298686",
+          "artifact": "Remitly-97.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Sydney-Australia/Organic-Social---Content-Marketing-Lead--APAC----Contract--12-months-_R_106718",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ad4b9635673cc07e4c08d8377d5fa06fdf0d595392fd569e46c7a07b3c3b242c",
+          "artifact": "Remitly-98.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Machine-Learning-Engineer_R_106762",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "cd66fbe4cc1ef2a77e7ea9bc6ea871000f2a39fcc47ee056fe93e4e58c0daefa",
+          "artifact": "Remitly-99.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/AI-Native-Software-Engineer_R_105956",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b96ddfaa827c958d39f5434a9bb80c2494828114b5b1ad2945443bb548211b69",
+          "artifact": "Remitly-100.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Program-Manager--Technical---Global-Money-Movement_R_106834",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ed4ddd2f1f517d477104320f7293051ab8434b02ede1350f8ec711797a9ad847",
+          "artifact": "Remitly-101.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Staff-Machine-Learning-Engineer_R_106404",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6c395c0d8d0336b76d6545fe75aedf916ab8ee3df41baa0dbb44f0a86657a7b6",
+          "artifact": "Remitly-102.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Full-Stack-Software-Development-Engineer_R_106603",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "939d63c1e919596d60915f44ff3378ed7ea3a3641cd8a820040a9907e72d3b6d",
+          "artifact": "Remitly-103.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Data-Analyst-II--Fraud_R_106696",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d8f21f8d6d28c738d5da10bbcd4fef8cc685a12d1798b4d38aec6f0f87032cbc",
+          "artifact": "Remitly-104.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Forward-Deployed-Engineer_R_105957-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f65c53eb7606e0dbddf7398a347980152448287bf33556f225b732e4d41374ad",
+          "artifact": "Remitly-105.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Principal-Engineer--Verification-Platform_R_106127-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "4b476b93ed820e806757c77870f2c4e4dad5b96d007a1d8f18a54dfbb63e45bc",
+          "artifact": "Remitly-106.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Software-Development-Engineer_R_106305",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f22e800f2cda7c2782331a329e58414948dc0bac4d31a0318437b3940b64db3b",
+          "artifact": "Remitly-107.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Software-Engineer_R_106587",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "1a5ba44acb6551aac68b64d54da55cc16a7dbe2096c2bfad5ce156321123a058",
+          "artifact": "Remitly-108.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Manager--Data-Analytics_R_106247",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "560bb2ef000e8fc36909ad16dadc2f15230e3c8b168ab65dad4a4a3d98a6f21e",
+          "artifact": "Remitly-109.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Fullstack-Software-Development-Engineer_R_106593",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "80a50a41d54d279c2c28d972bca862556a2fa932bec11511b639d49901be3fec",
+          "artifact": "Remitly-110.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Fullstack-Software-Development-Engineer--USA-Regional--Experience_R_106522",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6742fe43c157feb06a20fedac3eed48faaeeec4ffcb9eecd29838caeff7bf563",
+          "artifact": "Remitly-111.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Development-Engineer_R_104735",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "89e68dd1fe33ea2f20703d7da8042d220424ca113daf2348448a4625300d6801",
+          "artifact": "Remitly-112.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Software-Development-Engineer--Trust-Intelligence_R_106657",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "4aef391fb2aefb32f740365e2a44731dbde42af13e930982887ca977b712eb21",
+          "artifact": "Remitly-113.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Product-Manager--Conversational-Experiences_R_106803",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "31e2c7da9da3d35f4cdb4abc914231adedc574f9cd9a23170edeccf6564800af",
+          "artifact": "Remitly-114.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Program-Manager--Core-Transfer-Experience_R_106647",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "874e4d5fd9a1f924cfc9a275125b733741cc8624db82457e8d78712afd7bc29c",
+          "artifact": "Remitly-115.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Machine-Learning-Engineer--Identity---Trust_R_106552",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c8b9c40c002ee8bf353cdb42782bf4d29905ed1187de786ffab1a898230d35d2",
+          "artifact": "Remitly-116.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Product-Manager--Post-Submit-Experience_R_106769",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d322d566bfd2ac299656ecbcdc9ceabdf8c2e1b70b89f8915fc3bb99313a7b9e",
+          "artifact": "Remitly-117.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Dubai-United-Arab-Emirates/Account-Manager--Francophone-Africa_R_106491",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8e133a09f8217aa98bc0260cc30da7f2c3f95a66f7cdaeacd390ac3623a2e36c",
+          "artifact": "Remitly-118.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Abu-Dhabi-United-Arab-Emirates/Policy---Regulatory-Affairs-Lead--GCC_R_106661",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7edeba669e692534fab440071df6a723988e4a168d73b535b1ea9478a7603fbc",
+          "artifact": "Remitly-119.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Performance-Marketing-Manager---Remitly-Business_R_106576-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b26c452ce8ea8fbdb241787ba8d4767f2a063256b1417558e3b39343e60dfc5a",
+          "artifact": "Remitly-120.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Abu-Dhabi-United-Arab-Emirates/Principal-Product-Manager--Growth--GCC-_R_106383",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d912c75bbb4446db8cbcf4ab224409781bd0999d4aa90493ccb6cc3df04caa73",
+          "artifact": "Remitly-121.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Dubai-United-Arab-Emirates/Payments-Counsel--MEAPAC_R_106701",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "86badef697730997444b76147e2e340d32e1746c52278aa58d1a47b1485ec6f5",
+          "artifact": "Remitly-122.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Program-Manager--Technical---Global-Money-Movement_R_106617",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "0b7c240b0a68f441b461b77461318c5830f9f0930b9b457761a7776acf32c93e",
+          "artifact": "Remitly-123.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/USA-NY-New-York/Director-of-Public-Relations---Corporate-Communications_R_106581",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3e70d10c562ceb71afe06519bf662016a85196d6462e5dafc3e01218dd2c48d2",
+          "artifact": "Remitly-124.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Director--People-Operations---Workforce-Technology--AI-_R_106806",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "bea693ac0c4cd54f01c4f4387f9659687980be0794ff30ee621aa4a80be68df2",
+          "artifact": "Remitly-125.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Principal-Program-Manager---Technical_R_105828",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "62a7d9fa97d91df34b2a6565cefb5eb5d7f07430524bab3d1d654f05db8e8b16",
+          "artifact": "Remitly-126.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Director--Head-of-High-Value-Senders-Marketing_R_106189",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8067e8ef393f64e4907ed0e1065a6ff505a52f48db56376f4444406491a74597",
+          "artifact": "Remitly-127.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Director-of-Engineering--Money-Platform_R_106553-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "cc49b338657273289e0e6579759104fcfbb51e0cb6b62176a7c327d15f77a9d5",
+          "artifact": "Remitly-128.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Team-Manager--Multiproduct-Adhoc_R_106828-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ed6ad9e2677ed8af471e95d8f4561afc770468b76c039fd100b585824df4be23",
+          "artifact": "Remitly-129.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Manager-Global-Payroll_R_106821-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c39d9c9fc9a425f8ced897717616590a84952177c5eb68b46a91a9e35ae20053",
+          "artifact": "Remitly-130.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-Manager--Corporate-Development_R_106789",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "dceb950040097cb5848ee4bf1feebf88c523fb28eccb138085d6bc8ce9119e1b",
+          "artifact": "Remitly-131.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Principal-Product-Designer--Remitly-Card_R_106765",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "61f0bb536d7d4d112cd0aa3bc08e120abe11f2c153a4e57a809b2030d957841f",
+          "artifact": "Remitly-132.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Krakow-Poland/Senior-Cloud-Engineer_R_106372",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c28d1f2c2022dec8a9dce5154b8a414d8fd8be5cb412ca8f9c17eb1bfe2c1a77",
+          "artifact": "Remitly-133.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Director-of-Engineering---App-Platform_R_106796",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "841958106d0322db0ca009552a59c7f71abffbb84ce157982291a8d8a2d56ca0",
+          "artifact": "Remitly-134.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Staff-Security-Engineer_R_106374",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a27c93c38aab1a98296bda593c60cf58b33fbe910351a82637666d40edfcb480",
+          "artifact": "Remitly-135.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/London-United-Kingdom/Growth-Marketing-Lead--Remitly-Business_R_106609-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "79f30242ebe203dbdf2a9c783556eb0172b4c4328abbe23d54968de3067ba790",
+          "artifact": "Remitly-136.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/London-United-Kingdom/Senior-AI-Native-Software-Engineer_R_106343",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "621b20ee834b32d12ec3fb7c5b06973dd76db6773edb7037d08909db2f1e09c2",
+          "artifact": "Remitly-137.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Compliance-Associate--STAR-Operations_R_106893-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3231ebf8e8aacd1658f70723ceef657617c3caf776375d00a8e1b10cdc5d335b",
+          "artifact": "Remitly-138.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Security-Engineer_R_106377",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "18ae0c33941682c7e2be2b0a62034b4a45aefe1f15e61bad0b6d1f33cabd8d2e",
+          "artifact": "Remitly-139.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Senior-Product-Analyst_R_106385",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fee479d31dec6e3370d1aa55748ba3ca84cff3197821b0df2f729b3f48c5c9b7",
+          "artifact": "Remitly-140.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Krakow-Poland/Software-Development-Engineer-II--GMM_R_106677-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "dbde0616280f38b7b5c95a0550d894b28202a4988120f6483c44fd757f141844",
+          "artifact": "Remitly-141.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Krakow-Poland/Principal-Program-Manager---Safety---Security_R_106097",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "5f1239ae8cdbcb65037fe45e2490b6736c0fcfebd4e243fd3590b02807ab2ee4",
+          "artifact": "Remitly-142.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Abu-Dhabi-United-Arab-Emirates/Lead-Auditor--UAE_R_106785",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ad06beaaf75005561d9c148bee164a6479525fcfcd6e1e2b9bca6da0b89d5500",
+          "artifact": "Remitly-143.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Program-Manager--Financial-Crimes_R_106777",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8f408b267580f084563ae37ac5a864bc1223f25d9f3c6a19ad2dd426268f8369",
+          "artifact": "Remitly-144.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Global-Compliance-Assurance-Leader_R_106716-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ee2dfbde3cbb79b4f3b59fc1f544097f0794e72638fec8f0a99846c718a0c6fb",
+          "artifact": "Remitly-145.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Business-Concierge-Associate_R_106523",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7fe1146e141f76b3e41e6a015aa72214beba3bd8872c62c3686691e5b0ef1923",
+          "artifact": "Remitly-146.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Software-Development-Engineer--ML-Platform_R_106039",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "60da96286a0b51ef7d1afab36aa667cc6265133b2b0b12bcf7d2c158e11c14c2",
+          "artifact": "Remitly-147.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Senior-AI-Native-Software-Engineer_R_105960",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8d4b65447e5c7aa7353f0e75fdc92b54f190f11e1e09a9f91df7acc14a190ee2",
+          "artifact": "Remitly-148.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Arlington-Virginia-United-States/Staff-Fullstack-Software-Development-Engineer_R_106797",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "03ebd106b50b64c6d7d26cfdb4e2507a203306dfefbf1b1abde0f02a3dc3c07f",
+          "artifact": "Remitly-149.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Recruitment-Specialist--Contract-based-_R_106016",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "947ea8454b856bde772d06097059317c64d6d38fb3a90c1b5d977339617f170c",
+          "artifact": "Remitly-150.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Knowledge-Development-Engineer_R_105955-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "0d7001caf557d6938f882a07bd31f748ee77ce4dc1999856fa14c14cf5c1ba71",
+          "artifact": "Remitly-151.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Manager--People-Operations_R_106606",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "afc8524382ff5c02101801f9dec4adfb74cb993364723180a4dde5ca7ee57eb4",
+          "artifact": "Remitly-152.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Compliance-Specialist--STAR-Operations_R_105986",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c1b87fa029db657389eda6ce1d485f91be1581c2500c1767de22e919a442049b",
+          "artifact": "Remitly-153.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Recruiting-Coordinator_R_105705",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "098ce848b6dabe83d726d47573c69f943aa4d6ccf260b75f8d05408594d39d2b",
+          "artifact": "Remitly-154.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Managua-Nicaragua/Procurement-Specialist-II_R_106534",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f4734d404d0b566381a5f8e48e19e91474d534698f0cfe77fcaecdcf8abd7dcd",
+          "artifact": "Remitly-155.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Agentic-Software-Engineer_R_105958",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8da1d476bd60e05094ed7a5101fb392b0721b7c86da1103360dd0892e8088c73",
+          "artifact": "Remitly-156.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Program-Manager---Technical--Fraud-Program_R_106252",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e0a9d84ed61445c865700a1b6fa426e39d95c512a5878635e0a9942408a3c6fc",
+          "artifact": "Remitly-157.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Assurance-Manager_R_104968",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8c99640a257ec66d8ecd84d3e613f2b9c01e9d4bb89bf091435687d3063c5ccd",
+          "artifact": "Remitly-158.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Seattle-Washington-United-States/Knowledge-Development-Engineer-II_R_105964",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "23316106393bbb2c0fe3842b20b34f8a1b68fa3747160ed8f4ea197d520a1454",
+          "artifact": "Remitly-159.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Software-Development-Engineer-II--SDE2----Customer-Data-Platform_R_106044",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "844a0cc73ae47c1396df277ef9d1d5c77c310a8ac2c5ebe61dcb72e1347c9282",
+          "artifact": "Remitly-160.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Senior-Software-Development-Engineer_R_104909",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3a1e92f8444bfa020b22a093f3457ac004533497891c67308076b49cb0e210d8",
+          "artifact": "Remitly-161.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Senior-Assurance-Manager_R_104969",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fa7651c2d303e7cfacf22acc5da9f2d85f8b80402fb2b7c60dde5d48e5f426ed",
+          "artifact": "Remitly-162.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/London-United-Kingdom/Ambassador-Programme--EU-Lead_R_106650",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e09fa6133f234e91c50b1e693a8d6f3cb4898641c8b911c273cae5f8a9a36094",
+          "artifact": "Remitly-163.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Burnaby-British-Columbia-Canada/Data-Scientist-II_R_105279",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e4eeda5355d63c74fac096270b5e968844de06b9fd5c7276ea42a83465a2ac43",
+          "artifact": "Remitly-164.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/job/Manila-Phillippines/Compliance-Associate--STAR-Operations_R_105954",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "752c7f3921794d1e076283dbde6745804385f480298740dc6bf9b05efa09ac3d",
+          "artifact": "Remitly-165.body"
+        },
+        {
+          "url": "https://remitly.wd5.myworkdayjobs.com/wday/cxs/remitly/Remitly_Careers/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "ea9a8f7486b0a832226db0458935857ed827cfda70e18ee57a929918a7d22a13",
+          "artifact": "Remitly-166.body"
+        }
+      ],
+      "actions_run": "https://github.com/chandanvura/JobRadar/actions/runs/37788473143",
+      "artifact_id": 11555646297,
+      "score_before_production": 10
+    },
+    {
+      "company": "Vanguard",
+      "status": "COMPLETE_ACTIONS_NOT_PRODUCTION",
+      "official_chain": [
+        "https://www.vanguard.com/",
+        "investor.vanguard.com/corporate-portal",
+        "www.vanguardjobs.com",
+        "www.vanguardjobs.com/job/23969734/assistant-portfolio-manager-core-and-multi-sector-strategies-malvern-pa",
+        "vanguard.wd5.myworkdayjobs.com/vanguard_external/job/Malvern-PA/Assistant-Portfolio-Manager--Core-and-Multi-Sector-strategies_182376-1/apply"
+      ],
+      "board": "https://vanguard.wd5.myworkdayjobs.com/vanguard_external",
+      "identifier": "vanguard|vanguard_external|India",
+      "advertised_total": 84,
+      "details": 84,
+      "unique_ids": 84,
+      "unknown_dates": 84,
+      "unknown_locations": 0,
+      "missing_descriptions": 0,
+      "responses": [
+        {
+          "url": "https://www.vanguardjobs.com/job/23962192/ria-hybrid-sales-executive-california-remote/",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "de52b3e67bec66aca1ae78fbd0a0443c758ee3ad39d0d355129b7f508f044041",
+          "artifact": "Vanguard-0.body"
+        },
+        {
+          "url": "https://www.vanguardjobs.com/job/23969734/assistant-portfolio-manager-core-and-multi-sector-strategies-malvern-pa/",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ec190a67815fc538e09756c84307e0a1f3d3ca2bb6ead57647663a9ea64bbbea",
+          "artifact": "Vanguard-1.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {},
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "3173d6a8f4fbf244fe98e187498cf94cfe8b52bfbe34f63930ecd148dad3954b",
+          "artifact": "Vanguard-2.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {
+              "locations": [
+                "f08899aeb8ba10015e1ef5090d4f0000"
+              ]
+            },
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "f481a6f97018ec8fabe229afa170dc427fc0d3f5533107a188889897c2576a51",
+          "artifact": "Vanguard-3.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {
+              "locations": [
+                "f08899aeb8ba10015e1ef5090d4f0000"
+              ]
+            },
+            "limit": 20,
+            "offset": 20,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "c9b065b92189ad6f9f7545b5d8726c5a551a28a077011e758941901bb91884e7",
+          "artifact": "Vanguard-4.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {
+              "locations": [
+                "f08899aeb8ba10015e1ef5090d4f0000"
+              ]
+            },
+            "limit": 20,
+            "offset": 40,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "05a2e0f35fca5c0c91d1230615d4cc776c11cca70bf022c61ec9b86f34f23907",
+          "artifact": "Vanguard-5.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {
+              "locations": [
+                "f08899aeb8ba10015e1ef5090d4f0000"
+              ]
+            },
+            "limit": 20,
+            "offset": 60,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "4f31384fb82c431711c7242f3e6d1945074cf6a9119497eb048e08ac576b08c0",
+          "artifact": "Vanguard-6.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {
+              "locations": [
+                "f08899aeb8ba10015e1ef5090d4f0000"
+              ]
+            },
+            "limit": 20,
+            "offset": 80,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "95e3c9c4346e559714b3e0d6988e1562fe4c9eda965563ef03f5525de58a98fd",
+          "artifact": "Vanguard-7.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {
+              "locations": [
+                "f08899aeb8ba10015e1ef5090d4f0000"
+              ]
+            },
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "44ebfae69ee3270e3d7ae172f1a4efd1904406233920d60590027773ac4eed45",
+          "artifact": "Vanguard-8.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Senior-Manager--IT-Delivery_177978",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e2efd6ee06e0730d03482196c7794885b90bc8491ddc01c4c09256d3ed79afd0",
+          "artifact": "Vanguard-9.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_177961",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6dc92339dd489d330dd0f0302606a409f47ddedf332d09767a6bf917f917e43c",
+          "artifact": "Vanguard-10.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_178345",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "02ed14afca6aa24eb80b176a613f6ef70dc375762def251386ea78c273e21191",
+          "artifact": "Vanguard-11.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---II_178295",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a05cd003c4124eab57b852caa37db5ff508a32eeb7438177c2f67c33347b7eb3",
+          "artifact": "Vanguard-12.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Fraud-Strategy--Specialist_182248",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "416814caadcfb3777e9614c932c53dd217dbe6e5582d3fd3d794e3fe41e89a70",
+          "artifact": "Vanguard-13.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Technical-Lead---Fund-Accounting-Platforms--AWS-Python-_176973",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "66b3941a52cb05862eec58d2bf4d5d1a7a68d7fbca327576c1ddd524b4903c4c",
+          "artifact": "Vanguard-14.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III--Java-_182238",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c05feb549ea23e7603d00dad332e136517b475ba57142bee0cfdffcf8e4681a5",
+          "artifact": "Vanguard-15.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III_177966",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b5fdc0f090cb3087b9532605a11b5903dc552115c13c3e6a5172c780360d2b3b",
+          "artifact": "Vanguard-16.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III-AWMT-_177944",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "1ebbc0478268c63f4a2f71e72acc7a60f489c0b63e7c04f9767443af3a964c6c",
+          "artifact": "Vanguard-17.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III-IST-FAS-Servicing_179118",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "2371a183e38efd8769ffd1fad2e4a85f227b5fa19a0ce3910cc57b17e05e0e4c",
+          "artifact": "Vanguard-18.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Business-Continuity-Analyst--Specialist_182771",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7d8773ead29072c9f7e9b8107e28fb19d873bbec903aaf175102a7f25ba28c0b",
+          "artifact": "Vanguard-19.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Data-Engineer--Specialist-WT-Data-Initiatives_180495",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6b0aac5b6821a11b365773d301543c718969d7c6ad2e400907a6af667afbff0b",
+          "artifact": "Vanguard-20.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--Fraud-Analytics---Operations--FROM-BOT-_182246",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f7e5bbf50ec77569511183f1006800ddccb8778a0d990d1dfd6037d9c417f7b5",
+          "artifact": "Vanguard-21.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Data-Engineer--Specialist--WT-Service-Experience-_182573-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d615ce2530ebdba8ba74884807fe5f5ff27d3b23b3e3ff445dc3e9803a883099",
+          "artifact": "Vanguard-22.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_177960",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d18e0e0c9e4275a4fa31c702a5774dde5a5176b163b99d69fcc6bf4d1f33deb7",
+          "artifact": "Vanguard-23.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III-Invest-Debit-Card-Team-1-PWTech_182609",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fb7ebbe28d43aa2f1a195184f164667896b4ebf7100348a3cdc03898cefbd104",
+          "artifact": "Vanguard-24.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--Cloud-Engineering_182241",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "189a16e0e16429f88bb82c78cace6b5916802c5fac2230ca8e6cc365f69d2fd1",
+          "artifact": "Vanguard-25.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III-PI-Tech-Invest---Gifting_179088",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ae269381b7cb52f224c8f789f898f0272d935f35fa042ee3f5f7d24592b48891",
+          "artifact": "Vanguard-26.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---II-Java-Full-Stack-Developer_182542",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7e2a7878fb2ea3c61bc47ea30f407bcf174866e0b43874863941436122f00e56",
+          "artifact": "Vanguard-27.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Communications-Consultant--Specialist_182339",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e34f6b390e71af3b3cdc46adf0a620b655d623d8c085b11aad23c5ddb29d429b",
+          "artifact": "Vanguard-28.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--Talent-Acquisition_182767",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f6644ff17181a59d9bfd835612d27beccd5d8e49d36d31fc17a0bbf3cea99846",
+          "artifact": "Vanguard-29.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Marketing-Operations-Consultant--Specialist_182693",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "3263f994272f1125e6a8beda6c71a6b17838c5c770f562cc41f005aeb258f773",
+          "artifact": "Vanguard-30.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Business-Project-Manager--Specialist_182583",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e1aee9b6125bcdcf80eacec06e8e87d7a7be3fc31ccfb7d501dcea5c0aca16de",
+          "artifact": "Vanguard-31.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Marketing-Manager--Specialist_182057",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "dfd27966c305c3e5752c788ee5dc176ed3540e553452268a7ad339c601d74f36",
+          "artifact": "Vanguard-32.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--IT-Delivery-WT-Data-Initiatives_180493",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "1d64167f669c7189bb016fb3521d8dc00cb8e862b166edbe52b233275c50bf75",
+          "artifact": "Vanguard-33.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Data-Engineer--Specialist_178342",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "989f201774e5e70fa39a2fc223c7bab00463da8ed7dd8eef09ff213c8e4d65d7",
+          "artifact": "Vanguard-34.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III_180487",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d9f9d4ccfb8de64e429bfaef020ccec0a0a0dda24220035d441539ec98ad7183",
+          "artifact": "Vanguard-35.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III_179112",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "58e82ea2a11709cdf2b0b103a5b0b734b254b6b48dbade88d625d3e4234c4f68",
+          "artifact": "Vanguard-36.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---II_177956",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "80fac64d47801bdc01a67a99e3ced91de2eed0b258a09802f4cd774ddaf65ba7",
+          "artifact": "Vanguard-37.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Talent-Acquisition-Reporting---MIS-Analyst_182768",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "06920623dedba567397f19fb2966f17e72d7c152ccfae7192b3c962e839eb8cb",
+          "artifact": "Vanguard-38.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_182611-1",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "b8f863d90a319aa6c12208da11dd4053fce63aaed4f95b84fb5063432556df85",
+          "artifact": "Vanguard-39.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III_178296",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "21e2896afd08485ff9b07942a97d343f159631d3f942a0f00ae2a8559fe1b48e",
+          "artifact": "Vanguard-40.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Strategic-Communications--Specialist_182692",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "cd821c76f7ca79e3203eb6a21f5a6b78710797f45b121068ba78fb4bb768f240",
+          "artifact": "Vanguard-41.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Data-Engineer--Specialist--PITech--Core---Middle-Office-Team-1-_182646",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "300943258a9a59afe572dfa2cb18bc54e41a91db531b555d41ccbb8339e83148",
+          "artifact": "Vanguard-42.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer-III_180486",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "8429e0f0f22fb4a008b86c561c1225bf36806001d0ff214d608b5d9d2134a196",
+          "artifact": "Vanguard-43.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Tech-Lead---_180822",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "10cb1e511d578fdf70fb87b76529bc089e137612685cf9a954ad9f402b4dcb37",
+          "artifact": "Vanguard-44.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---II--Java--AWS--Angular-React-_181656",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "82f1c8a0b29e899295db49b83b2b996c0c9150c5a1013b11c4c65fff963e55a2",
+          "artifact": "Vanguard-45.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III_180492",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "28d94f2451dc235e1cbff23884bcd99b446fd624b428f9a5c14da11f079e0515",
+          "artifact": "Vanguard-46.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_177959",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7b526f0c160ab343de3f284c33d0623c9a53b28fcff4f97f1f78f71069f426b0",
+          "artifact": "Vanguard-47.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--Business-Project-Management_182169",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "2e28b98d72d79647735c7536aaec2f8c02a161772307ede30c06de90863ff05f",
+          "artifact": "Vanguard-48.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III_178293",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "45f6e2291f20de8fb75c20a3ae603fcdde95555107c5c0077378853cf7ff22f4",
+          "artifact": "Vanguard-49.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Business-Transformation-and-Change-Management-Lead--Specialist_176559",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "e1162c73cbae80b552df7ec8b45fa547a6b22bcb20abd002c167610f12da0ac2",
+          "artifact": "Vanguard-50.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III_177969",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "01228c71b2a87e4485e524a47175e95f8dff69fd7eea937e8199968bfab817e9",
+          "artifact": "Vanguard-51.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--IT-Delivery_178334",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "072822b6035613bd1b55b061f2e1729ce6f00c9dff72d6206c2558a4af827058",
+          "artifact": "Vanguard-52.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II-GIFS-Middle-Office---ICAP-Cash-Edge_180484",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f197c7b2199bf13f13a2f8fb367a138ac29a47604a0014c7fb68407328430d04",
+          "artifact": "Vanguard-53.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Data-Scientist--Specialist_178033",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "20d2b21c9181e7be044b99361f5894a6a6d42339d08f0eba0f6c594a78161160",
+          "artifact": "Vanguard-54.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/AI-Automation-Engineer--Unix-Linux-Environment-_177973",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "7eec18e68d2ec7cccd308a7edb0e55b4557ae05541859b102c581b8a92b2c21f",
+          "artifact": "Vanguard-55.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead--II--Senior-Developer---Angular---AWS-Cloud-_179117",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "5e07d7a1f14574150c0905869044c04a542a8f52c499b342fd74a85699234705",
+          "artifact": "Vanguard-56.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III_178297",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "52e9307885054f358b3797ef1c6e77a527de60790f72cf75dd25e26205abd635",
+          "artifact": "Vanguard-57.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Senior-Manager--Total-Rewards_181385",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "cde98124d690889c283e1988aa2f1deed0d05099d63b4d95395a1645ef50bdd5",
+          "artifact": "Vanguard-58.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Cloud-Engineer--Specialist-CDAO-Data-Mgmt---Analytics-Platforms_179100",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "58c12345e10080b790e40a53c76913095fe5b65f3da87a7c7a0a9cd0ea514e37",
+          "artifact": "Vanguard-59.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III-PI-Tech-API---Portfolio-Metrics-Services-Team-B_179435",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fcc3ed1d9d4659178b147c8b28f9d0da5df2342bdb9a4f9a645684425e6e1346",
+          "artifact": "Vanguard-60.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Business-Project-Manager--Specialist_182140",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "451e88654ecfba3545ca8bb0cb0a6e6eecbe9f643a88c60a606cd8500d32a3fe",
+          "artifact": "Vanguard-61.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III-Java-Fullstack-developer_179433",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6b3f39b26788cb63b23801df54c6c97ee2728c0b00866f7f36be3fa6e18c83d5",
+          "artifact": "Vanguard-62.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Product-Manager--Specialist_179822",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "dede14a537722a6db2d776a32dae475f8c97032c9ebb21cb772f502c476ab354",
+          "artifact": "Vanguard-63.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---II-PI-Tech-Core---Tax-Form-and-Delivery_179076",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "4dac034e71eca05a6e39ae8b26245149ead891170636dd2e8765bdff8d2dbbb7",
+          "artifact": "Vanguard-64.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Senior-Manager--Real-Estate_180865",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6f66dcecea2f634c8d3cb6575d2be87e11ac5150d20e676c90e1f2bed6a5ef88",
+          "artifact": "Vanguard-65.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Senior-Product-Manager---Wealth-Management_179819",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d94784129bb88f7fa249256fc4379db32c63a9b8874891bad87988376e49a888",
+          "artifact": "Vanguard-66.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---II-PI-Tech-Invest---Trade-Enablement-India-Team_179075",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "93874735bbd44db28cbdbbe24d4f13957cee8ce7e1a0e486694409e161655ffa",
+          "artifact": "Vanguard-67.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---II-PI-Tech-Core---Tax-Form-and-Delivery_179077",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "009d3b919be172d359d79ae0da9ff67f0666ead3f47364a8d3ebe4e365cfe3c4",
+          "artifact": "Vanguard-68.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III-PI-Tech-API---Personal-Performance-Services-Team-A_179436",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "195fcbd7bc931f63f7c9568d950b113e19677387ba01e2bd603536f4c18c32a3",
+          "artifact": "Vanguard-69.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Cyber-Threat-Management-Analyst--Specialist--ES-F-Secure-AI-Enablement_179142",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c6bfa22d0cc92b4018e638dabb535e2ab51b0a209138326100b8cccc5872d821",
+          "artifact": "Vanguard-70.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_179078",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ed51f8abd326f09331c61e1eacfb5be21d0246ed7cf11ac8a72c9bd87ba41152",
+          "artifact": "Vanguard-71.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/CRM-Manager--IT-Delivery_179090",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f8374e9c7a5eff95cea943614f35b9be8207e87b8b2baf8014ee2b3920748d49",
+          "artifact": "Vanguard-72.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Full-Stack-Engineering-Lead_179426",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "9678296960d1b26afeb455bbbe0915822b90ce6f1c586042c87bed2e7f8d8fb9",
+          "artifact": "Vanguard-73.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_179080",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "9806fc8ba4e84b71e60cddeb5938455aeb5ce31bb5bb6a29898271adb2e6181c",
+          "artifact": "Vanguard-74.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--IT-Delivery_178299",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "5e12f126b7493b35f49ba57b634acb52d24e07b00e4916dbe0efc127bca5b2f1",
+          "artifact": "Vanguard-75.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---IV-GIFS-Data---Polaris_179114",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "36ae255e4429a7fc1475eb9ddabc7266b9355e621fccac11f0b8e5d8a9829825",
+          "artifact": "Vanguard-76.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Site-Reliability-Champion--Specialist_179093",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "eb2533e511f0bef889198f6f1a961de7a4b05ba63b2b40780ab1c1cca1b28513",
+          "artifact": "Vanguard-77.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Product-Architect---Appian---AWS_179425",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "d5b64363ca17f1ad8fd4e21e0f17a095fc99ea7a4b3062539bb3abfe31dad713",
+          "artifact": "Vanguard-78.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_179427",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "bfe7d23262c08f47271d4dd26bc8d92c5340d984f0f78c3d53192190da090b60",
+          "artifact": "Vanguard-79.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_179428",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "4f9375b4f4e3f5b6932aeace3de02b60ca34c8ad2f932a4e3b5812f84add83b3",
+          "artifact": "Vanguard-80.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---Fund-Treasury-Banking-Services_179113",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "4c7d6668db628b7ba0312a53a02e2e9145c14f81999d3df3cda74a0995514105",
+          "artifact": "Vanguard-81.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---IV_178298",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "92db526e5542ba50129703c2ed3d3357bcce37746dd8f9fb5c80227829f9419b",
+          "artifact": "Vanguard-82.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--IT-Delivery_178338",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "fe679fe110491c7a885dfbfc4684aea36ede43bd8700a79ef40d5bcfc5c232b8",
+          "artifact": "Vanguard-83.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--IT-Delivery_178335",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "f4c8e6b2a398f053402946fdbcbe91b37c06e454c19fd010db24f2e51504db7f",
+          "artifact": "Vanguard-84.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_177958",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "97d0f4f87bc4ee54a717e00d0c40ed03ccb01704797a56b2d6645972ff1694c1",
+          "artifact": "Vanguard-85.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Manager--Data-Engineering_178339",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "a4dcad6284c190ca0812adc037f9f6875230e18614e345bec22d0cad6f6f39b7",
+          "artifact": "Vanguard-86.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Environments-Support-Analyst--Specialist_177951",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "6e9d97e5ea4bb91844752d8c5d3709d3696f8953332ce7d04f68615d47d59ff5",
+          "artifact": "Vanguard-87.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---IV_177974",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "50db8971bfad59832f2509f27c231dba51ccb31701134cd922f7b7ee450a43c9",
+          "artifact": "Vanguard-88.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Product-Architect---General--Specialist_176983",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "feb813a4bbe9010a325b6c72e2c720f0f23b0f025b0152e246239c38836968ab",
+          "artifact": "Vanguard-89.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineering-Technical-Lead---II_178332",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "c98ec88cf16c6c3ac6d01de6b084e19afb672a79a2df0591bd4c3fb7a88d9064",
+          "artifact": "Vanguard-90.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Government-Relations-Strategist--Senior-Specialist_176747",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "ee0d76178f72ae3c5ae5c2a76d19059372c82de4129ee620c8fc7e9bd1599ce3",
+          "artifact": "Vanguard-91.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/job/Hyderabad-India/Application-Engineer---III-PI-Tech-Core---Tax-Form-and-Delivery_179086",
+          "method": "GET",
+          "payload": null,
+          "status": 200,
+          "sha256": "43f64e395d270f2645707c411d89752c26973b10f8d4cdb15a7920a71f35cf11",
+          "artifact": "Vanguard-92.body"
+        },
+        {
+          "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguard_external/jobs",
+          "method": "POST",
+          "payload": {
+            "appliedFacets": {
+              "locations": [
+                "f08899aeb8ba10015e1ef5090d4f0000"
+              ]
+            },
+            "limit": 20,
+            "offset": 0,
+            "searchText": ""
+          },
+          "status": 200,
+          "sha256": "44ebfae69ee3270e3d7ae172f1a4efd1904406233920d60590027773ac4eed45",
+          "artifact": "Vanguard-93.body"
+        }
+      ],
+      "actions_run": "https://github.com/chandanvura/JobRadar/actions/runs/37788473143",
+      "artifact_id": 11555646297,
+      "score_before_production": 10
+    },
+    {
+      "company": "Southwest Airlines",
+      "status": "UNRESOLVED",
+      "error": "ValueError: Official root to this exact Workday board link chain is incomplete",
+      "responses": [],
+      "actions_run": "https://github.com/chandanvura/JobRadar/actions/runs/37788473143",
+      "artifact_id": 11555646297,
+      "score_before_production": 0
+    }
+  ]
+}

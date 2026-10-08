@@ -1,0 +1,31 @@
+name: Next unresolved feed evidence
+on:
+  push:
+    branches: [ats-next/2026-10-08]
+    paths: [companies/ats-next-2026-10-08.json, .github/workflows/ats-next.yml, scripts/ats_next_probe.py, scraper/**]
+permissions:
+  contents: read
+jobs:
+  investigate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m scripts.coverage_snapshot --output artifacts/next-before.json
+      - run: python -m scripts.ats_deep --manifest companies/ats-next-2026-10-08.json --output artifacts/next-evidence
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '1'
+      - run: python -m scripts.ats_next_probe --verify BrowserStack Remitly Vanguard
+        env:
+          JOBRADAR_DOMAIN_CONCURRENCY: '1'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ats-next-evidence
+          path: artifacts/
+          retention-days: 7

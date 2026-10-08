@@ -308,8 +308,11 @@ def workday_country_facets(nodes,country):
     return countries or ({"locations":locations} if locations else {})
 
 class WorkdayAdapter(JobSource):
-    def __init__(self, complete=False):
+    def __init__(self, complete=False, all_details=False):
+        if all_details and not complete:
+            raise ValueError('All Workday details require complete pagination')
         self.complete=complete
+        self.all_details=all_details
 
     async def fetch_jobs(self,c):
         origin,tenant,site=workday_config(c); api=f"{origin}/wday/cxs/{tenant}/{site}"
@@ -357,10 +360,12 @@ class WorkdayAdapter(JobSource):
                 # Complete mode reads relevant titles even if listing locations hide
                 # secondary offices; actual detail fields alone establish the city.
                 relevant=likely_role(item.get("title","")) if self.complete else likely_target(item.get("title",""),item.get("locationsText",""))
-                if not country and not relevant: return None
+                if not country and not relevant and not self.all_details: return None
                 path=item.get("externalPath")
                 if not path: return None
-                async with semaphore: detail_response=await cached_get(x,f"{api}{path}")
+                async with semaphore:
+                    detail_response=(await request(x,'GET',f"{api}{path}") if self.all_details
+                                     else await cached_get(x,f"{api}{path}"))
                 if detail_response.status_code in (404,410):
                     if self.complete: missing.append(path)
                     return None
@@ -369,12 +374,25 @@ class WorkdayAdapter(JobSource):
                 info=detail_response.json().get("jobPostingInfo",{})
                 if self.complete and (not info.get("jobDescription") or not info.get("title")):
                     raise ValueError("Workday complete detail omitted its full description or title")
+                if self.all_details and info.get('title')!=item.get('title'):
+                    raise SnapshotChanged('Workday listed title changed during full detail collection')
                 public_url=urljoin(origin,f"/{site}{path}")
                 posting=item.get("postedOn") or info.get("startDate")
                 location=location_text(info.get("location"),info.get("additionalLocations"),item.get("locationsText"))
                 return make_job(str(info.get("jobReqId") or info.get("jobPostingId") or path),info.get("title") or item.get("title",""),c.name,location,clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting)
             converted=await asyncio.gather(*(convert(item) for item in postings))
             jobs=[job for job in converted if job]
+            if self.all_details:
+                if len({job.external_job_id for job in jobs})!=len(jobs):
+                    raise ValueError('Workday full public details repeat an external job ID')
+                if not missing and len(jobs)!=expected:
+                    raise ValueError('Workday full public details do not match the advertised total')
+                final=await request(x,'POST',f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":0,"searchText":""})
+                final.raise_for_status();snapshot=final.json()
+                fields=('externalPath','title','locationsText','postedOn')
+                signature=lambda rows:[{field:row.get(field) for field in fields} for row in rows]
+                if snapshot.get('total')!=expected or signature(snapshot.get('jobPostings',[]))!=signature(postings[:20]):
+                    raise SnapshotChanged('Workday full public listing changed during detail collection')
         if self.complete:
             warning=f"Limited coverage: {len(missing)} relevant Workday details disappeared during collection" if missing else None
             return JobBatch(jobs,warning),len(postings)
@@ -746,3 +764,5 @@ ADAPTERS['keka'] = KekaCareerAdapter()
 ADAPTERS["vodafone"] = InfineonCareerAdapter("Vodafone","https://jobs.vodafone.com/careers","vodafone.com","vodafone")
 
 ADAPTERS["eightfold_complete"] = EightfoldCareerAdapter(complete=True)
+
+ADAPTERS["workday_all"] = WorkdayAdapter(complete=True, all_details=True)

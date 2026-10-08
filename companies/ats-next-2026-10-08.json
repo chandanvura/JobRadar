@@ -1,0 +1,34 @@
+{
+  "batch": "ats-next-2026-10-08",
+  "max_assets": 64,
+  "companies": [
+    "HubSpot",
+    "BrowserStack",
+    "Remitly",
+    "Vanguard",
+    "Southwest Airlines"
+  ],
+  "evidence_links": {
+    "HubSpot": [
+      "https://www.hubspot.com/",
+      "https://www.hubspot.com/careers",
+      "https://www.hubspot.com/careers/jobs?hubs_signup-cta=careers-nav-cta&page=1"
+    ],
+    "BrowserStack": [
+      "https://www.browserstack.com/",
+      "https://www.browserstack.com/careers"
+    ],
+    "Remitly": [
+      "https://www.remitly.com/",
+      "https://careers.remitly.com/"
+    ],
+    "Vanguard": [
+      "https://www.vanguard.com/",
+      "https://www.vanguardjobs.com/"
+    ],
+    "Southwest Airlines": [
+      "https://www.southwest.com/",
+      "https://careers.southwestair.com/in/en/search-results"
+    ]
+  }
+}
