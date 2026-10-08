@@ -36,7 +36,7 @@
   "React": "(?<![a-z0-9])react(?![a-z0-9])",
   "Angular": "(?<![a-z0-9])angular(?![a-z0-9])",
   "Node.js": "\\bnode(?:\\.js|js| js)\\b",
-  "Go": "\\b(?:golang|go programming|programming in go)\\b",
+  "Go": "\\b(?:golang|go programming|programming in go)\\b|\\bgo\\b(?=\\s*[,;/]|\\s+(?:or|and)\\b)",
   ".NET": "(?<![a-z0-9])\\.net(?![a-z0-9])",
   "C#": "(?<![a-z0-9])c\\#(?![a-z0-9])",
   "C++": "(?<![a-z0-9])c\\+\\+(?![a-z0-9])",

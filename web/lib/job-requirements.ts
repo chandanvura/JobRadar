@@ -21,6 +21,7 @@ export function extractRequirements(description:string,location='') {
   const required=!preferred&&(new RegExp(sections.required,'i').test(section)||/\b(?:must|required|mandatory|minimum|need to have)\b/i.test(text));
   for(const [skill,pattern] of Object.entries(skillPatterns))if(new RegExp(pattern,'i').test(text))push(preferred?preferredSkills:required?requiredSkills:mentionedSkills,skill,text);
   for(const m of text.matchAll(/\b(?:bachelor(?:'s|s)?|master(?:'s|s)?|ph\.?d\.?|b\.?tech|m\.?tech|b\.e\.?|m\.e\.?|bca|mca|b\.?sc|m\.?sc|diploma|equivalent (?:practical |work )?experience)\b/gi))push(education,m[0],text);
+  for(const m of text.matchAll(/\b(?:BE|ME|BS|MS|BEng|MEng)\b(?=\s+(?:or|and|in|degree)\b)/g))push(education,m[0],text);
   if(/\b(?:batch|graduat(?:ion|ing|ed|es)|class of|pass(?:ed|ing) out)\b/i.test(text))for(const m of text.matchAll(/\b20\d{2}\b/g))push(batches,m[0],text);
  }
  // A conflicting clause is uncertainty, never silently resolved as a must-have.

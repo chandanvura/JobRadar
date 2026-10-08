@@ -1,7 +1,7 @@
 {
-  "headers": "(?:job description|basic qualifications|minimum qualifications|required qualifications|required skills|requirements|qualifications|education and experience|knowledge and skills|what you bring|what we look for|what you need|what you'll do|what you will do|responsibilities|preferred qualifications|preferred skills|nice to have|good to have|desirable|who we are|about us|about the company|our company|company overview|benefits|what we offer|equal opportunity|additional information)",
-  "boilerplate": "^(?:who we are|about us|about the company|our company|company overview|benefits|what we offer|equal opportunity|additional information)$",
-  "preferred": "^(?:preferred qualifications|preferred skills|nice to have|good to have|desirable)$",
+  "headers": "(?:job description|basic qualifications|minimum qualifications|required qualifications|required skills|requirements|qualifications|education and experience|knowledge and skills|what you bring|what we look for|what you need|what you'll do|what you will do|responsibilities|preferred qualifications|preferred experience|preferred skills|nice to have|good to have|desirable|who we are|about us|about the company|our company|company overview|benefits|what we offer|what we can offer you|accessibility|equal opportunity|additional information)",
+  "boilerplate": "^(?:who we are|about us|about the company|our company|company overview|benefits|what we offer|what we can offer you|accessibility|equal opportunity|additional information)$",
+  "preferred": "^(?:preferred qualifications|preferred experience|preferred skills|nice to have|good to have|desirable)$",
   "required": "^(?:basic qualifications|minimum qualifications|required qualifications|required skills|requirements|qualifications|education and experience|knowledge and skills|what you bring|what we look for|what you need)$",
   "company_clause": "\\b(?:our company|our platform|our customers|we are a|we serve|we help|company has|company uses|organization uses|organisation uses|equal opportunity|benefits include)\\b"
 }
