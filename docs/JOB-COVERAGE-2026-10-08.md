@@ -27,3 +27,13 @@ The four-hour recovery change is already in production. Recovery scan 3780130609
 455 Python tests and 89 browser-product regression tests passed locally. The production build, compiled Worker/local D1 integration, lint, UI typecheck, production dependency audit and Python security scan passed. Remote validation and deployment are recorded by the release PR and Actions run.
 
 22 dated research workflows move to `docs/archive/workflows/` with their original contents retained. Active production scanning, deployment, recovery, backups, maintenance and notifications remain in `.github/workflows/`.
+
+## Production result
+
+PR https://github.com/chandanvura/JobRadar/pull/29 merged as `859d76b4c05f3abfa3ae25f68f1056a732c7abc4`. Production deployment https://github.com/chandanvura/JobRadar/actions/runs/37806621273 and both release validation jobs succeeded.
+
+A bounded refresh of HPE, Microsoft, Cisco and SAP completed successfully: https://github.com/chandanvura/JobRadar/actions/runs/37807573263. The existing registry-sync code verified all four feeds and published the jobs without changing full-scan metrics or sending notifications. The temporary execution workflow exists only on the evidence branch, not production main.
+
+Live UI verification found HPE `Cloud Developer`, requisition `1211072`, Bengaluru, 1–3 years, employer label `Posted Yesterday`, explicitly marked for posting-date review. Searching `"cloud developer" HPE` returns this role. The active catalogue increased from 3,467 to 3,723 listings; those counts include roles outside the candidate's range. Before that refresh, the dashboard showed 950 matching leads versus 14 in the strict 24-hour Recommended view. `Merck AWS` and `AWS Merck` returned the same three listings. All figures are observations, not coverage guarantees.
+
+Remaining source failures in the last full scan: Innovaccer (429), HubSpot (404), Maersk (snapshot pagination changed/repeated records). Accenture's capped coverage and IBM's empty audit remain unresolved. The health endpoint reports a degraded 503 for source failures while the database is available and the scan is not stale. Do not treat successful workflow completion as complete coverage of all employers.
