@@ -30,3 +30,17 @@ test('quoted phrases stay ordered and title evidence outranks description mentio
  assert.equal(index.search('"developer cloud"').size,0);
  assert.ok(index.search('"cloud developer"').has(direct));
 });
+test('hybrid retrieval recovers related roles while retaining employer and phrase constraints',()=>{
+ const developer=job('Cloud Developer'),engineer=job('Cloud Engineer'),foreign=job('Cloud Engineer','Other');
+ const index=createJobSearchIndex([developer,engineer,foreign]);
+ const hits=[...index.search('HPE cloud developer').keys()];
+ assert.equal(hits[0],developer);assert.ok(hits.includes(engineer));assert.ok(!hits.includes(foreign));
+ assert.ok(!index.search('HPE "cloud developer"').has(engineer));
+ assert.equal(index.search('missingcompany cloud developer').size,0);
+});
+test('concept retrieval finds requirements even without literal wording',()=>{
+ const infra=job('Platform Engineer','HPE','Terraform AWS provisioning'),irrelevant=job('QA Engineer','Other','Manual tests');
+ const index=createJobSearchIndex([infra,irrelevant]);
+ assert.ok(index.search('HPE infrastructure as code').has(infra));
+ assert.ok(index.search('HPE container orchestration').size===0);
+});
