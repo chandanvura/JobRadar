@@ -24,3 +24,8 @@ Exact companies.csv change:
 Focused production selection: `Lam Research`, `Principal Financial Group`. The main workflow records actual before/after coverage and verifies ingestion against the live portal. Final production results and workflow links are recorded in the pull request after execution. A focused repair does not rewrite the historical full-scan health record.
 
 Local verification: 349 Python regression/fault tests, Bandit, 80 web tests with production build, compiled Worker/local D1 integration including same-day checks and failed-check last-success preservation. CI additionally runs dependency audits, lint and UI types. Unknown dates and actual locations are preserved. Company timestamp refreshes add at most 4,200 company row updates for six scheduled scans of 700 employers; unchanged job bodies remain conditional updates.
+
+
+Production follow-up: PR #21 merged and deployed successfully. Registry publication recovered Lam; focused publication recovered Principal. Independent production snapshot at 13:18:39 UTC confirms 700 employers, 211 limited sources and one error (HubSpot), down from three. Lam has 113 listings/7 candidates; Principal has 19 listings/5 candidates; both have zero eligible jobs under the current policy.
+
+The first focused verification run failed its exact timestamp assertion because it collected before the Worker deployment completed: Lam's unchanged repeat went through the old same-day timestamp logic. It successfully published both feeds, but is not counted as a passing verification. A follow-up adds explicit same-revision deployment sequencing for Worker changes and repeats the focused verification after deployment; final run links and results are recorded in the PR.
