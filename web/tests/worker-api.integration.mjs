@@ -65,6 +65,16 @@ try {
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);
   assert.deepEqual((await db.prepare('SELECT * FROM scraper_runs').all()).results,beforeRegistryRun.results);
   assert.equal((await db.prepare('SELECT last_checked_at FROM companies WHERE name=?').bind('New source').first()).last_checked_at,null);
+  // Unchanged results must still record every real same-day check.
+  const checkedSource={name:'New source',careers_url:'https://new.test/careers',ats_provider:'custom',ats_identifier:'new-source',priority:4,warning:'Limited coverage: no structured public job feed',error_count:0,jobs_found:0};
+  for(const checked of ['2026-10-08T00:07:00+00:00','2026-10-08T04:07:00+00:00']){
+    assert.equal((await request('/api/ingest',{companies:[{...checkedSource,last_checked_at:checked,last_success_at:checked}]})).status,200);
+    const stored=await db.prepare('SELECT last_checked_at,last_success_at FROM companies WHERE name=?').bind('New source').first();
+    assert.equal(stored.last_checked_at,checked);assert.equal(stored.last_success_at,checked);
+  }
+  assert.equal((await request('/api/ingest',{companies:[{...checkedSource,error_count:1,warning:'Upstream unavailable',last_checked_at:'2026-10-08T08:07:00+00:00',last_success_at:null}]})).status,200);
+  const failedCheck=await db.prepare('SELECT last_checked_at,last_success_at FROM companies WHERE name=?').bind('New source').first();
+  assert.equal(failedCheck.last_checked_at,'2026-10-08T08:07:00+00:00');assert.equal(failedCheck.last_success_at,'2026-10-08T04:07:00+00:00');
   const live=await (await request('/api/dashboard')).json();assert.equal(live.jobs.length,1);assert.equal(live.data_mode,undefined);
   const page=await (await request('/api/jobs?after=0')).json();assert.equal(page.jobs.length,1);assert.equal(page.next_cursor,null);
   // An explicit empty successful manifest is authoritative and can retire jobs.
