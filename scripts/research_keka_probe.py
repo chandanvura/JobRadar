@@ -76,6 +76,21 @@ async def run():
                 case.update(status='UNRESOLVED', blocker=type(exc).__name__ + ': ' + str(exc)[:200])
             print(json.dumps(case), flush=True)
     (OUT / 'evidence.json').write_text(json.dumps(cases, indent=2))
+    # Release gate is the production adapter, not an HTTP-200 discovery count.
+    from scraper.adapters import ADAPTERS
+    from scraper.main import load_companies
+    company = next(c for c in load_companies() if c.name == 'Jupiter')
+    if company.ats_provider != 'keka':
+        raise ValueError('Jupiter registry repair is not configured for Keka')
+    jobs, total = await ADAPTERS['keka'].fetch_jobs(company)
+    verified = {'company': company.name, 'status': 'COMPLETE_ACTIONS_NOT_PRODUCTION',
+                'total': total, 'details': len(jobs),
+                'unique_ids': len({j.external_job_id for j in jobs}),
+                'missing_descriptions': sum(not j.description for j in jobs)}
+    if total != len(jobs) or total != verified['unique_ids'] or verified['missing_descriptions']:
+        raise ValueError('Jupiter complete feed release gate failed')
+    (OUT / 'jupiter-adapter-verification.json').write_text(json.dumps(verified, indent=2))
+    print(json.dumps(verified), flush=True)
 
 
 if __name__ == '__main__':
