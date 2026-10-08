@@ -1,0 +1,231 @@
+{
+  "baseline": {
+    "checked_at": "2026-10-08T13:57:58.191457+00:00",
+    "counts": {
+      "companies": 700,
+      "limited": 211,
+      "errors": 1,
+      "server_time": "2026-10-08T13:57:58.107Z"
+    }
+  },
+  "after_registry_verification": {
+    "checked_at": "2026-10-08T14:06:27.558041+00:00",
+    "counts": {
+      "companies": 700,
+      "limited": 208,
+      "errors": 1,
+      "server_time": "2026-10-08T14:06:27.491Z"
+    }
+  },
+  "companies_before": [
+    {
+      "name": "BrowserStack",
+      "careers_url": "https://www.browserstack.com/careers",
+      "ats_provider": "custom",
+      "last_checked_at": "2026-10-08T11:01:29.324782+00:00",
+      "last_success_at": "2026-10-08T11:03:06.151948+00:00",
+      "error_count": 0,
+      "jobs_found": 32,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "Limited coverage: autodiscovered board identity and scope await verification"
+    },
+    {
+      "name": "HubSpot",
+      "careers_url": "https://job-boards.greenhouse.io/hubspotjobs",
+      "ats_provider": "greenhouse",
+      "last_checked_at": "2026-10-08T00:31:24.203448+00:00",
+      "last_success_at": "2026-10-06T11:51:25.654316+00:00",
+      "error_count": 1,
+      "jobs_found": 0,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "HTTPStatusError: Client error '404 Not Found' for url 'https://boards-api.greenhouse.io/v1/boards/hubspotjobs/jobs?content=true'\nFor more information check: https://developer.mo"
+    },
+    {
+      "name": "Remitly",
+      "careers_url": "https://careers.remitly.com/",
+      "ats_provider": "custom",
+      "last_checked_at": "2026-10-08T11:01:32.851850+00:00",
+      "last_success_at": "2026-10-08T11:07:54.193663+00:00",
+      "error_count": 0,
+      "jobs_found": 155,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "Limited coverage: autodiscovered board identity and scope await verification"
+    },
+    {
+      "name": "Southwest Airlines",
+      "careers_url": "https://careers.southwestair.com/in/en/search-results",
+      "ats_provider": "custom",
+      "last_checked_at": "2026-10-08T11:01:29.325002+00:00",
+      "last_success_at": "2026-10-08T11:07:17.317194+00:00",
+      "error_count": 0,
+      "jobs_found": 45,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "Limited coverage: autodiscovered board identity and scope await verification"
+    },
+    {
+      "name": "Vanguard",
+      "careers_url": "https://www.vanguardjobs.com/",
+      "ats_provider": "custom",
+      "last_checked_at": "2026-10-08T11:01:29.324961+00:00",
+      "last_success_at": "2026-10-08T11:07:09.968111+00:00",
+      "error_count": 0,
+      "jobs_found": 368,
+      "candidate_jobs": 36,
+      "eligible_jobs": 0,
+      "warning": "Limited coverage: autodiscovered board identity and scope await verification"
+    }
+  ],
+  "companies_after": [
+    {
+      "name": "BrowserStack",
+      "careers_url": "https://browserstack.wd3.myworkdayjobs.com/External",
+      "ats_provider": "workday_all",
+      "last_checked_at": "2026-10-08T14:05:24.981694+00:00",
+      "last_success_at": "2026-10-08T14:05:30.472747+00:00",
+      "error_count": 0,
+      "jobs_found": 33,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "No roles with a published target-city location returned"
+    },
+    {
+      "name": "HubSpot",
+      "careers_url": "https://job-boards.greenhouse.io/hubspotjobs",
+      "ats_provider": "greenhouse",
+      "last_checked_at": "2026-10-08T00:31:24.203448+00:00",
+      "last_success_at": "2026-10-06T11:51:25.654316+00:00",
+      "error_count": 1,
+      "jobs_found": 0,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "HTTPStatusError: Client error '404 Not Found' for url 'https://boards-api.greenhouse.io/v1/boards/hubspotjobs/jobs?content=true'\nFor more information check: https://developer.mo"
+    },
+    {
+      "name": "Remitly",
+      "careers_url": "https://remitly.wd5.myworkdayjobs.com/Remitly_Careers",
+      "ats_provider": "workday_all",
+      "last_checked_at": "2026-10-08T14:05:25.034024+00:00",
+      "last_success_at": "2026-10-08T14:05:41.698927+00:00",
+      "error_count": 0,
+      "jobs_found": 155,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "No roles with a published target-city location returned"
+    },
+    {
+      "name": "Southwest Airlines",
+      "careers_url": "https://careers.southwestair.com/in/en/search-results",
+      "ats_provider": "custom",
+      "last_checked_at": "2026-10-08T11:01:29.325002+00:00",
+      "last_success_at": "2026-10-08T11:07:17.317194+00:00",
+      "error_count": 0,
+      "jobs_found": 45,
+      "candidate_jobs": 0,
+      "eligible_jobs": 0,
+      "warning": "Limited coverage: autodiscovered board identity and scope await verification"
+    },
+    {
+      "name": "Vanguard",
+      "careers_url": "https://vanguard.wd5.myworkdayjobs.com/vanguard_external",
+      "ats_provider": "workday_all",
+      "last_checked_at": "2026-10-08T14:05:25.022417+00:00",
+      "last_success_at": "2026-10-08T14:05:43.053901+00:00",
+      "error_count": 0,
+      "jobs_found": 84,
+      "candidate_jobs": 36,
+      "eligible_jobs": 0,
+      "warning": null
+    }
+  ],
+  "merged_patch": "https://github.com/chandanvura/JobRadar/pull/23",
+  "release_gate": {
+    "run_id": 37789355958,
+    "conclusion": "success"
+  },
+  "pr_ci": {
+    "run_id": 37789364950,
+    "conclusion": "success"
+  },
+  "main_ci": {
+    "run_id": 37789588713,
+    "conclusion": "success"
+  },
+  "registry_production_verification": {
+    "run_id": 37789588644,
+    "conclusion": "success"
+  },
+  "scores": {
+    "BrowserStack": 15,
+    "Remitly": 15,
+    "Vanguard": 15
+  },
+  "remaining_unresolved": [
+    "HubSpot",
+    "Southwest Airlines"
+  ],
+  "focused_production_verification": {
+    "run_id": 37789588661,
+    "conclusion": "success",
+    "artifact_id": 11556211777,
+    "before": {
+      "checked_at": "2026-10-08T14:06:19.442401+00:00",
+      "counts": {
+        "companies": 700,
+        "limited": 208,
+        "errors": 1,
+        "server_time": "2026-10-08T14:06:19.366Z"
+      }
+    },
+    "after": {
+      "checked_at": "2026-10-08T14:08:33.332531+00:00",
+      "counts": {
+        "companies": 700,
+        "limited": 208,
+        "errors": 1,
+        "server_time": "2026-10-08T14:08:33.258Z"
+      }
+    },
+    "companies": [
+      {
+        "name": "BrowserStack",
+        "careers_url": "https://browserstack.wd3.myworkdayjobs.com/External",
+        "ats_provider": "workday_all",
+        "last_checked_at": "2026-10-08T14:06:20.453815+00:00",
+        "last_success_at": "2026-10-08T14:06:56.139729+00:00",
+        "error_count": 0,
+        "jobs_found": 34,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      {
+        "name": "Remitly",
+        "careers_url": "https://remitly.wd5.myworkdayjobs.com/Remitly_Careers",
+        "ats_provider": "workday_all",
+        "last_checked_at": "2026-10-08T14:06:20.545720+00:00",
+        "last_success_at": "2026-10-08T14:08:29.767156+00:00",
+        "error_count": 0,
+        "jobs_found": 155,
+        "candidate_jobs": 0,
+        "eligible_jobs": 0,
+        "warning": "No roles with a published target-city location returned"
+      },
+      {
+        "name": "Vanguard",
+        "careers_url": "https://vanguard.wd5.myworkdayjobs.com/vanguard_external",
+        "ats_provider": "workday_all",
+        "last_checked_at": "2026-10-08T14:06:20.528031+00:00",
+        "last_success_at": "2026-10-08T14:07:58.788128+00:00",
+        "error_count": 0,
+        "jobs_found": 84,
+        "candidate_jobs": 36,
+        "eligible_jobs": 0,
+        "warning": null
+      }
+    ]
+  }
+}
