@@ -49,6 +49,13 @@ async def run():
                 response = await request(x, 'GET', url)
                 print(json.dumps({'company':case['company'], 'detail_url':str(response.url), 'http_status':response.status_code, 'detail_html':response.text[:2000], 'detail_text':BeautifulSoup(response.text,'html.parser').get_text(' ',strip=True)[-16000:]}), flush=True)
                 (root / (case['company']+f'-detail-{index}.html')).write_text(response.text)
+                if case['company'] == 'Kissflow':
+                    doc = BeautifulSoup(response.text, 'html.parser')
+                    print(json.dumps({'company':'Kissflow','headings':[str(n) for n in doc.select('h1,h2,h3,h4')], 'job_section':[str(n.parent.parent)[:24000] for n in doc.find_all(string=lambda s:s and 'Job Description:' in s)]}),flush=True)
+            if case['company'] == 'Kissflow':
+                for p in case['pages']:
+                    if 'module_Career_job_list' in p['url'] and p.get('artifact'):
+                        print(json.dumps({'company':'Kissflow','list_module':(root/p['artifact']).read_text()}),flush=True)
 
 
 if __name__ == '__main__':
