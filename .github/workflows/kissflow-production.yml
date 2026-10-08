@@ -1,0 +1,50 @@
+name: Verify live Kissflow coverage
+on:
+  push:
+    branches: [ats-audit/kissflow-production-2026-10-08]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+          origin = 'https://jobradar.chandanvura.workers.dev'
+          request = Request(origin+'/api/dashboard', headers={'User-Agent':'JobRadar/1.2 (read-only coverage verification)'})
+          with urlopen(request, timeout=30) as response:
+              catalog = json.load(response)
+          if catalog.get('data_mode') == 'backup':
+              raise ValueError('Live catalog required')
+          companies = catalog['companies']
+          selected = next(c for c in companies if c['name'] == 'Kissflow')
+          report = dict(server_time=catalog.get('server_time'), counts=dict(companies=len(companies),limited=sum((c.get('warning') or '').startswith('Limited coverage') for c in companies),errors=sum(bool(c.get('error_count')) for c in companies)), source=selected)
+          try:
+              with urlopen(Request(origin+'/api/health',headers={'User-Agent':'JobRadar/1.2 (read-only health verification)'}),timeout=30) as response:
+                  report['health_http_status'] = response.status
+                  report['health'] = json.load(response)
+          except HTTPError as response:
+              report['health_http_status'] = response.code
+              report['health'] = json.load(response)
+          output = Path('artifacts/kissflow-production.json')
+          output.parent.mkdir(parents=True,exist_ok=True)
+          output.write_text(json.dumps(report,indent=2))
+          print(json.dumps(report),flush=True)
+          if selected.get('ats_provider') != 'kissflow' or selected.get('error_count') or (selected.get('warning') or '').startswith(('Limited coverage','Source updated')):
+              raise ValueError('Kissflow production repair is not independently verified')
+          PY
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: kissflow-production
+          path: artifacts/kissflow-production.json
+          retention-days: 7
