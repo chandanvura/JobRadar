@@ -2,7 +2,8 @@
 import json
 import os
 import re
-import subprocess
+import subprocess  # nosec B404
+# Only a fixed, read-only git command below uses subprocess; no shell or user argv.
 import time
 from urllib.request import Request, urlopen
 
@@ -40,7 +41,7 @@ def wait_for_deployment(repository, revision, fetch=deployment_runs, timeout=120
 
 
 def main():
-    result = subprocess.run(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'],
+    result = subprocess.run(['/usr/bin/git', 'diff', '--name-only', 'HEAD^', 'HEAD'],  # nosec B603
                             check=True, capture_output=True, text=True)
     if not worker_changed(result.stdout.splitlines()):
         print('This revision has no Worker changes; focused ingestion can proceed')
