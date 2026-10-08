@@ -1,18 +1,8 @@
 import re
 from datetime import datetime, timedelta, timezone
 from .models import Job
+from .roles import classify_role, NON_TECHNICAL
 
-ROLE_PATTERNS = {
-    "DevOps": r"\bdev\s*sec\s*ops\b|\bdev\s*ops\b|\bbuild(?:/| and | & )?release\b|\brelease engineer\b|\bdeployment engineer\b", "Cloud": r"\bcloud (?:support |operations |infrastructure |migration |platform )?(?:engineer|associate)\b|\bcloud operations\b|\bcloudops\b",
-    "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b", "Platform": r"\bplatform (?:software )?engineer\b",
-    "Infrastructure / Operations": r"\binfrastructure (?:automation |operations |support )?engineer\b|\bsoftware engineer\s*[-–—:,]?\s*infrastructure\b|\blinux (?:systems? |infrastructure |cloud )?engineer\b|\bsystems? engineer\s*(?:i|1)\b",
-    "Java / Backend": r"\b(?:java|python|go(?:lang)?|node(?:\.js)?|\.net|c#) (?:full[ -]?stack |back[ -]?end |software |application )?(?:developer|engineer)\b|\bback[ -]?end (?:software |application )?(?:developer|engineer)\b|\bsoftware engineer\s*[-–—:]?\s*(?:java|python|go(?:lang)?|node(?:\.js)?|\.net|back[ -]?end)\b",
-    "Data Engineering": r"\b(?:associate |junior |graduate )?(?:data|analytics|etl) engineer(?:\s+(?:i|1))?\b|\bdata platform engineer(?:\s+(?:i|1))?\b",
-    "Security Engineering": r"\b(?:associate |junior )?(?:security|cybersecurity|application security|cloud security|soc) (?:engineer|analyst)(?:\s+(?:i|1))?\b",
-    "Quality Engineering": r"\b(?:associate |junior )?(?:qa|quality assurance|quality) (?:engineer|associate|analyst)(?:\s+(?:i|1))?\b|\b(?:software test|test automation|automation test) engineer(?:\s+(?:i|1))?\b|\bsdet(?:\s+(?:i|1))?\b",
-    "Technical Support": r"\b(?:application|production|technical|product|software|cloud) support (?:engineer|associate|analyst)(?:\s+(?:i|1))?\b|\bsupport engineer(?:\s+(?:i|1))?\b",
-    "Software Engineering": r"\b(?:associate|junior|graduate)?\s*software (?:development )?(?:engineer(?:ing)?|developer)(?:\s+(?:i|1))?\b|\b(?:sde|swe|sw engineer)\s*(?:i|1)?\b|\b(?:application|front[ -]?end|full[ -]?stack|mobile) (?:developer|engineer)(?:\s+(?:i|1))?\b|\b(?:graduate )?engineer trainee\b|\bmember of technical staff(?:\s+(?:i|1))?\b|\bget\b",
-}
 INTERNSHIP_ROLE_PATTERNS = {
     "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b",
     "Cloud": r"\bcloud\b",
@@ -37,15 +27,15 @@ def normalize_location(value: str):
     if re.search(r"\bpune\b|\bpoona\b",low): return "Pune"+hybrid,"Pune"
     return value.strip() or "Not specified",None
 
-def classify_title(title: str):
-    clean=re.sub(r"[^a-z0-9+]+"," ",title.lower()).strip()
-    if re.search(r"\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b",clean,re.I):
-        if re.search(r"\b(?:non technical|nontechnical|talent acquisition|human resources|tax|marketing)\b",clean,re.I): return clean,"Other"
-        for category,pattern in INTERNSHIP_ROLE_PATTERNS.items():
-            if re.search(pattern,clean,re.I): return clean,category
-    for category,pattern in ROLE_PATTERNS.items():
-        if re.search(pattern,clean,re.I): return clean,category
-    return clean,"Other"
+def classify_title(title: str, description: str=""):
+    clean, category = classify_role(title, description)
+    if category != "Other" or NON_TECHNICAL.search(clean):
+        return clean, category
+    if re.search(r"\b(?:intern|internship|co op|apprentice|apprenticeship)\b", clean):
+        for category, pattern in INTERNSHIP_ROLE_PATTERNS.items():
+            if re.search(pattern, clean, re.I):
+                return clean, category
+    return clean, "Other"
 
 def classify_employment_type(title: str, description: str=""):
     """Keep internships out of full-time views without guessing from generic graduate wording."""
@@ -106,7 +96,7 @@ def posted_age_hours(posted_at):
         return None
 
 def enrich(job: Job, company_priority: int=3):
-    job.normalized_title,job.role_category=classify_title(job.title); job.normalized_location,job.city=normalize_location(job.location)
+    job.normalized_title,job.role_category=classify_title(job.title,job.description); job.normalized_location,job.city=normalize_location(job.location)
     job.employment_type=classify_employment_type(job.title,job.description)
     job.experience_min,job.experience_max,job.experience_label=extract_experience(f"{job.title}\n{job.description}")
     corpus=f"{job.title} {job.description}".lower(); job.skills=[s for s in SKILLS if skill_present(s,corpus)]
@@ -121,7 +111,8 @@ def enrich(job: Job, company_priority: int=3):
     bounded_experience=job.experience_min is not None and job.experience_max is not None and job.experience_min >= 0 and job.experience_max <= MAX_EXPERIENCE_YEARS
     accepted_plus=job.experience_min is not None and job.experience_max is None and 0 <= job.experience_min <= 2
     experience_ok=bounded_experience or accepted_plus
-    leadership=bool(LEADERSHIP_TITLE.search(job.title))
+    leadership_title=re.sub(r"\bmember of technical staff\b", "technical contributor", job.title, flags=re.I)
+    leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
     explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|qa engineer|sdet|support engineer)\s*(?:i|1)\b",job.title,re.I))
     if job.experience_min is None and explicit_entry_title:
         job.experience_min,job.experience_max,job.experience_label=0.0,3.0,"Entry-level title"

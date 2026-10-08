@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from defusedxml import ElementTree as ET
 from .models import Company, Job, JobBatch
 from .snapshot import SnapshotChanged
+from .roles import likely_technical_title
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
 CACHE_ROOT=Path(os.getenv("JOBRADAR_HTTP_CACHE",".cache/jobradar-http"))
@@ -80,7 +81,7 @@ def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
 def likely_role(title):
-    return bool(re.search(r"\b(engineer|developer|devops|devsecops|sre|sde|swe|sdet|qa|quality assurance|platform|cloud|infrastructure|operations|support|release|build|site reliability|security|cybersecurity|data|analytics|etl|graduate|trainee|associate|intern|internship|apprentice|co[ -]?op)\b",str(title),re.I))
+    return likely_technical_title(title)
 
 def likely_target(title, location):
     return bool(likely_role(title) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
