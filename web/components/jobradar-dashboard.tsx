@@ -14,6 +14,7 @@ import {
   ChevronDown,
   ChevronUp,
   CircleGauge,
+  Clock3,
   Cloud,
   Code2,
   Download,
@@ -877,14 +878,14 @@ function DashboardContent() {
         aria-label={mobile ? "Navigation" : undefined}
         className={`${mobile ? "flex" : "hidden"} radar-drawer fixed inset-y-0 left-0 z-50 w-72 flex-col border-r border-border bg-sidebar lg:flex`}
       >
-        <div className="flex h-20 items-center gap-3 border-b border-border px-6">
+        <div className="radar-brand flex h-20 items-center gap-3 border-b border-border px-6">
           <div className="grid size-10 place-items-center rounded-xl bg-hero text-white">
             <Radar size={22} />
           </div>
           <div>
-            <p className="text-lg font-black">JOBRADAR</p>
+            <p className="text-lg font-black tracking-[-.05em]">JobRadar</p>
             <p className="text-[10px] font-bold uppercase tracking-[.22em] text-muted-foreground">
-              Official sources · truthful dates
+              Your next move starts here
             </p>
           </div>
           <button
@@ -929,7 +930,7 @@ function DashboardContent() {
         <SystemCard data={data} loading={loading} />
       </aside>
       <main inert={mobile} className="pb-20 lg:pb-0 lg:pl-72">
-        <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-border bg-card/90 px-4 backdrop-blur-xl md:px-8">
+        <header className="radar-topbar sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-border bg-card/90 px-4 backdrop-blur-xl md:px-8">
           <button
             aria-label="Open navigation"
             aria-expanded={mobile}
@@ -941,7 +942,7 @@ function DashboardContent() {
           </button>
           <div>
             <p className="text-xs font-bold uppercase tracking-[.18em] text-muted-foreground">
-              Discover → verify → apply
+              Your career workspace
             </p>
             <h1 key={active} className="radar-view-title text-xl font-black">{active}</h1>
           </div>
@@ -959,6 +960,7 @@ function DashboardContent() {
           <ThemeToggle />
           <Button
             variant="outline"
+            aria-label="Refresh jobs"
             onClick={() => void load()}
             disabled={loading}
             className="rounded-xl"
@@ -967,7 +969,7 @@ function DashboardContent() {
             Refresh
           </Button>
         </header>
-        <div className="mx-auto max-w-[1500px] p-4 md:p-8">
+        <div className="radar-content mx-auto max-w-[1500px] p-4 md:p-8">
           <div className="mb-4 md:hidden">
             <SearchBox
               value={query}
@@ -1015,9 +1017,9 @@ function DashboardContent() {
                   <div>
                     <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-white/80">
                       <Radar size={16} />
-                      Opportunity radar
+                      Find your next opportunity
                     </div>
-                    <h2 className="text-3xl font-black md:text-4xl">
+                    <h2 className="text-3xl font-semibold tracking-[-.045em] md:text-5xl">
                       {loading
                         ? "Checking live jobs…"
                         : ["Dashboard", "Recommended"].includes(active) && !filtered.length && reviewPreview.length
@@ -1041,7 +1043,7 @@ function DashboardContent() {
                   </div>
                 </div>
               </section>
-              <section className="mb-5 flex flex-col flex-wrap gap-3 rounded-2xl border border-border bg-card p-3 xl:flex-row xl:items-center">
+              <section className="radar-filterbar mb-5 flex flex-col flex-wrap gap-3 rounded-2xl border border-border bg-card p-3 xl:flex-row xl:items-center">
                 <div className="flex items-center gap-2 px-2 text-sm font-bold">
                   <Filter size={17} />
                   Filters
@@ -1246,14 +1248,14 @@ function WelcomeCard({
   dismiss: () => void;
 }) {
   return (
-    <section className="mb-5 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+    <section className="radar-welcome mb-5 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
       <div className="grid gap-6 p-6 lg:grid-cols-[1.5fr_1fr] lg:p-8">
         <div>
           <Badge className="bg-success-soft text-success">
             WELCOME TO JOBRADAR
           </Badge>
-          <h2 className="mt-4 text-2xl font-black md:text-3xl">
-            Your job search, organized in one place.
+          <h2 className="mt-4 text-3xl font-semibold tracking-[-.04em] md:text-4xl">
+            Make your next move.
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
             Set your titles, skills, experience, and cities once. Review fresh
@@ -1295,59 +1297,17 @@ function ProductPromise({
   internships: () => void;
 }) {
   return (
-    <section className="mb-6 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-      <div className="grid gap-6 p-6 lg:grid-cols-[1.4fr_1fr] lg:p-8">
-        <div>
-          <Badge className="bg-success-soft text-success">
-            EARLY-CAREER OPPORTUNITY RADAR
-          </Badge>
-          <h2 className="mt-4 max-w-3xl text-2xl font-black leading-tight md:text-3xl">
-            Skip stale reposts. Find verified roles where you can actually apply.
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
-            JobRadar checks official employer career pages, verifies posting age and
-            experience evidence, explains every match, and takes you to the original
-            application—not a copied listing.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <Button onClick={setup} className="h-11 rounded-xl bg-primary px-5">
-              <Radar size={16} /> Personalize my radar
-            </Button>
-            <Button onClick={internships} variant="outline" className="h-11 rounded-xl">
-              <GraduationCap size={16} /> Explore internships
-            </Button>
-          </div>
-        </div>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-          <PromiseLine
-            title={`${sources || "600+"} official sources`}
-            text="Employer pages and supported ATS feeds—not copied job-board results."
-          />
-          <PromiseLine
-            title="Evidence before recommendation"
-            text="Freshness, location and 0–3 YOE eligibility stay visible and explainable."
-          />
-          <PromiseLine
-            title="Private by default"
-            text={`Saved jobs and application stages stay in your browser · scan ${lastScan ? relative(lastScan) : "pending"}.`}
-          />
-        </div>
+    <section className="radar-intro mb-5 flex flex-col justify-between gap-4 rounded-2xl border border-border bg-card p-5 xl:flex-row xl:items-center">
+      <div>
+        <p className="text-[10px] font-bold uppercase tracking-[.18em] text-success">Your search, in focus</p>
+        <h2 className="mt-1 text-xl font-semibold tracking-[-.025em]">Good opportunities. Clear evidence.</h2>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">{sources} employer sources · scan {lastScan ? relative(lastScan) : "pending"} · private application tracking</p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={setup} className="rounded-xl"><Radar size={16} /> Personalize radar</Button>
+        <Button onClick={internships} variant="outline" className="rounded-xl"><GraduationCap size={16} /> Internships</Button>
       </div>
     </section>
-  );
-}
-
-function PromiseLine({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="flex gap-3 rounded-2xl bg-muted p-4">
-      <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-success-soft text-success">
-        <Check size={15} />
-      </span>
-      <div>
-        <p className="text-sm font-black">{title}</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">{text}</p>
-      </div>
-    </div>
   );
 }
 
@@ -1851,7 +1811,7 @@ function JobCard({
               {job.company[0]}
             </div>
             <div>
-              <h3 className="text-xl font-black">{job.title}</h3>
+              <h3 className="text-xl font-semibold tracking-[-.025em]">{job.title}</h3>
               <p className="mt-1 text-sm font-semibold text-muted-foreground">
                 {job.company}
               </p>
@@ -1894,7 +1854,7 @@ function JobCard({
             )}
           </div>
         </div>
-        <div className="flex min-w-72 flex-col justify-between border-t bg-muted p-5 lg:border-l lg:border-t-0">
+        <div className="radar-job-priority flex min-w-72 flex-col justify-between border-t bg-muted p-5 lg:border-l lg:border-t-0">
           <div>
             <div className="flex items-end justify-between">
               <span className="text-xs font-bold uppercase text-muted-foreground">
@@ -2406,6 +2366,14 @@ function HealthView({ data }: { data: Payload | null }) {
             : "No completed scan"
         }
       />
+      <section className="rounded-2xl border border-border bg-card p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="flex items-center gap-2 font-semibold"><Clock3 size={17} /> Scan cadence</h3>
+          <a href="https://github.com/chandanvura/JobRadar/actions/workflows/scrape.yml" target="_blank" rel="noreferrer" className="text-sm font-semibold text-success">View scan runs <span aria-hidden="true">↗</span></a>
+        </div>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">Six scheduled scans daily at 00:07, 04:07, 08:07, 12:07, 16:07 and 20:07 UTC. Schedules can start late. An independent check every 15 minutes requests recovery once the last completed scan is four hours old, provided no scan is active and database quota is available.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Recovery requests also depend on GitHub runner availability. Scan completion and source errors are reported separately below.</p>
+      </section>
       <div className="grid gap-3 md:grid-cols-4 xl:grid-cols-7">
         <Stat
           label="Sources checked"

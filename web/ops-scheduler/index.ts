@@ -5,10 +5,12 @@ const API="https://api.github.com/repos/chandanvura/JobRadar";
 const HEALTH="https://jobradar.chandanvura.workers.dev/api/health";
 const ACTIVE=new Set(["queued","in_progress","pending","requested","waiting"]);
 
+// Match the four-hour scan cadence; the independent 15-minute check bounds
+// recovery detection without adding a one-hour wait after a missed schedule.
 export function needsScan(finished:string|null,runs:Run[],now=Date.now()){
   if(runs.some(run=>ACTIVE.has(run.status)))return false;
   const age=finished?now-Date.parse(finished):Infinity;
-  return !Number.isFinite(age)||age>=300*60_000;
+  return !Number.isFinite(age)||age>=240*60_000;
 }
 
 async function github(path:string,token:string,body?:unknown,method?:string){
