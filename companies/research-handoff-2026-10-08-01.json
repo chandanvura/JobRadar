@@ -1,0 +1,15 @@
+{
+  "batch": "research-handoff-2026-10-08-01",
+  "max_assets": 32,
+  "companies": ["Clear", "Moneyview", "Perfios", "Orange Health Labs", "Jupiter", "Open Financial Technologies", "CGI", "Delta Air Lines"],
+  "evidence_links": {
+    "Clear": ["https://www.clear.in/", "https://www.clear.in/s/careers"],
+    "Moneyview": ["https://moneyview.in/", "https://moneyview.in/careers", "https://moneyview.darwinbox.in/ms/candidate/careers"],
+    "Perfios": ["https://perfios.ai/", "https://perfios.ai/careers/", "https://perfios.darwinbox.in/ms/candidate/careers/"],
+    "Orange Health Labs": ["https://www.orangehealth.in/", "https://www.orangehealth.in/jobs", "https://orangehealth.darwinbox.in/ms/candidatev2/main/careers/allJobs"],
+    "Jupiter": ["https://jupiter.money/", "https://jupiter.money/careers/", "https://jupiter.keka.com/careers"],
+    "Open Financial Technologies": ["https://open.money/", "https://open.money/careers", "https://openfinancial.keka.com/careers/"],
+    "CGI": ["https://www.cgi.com/", "https://www.cgi.com/en/careers-search"],
+    "Delta Air Lines": ["https://www.delta.com/", "https://delta.avature.net/careers"]
+  }
+}
