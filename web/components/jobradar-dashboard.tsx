@@ -2411,7 +2411,7 @@ function HealthView({ data }: { data: Payload | null }) {
           <h3 className="flex items-center gap-2 font-semibold"><Clock3 size={17} /> Scan cadence</h3>
           <a href="https://github.com/chandanvura/JobRadar/actions/workflows/scrape.yml" target="_blank" rel="noreferrer" className="text-sm font-semibold text-success">View scan runs <span aria-hidden="true">↗</span></a>
         </div>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">Six scheduled scans daily at 00:07, 04:07, 08:07, 12:07, 16:07 and 20:07 UTC. Schedules can start late. An independent check every 15 minutes requests recovery once the last completed scan is four hours old, provided no scan is active and database quota is available.</p>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">Scans are due every 2½ hours from the previous scan start. GitHub checks every 30 minutes and an independent scheduler checks every five minutes. Starts can be delayed by runner availability; active scans and exhausted database quota suppress duplicate scans. Failed sources remain visible in coverage diagnostics.</p>
         <p className="mt-2 text-xs text-muted-foreground">Recovery requests also depend on GitHub runner availability. Scan completion and source errors are reported separately below.</p>
       </section>
       <div className="grid gap-3 md:grid-cols-4 xl:grid-cols-7">

@@ -8,10 +8,10 @@ from scraper.watchdog import last_successful_finalization, request_json, should_
 def test_watchdog_recovers_stale_scan_but_does_not_duplicate_active_run():
     now=datetime(2026,9,26,12,tzinfo=timezone.utc)
     health=lambda minutes: {"latest_run":{"finished_at":(now-timedelta(minutes=minutes)).isoformat()}}
-    assert not should_dispatch(health(239),[],now)
-    assert should_dispatch(health(240),[],now)
-    assert not should_dispatch(health(240),[{"status":"queued"}],now)
-    assert not should_dispatch(health(240),[{"status":"in_progress"}],now)
+    assert not should_dispatch(health(149),[],now)
+    assert should_dispatch(health(150),[],now)
+    assert not should_dispatch(health(150),[{"status":"queued"}],now)
+    assert not should_dispatch(health(150),[{"status":"in_progress"}],now)
     assert should_dispatch({"latest_run":None},[],now)
 
 

@@ -30,7 +30,9 @@ def request_bucket(url):
 def domain_limiter(url):
     """Bound requests per ATS family while allowing unrelated employers to overlap."""
     loop=asyncio.get_running_loop(); bucket=request_bucket(url)
-    key=(id(loop),bucket)
+    # Keep each employer bounded without serializing unrelated Workday tenants.
+    host=(urlparse(url).hostname or "").lower()
+    key=(id(loop),bucket,host if bucket.startswith("workday-") else "")
     if key not in _DOMAIN_LIMITERS:
         if bucket=="workday-listings": setting,default="JOBRADAR_WORKDAY_LISTING_CONCURRENCY","5"
         elif bucket=="workday-details": setting,default="JOBRADAR_WORKDAY_DETAIL_CONCURRENCY","10"

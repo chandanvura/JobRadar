@@ -21,7 +21,7 @@ neutral custom domain can be attached without changing the application.
 - Browser-private Saved and application-stage tracking with JSON export
 - 700-company registry covering major enterprises, MNCs, startups and scaleups; [coverage notes](docs/COMPANY-COVERAGE.md)
 
-Architecture: `freshness-gated GitHub scheduler → 8 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. Six best-effort scans per day are backed by hourly GitHub and 15-minute Cloudflare recovery checks. A watchdog dispatches only when the latest completed scan is at least four hours old and none is running. Every scan uses one source revision; failed discovery shards get one bounded retry. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
+Architecture: `freshness-gated GitHub scheduler → 8 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. Scans are due every 150 minutes from the previous scan start, backed by hourly GitHub and five-minute Cloudflare recovery checks. A watchdog dispatches only when the latest scan start is at least 150 minutes old and none is running. Every scan uses one source revision; failed discovery shards get one bounded retry. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
 
 ## Local dashboard
 
@@ -100,7 +100,7 @@ npm audit --omit=dev
 
 The standalone application lives under `web/` and does not require ChatGPT Sites at runtime. The **Deploy independent JobRadar** workflow creates an Asia-Pacific D1 database when needed, applies versioned migrations, builds the vinext application, deploys the Worker, configures protected ingestion, and verifies the deployment.
 
-Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scheduler runs every four hours, reducing repeated D1 writes while still refreshing each 24-hour job window six times per day. Verify the **Deploy independent JobRadar** and **JobRadar free-tier scan** workflows in GitHub Actions after changing infrastructure or matching logic.
+Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scheduler checks every 30 minutes and the freshness gate permits scans every 150 minutes from the previous scan start (about 9–10 scans/day). Verify the **Deploy independent JobRadar** and **JobRadar free-tier scan** workflows in GitHub Actions after changing infrastructure or matching logic.
 
 ## Matching guarantees
 
@@ -124,12 +124,12 @@ Each distributed worker refreshes its deterministic share of listing feeds, then
 - No Telegram alert: message the bot first and verify the chat ID.
 - One company fails: verify the ATS identifier; other companies continue.
 - No matching jobs: inspect location, title, seniority, and experience rules.
-- A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and production is at least four hours old. GitHub may delay both schedules; no GitHub Actions schedule is guaranteed to run at an exact minute.
+- A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and the latest scan start is at least 150 minutes old. GitHub may delay both schedules; no GitHub Actions schedule is guaranteed to run at an exact minute.
 - An untouched public repository may have scheduled workflows disabled after 60 days of inactivity. Monthly maintenance records a real scan status and commits it to `ops/last-monthly-check.json` as a best-effort activity signal. Check Actions if GitHub disables scheduling or changes its inactivity policy.
 
 ### Independent Cloudflare recovery schedule
 
-The deployment also creates a small Cloudflare Cron Worker (`jobradar-ops-scheduler`) on the existing free account. It checks every 15 minutes, avoids duplicate running scans, and dispatches a GitHub scan only if the last completed scan is at least four hours old. If GitHub disables the scan workflow for inactivity, it re-enables it; an intentionally disabled workflow remains disabled. If the production health endpoint blocks the check, it uses completed GitHub finalizer jobs. Its scheduler is independent of GitHub's scheduled-event delivery.
+The deployment also creates a small Cloudflare Cron Worker (`jobradar-ops-scheduler`) on the existing free account. It checks every five minutes, avoids duplicate running scans, and dispatches a GitHub scan only if the latest scan start is at least 150 minutes old. If GitHub disables the scan workflow for inactivity, it re-enables it; an intentionally disabled workflow remains disabled. If the production health endpoint blocks the check, it uses completed GitHub finalizer jobs. Its scheduler is independent of GitHub's scheduled-event delivery.
 
 To activate it, create a fine-grained GitHub personal access token restricted to **this repository** with **Actions: Read and write** permission. Save it as the repository Actions secret `JOBRADAR_DISPATCH_TOKEN`, then rerun **Deploy independent JobRadar** once. The deployment copies it into the Cloudflare Worker's secret store. Set the token expiration beyond the intended unattended period and rotate it before expiry. Do not put the token in a URL, commit, issue, or chat. Without this credential, the Cloudflare Worker is deployed but dormant; the existing GitHub scheduler and watchdog continue working.
 

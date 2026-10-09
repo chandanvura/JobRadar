@@ -39,7 +39,7 @@ Artifact invariants:
 ## Load, payload, and failure controls
 
 - Stable sharding keeps retries predictable and balances hundreds of sources.
-- GitHub scan opportunities run every four hours, but a production freshness check skips a full scan until the last completion is at least 210 minutes old. The gate fails open so a dashboard outage cannot permanently stop discovery.
+- GitHub checks every 30 minutes; the freshness gate permits scans after 150 minutes from the previous scan start. The independent Cloudflare scheduler checks every five minutes. Health failures defer scanning; recovery falls back to successful GitHub finalizers. Known quota exhaustion and active runs suppress dispatch.
 - Per-worker source and provider semaphores cap outbound load; Workday receives stricter limits.
 - Candidate-only artifacts avoid moving irrelevant descriptions.
 - Descriptions are capped at 4,000 characters and ingestion batches at 125 jobs.

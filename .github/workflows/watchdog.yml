@@ -8,8 +8,7 @@ on:
       - "scraper/watchdog.py"
       - "tests/test_watchdog.py"
   schedule:
-    # One hourly check can recover a missed four-hour scan without creating
-    # enough recovery traffic to threaten the D1 free-tier write allowance.
+    # Secondary recovery; the independent Worker checks every five minutes.
     - cron: "44 * * * *"
   workflow_dispatch:
 
