@@ -1,5 +1,6 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { safeUrl } from "./urls";
 import { publicRead } from "./public-backup";
 import { apiFailure, quotaExceeded } from "./api-failure";
 
@@ -15,7 +16,6 @@ const textValue=(value:unknown,fallback="")=>typeof value==="string"?value.trim(
 const numberValue=(value:unknown,fallback=0)=>Number.isFinite(Number(value))?Number(value):fallback;
 const nullableNumber=(value:unknown)=>value===null||value===undefined||value===""?null:numberValue(value);
 const nullableText=(value:unknown)=>typeof value==="string"&&value.trim()?value.trim():null;
-const safeUrl=(value:unknown)=>{try{const url=new URL(String(value));return url.protocol==="https:"&&url.hostname&&!url.username&&!url.password?url.toString():null}catch{return null}};
 const authorized=(request:Request,env:Env)=>Boolean(env.JOBRADAR_INGEST_SECRET&&request.headers.get("Authorization")===`Bearer ${env.JOBRADAR_INGEST_SECRET}`);
 const companyQuality=(company:RecordValue)=>[
   numberValue(company.error_count)===0?1:0,

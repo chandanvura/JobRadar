@@ -334,7 +334,7 @@ class WorkdayAdapter(JobSource):
         origin,tenant,site=workday_config(c); api=f"{origin}/wday/cxs/{tenant}/{site}"
         async with client() as x:
             postings=[]; offset=0; facets={}; expected=None; identifiers=set(); advertised=None; duplicate_paths=False
-            bound=2000 if self.complete else 1000
+            bound=2000
             country=c.ats_identifier.split("|")[2] if len(c.ats_identifier.split("|"))>2 else None
             if country:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":0,"searchText":""})
@@ -387,6 +387,11 @@ class WorkdayAdapter(JobSource):
                 # secondary offices; actual detail fields alone establish the city.
                 relevant=likely_role(item.get("title","")) if self.complete or facets else likely_target(item.get("title",""),item.get("locationsText",""))
                 if not country and not relevant and not self.all_details: return None
+                # Employer-published age >=2 days is certainly outside the 24-hour
+                # window. Keep today, yesterday, one-day and unknown ages; complete
+                # inventory adapters still collect every required detail.
+                old=re.fullmatch(r"(?:Posted\s+)?(\d+)\+?\s+Days?\s+Ago",str(item.get("postedOn","")).strip(),re.I)
+                if not self.complete and old and int(old.group(1))>=2: return None
                 path=item.get("externalPath")
                 if not path: return None
                 async with semaphore:
@@ -699,6 +704,8 @@ class CustomCareerAdapter(JobSource):
             provider,identifier,board_url=detected
             indexed=Company(c.name,board_url if provider in {"workday","oracle"} else c.careers_url,provider,identifier,c.priority,c.enabled)
             jobs,total=await ADAPTERS[provider].fetch_jobs(indexed)
+            for job in jobs:
+                job.career_page_url=c.careers_url
             # A published ATS link is a lead, not proof of employer identity or scope.
             warning=getattr(jobs,"coverage_warning",None) or "Limited coverage: autodiscovered board identity and scope await verification"
             return JobBatch(jobs,coverage_warning=warning),total
