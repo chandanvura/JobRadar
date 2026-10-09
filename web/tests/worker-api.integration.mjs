@@ -32,6 +32,16 @@ try {
   const rejected=await (await request('/api/ingest',{jobs:[{...job,career_page_url:'http://unsafe.example/careers'}]})).json();
   assert.equal(rejected.rejected,1);
   await request('/api/ingest',{jobs:[job]});
+  // Repeated sightings must not touch jobs or their AUTOINCREMENT counter.
+  const sequenceBefore=await db.prepare("SELECT seq FROM sqlite_sequence WHERE name='jobs'").first();
+  const unchanged=await (await request('/api/ingest',{jobs:[{...job,last_seen_at:'2026-10-09T10:00:00Z'}]})).json();
+  assert.equal(unchanged.d1_rows_written,0);
+  assert.deepEqual(await db.prepare("SELECT seq FROM sqlite_sequence WHERE name='jobs'").first(),sequenceBefore);
+  const changed=await (await request('/api/ingest',{jobs:[{...job,description:'Updated requirements'}]})).json();
+  assert.ok(changed.d1_rows_written>0);
+  assert.equal((await db.prepare('SELECT description FROM jobs').first()).description,'Updated requirements');
+  assert.deepEqual(await db.prepare("SELECT seq FROM sqlite_sequence WHERE name='jobs'").first(),sequenceBefore);
+  await request('/api/ingest',{jobs:[job]});
   const run={started_at:new Date().toISOString(),finished_at:new Date().toISOString(),companies_checked:1,companies_successful:1,companies_failed:0,status:'success',successful_companies:['Example'],seen_job_keys:[...Array.from({length:5001},(_,i)=>`unrelated-${i}`),'Example\x1fworkday\x1fREQ-1']};
   assert.equal((await request('/api/ingest',{run})).status,200);
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);
@@ -72,6 +82,11 @@ try {
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);
   assert.deepEqual((await db.prepare('SELECT * FROM scraper_runs').all()).results,beforeRegistryRun.results);
   assert.equal((await db.prepare('SELECT last_checked_at FROM companies WHERE name=?').bind('New source').first()).last_checked_at,null);
+  const companySequence=await db.prepare("SELECT seq FROM sqlite_sequence WHERE name='companies'").first();
+  const replay=await (await request('/api/ingest',{companies:[{name:'New source',careers_url:'https://new.test/careers',ats_provider:'custom',ats_identifier:'new-source',priority:4,warning:'Awaiting first scheduled scan'}]})).json();
+  assert.equal(replay.d1_rows_written,0);
+  assert.deepEqual(await db.prepare("SELECT seq FROM sqlite_sequence WHERE name='companies'").first(),companySequence);
+
   // Unchanged results must still record every real same-day check.
   const checkedSource={name:'New source',careers_url:'https://new.test/careers',ats_provider:'custom',ats_identifier:'new-source',priority:4,warning:'Limited coverage: no structured public job feed',error_count:0,jobs_found:0};
   for(const checked of ['2026-10-08T00:07:00+00:00','2026-10-08T04:07:00+00:00']){

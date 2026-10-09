@@ -131,6 +131,8 @@ jobs:
           echo "Deployed health HTTP status: $health_status"
           jq '{ok, quota_exhausted, retry_at, stale}' deployed-health.json
           echo "Independent JobRadar verified at $JOBRADAR_WORKER_URL"
+      - name: Verify deployed ingestion write savings
+        run: node scripts/verify-ingestion-writes.mjs
       - name: Deploy independent free Cron recovery worker
         run: |
           npx wrangler deploy --config ops-scheduler/wrangler.jsonc
