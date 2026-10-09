@@ -56,12 +56,27 @@ export async function captureCatalog(origin, fetcher = fetch) {
   }
 }
 
+export function serializeCatalog(catalog, budget=24_000_000){
+  let contents=JSON.stringify(catalog);
+  if(Buffer.byteLength(contents)<=budget)return contents;
+  // Keep every listing and all filtering/application fields. Only the browsing
+  // copy of long descriptions becomes an explicitly labelled excerpt.
+  for(const limit of [2000,1000,500,0]){
+    const compact={...catalog,description_mode:'excerpt',jobs:catalog.jobs.map(job=>{
+      if(typeof job.description!=='string'||job.description.length<=limit)return job;
+      return {...job,description:job.description.slice(0,limit),description_truncated:true};
+    })};
+    contents=JSON.stringify(compact);
+    if(Buffer.byteLength(contents)<=budget)return contents;
+  }
+  throw Error('Catalog metadata exceeds static asset budget; refusing to drop listings');
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const origin = process.env.JOBRADAR_BACKUP_ORIGIN;
   if (!origin || new URL(origin).protocol !== 'https:') throw Error('Set JOBRADAR_BACKUP_ORIGIN to the production HTTPS origin');
   const catalog = await captureCatalog(origin);
-  const contents = JSON.stringify(catalog);
-  if (Buffer.byteLength(contents) > 24_000_000) throw Error('Snapshot exceeds static asset size budget');
+  const contents = serializeCatalog(catalog);
   await mkdir('public/backup', { recursive: true });
   await writeFile('public/backup/catalog.json', contents);
   console.log(`Public backup: ${catalog.jobs.length} jobs, saved ${catalog.snapshot_at}`);

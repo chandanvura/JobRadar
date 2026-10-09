@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {publicRead} from '../worker/public-backup.ts';
-import {captureCatalog} from '../scripts/capture-public-backup.mjs';
+import {captureCatalog,serializeCatalog} from '../scripts/capture-public-backup.mjs';
 
 const catalog = {version:1,data_mode:'backup',snapshot_at:'2026-09-30T10:00:00Z',jobs:Array.from({length:501},(_,i)=>({id:i+1,title:'Public job'})),companies:[],configured:true};
 const assets = {fetch:async()=>Response.json(catalog)};
@@ -106,4 +106,17 @@ test('explicit read 5xx falls back; client errors and health retain original sta
   }
   const health=await publicRead(req('/api/health'),assets,async()=>new Response('degraded',{status:503}),{});
   assert.equal(health.status,503);assert.equal(await health.text(),'degraded');
+});
+
+
+test('oversized browsing backup keeps all listings and labels description excerpts',()=>{
+  const jobs=Array.from({length:20},(_,i)=>({id:i+1,title:`Job ${i}`,description:'界'.repeat(12000),application_url:'https://employer.test/job',city:'Bengaluru',skills:['Java']}));
+  const full={...catalog,jobs};
+  const contents=serializeCatalog(full,50_000);const compact=JSON.parse(contents);
+  assert.ok(Buffer.byteLength(contents)<=50_000);
+  assert.equal(compact.description_mode,'excerpt');
+  assert.deepEqual(compact.jobs.map(job=>job.id),jobs.map(job=>job.id));
+  assert.ok(compact.jobs.every(job=>job.description_truncated&&job.city==='Bengaluru'&&job.skills[0]==='Java'&&job.application_url==='https://employer.test/job'));
+  assert.equal(full.jobs[0].description.length,12000);
+  assert.throws(()=>serializeCatalog(full,20),/refusing to drop listings/);
 });
