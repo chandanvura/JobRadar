@@ -10,8 +10,8 @@ test('external scheduler suppresses duplicate active scans',()=>{
   }
   assert.equal(needsScan('not-a-date',[],0),true);
   assert.equal(needsScan('2026-09-26T15:00:00Z',[],Date.parse('2026-09-26T14:00:00Z')),false);
-  assert.equal(needsScan('2026-09-26T10:00:00Z',[],Date.parse('2026-09-26T13:59:59Z')),false);
-  assert.equal(needsScan('2026-09-26T10:00:00Z',[],Date.parse('2026-09-26T14:00:00Z')),true);
+  assert.equal(needsScan('2026-09-26T10:00:00Z',[],Date.parse('2026-09-26T12:29:59Z')),false);
+  assert.equal(needsScan('2026-09-26T10:00:00Z',[],Date.parse('2026-09-26T12:30:00Z')),true);
 });
 
 test('external scheduler dispatches after health is blocked and a finalizer is stale',async()=>{

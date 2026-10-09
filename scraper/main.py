@@ -82,7 +82,12 @@ async def scrape(company,sem,custom_sem):
         context=custom_sem if company.ats_provider=="custom" else _NoopAsyncContext()
         async with context:
             try:
-                raw,discovered=await fetch_company_jobs(company)
+                print(f"START {company.name} ({company.ats_provider})",flush=True)
+                # Bound the complete source operation, including retries and limiter waits.
+                # A slow employer must not prevent every other source from being ingested.
+                async with asyncio.timeout(float(os.getenv("JOBRADAR_SOURCE_TIMEOUT","900"))):
+                    raw,discovered=await fetch_company_jobs(company)
+                print(f"DONE {company.name}: {discovered} listings",flush=True)
                 jobs=[enrich(j,company.priority) for j in raw]
                 candidates=[j for j in jobs if j.city in TARGET_CITIES and j.role_category!="Other"]
                 eligible=[j for j in candidates if j.is_eligible]
@@ -99,7 +104,7 @@ async def scrape(company,sem,custom_sem):
                 warning=("Limited coverage: official career page blocks or does not expose machine-readable access"
                          if limited else f"{type(exc).__name__}: {str(exc)[:160]}")
                 status={"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":0 if limited else 1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":warning}
-                return [],status,None if limited else str(exc),0
+                return [],status,None if limited else f"{type(exc).__name__}: {exc}",0
 
 def private_start_chat_id(payload):
     """Return the most recent private chat that explicitly sent /start."""

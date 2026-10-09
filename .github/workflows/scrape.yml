@@ -1,10 +1,9 @@
 name: JobRadar free-tier scan
 on:
   schedule:
-    # Six full scans per day keep D1 writes comfortably inside the free tier.
-    # Manual runs remain available for urgent refreshes; code pushes never
-    # start an expensive full scan automatically.
-    - cron: "7 */4 * * *"
+    # Check every 30 minutes; the gate permits one scan every 150 minutes.
+    # A cron with a fractional hour interval cannot express this cadence.
+    - cron: "7,37 * * * *"
   workflow_dispatch:
 concurrency:
   # Queue overlapping push/manual/scheduled runs instead of cancelling an active scan.
@@ -69,7 +68,7 @@ jobs:
   discover:
     needs: validate
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
@@ -100,6 +99,8 @@ jobs:
             sleep 15
           done
         env:
+          PYTHONUNBUFFERED: 1
+          JOBRADAR_SOURCE_TIMEOUT: 900
           JOBRADAR_SOURCE_CONCURRENCY: 5
           JOBRADAR_CUSTOM_CONCURRENCY: 2
           JOBRADAR_DOMAIN_CONCURRENCY: 1

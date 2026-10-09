@@ -35,7 +35,8 @@ def request_json(url, token=None, data=None):
 
 
 def minutes_since_scan(health, now=None):
-    finished=(health.get("latest_run") or {}).get("finished_at")
+    run=health.get("latest_run") or {}
+    finished=run.get("started_at") or run.get("finished_at")
     if not finished:
         return None
     try:
@@ -51,7 +52,7 @@ def should_dispatch(health, runs, now=None):
         return False
     age=minutes_since_scan(health,now)
     active=any(run.get("status") in ACTIVE_STATUSES for run in runs)
-    return (age is None or age>=240) and not active
+    return (age is None or age>=150) and not active
 
 
 def last_successful_finalization(runs, repository, token, fetch=request_json):

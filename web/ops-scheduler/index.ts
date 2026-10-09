@@ -5,12 +5,11 @@ const API="https://api.github.com/repos/chandanvura/JobRadar";
 const HEALTH="https://jobradar.chandanvura.workers.dev/api/health";
 const ACTIVE=new Set(["queued","in_progress","pending","requested","waiting"]);
 
-// Match the four-hour scan cadence; the independent 15-minute check bounds
-// recovery detection without adding a one-hour wait after a missed schedule.
+// Match the 150-minute cadence; independent five-minute checks recover missed triggers.
 export function needsScan(finished:string|null,runs:Run[],now=Date.now()){
   if(runs.some(run=>ACTIVE.has(run.status)))return false;
   const age=finished?now-Date.parse(finished):Infinity;
-  return !Number.isFinite(age)||age>=240*60_000;
+  return !Number.isFinite(age)||age>=150*60_000;
 }
 
 async function github(path:string,token:string,body?:unknown,method?:string){
@@ -57,7 +56,7 @@ export async function checkAndRecover(env:Env){
     // Only quota exhaustion must suppress recovery; stale health is exactly what
     // this scheduler exists to recover from.
     if(response.status===200 || response.status===503){
-      const health=await response.json() as {latest_run?:{finished_at?:string};quota_exhausted?:boolean;retry_at?:string;stale?:boolean};
+      const health=await response.json() as {latest_run?:{started_at?:string;finished_at?:string};quota_exhausted?:boolean;retry_at?:string;stale?:boolean};
       if(health.quota_exhausted){
         console.log(`D1 daily quota exhausted; recovery waits until ${health.retry_at||"the UTC reset"}`);
         return "quota";
@@ -66,7 +65,7 @@ export async function checkAndRecover(env:Env){
         console.log("Production health unavailable without a quota signal; using GitHub finalizer history");
         finished=await latestCompletedScan(runs,token);
       }else{
-        finished=health.latest_run?.finished_at||null;
+        finished=health.latest_run?.started_at||health.latest_run?.finished_at||null;
       }
     }else{
       throw new Error(`Health returned HTTP ${response.status}`);

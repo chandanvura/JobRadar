@@ -41,7 +41,7 @@ def test_unhealthy_gate_never_starts_expensive_scan(event, health):
 
 def test_freshness_boundary_and_manual_refresh():
     now = datetime(2026, 10, 4, 4, tzinfo=timezone.utc)
-    for stamp, expected in [('2026-10-04T03:45:00Z', True), ('2026-10-04T03:45:01Z', False)]:
+    for stamp, expected in [('2026-10-04T01:30:00Z', True), ('2026-10-04T01:30:01Z', False)]:
         health = {'ok': True, 'latest_run': {'finished_at': stamp}}
         assert scan_gate.should_scan(health, 'schedule', now) is expected
         assert scan_gate.should_scan(health, 'workflow_dispatch', now)
@@ -120,7 +120,52 @@ def test_source_degradation_does_not_lock_out_manual_recovery_or_due_scheduled_s
     assert not scan_gate.should_scan(dict(health,latest_run={'status':'unknown'}),'workflow_dispatch',now)
 
 
-@pytest.mark.parametrize('finished', ['2026-10-08T09:09:00Z', '2026-10-08T11:09:25Z'])
-def test_manual_refresh_does_not_skip_next_four_hour_schedule(finished):
+@pytest.mark.parametrize('finished', ['2026-10-08T09:09:00Z', '2026-10-08T09:37:00Z'])
+def test_scan_is_due_after_150_minutes(finished):
     health={'ok':True,'latest_run':{'finished_at':finished}}
     assert scan_gate.should_scan(health,'schedule',datetime(2026,10,8,12,7,tzinfo=timezone.utc))
+
+
+def test_source_deadline_records_failure_without_losing_other_sources(monkeypatch):
+    from scraper.models import Company
+    slow=Company('Slow employer','https://slow.test','greenhouse','slow',3,True)
+    fast=Company('Fast employer','https://fast.test','greenhouse','fast',3,True)
+    cancelled=[]
+    async def fetch(company):
+        if company.name==slow.name:
+            try: await asyncio.Event().wait()
+            finally: cancelled.append(company.name)
+        return [],0
+    monkeypatch.setenv('JOBRADAR_SOURCE_TIMEOUT','0.02')
+    monkeypatch.setattr(main,'fetch_company_jobs',fetch)
+    async def execute():
+        sem=asyncio.Semaphore(2);custom=asyncio.Semaphore(1)
+        return await asyncio.gather(main.scrape(slow,sem,custom),main.scrape(fast,sem,custom))
+    results=asyncio.run(execute())
+    assert cancelled==[slow.name]
+    assert results[0][1]['error_count']==1
+    assert results[0][1]['last_success_at'] is None
+    assert results[0][2].startswith('TimeoutError:')
+    assert results[1][1]['error_count']==0
+    assert results[1][1]['last_success_at']
+
+
+def test_workday_employers_have_independent_bounded_request_slots(monkeypatch):
+    from scraper.adapters import domain_limiter
+    monkeypatch.setenv('JOBRADAR_WORKDAY_DETAIL_CONCURRENCY','1')
+    async def execute():
+        first=domain_limiter('https://one.wd5.myworkdayjobs.com/wday/cxs/one/jobs/job/1')
+        same=domain_limiter('https://one.wd5.myworkdayjobs.com/wday/cxs/one/jobs/job/2')
+        other=domain_limiter('https://two.wd5.myworkdayjobs.com/wday/cxs/two/jobs/job/1')
+        assert first is same
+        assert first is not other
+        async with first:
+            assert first.locked()
+            assert not other.locked()
+    asyncio.run(execute())
+
+
+def test_cadence_uses_start_time_so_scan_duration_does_not_add_drift():
+    now=datetime(2026,10,9,12,tzinfo=timezone.utc)
+    health={'ok':True,'latest_run':{'started_at':'2026-10-09T09:30:00Z','finished_at':'2026-10-09T10:00:00Z'}}
+    assert scan_gate.should_scan(health,'schedule',now)
