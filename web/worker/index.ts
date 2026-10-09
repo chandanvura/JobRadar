@@ -90,7 +90,7 @@ async function recordNotification(request:Request,env:Env){
 }
 
 async function health(env:Env){
-  const run=await env.DB.prepare("SELECT finished_at,status,companies_checked,companies_successful,companies_failed,companies_empty,jobs_scanned,candidate_jobs FROM scraper_runs ORDER BY id DESC LIMIT 1").first<RecordValue>();
+  const run=await env.DB.prepare("SELECT started_at,finished_at,status,companies_checked,companies_successful,companies_failed,companies_empty,jobs_scanned,candidate_jobs FROM scraper_runs ORDER BY id DESC LIMIT 1").first<RecordValue>();
   const elapsed=run?.finished_at?(Date.now()-Date.parse(String(run.finished_at)))/3600000:null;
   const age=elapsed!==null&&Number.isFinite(elapsed)?elapsed:null;
   const stale=age===null||age<0||age>=5;

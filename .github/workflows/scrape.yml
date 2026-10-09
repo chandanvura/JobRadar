@@ -1,5 +1,8 @@
 name: JobRadar free-tier scan
 on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/scrape.yml"]
   schedule:
     # Check every 30 minutes; the gate permits one scan every 150 minutes.
     # A cron with a fractional hour interval cannot express this cadence.
