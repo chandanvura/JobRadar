@@ -67,12 +67,45 @@ def last_successful_finalization(runs, repository, token, fetch=request_json):
     return {"latest_run":None}
 
 
+def obsolete_scan_ids(health, runs, event, now=None):
+    """Only a scheduler-fix push may retire old code blocking a queued replacement."""
+    age=minutes_since_scan(health,now)
+    if event!="push" or health.get("quota_exhausted") or age is None or age<150:
+        return []
+    queued={run.get("head_sha") for run in runs
+            if run.get("status") in {"queued","pending","waiting"} and run.get("head_sha")}
+    if not queued:
+        return []
+    current=now or datetime.datetime.now(datetime.timezone.utc)
+    obsolete=[]
+    for run in runs:
+        if run.get("status")!="in_progress" or not run.get("head_sha") or run["head_sha"] in queued:
+            continue
+        try:
+            started=datetime.datetime.fromisoformat(run["created_at"].replace("Z","+00:00"))
+        except (KeyError,TypeError,ValueError):
+            continue
+        if (current-started).total_seconds()>=600:
+            obsolete.append(run["id"])
+    return obsolete
+
+
 def main():
     token=os.environ["GITHUB_TOKEN"]
     repository=os.environ["GITHUB_REPOSITORY"]
     api=f"https://api.github.com/repos/{repository}/actions/workflows/scrape.yml"
     runs=request_json(api+"/runs?per_page=30",token).get("workflow_runs",[])
     if any(run.get("status") in ACTIVE_STATUSES for run in runs):
+        if os.environ.get("GITHUB_EVENT_NAME")=="push":
+            # The replacement is already queued under the same concurrency group.
+            # Routine hourly recovery never cancels an active scan.
+            try:
+                health=request_json(HEALTH_URL)
+                for run_id in obsolete_scan_ids(health,runs,"push"):
+                    request_json(f"https://api.github.com/repos/{repository}/actions/runs/{run_id}/cancel",token,{})
+                    print(f"Cancelled obsolete scan {run_id}; newer queued revision can proceed")
+            except (RuntimeError,urllib.error.URLError,TimeoutError,ValueError) as exc:
+                print(f"Could not retire obsolete scan ({type(exc).__name__}); queued replacement remains")
         print("Scan already queued/running")
         return
     try:
