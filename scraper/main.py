@@ -210,13 +210,15 @@ def ingest_chunks(items,size=125):
 async def ingest_scan(endpoint,headers,jobs,companies,run):
     """Upload one logical scan in bounded requests and finalize it exactly once."""
     url=endpoint.rstrip("/")+"/api/ingest"
-    await post_with_retry(url,headers,{"jobs":[],"companies":companies})
+    company_result=(await post_with_retry(url,headers,{"jobs":[],"companies":companies})).json()
+    rows_written=int(company_result.get("d1_rows_written",0))
     new_external_ids=[]; new_job_keys=[]; notification_keys=[]; rejected=0
     for batch in ingest_chunks(jobs):
         result=(await post_with_retry(url,headers,{"jobs":batch,"companies":[]})).json()
         new_external_ids.extend(result.get("new_external_ids",[]))
         new_job_keys.extend(result.get("new_job_keys",[]))
         notification_keys.extend(result.get("notification_keys",[]))
+        rows_written+=int(result.get("d1_rows_written",0))
         rejected+=int(result.get("rejected",0))
         if rejected:
             raise RuntimeError(f"Ingestion rejected records: {result.get('errors', [])}; scan finalization withheld to protect existing data")
@@ -232,7 +234,9 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
         "successful_companies":successful_companies,
         "seen_job_keys":seen_job_keys,
     }
-    await post_with_retry(url,headers,{"jobs":[],"companies":[],"run":final_run})
+    final_result=(await post_with_retry(url,headers,{"jobs":[],"companies":[],"run":final_run})).json()
+    rows_written+=int(final_result.get("d1_rows_written",0))
+    print(f"D1 ingestion rows written: {rows_written} across {len(jobs)} candidate jobs and {len(companies)} sources")
     return {"new_external_ids":list(dict.fromkeys(new_external_ids)),"new_job_keys":list(dict.fromkeys(new_job_keys)),"notification_keys":list(dict.fromkeys(notification_keys)),"rejected":rejected}
 
 class _NoopAsyncContext:

@@ -231,3 +231,7 @@ the page reloads stored data and does not initiate a four-hour employer scan.
 A custom hostname can be enabled later using the optional GitHub Actions variable
 `JOBRADAR_CUSTOM_DOMAIN`. No hostname is attached until you supply one and configure
 its zone. See [custom-domain setup and private-data migration](docs/CUSTOM-DOMAIN.md).
+
+### D1 write usage
+
+Ingestion reads existing employer/job records first. Unchanged jobs produce no writes; changes update only affected columns, avoiding unnecessary AUTOINCREMENT and index writes. Real company check timestamps, eligibility changes, reactivation, retirement, new jobs and alerts are still saved. `last_seen_at` on unchanged jobs remains the last persisted sighting; the completed scan manifest establishes source coverage. Each ingestion response reports `d1_rows_written`, and scan logs sum those counters. This measures ingestion only, not account-wide usage or notification/maintenance writes. The 150-minute scan cadence is unchanged.
