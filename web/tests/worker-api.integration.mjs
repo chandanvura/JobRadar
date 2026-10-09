@@ -25,6 +25,13 @@ try {
   const job={company:'Example',ats_provider:'workday',external_job_id:'REQ-1',title:'Java Engineer',job_url:'https://example.test/job/1',application_url:'https://example.test/job/1',career_page_url:'https://example.test/careers',city:'Bengaluru',location:'Bengaluru',normalized_location:'Bengaluru',role_category:'Java / Backend',skills:[]};
   for(const company of ['Example','example'])assert.equal((await request('/api/ingest',{jobs:[{...job,company}]})).status,200);
   assert.equal((await db.prepare('SELECT count(*) AS total FROM jobs').first()).total,1);
+  const legacyCareer='http://bakerhughes.wd5.myworkdayjobs.com/BakerHughes/userHome/';
+  const repaired=await (await request('/api/ingest',{jobs:[{...job,career_page_url:legacyCareer}]})).json();
+  assert.equal(repaired.accepted,1);assert.equal(repaired.rejected,0);
+  assert.equal((await db.prepare('SELECT career_page_url FROM jobs').first()).career_page_url,legacyCareer.replace('http:','https:'));
+  const rejected=await (await request('/api/ingest',{jobs:[{...job,career_page_url:'http://unsafe.example/careers'}]})).json();
+  assert.equal(rejected.rejected,1);
+  await request('/api/ingest',{jobs:[job]});
   const run={started_at:new Date().toISOString(),finished_at:new Date().toISOString(),companies_checked:1,companies_successful:1,companies_failed:0,status:'success',successful_companies:['Example'],seen_job_keys:[...Array.from({length:5001},(_,i)=>`unrelated-${i}`),'Example\x1fworkday\x1fREQ-1']};
   assert.equal((await request('/api/ingest',{run})).status,200);
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,1);

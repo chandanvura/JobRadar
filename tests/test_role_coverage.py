@@ -68,3 +68,20 @@ def test_generic_added_titles_need_technical_requirements(title):
     assert adapters.likely_role(title)
     assert classify_title(title, "General business operations")[1] == "Other"
     assert classify_title(title, "Develop software using Java and SQL")[1] == "Software Engineering"
+
+
+def test_workday_skips_only_definitely_old_details_and_keeps_unknown_dates(monkeypatch):
+    ages=['Posted Today','Posted Yesterday','Posted 1 Day Ago','Posted 2 Days Ago','Posted 30+ Days Ago',None]
+    requested=[]
+    async def request(client,method,url,**kwargs):
+        rows=[{'title':'Cloud Developer','externalPath':f'/job/India/R{i}','locationsText':'Bengaluru','postedOn':age} for i,age in enumerate(ages)]
+        return httpx.Response(200,request=httpx.Request(method,url),json={'total':len(rows),'jobPostings':rows})
+    async def detail(client,url):
+        requested.append(url.rsplit('/',1)[-1])
+        return httpx.Response(200,request=httpx.Request('GET',url),json={'jobPostingInfo':{'title':'Cloud Developer','jobReqId':url.rsplit('/',1)[-1],'jobDescription':'0-2 years Java','location':'Bengaluru'}})
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    company=Company('Example','https://example.wd1.myworkdayjobs.com/Jobs','workday','example|Jobs')
+    jobs,total=asyncio.run(adapters.WorkdayAdapter().fetch_jobs(company))
+    assert total==6
+    assert {job.external_job_id for job in jobs}=={'R0','R1','R2','R5'}
+    assert set(requested)=={'R0','R1','R2','R5'}

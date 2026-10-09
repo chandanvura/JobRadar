@@ -90,7 +90,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .cache/jobradar-http
-          key: jobradar-details-${{ runner.os }}-${{ steps.cache-date.outputs.value }}-shard-${{ matrix.shard }}
+          key: jobradar-details-${{ runner.os }}-shard-${{ matrix.shard }}-${{ steps.cache-date.outputs.value }}
+          restore-keys: jobradar-details-${{ runner.os }}-shard-${{ matrix.shard }}-
       - name: Discover shard ${{ matrix.shard }}
         run: |
           for attempt in 1 2; do
