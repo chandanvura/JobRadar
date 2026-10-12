@@ -41,6 +41,7 @@
     "drizzle-kit": "0.31.11",
     "eslint": "9.39.4",
     "eslint-config-next": "16.3.8",
+    "jsdom": "26.1.0",
     "miniflare": "5.20260926.1-alpha",
     "react-server-dom-webpack": "19.3.0",
     "tailwindcss": "4.2.1",

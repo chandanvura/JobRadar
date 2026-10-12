@@ -235,3 +235,7 @@ its zone. See [custom-domain setup and private-data migration](docs/CUSTOM-DOMAI
 ### D1 write usage
 
 Ingestion reads existing employer/job records first. Unchanged jobs produce no writes; changes update only affected columns, avoiding unnecessary AUTOINCREMENT and index writes. Real company check timestamps, eligibility changes, reactivation, retirement, new jobs and alerts are still saved. `last_seen_at` on unchanged jobs remains the last persisted sighting; the completed scan manifest establishes source coverage. Each ingestion response reports `d1_rows_written`, and scan logs sum those counters. This measures ingestion only, not account-wide usage or notification/maintenance writes. The 150-minute scan cadence is unchanged.
+
+### Stable large-catalog browsing
+
+Job results render in pages of 30, with previous/next and a page selector so every match remains reachable. Save/stage/note updates preserve the selected page; changing search filters resets it. Refresh keeps the existing complete catalog visible until the replacement is fully loaded. Ranking order advances on catalog refresh rather than reordering each minute. Empty searches do not allocate a full lexical index; requirement patterns and parsed clauses are reused. Notes persist after 350 ms idle and flush on blur, page exit and unmount. The UI interaction suite checks bounded rendering with 10,000 jobs, page retention, filter resets, count changes, focus and note persistence.
