@@ -1198,7 +1198,7 @@ function DashboardContent() {
           {active === "Settings" && <Suspense fallback={<Loading />}><ProfilePanel /></Suspense>}
           {active === "Resume Studio" ? (
             <Suspense fallback={<Loading />}><ResumeWorkspace /></Suspense>
-          ) : loading ? (
+          ) : loading && !data ? (
             <Loading />
           ) : showJobs ? (
             <>
