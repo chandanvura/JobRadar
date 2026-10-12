@@ -1,5 +1,5 @@
 "use client";
-import { createJobSearchIndex } from "@/lib/job-search";
+import { useJobSearch } from "@/lib/use-job-search";
 import { fitPreferenceModel } from "@/lib/preference-model";
 import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
 import { defaultFreshness, matchesCareerView, verifiedView, visibleCareerJobs } from "@/lib/job-view";
@@ -613,15 +613,13 @@ function DashboardContent() {
       return [trackingKey(job), {match, priority: opportunity.score + (preferenceModel.trained ? preferenceModel.boost(job) : (feedback.get(job.role_category) || 0))}];
     }));
   }, [mergedJobs, preferences, tracking, rankingNow, preferenceModel, matches]);
-  const searching = Boolean(deferredQuery.trim());
-  const searchIndex = useMemo(() => searching ? createJobSearchIndex(mergedJobs) : null, [mergedJobs, searching]);
-  const searchScores = useMemo(() => searchIndex?.search(deferredQuery) || new Map<ApiJob,number>(), [searchIndex, deferredQuery]);
+  const {scores:searchScores,pending:searchPending,error:searchError} = useJobSearch(mergedJobs,deferredQuery);
   const filtered = useMemo(() => {
     const reviewView = active === "Needs Review";
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j), match = ranking.get(trackingKey(j))!.match;
       if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, postingStillCurrent(j))) return false;
-      if (deferredQuery && !searchScores.has(j)) return false;
+      if (deferredQuery && !searchPending && !searchScores.has(j)) return false;
       if (workMode !== "All arrangements" && requirementsFor(j).workMode !== workMode) return false;
       if (active === "Internships" && !isInternship(j)) return false;
       if (active === "Internships" && !technicalInternshipRole(j)) return false;
@@ -753,6 +751,7 @@ function DashboardContent() {
     jobTracking,
     deferredQuery,
     searchScores,
+    searchPending,
     location,
     ats,
     workMode,
@@ -790,7 +789,7 @@ function DashboardContent() {
         (role === "All roles" || j.role_category === role) &&
         (ats === "All ATS" || j.ats_provider === ats) &&
         (workMode === "All arrangements" || requirementsFor(j).workMode === workMode) &&
-        (!deferredQuery || searchScores.has(j)) &&
+        (!deferredQuery || searchPending || searchScores.has(j)) &&
         (matchMode !== "Exact" || ((!preferences.titles.length || personalMatch(j, preferences).titleMatch) &&
           (!preferences.skills.length || personalMatch(j, preferences).skillMatch))),
     )).map(group=>group.job).slice(0, 20),
@@ -1212,6 +1211,8 @@ function DashboardContent() {
                 </section>
               )}
               {!visibleJobs.length && currentJobs.length > 0 && <section className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 text-sm"><p>There are {currentJobs.filter(j => j.is_active).length} active listings in the catalogue. Your current search or filters returned no matches.</p><Button variant="outline" onClick={() => { clearQuickFilters(); navigate("All Jobs"); }}>Reset filters and browse all</Button></section>}
+              {searchPending && <p role="status" className="mb-3 text-sm text-muted-foreground">Searching the catalog… You can keep scrolling while search prepares.</p>}
+              {searchError && <p role="alert" className="mb-3 text-sm text-warning">{searchError}</p>}
               <JobList
                 now={rankingNow}
                 resetKey={resultsKey}
