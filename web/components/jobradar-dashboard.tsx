@@ -3,6 +3,8 @@ import { createJobSearchIndex } from "@/lib/job-search";
 import { fitPreferenceModel } from "@/lib/preference-model";
 import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
 import { defaultFreshness, matchesCareerView, verifiedView, visibleCareerJobs } from "@/lib/job-view";
+import { PrivateNotes } from "./private-notes";
+import { JobPagination } from "./job-pagination";
 import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { hiringManagerDraft } from "@/lib/job-search-strategy";
@@ -406,7 +408,7 @@ function DashboardContent() {
     [showMoreFilters, setShowMoreFilters] = useState(false),
     [showOperations, setShowOperations] = useState(false),
     [showTools, setShowTools] = useState(false);
-  const deferredQuery = useDeferredValue(query);
+  const deferredQuery = useDeferredValue(query.trim());
   const navigationRef = useRef<HTMLElement>(null);
   const loadGeneration = useRef(0);
   const activeLoad = useRef<AbortController | null>(null);
@@ -451,7 +453,7 @@ function DashboardContent() {
     try {
       const payload = await loadPublicCatalog<Payload>((initial) => {
         if (generation === loadGeneration.current) {
-          setData(initial);
+          setData(current => current || initial);
           if (!silent) setLoading(false);
         }
       }, fetch, controller.signal);
@@ -551,7 +553,7 @@ function DashboardContent() {
     history.pushState(null, "", `#${slug(label)}`);
     window.dispatchEvent(new HashChangeEvent("hashchange"));
   };
-  const saveTracking = (job: ApiJob, patch: Partial<Tracking>) =>
+  const saveTracking = useCallback((job: ApiJob, patch: Partial<Tracking>) =>
     setTracking((current) => {
       const key = trackingKey(job),
         prior = current[key] || {
@@ -571,14 +573,13 @@ function DashboardContent() {
       };
       writePrivate("jobradar-tracking-v2", JSON.stringify(next));
       return next;
-    });
+    }), []);
   const currentJobs = useMemo(() => (data?.jobs || []).map(normalizeExperience), [data?.jobs]);
   const mergedJobs = useMemo(() => {
     const map = new Map(currentJobs.map((j) => [trackingKey(j), j]));
-    Object.values(tracking).forEach((t) => {
-      if (!map.has(trackingKey(t.job)))
-        map.set(trackingKey(t.job), { ...t.job, is_active: 0 });
-    });
+    const missing = Object.values(tracking).filter(t => !map.has(trackingKey(t.job)));
+    if (!missing.length) return currentJobs;
+    missing.forEach(t => map.set(trackingKey(t.job), {...t.job,is_active:0}));
     return [...map.values()];
   }, [currentJobs, tracking]);
   const jobTracking = useCallback(
@@ -600,19 +601,21 @@ function DashboardContent() {
   );
   const [rankingNow, setRankingNow] = useState(() => Date.now());
   useEffect(() => {setRankingNow(Date.now());}, [data]);
-  useEffect(() => { const timer=window.setInterval(() => setRankingNow(Date.now()), 60000); return () => window.clearInterval(timer); }, []);
+  // Keep order stable while browsing; the five-minute catalog refresh advances ranking time.
+  const matches = useMemo(() => new Map(mergedJobs.map(job => [trackingKey(job),personalMatch(job,preferences)])), [mergedJobs,preferences]);
   const preferenceModel = useMemo(() => fitPreferenceModel(Object.values(tracking), preferences), [tracking, preferences]);
   const ranking = useMemo(() => {
     const now = rankingNow;
     const feedback = feedbackByFamily(Object.values(tracking));
     return new Map(mergedJobs.map(job => {
-      const match = personalMatch(job, preferences);
+      const match = matches.get(trackingKey(job))!;
       const opportunity = opportunityPriority(job, preferences, now, match);
       return [trackingKey(job), {match, priority: opportunity.score + (preferenceModel.trained ? preferenceModel.boost(job) : (feedback.get(job.role_category) || 0))}];
     }));
-  }, [mergedJobs, preferences, tracking, rankingNow, preferenceModel]);
-  const searchIndex = useMemo(() => createJobSearchIndex(mergedJobs), [mergedJobs]);
-  const searchScores = useMemo(() => searchIndex.search(deferredQuery), [searchIndex, deferredQuery]);
+  }, [mergedJobs, preferences, tracking, rankingNow, preferenceModel, matches]);
+  const searching = Boolean(deferredQuery.trim());
+  const searchIndex = useMemo(() => searching ? createJobSearchIndex(mergedJobs) : null, [mergedJobs, searching]);
+  const searchScores = useMemo(() => searchIndex?.search(deferredQuery) || new Map<ApiJob,number>(), [searchIndex, deferredQuery]);
   const filtered = useMemo(() => {
     const reviewView = active === "Needs Review";
     const result = mergedJobs.filter((j) => {
@@ -852,6 +855,7 @@ function DashboardContent() {
   const showJobs = jobViews.has(active),
     companySearch = active === "Companies" ? deferredQuery : "";
   const visibleJobs = visibleCareerJobs(active, filtered, reviewPreview);
+  const resultsKey = JSON.stringify([active,deferredQuery,location,ats,workMode,role,freshness,preferences,sort,applicationStage,matchMode]);
   const navGroup = (title: string, items: Set<string>) => (
     <div className="mb-4">
       <p className="mb-1 px-4 text-[10px] font-black uppercase tracking-[.18em] text-muted-foreground">
@@ -1210,6 +1214,7 @@ function DashboardContent() {
               {!visibleJobs.length && currentJobs.length > 0 && <section className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 text-sm"><p>There are {currentJobs.filter(j => j.is_active).length} active listings in the catalogue. Your current search or filters returned no matches.</p><Button variant="outline" onClick={() => { clearQuickFilters(); navigate("All Jobs"); }}>Reset filters and browse all</Button></section>}
               <JobList
                 now={rankingNow}
+                resetKey={resultsKey}
                 jobs={visibleJobs}
                 preferences={preferences}
                 getTracking={jobTracking}
@@ -1648,50 +1653,16 @@ function Pills({
     </div>
   );
 }
-function JobList({
-  now,
-  jobs,
-  preferences,
-  getTracking,
-  saveTracking,
-}: {
-  now: number;
-  jobs: ApiJob[];
-  preferences: SearchPreferences;
-  getTracking: (j: ApiJob) => Tracking;
-  saveTracking: (j: ApiJob, p: Partial<Tracking>) => void;
+function JobList({now,jobs,resetKey,preferences,getTracking,saveTracking}: {
+  now:number; jobs:ApiJob[]; resetKey:string; preferences:SearchPreferences;
+  getTracking:(j:ApiJob)=>Tracking; saveTracking:(j:ApiJob,p:Partial<Tracking>)=>void;
 }) {
-  const [limit, setLimit] = useState(30);
-  useEffect(() => setLimit(30), [jobs]);
-  return (
-    <section className="space-y-4">
-      {jobs.length ? (
-        jobs
-          .slice(0, limit)
-          .map((j) => (
-            <JobCard
-              now={now}
-              key={trackingKey(j)}
-              job={j}
-              preferences={preferences}
-              tracking={getTracking(j)}
-              saveTracking={saveTracking}
-            />
-          ))
-      ) : (
-        <Empty />
-      )}
-      {jobs.length > limit && (
-        <button
-          onClick={() => setLimit((n) => n + 30)}
-          className="w-full rounded-xl border bg-card p-4 font-bold"
-        >
-          Show more jobs ({jobs.length - limit} remaining)
-        </button>
-      )}
-    </section>
-  );
+  return jobs.length ? <JobPagination jobs={jobs} resetKey={resetKey} renderJob={job=><JobCard
+    now={now} key={trackingKey(job)} job={job} preferences={preferences}
+    tracking={getTracking(job)} saveTracking={saveTracking}
+  />} /> : <Empty />;
 }
+
 function ApplicationSummary({
   tracking,
   stage,
@@ -2018,13 +1989,7 @@ function JobCard({
           </label>
           <label className="text-sm font-bold">
             Private notes
-            <textarea
-              value={tracking.notes || ""}
-              onChange={(e) => saveTracking(job, { notes: e.target.value })}
-              rows={3}
-              className="mt-2 w-full resize-y rounded-xl border bg-card p-3 text-sm font-normal"
-              placeholder="Recruiter, referral contact, interview date, follow-up…"
-            />
+            <PrivateNotes value={tracking.notes || ""} onSave={notes=>saveTracking(job,{notes})} />
           </label>
           {tracking.appliedAt && (
             <p className="text-xs text-muted-foreground md:col-span-2">
@@ -2067,7 +2032,7 @@ function InternshipDiscovery({ preferences, lastScan, count, freshCount }: { pre
     <section className="mb-5 rounded-3xl border border-info/40 bg-info-soft p-5">
       <div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-700 text-white"><GraduationCap size={20} /></div><div><h3 className="font-black text-info">Internship & apprenticeship discovery</h3><p className="mt-1 text-sm leading-6 text-info/75">Kept separate from full-time jobs. JobRadar indexes official employer sources and offers user-initiated LinkedIn, Naukri and official ATS searches; it never scrapes those job boards.</p></div></div>
       <p className="mt-3 text-sm font-semibold">{count} matching listings · {freshCount} with a current employer date · last completed scan: {lastScan ? new Date(lastScan).toLocaleString("en-IN", {timeZone: "Asia/Kolkata"}) + " IST" : "not available"}.</p>
-      <p className="mt-2 text-xs text-info/70">Employer sources are checked approximately every four hours. Refresh reloads the latest scan; it does not start a new scan. Older or unknown-date listings stay visible for review and are not presented as newly posted. Full-time experience preferences do not hide internships.</p>
+      <p className="mt-2 text-xs text-info/70">Employer sources are checked approximately every 2½ hours. Refresh reloads the latest scan; it does not start a new scan. Older or unknown-date listings stay visible for review and are not presented as newly posted. Full-time experience preferences do not hide internships.</p>
       <div className="mt-4 grid gap-2 md:grid-cols-2">{links.map((link) => <a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-info/40 bg-card p-3 text-sm font-bold text-info hover:border-info/40">{link.name} <ExternalLink size={15} /></a>)}</div>
       <p className="mt-3 text-xs text-info/70">Use the Companies area to open a company-specific public recruiter search. Verify employment before sending a short, personalized referral request; JobRadar collects no personal data.</p>
     </section>

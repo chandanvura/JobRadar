@@ -1,25 +1,30 @@
 import sections from '../../config/requirement-sections.json' with {type:'json'};
+const headersPattern=new RegExp('\\b('+sections.headers+')\\s*:?','gi');
+const boilerplatePattern=new RegExp(sections.boilerplate,'i');
+const companyPattern=new RegExp(sections.company_clause,'i');
+const preferredPattern=new RegExp(sections.preferred,'i');
+const requiredPattern=new RegExp(sections.required,'i');
 export type RequirementEvidence = {value:string; evidence:string; certainty:'stated'};
 export function candidateClauses(description:string) {
  const text=description.slice(0,20000).replace(/[‘’]/g,"'").replace(/<[^>]+>/g,'\n').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&#39;|&apos;/g,"'")
-  .replace(new RegExp('\\b('+sections.headers+')\\s*:?','gi'),(_,heading:string)=>'\n§'+heading.toLowerCase()+'\n');
+  .replace(headersPattern,(_,heading:string)=>'\n§'+heading.toLowerCase()+'\n');
  let section='unspecified';const clauses:{text:string;section:string}[]=[];
  for(const part of text.split(/[\n;•]|(?<=[.!?])\s+/)) {
   const value=part.trim();if(value.startsWith('§')){section=value.slice(1);continue;}
-  if(value&&!new RegExp(sections.boilerplate,'i').test(section)&&!new RegExp(sections.company_clause,'i').test(value))clauses.push({text:value,section});
+  if(value&&!boilerplatePattern.test(section)&&!companyPattern.test(value))clauses.push({text:value,section});
  }
  return clauses;
 }
 import skillPatterns from '../../config/skills.json' with {type:'json'};
+const compiledSkills=Object.entries(skillPatterns).map(([skill,pattern])=>[skill,new RegExp(pattern,'i')] as const);
 
-export function extractRequirements(description:string,location='') {
- const clauses=candidateClauses(description);
+export function extractRequirements(description:string,location='',clauses=candidateClauses(description)) {
  const requiredSkills:RequirementEvidence[]=[],preferredSkills:RequirementEvidence[]=[],mentionedSkills:RequirementEvidence[]=[],education:RequirementEvidence[]=[],batches:RequirementEvidence[]=[];
  const push=(out:RequirementEvidence[],value:string,text:string)=>{if(!out.some(x=>x.value===value))out.push({value,evidence:text.slice(0,320),certainty:'stated'});};
  for(const {text,section} of clauses){
-  const preferred=new RegExp(sections.preferred,'i').test(section)||/\b(?:preferred|nice to have|good to have|a plus|desirable|bonus|optional)\b/i.test(text);
-  const required=!preferred&&(new RegExp(sections.required,'i').test(section)||/\b(?:must|required|mandatory|minimum|need to have)\b/i.test(text));
-  for(const [skill,pattern] of Object.entries(skillPatterns))if(new RegExp(pattern,'i').test(text))push(preferred?preferredSkills:required?requiredSkills:mentionedSkills,skill,text);
+  const preferred=preferredPattern.test(section)||/\b(?:preferred|nice to have|good to have|a plus|desirable|bonus|optional)\b/i.test(text);
+  const required=!preferred&&(requiredPattern.test(section)||/\b(?:must|required|mandatory|minimum|need to have)\b/i.test(text));
+  for(const [skill,pattern] of compiledSkills)if(pattern.test(text))push(preferred?preferredSkills:required?requiredSkills:mentionedSkills,skill,text);
   for(const m of text.matchAll(/\b(?:bachelor(?:'s|s)?|master(?:'s|s)?|ph\.?d\.?|b\.?tech|m\.?tech|b\.e\.?|m\.e\.?|bca|mca|b\.?sc|m\.?sc|diploma|equivalent (?:practical |work )?experience)\b/gi))push(education,m[0],text);
   for(const m of text.matchAll(/\b(?:BE|ME|BS|MS|BEng|MEng)\b(?=\s+(?:or|and|in|degree)\b)/g))push(education,m[0],text);
   if(/\b(?:batch|graduat(?:ion|ing|ed|es)|class of|pass(?:ed|ing) out)\b/i.test(text))for(const m of text.matchAll(/\b20\d{2}\b/g))push(batches,m[0],text);
@@ -39,9 +44,14 @@ export function normalizeExperience<T extends {experience_label:string;experienc
  return experienceUnverified(job)?{...job,experience_min:null,experience_max:null,experience_label:'Entry-level title — experience unverified',is_eligible:0,eligibility_reason:'Entry-level title — experience unverified'}:job;
 }
 
+const clauseCache=new WeakMap<object,ReturnType<typeof candidateClauses>>();
+export function clausesFor(job:{description?:string|null}) {
+ const cached=clauseCache.get(job);if(cached)return cached;
+ const value=candidateClauses(job.description||'');clauseCache.set(job,value);return value;
+}
 const requirementCache=new WeakMap<object,ReturnType<typeof extractRequirements>>();
 export function requirementsFor(job:{description?:string|null;location?:string;normalized_location?:string}) {
  const cached=requirementCache.get(job);if(cached)return cached;
- const value=extractRequirements(job.description||'',job.location||job.normalized_location||'');
+ const value=extractRequirements(job.description||'',job.location||job.normalized_location||'',clausesFor(job));
  requirementCache.set(job,value);return value;
 }
