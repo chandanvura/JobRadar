@@ -41,7 +41,10 @@ export function extractRequirements(description:string,location='',clauses=candi
 }
 export function experienceUnverified(job:{experience_label?:string}) {return /^Entry-level title/i.test(job.experience_label||'');}
 export function normalizeExperience<T extends {experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string}>(job:T):T {
- return experienceUnverified(job)?{...job,experience_min:null,experience_max:null,experience_label:'Entry-level title — experience unverified',is_eligible:0,eligibility_reason:'Entry-level title — experience unverified'}:job;
+ if(!experienceUnverified(job))return job;
+ const normalized={...job,experience_min:null,experience_max:null,experience_label:'Entry-level title — experience unverified',is_eligible:0,eligibility_reason:'Entry-level title — experience unverified'};
+ const requirements=requirementCache.get(job);if(requirements)requirementCache.set(normalized,requirements);
+ return normalized;
 }
 
 const clauseCache=new WeakMap<object,ReturnType<typeof candidateClauses>>();
@@ -55,3 +58,9 @@ export function requirementsFor(job:{description?:string|null;location?:string;n
  const value=extractRequirements(job.description||'',job.location||job.normalized_location||'',clausesFor(job));
  requirementCache.set(job,value);return value;
 }
+
+export function primeRequirements(job:object, value:ReturnType<typeof extractRequirements>) {
+ requirementCache.set(job,value);
+}
+
+export function hasRequirements(job:object) {return requirementCache.has(job);}

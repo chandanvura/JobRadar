@@ -239,3 +239,19 @@ Ingestion reads existing employer/job records first. Unchanged jobs produce no w
 ### Stable large-catalog browsing
 
 Job results render in pages of 30, with previous/next and a page selector so every match remains reachable. Save/stage/note updates preserve the selected page; changing search filters resets it. Refresh keeps the existing complete catalog visible until the replacement is fully loaded. Ranking order advances on catalog refresh rather than reordering each minute. Empty searches do not allocate a lexical index. Catalog search builds and queries its index in a background Web Worker, with bounded description transport, preserved requirement evidence, cancellation and stale-response protection; requirement patterns and parsed clauses are reused. Notes persist after 350 ms idle and flush on blur, page exit and unmount. The UI interaction suite checks bounded rendering with 10,000 jobs, page retention, filter resets, count changes, focus and note persistence.
+
+### Catalog loading and interaction harness
+
+The browser requests live jobs in validated keyset pages of up to 500 (the API's
+compatibility default remains 100). Full requirement parsing runs in a Web Worker
+in batches of 128; a yielding fallback keeps older browsers usable. Worker
+failures, cancellation and search deadlines are bounded. Refresh preserves the
+current results until replacement analysis is complete. Company cards and tables
+share 30-company pagination so hidden mobile markup does not mount all 700 sources.
+
+The web harness mounts the full dashboard with 7,000 jobs and 700 companies,
+checks navigation, bounded rendering, retained pages and refresh controls, and
+prints navigation timings. A real worker test parses 2,000 full descriptions while
+checking that the main event loop continues running. Worker failure/abort and
+search stalls are injected. Timings describe the test environment; DOM and request
+bounds are the release assertions, not a guarantee about every device or network.

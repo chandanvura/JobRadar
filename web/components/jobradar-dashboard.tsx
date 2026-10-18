@@ -5,11 +5,12 @@ import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
 import { defaultFreshness, matchesCareerView, verifiedView, visibleCareerJobs } from "@/lib/job-view";
 import { PrivateNotes } from "./private-notes";
 import { JobPagination } from "./job-pagination";
+import { prepareCatalog } from "@/lib/prepare-catalog";
 import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { hiringManagerDraft } from "@/lib/job-search-strategy";
 import { ThemeToggle } from "./theme-toggle";
-import { lazy, Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, memo, Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   Bell,
@@ -397,6 +398,7 @@ function DashboardContent() {
     [mobile, setMobile] = useState(false),
     [data, setData] = useState<Payload | null>(null),
     [loading, setLoading] = useState(true),
+    [catalogLoading, setCatalogLoading] = useState(true),
     [notice, setNotice] = useState<NoticeState>(null),
     [tracking, setTracking] =
       useState<Record<string, Tracking>>(initialTracking),
@@ -412,6 +414,7 @@ function DashboardContent() {
   const navigationRef = useRef<HTMLElement>(null);
   const loadGeneration = useRef(0);
   const activeLoad = useRef<AbortController | null>(null);
+  const [rankingNow, setRankingNow] = useState(() => Date.now());
   useEffect(() => {
     if (!mobile) return;
     const previousFocus = document.activeElement as HTMLElement | null;
@@ -449,22 +452,31 @@ function DashboardContent() {
     activeLoad.current?.abort();
     const controller = new AbortController();
     activeLoad.current = controller;
+    setCatalogLoading(true);
     if (!silent) setLoading(true);
     try {
-      const payload = await loadPublicCatalog<Payload>((initial) => {
+      const payload = await loadPublicCatalog<Payload>(async (initial) => {
+        await prepareCatalog(initial.jobs, controller.signal);
         if (generation === loadGeneration.current) {
+          setRankingNow(Date.now());
           setData(current => current || initial);
           if (!silent) setLoading(false);
         }
       }, fetch, controller.signal);
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
+      await prepareCatalog(payload.jobs, controller.signal);
+      if (generation !== loadGeneration.current || controller.signal.aborted) return;
+      setRankingNow(Date.now());
       setData(payload);
       if (!silent) setNotice(null);
     } catch (e) {
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
       setNotice({tone:"error",title:"Dashboard could not refresh",text:e instanceof Error?e.message:"Unable to load JobRadar"});
     } finally {
-      if (generation === loadGeneration.current && !silent) setLoading(false);
+      if (generation === loadGeneration.current) {
+        setCatalogLoading(false);
+        if (!silent) setLoading(false);
+      }
     }
   }, []);
   useEffect(() => {
@@ -582,15 +594,12 @@ function DashboardContent() {
     missing.forEach(t => map.set(trackingKey(t.job), {...t.job,is_active:0}));
     return [...map.values()];
   }, [currentJobs, tracking]);
+  const defaultTracking = useMemo(() => new Map(mergedJobs.map(job => [job, {
+    saved: false, status: "New", updated_at: "", job,
+  }])), [mergedJobs]);
   const jobTracking = useCallback(
-    (job: ApiJob) =>
-      tracking[trackingKey(job)] || {
-        saved: false,
-        status: "New",
-        updated_at: "",
-        job,
-      },
-    [tracking],
+    (job: ApiJob) => tracking[trackingKey(job)] || defaultTracking.get(job)!,
+    [tracking, defaultTracking],
   );
   const atsOptions = useMemo(
     () => [
@@ -599,8 +608,6 @@ function DashboardContent() {
     ],
     [currentJobs],
   );
-  const [rankingNow, setRankingNow] = useState(() => Date.now());
-  useEffect(() => {setRankingNow(Date.now());}, [data]);
   // Keep order stable while browsing; the five-minute catalog refresh advances ranking time.
   const matches = useMemo(() => new Map(mergedJobs.map(job => [trackingKey(job),personalMatch(job,preferences)])), [mergedJobs,preferences]);
   const preferenceModel = useMemo(() => fitPreferenceModel(Object.values(tracking), preferences), [tracking, preferences]);
@@ -615,6 +622,7 @@ function DashboardContent() {
   }, [mergedJobs, preferences, tracking, rankingNow, preferenceModel, matches]);
   const {scores:searchScores,pending:searchPending,error:searchError} = useJobSearch(mergedJobs,deferredQuery);
   const filtered = useMemo(() => {
+    if (!jobViews.has(active)) return [];
     const reviewView = active === "Needs Review";
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j), match = ranking.get(trackingKey(j))!.match;
@@ -776,26 +784,26 @@ function DashboardContent() {
       text: `Ranking ${next.locations.join(" + ")} roles for ${next.experienceMin}–${next.experienceMax} YOE${next.titles.length ? ` using ${next.titles.length} preferred titles` : ""}${next.skills.length ? ` and ${next.skills.length} preferred skills` : ""}.`,
     });
   };
-  const eligible = currentJobs.filter(
-      (j) => j.is_eligible && j.is_active && postingStillCurrent(j) && !isInternship(j),
-    ),
-    reviewPreview = groupDuplicateJobs(currentJobs.filter(
+  const eligible = useMemo(() => currentJobs.filter(
+      (j) => j.is_eligible && j.is_active && currentPosting(j, rankingNow) && !isInternship(j),
+    ), [currentJobs, rankingNow]),
+    reviewPreview = useMemo(() => groupDuplicateJobs(currentJobs.filter(
       (j) => j.is_active && !isInternship(j) &&
         !/\b(?:senior|staff|principal|lead|manager|experienced)\b/i.test(j.title) &&
         ["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason) &&
-        personalMatch(j, preferences).experienceMatch !== false &&
+        matches.get(trackingKey(j))!.experienceMatch !== false &&
         preferences.locations.some((city) => j.normalized_location.includes(city)) &&
         (location === "All cities" || j.normalized_location.includes(location)) &&
         (role === "All roles" || j.role_category === role) &&
         (ats === "All ATS" || j.ats_provider === ats) &&
         (workMode === "All arrangements" || requirementsFor(j).workMode === workMode) &&
         (!deferredQuery || searchPending || searchScores.has(j)) &&
-        (matchMode !== "Exact" || ((!preferences.titles.length || personalMatch(j, preferences).titleMatch) &&
-          (!preferences.skills.length || personalMatch(j, preferences).skillMatch))),
-    )).map(group=>group.job).slice(0, 20),
-    internships = currentJobs.filter(
+        (matchMode !== "Exact" || ((!preferences.titles.length || matches.get(trackingKey(j))!.titleMatch) &&
+          (!preferences.skills.length || matches.get(trackingKey(j))!.skillMatch))),
+    )).map(group=>group.job).slice(0, 20), [currentJobs, matches, preferences, location, role, ats, workMode, deferredQuery, searchPending, searchScores, matchMode]),
+    internships = useMemo(() => currentJobs.filter(
       (j) => j.is_active && technicalInternshipRole(j),
-    ),
+    ), [currentJobs]),
     ultra = eligible.filter((j) => {
       const age = freshnessAge(j);
       return age !== null && age < 3 && j.posted_precision !== "day";
@@ -974,10 +982,10 @@ function DashboardContent() {
             variant="outline"
             aria-label="Refresh jobs"
             onClick={() => void load()}
-            disabled={loading}
+            disabled={catalogLoading}
             className="rounded-xl"
           >
-            <RefreshCw size={16} className={loading ? "animate-spin" : ""} />{" "}
+            <RefreshCw size={16} className={catalogLoading ? "animate-spin" : ""} />{" "}
             Refresh
           </Button>
         </header>
@@ -999,6 +1007,7 @@ function DashboardContent() {
               dismiss={() => dismissWelcome(false)}
             />
           )}{" "}
+          {catalogLoading && data && <p role="status" className="mb-3 text-sm text-muted-foreground">Updating jobs… You can keep browsing.</p>}
           {notice && <Notice {...notice} close={() => setNotice(null)} />}{" "}
           {data?.data_mode === "backup" && (
             <div role="status" className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5 text-warning">
@@ -1032,7 +1041,7 @@ function DashboardContent() {
                       Find your next opportunity
                     </div>
                     <h2 className="text-3xl font-semibold tracking-[-.045em] md:text-5xl">
-                      {loading
+                      {loading && !data
                         ? "Checking live jobs…"
                         : active === "Recommended" && !filtered.length && reviewPreview.length
                           ? `${reviewPreview.length} roles to review`
@@ -1727,7 +1736,7 @@ function ApplicationSummary({
     </section>
   );
 }
-function JobCard({
+const JobCard = memo(function JobCard({
   now,
   job,
   preferences,
@@ -2002,7 +2011,7 @@ function JobCard({
       )}
     </article>
   );
-}
+});
 function Empty() {
   return (
     <div className="rounded-3xl border border-dashed bg-card p-16 text-center">
@@ -2266,8 +2275,9 @@ function CompaniesView({
         <Info label="Productive now" value={String(companies.filter((c) => c.candidate_jobs > 0).length)} />
         <Info label="Healthy sources" value={String(companies.filter((c) => c.last_checked_at && !c.error_count).length)} />
       </div>
+      <JobPagination jobs={companies} resetKey={query} noun="companies" renderPage={page => <>
       <div className="grid gap-3 md:hidden">
-        {companies.map((c) => {
+        {page.map((c) => {
           const limited = c.warning?.startsWith("Limited coverage"),
             state = !c.last_checked_at ? "Awaiting scan" : c.error_count ? "Failed" : limited ? "Limited coverage" : c.jobs_found === 0 ? "No current openings" : c.candidate_jobs === 0 ? "No target roles" : "Productive";
           const fallback = companyFallbackLinks(c.name, preferences);
@@ -2290,7 +2300,7 @@ function CompaniesView({
             </tr>
           </thead>
           <tbody>
-            {companies.map((c) => {
+            {page.map((c) => {
               const limited = c.warning?.startsWith("Limited coverage"),
                 fallback = companyFallbackLinks(c.name, preferences),
                 state = !c.last_checked_at
@@ -2350,6 +2360,7 @@ function CompaniesView({
           </tbody>
         </table>
       </div>
+      </>} />
     </div>
   );
 }

@@ -15,6 +15,7 @@ try {
   assert.equal((await request('/api/notifications',null)).status,400);
   assert.equal((await request('/api/unknown')).status,404);
   assert.equal((await request('/api/jobs?after=-1')).status,400);
+  for(const limit of ['0','-1','501','NaN','1.5'])assert.equal((await request(`/api/jobs?limit=${limit}`)).status,400);
   assert.equal((await (await request('/api/dashboard')).json()).data_mode,'backup');
   assert.equal((await request('/api/health')).status,503);
   const db=await mf.getD1Database('DB');const dir=new URL('../drizzle/',import.meta.url);
@@ -99,6 +100,16 @@ try {
   assert.equal(failedCheck.last_checked_at,'2026-10-08T08:07:00+00:00');assert.equal(failedCheck.last_success_at,'2026-10-08T04:07:00+00:00');
   const live=await (await request('/api/dashboard')).json();assert.equal(live.jobs.length,1);assert.equal(live.data_mode,undefined);
   const page=await (await request('/api/jobs?after=0')).json();assert.equal(page.jobs.length,1);assert.equal(page.next_cursor,null);
+  for(let offset=0;offset<505;offset+=125){
+    const rows=Array.from({length:Math.min(125,505-offset)},(_,i)=>({...job,external_job_id:`PAGE-${offset+i}`,city:i%2?'Hyderabad':'Bengaluru'}));
+    assert.equal((await request('/api/ingest',{jobs:rows})).status,200);
+  }
+  assert.equal((await (await request('/api/jobs?after=0')).json()).jobs.length,100);
+  const large=await (await request('/api/jobs?limit=500&after=0')).json();assert.equal(large.jobs.length,500);
+  const tail=await (await request(`/api/jobs?limit=500&after=${large.next_cursor}`)).json();
+  assert.equal(tail.jobs.length,6);assert.equal(tail.next_cursor,null);
+  assert.equal(new Set([...large.jobs,...tail.jobs].map(job=>job.id)).size,506);
+  await db.prepare("DELETE FROM jobs WHERE external_job_id LIKE 'PAGE-%'").run();
   // An explicit empty successful manifest is authoritative and can retire jobs.
   assert.equal((await request('/api/ingest',{run:{...run,seen_job_keys:[]}})).status,200);
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,0);

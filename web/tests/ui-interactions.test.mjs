@@ -1,4 +1,4 @@
-import {test} from 'node:test';
+import {test,mock} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {JSDOM} from 'jsdom';
@@ -98,5 +98,25 @@ test('background search ignores old responses, reports errors and releases the i
     await act(()=>worker.listeners.get('error')());assert.match(state.error,/Clear the search/);
     await act(()=>{query='';render();});assert.equal(worker.terminated,true);assert.equal(state.pending,false);
   }finally{await act(()=>root.unmount());delete globalThis.Worker;dom.window.close();}
+});
+test('stalled or throwing search workers fail visibly instead of leaving search pending',async()=>{
+  const {dom,root}=setup();let state,query='',throwQuery=false;
+  class Worker {
+    addEventListener(){} removeEventListener(){} terminate(){}
+    postMessage(message){if(throwQuery&&message.type==='query')throw Error('Worker closed');}
+  }
+  globalThis.Worker=Worker;
+  const jobs=[{title:'Java Engineer',company:'Example',skills:'[]',role_category:'Java / Backend',application_url:'https://example.test/jobs/1'}];
+  function Consumer(){state=useJobSearch(jobs,query);return null;}
+  try{
+    await act(()=>root.render(React.createElement(Consumer)));
+    mock.timers.enable({apis:['setTimeout']});
+    await act(()=>{query='java';root.render(React.createElement(Consumer));});
+    assert.equal(state.pending,true);
+    await act(()=>mock.timers.tick(15001));assert.equal(state.pending,false);assert.match(state.error,/Clear the search/);
+    mock.timers.reset();throwQuery=true;
+    await act(()=>{query='cloud';root.render(React.createElement(Consumer));});
+    assert.equal(state.pending,false);assert.match(state.error,/Clear the search/);
+  }finally{mock.timers.reset();await act(()=>root.unmount());delete globalThis.Worker;dom.window.close();}
 });
 test('remove compiled test modules',async()=>{await rm(directory,{recursive:true,force:true});});

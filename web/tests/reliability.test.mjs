@@ -38,3 +38,15 @@ test('health exposes daily quota and reset without leaking database errors',asyn
   const body=await response.json();assert.equal(body.quota_exhausted,true);assert.equal(body.retry_at,'2026-10-01T00:00:00.000Z');assert.ok(!JSON.stringify(body).includes('secret-query'));
   assert.equal(apiFailure(Error('database temporarily unavailable'),'/api/ingest',{}).status,500);
 });
+
+test('7,000 live jobs load in 14 bounded pages and wait for initial preparation',async()=>{
+  const jobs=Array.from({length:7000},(_,index)=>({id:index+1}));let pages=0,prepared=false;
+  const result=await loadPublicCatalog(async()=>{await Promise.resolve();prepared=true;},async path=>{
+    if(path==='/api/dashboard')return Response.json({...live,jobs:jobs.slice(0,100)});
+    assert.equal(prepared,true);const url=new URL(path,'https://example.test');
+    assert.equal(url.searchParams.get('limit'),'500');pages++;
+    const after=Number(url.searchParams.get('after'));const batch=jobs.filter(job=>job.id>after).slice(0,500);
+    return Response.json({jobs:batch,next_cursor:batch.at(-1).id===7000?null:batch.at(-1).id});
+  });
+  assert.equal(pages,14);assert.equal(result.jobs.length,7000);assert.equal(result.jobs.at(-1).id,7000);
+});

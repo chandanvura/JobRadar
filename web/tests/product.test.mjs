@@ -144,3 +144,11 @@ test('Jake export escapes user LaTeX and retains content and license',()=>{
  const output=buildJakeResume('Example & Test','test@example.com',[['Experience','Reduced latency by 20%\n- Used Java & SQL\n\\input{private}']]);
  assert.ok(output.includes('MIT License'));assert.ok(output.includes('20\\%'));assert.ok(output.includes('Java \\& SQL'));assert.ok(output.includes('\\textbackslash{}input\\{private\\}'));assert.ok(output.includes('\\begin{document}'));
 });
+
+
+test('posted today uses the precise India midnight boundary without Intl formatting',()=>{
+ const job={reported_age_hours:null,posted_at:null,last_seen_at:'2026-10-18T18:29:59Z',posted_precision:'day',posted_label:'Posted today'};
+ assert.equal(currentPosting(job,Date.parse('2026-10-18T18:29:59.999Z')),true);
+ assert.equal(currentPosting(job,Date.parse('2026-10-18T18:30:00Z')),false);
+ assert.equal(currentPosting({...job,last_seen_at:'2026-10-18T18:30:00Z'},Date.parse('2026-10-18T18:30:00Z')),true);
+});

@@ -24,15 +24,18 @@ export function useJobSearch<T extends SearchableJob & {application_url:string}>
   useEffect(()=>{
     if(!searching)return;
     const current=worker.current,id=++request.current;
-    const fail=()=>setResponse({jobs,query,scores:new Map(),error:'Search could not start. Clear the search to browse jobs, or refresh and try again.'});
+    const fail=()=>{clearTimeout(timer);setResponse({jobs,query,scores:new Map(),error:'Search could not start. Clear the search to browse jobs, or refresh and try again.'});};
+    const timer=setTimeout(fail,15000);
     if(!current){fail();return;}
     const receive=(event:MessageEvent<{id:number;results:[number,number][]}>)=>{
-      if(event.data.id!==id)return;
+      if(!event.data||event.data.id!==id)return;
+      if(!Array.isArray(event.data.results)||!event.data.results.every(item=>Array.isArray(item)&&item.length===2&&Number.isSafeInteger(item[0])&&item[0]>=0&&item[0]<jobs.length&&Number.isFinite(item[1]))){fail();return;}
+      clearTimeout(timer);
       setResponse({jobs,query,scores:new Map(event.data.results.filter(([index])=>index>=0&&index<jobs.length).map(([index,score])=>[jobs[index],score]))});
     };
     current.addEventListener('message',receive);current.addEventListener('error',fail);
-    current.postMessage({type:'query',id,query});
-    return ()=>{current.removeEventListener('message',receive);current.removeEventListener('error',fail);};
+    try{current.postMessage({type:'query',id,query});}catch{fail();}
+    return ()=>{clearTimeout(timer);current.removeEventListener('message',receive);current.removeEventListener('error',fail);};
   },[jobs,query,searching]);
   const ready=response?.jobs===jobs&&response.query===query;
   return {scores:ready?response.scores:empty,pending:searching&&!ready,error:ready?response.error:undefined};

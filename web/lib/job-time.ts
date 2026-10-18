@@ -8,6 +8,8 @@ export function currentPosting(job:Posting,now=Date.now()){
  const age=postingAge(job,now);if(age!==null)return age<=24;
  // An employer's “today” label is valid only on the day it was observed in India.
  const observed=Date.parse(job.last_seen_at);
- const day=(time:number)=>new Date(time).toLocaleDateString('en-CA',{timeZone:'Asia/Kolkata'});
+ // India uses a fixed UTC+05:30 day boundary. Avoid constructing an Intl
+ // formatter twice for every unknown-date listing on each view change.
+ const day=(time:number)=>Math.floor((time+19_800_000)/86_400_000);
  return /\btoday\b/i.test(job.posted_label||'')&&Number.isFinite(observed)&&observed<=now&&day(observed)===day(now);
 }
