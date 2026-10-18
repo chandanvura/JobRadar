@@ -1694,7 +1694,7 @@ const JobCard = memo(function JobCard({
   return (
     <article className="radar-job-card overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col lg:flex-row">
-        <div className="flex-1 p-6">
+        <div className="min-w-0 flex-1 p-6">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Badge
               className={
@@ -1783,7 +1783,7 @@ const JobCard = memo(function JobCard({
             )}
           </div>
         </div>
-        <div className="radar-job-priority flex min-w-72 flex-col justify-between border-t bg-muted p-5 lg:border-l lg:border-t-0">
+        <div className="radar-job-priority flex min-w-0 flex-col justify-between border-t bg-muted p-5 lg:w-80 lg:shrink-0 lg:border-l lg:border-t-0">
           <div>
             <div className="flex items-end justify-between">
               <span className="text-xs font-bold uppercase text-muted-foreground">
@@ -1848,7 +1848,7 @@ const JobCard = memo(function JobCard({
               ))}
             </select>
           </div>
-          <label className="mt-3 text-xs font-semibold">Recommendation feedback
+          <label className="mt-3 block text-xs font-semibold">Recommendation feedback
             <select aria-label={`Recommendation feedback for ${job.title}`} value={tracking.feedback||''} onChange={event=>saveTracking(job,{feedback:cleanFeedback(event.target.value)})} className="mt-1 h-10 w-full rounded-xl border bg-card px-3 text-xs font-normal">
               {feedbackOptions.map(([value,label])=><option key={value} value={value}>{label}</option>)}
             </select>
@@ -1860,7 +1860,7 @@ const JobCard = memo(function JobCard({
                 new CustomEvent("jobradar-resume", { detail: job }),
               )
             }
-            className="mt-3 rounded-xl border py-2 text-xs font-bold"
+            className="mt-3 w-full rounded-xl border px-3 py-2 text-xs font-bold"
           >
             Tailor resume for this job
           </button>
