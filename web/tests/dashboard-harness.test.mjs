@@ -37,11 +37,18 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   await act(()=>root.render(React.createElement(JobRadarDashboard)));
   await settle(()=>results()?.includes('of 7000 jobs'));
   const durations=[];
-  for(const view of ['All Jobs','Recommended','Needs Review','Internships','Fresher Roles','Saved','Applications','All Jobs']){
+  for(const view of ['All Jobs','Recommended','Needs Review','Internships','Saved','Applications','All Jobs']){
    const started=performance.now();await click(view);durations.push(Math.round(performance.now()-started));
    assert.equal(document.querySelector('h1').textContent,view);
    assert.ok(document.querySelectorAll('[aria-label="Job results"] article').length<=30);
   }
+  assert.equal([...document.querySelectorAll('nav[aria-label="JobRadar views"] button')].some(node=>node.textContent.trim()==='Fresher Roles'),false);
+  assert.equal(document.querySelectorAll('article details').length>0,true);
+  assert.equal([...document.querySelectorAll('article details')].find(node=>node.querySelector('summary')?.textContent==='Track & give feedback').open,false);
+  await click('More filters');
+  const experience=document.querySelector('[aria-label="Experience view"]');
+  await act(()=>{experience.value='fresher';experience.dispatchEvent(new window.Event('change',{bubbles:true}));});
+  assert.equal(document.querySelector('h1').textContent,'Fresher Roles');
   await click('Recommended');
   const feedback=document.querySelector('select[aria-label^="Recommendation feedback"]'),label=feedback.getAttribute('aria-label');
   await act(()=>{feedback.value='experience';feedback.dispatchEvent(new window.Event('change',{bubbles:true}));});

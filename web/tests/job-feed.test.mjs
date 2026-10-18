@@ -66,3 +66,14 @@ test('partly overlapping experience is down-ranked and contradictory seniority i
  assert.ok(stretch.reasons.includes('experience partly overlaps — verify'));
  assert.equal(personalMatch(job({title:'Senior DevOps Engineer'}),prefs).reasons[0],'seniority and experience conflict — verify');
 });
+
+test('similar openings collapse visually while retaining different requisitions',async()=>{
+ const {groupSimilarOpenings}=await import('../lib/job-feed.ts');
+ const base={company:'Acme',title:'Engineer',normalized_location:'Bengaluru',ats_provider:'test',external_job_id:'1',application_url:'https://acme.test/jobs/1',is_eligible:1,is_active:1,role_category:'Software Engineering'};
+ const second={...base,external_job_id:'2',application_url:'https://acme.test/jobs/2'};
+ const other={...base,title:'Designer',external_job_id:'3'};
+ const groups=groupSimilarOpenings([base,second,other]);
+ assert.deepEqual(groups.map(group=>group.length),[2,1]);
+ assert.deepEqual(groups[0].map(job=>job.application_url),[base.application_url,second.application_url]);
+ assert.equal(groupSimilarOpenings([base,{...second,is_eligible:0}]).length,2);
+});

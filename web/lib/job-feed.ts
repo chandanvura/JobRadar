@@ -71,3 +71,13 @@ export function diversifyFeed<T extends {company: string; role_category: string}
   }
   return result;
 }
+
+/** Page-local presentation grouping; never merges distinct requisitions or tracking. */
+export function groupSimilarOpenings<T extends FeedJob>(jobs:T[]) {
+  const groups=new Map<string,T[]>();
+  for(const job of jobs){
+    const key=[normalized(boardAttribution(job).employer),normalized(job.title),normalized(job.normalized_location.replace(/bangalore/gi,'Bengaluru')),job.is_eligible,job.is_active].join('\u001f');
+    const group=groups.get(key);if(group)group.push(job);else groups.set(key,[job]);
+  }
+  return [...groups.values()];
+}

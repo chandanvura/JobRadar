@@ -64,7 +64,7 @@ import {
 } from "@/lib/private-profile";
 import { Progress } from "@/components/ui/progress";
 import { feedbackByFamily, opportunityPriority, personalMatch } from "@/lib/job-match";
-import { diversifyFeed, groupDuplicateJobs } from "@/lib/job-feed";
+import { diversifyFeed, groupDuplicateJobs, groupSimilarOpenings } from "@/lib/job-feed";
 import { fresherRole, internshipRole as isInternship, technicalInternshipRole } from "@/lib/job-sections";
 
 import {requirementsFor, normalizeExperience} from "@/lib/job-requirements";
@@ -203,20 +203,12 @@ const nav = [
 ] as const;
 const primaryNav = new Set([
   "Internships",
-  "Fresher Roles",
   "Dashboard",
   "Recommended",
   "All Jobs",
   "Needs Review",
   "Saved",
   "Applications",
-]);
-const exploreNav = new Set([
-  "Latest Jobs",
-  "Ultra Fresh",
-  "DevOps & Cloud",
-  "Software Engineering",
-  "Java / Backend",
 ]);
 const toolsNav = new Set(["Outreach", "Companies", "Job Boards", "Resume Studio"]);
 const operationsNav = new Set(["Scraper Health", "Notifications", "Settings"]);
@@ -410,7 +402,6 @@ function DashboardContent() {
       useState<SearchPreferences>(initialPreferences),
     [editingSearch, setEditingSearch] = useState(false),
     [showWelcome, setShowWelcome] = useState(false),
-    [showExplore, setShowExplore] = useState(false),
     [showMoreFilters, setShowMoreFilters] = useState(false),
     [showOperations, setShowOperations] = useState(false),
     [showTools, setShowTools] = useState(false);
@@ -784,6 +775,8 @@ function DashboardContent() {
     writePrivate("jobradar-search-preferences-v1", JSON.stringify(next));
     setLocation(next.locations.length === 1 ? next.locations[0] : "All cities");
     setEditingSearch(false);
+    setShowWelcome(false);
+    writePrivate("jobradar-onboarded-v1", "true");
     navigate("All Jobs");
     setNotice({
       tone: "success",
@@ -935,16 +928,6 @@ function DashboardContent() {
           className="flex-1 space-y-1 overflow-y-auto p-4"
         >
           {navGroup("Find work", primaryNav)}
-          <button
-            type="button"
-            aria-expanded={showExplore}
-            onClick={() => setShowExplore((value) => !value)}
-            className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-muted"
-          >
-            <Filter size={18} /> Browse by role
-            {showExplore ? <ChevronUp className="ml-auto" size={16} /> : <ChevronDown className="ml-auto" size={16} />}
-          </button>
-          {(showExplore || exploreNav.has(active)) && navGroup("Role views", exploreNav)}
           <button type="button" aria-expanded={showTools} onClick={() => setShowTools(value => !value)} className="mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-muted">
             <BriefcaseBusiness size={18} /> Career tools
             {showTools ? <ChevronUp className="ml-auto" size={16} /> : <ChevronDown className="ml-auto" size={16} />}
@@ -1015,7 +998,7 @@ function DashboardContent() {
               }
             />
           </div>
-          {showWelcome && showJobs && (
+          {showWelcome && active === "Dashboard" && (
             <WelcomeCard
               setup={() => dismissWelcome(true)}
               dismiss={() => dismissWelcome(false)}
@@ -1039,14 +1022,6 @@ function DashboardContent() {
           )}
           {showJobs && (
             <>
-              {active === "Dashboard" && !showWelcome && (
-                <ProductPromise
-                  sources={data?.companies.length || 0}
-                  lastScan={data?.latest_run?.finished_at}
-                  setup={() => setEditingSearch(true)}
-                  internships={() => navigate("Internships")}
-                />
-              )}
               <section className="radar-hero mb-6 rounded-3xl bg-hero p-6 text-white md:p-8">
                 <div className="flex flex-col justify-between gap-6 xl:flex-row xl:items-center">
                   <div>
@@ -1117,6 +1092,9 @@ function DashboardContent() {
                 </span>
                 {showMoreFilters && (
                   <div className="flex w-full flex-wrap items-center gap-3 border-t border-border px-2 pt-3">
+                    <select aria-label="Experience view" value={active==="Fresher Roles"?"fresher":"all"} onChange={event=>navigate(event.target.value==="fresher"?"Fresher Roles":"All Jobs")} className="h-10 rounded-xl border bg-card px-3 text-xs font-bold">
+                      <option value="all">Your experience range</option><option value="fresher">Fresher roles</option>
+                    </select>
                     <Pills
                       items={["Recommended", "Exact"]}
                       value={matchMode}
@@ -1289,86 +1267,11 @@ function DashboardContent() {
   );
 }
 
-function WelcomeCard({
-  setup,
-  dismiss,
-}: {
-  setup: () => void;
-  dismiss: () => void;
-}) {
-  return (
-    <section className="radar-welcome mb-5 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-      <div className="grid gap-6 p-6 lg:grid-cols-[1.5fr_1fr] lg:p-8">
-        <div>
-          <Badge className="bg-success-soft text-success">
-            WELCOME TO JOBRADAR
-          </Badge>
-          <h2 className="mt-4 text-3xl font-semibold tracking-[-.04em] md:text-4xl">
-            Make your next move.
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Set your titles, skills, experience, and cities once. Review fresh
-            official openings, save the strongest matches, apply on the employer
-            site, and track every application here.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <Button onClick={setup} className="h-11 rounded-xl bg-primary">
-              <Settings size={16} /> Set up my search
-            </Button>
-            <Button
-              onClick={dismiss}
-              variant="outline"
-              className="h-11 rounded-xl"
-            >
-              Use 0–3 YOE defaults
-            </Button>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 gap-2 lg:grid-cols-1">
-          <OnboardingStep number="1" text="Choose your search" />
-          <OnboardingStep number="2" text="Apply on official pages" />
-          <OnboardingStep number="3" text="Track your progress" />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ProductPromise({
-  sources,
-  lastScan,
-  setup,
-  internships,
-}: {
-  sources: number;
-  lastScan?: string;
-  setup: () => void;
-  internships: () => void;
-}) {
-  return (
-    <section className="radar-intro mb-5 flex flex-col justify-between gap-4 rounded-2xl border border-border bg-card p-5 xl:flex-row xl:items-center">
-      <div>
-        <p className="text-[10px] font-bold uppercase tracking-[.18em] text-success">Your search, in focus</p>
-        <h2 className="mt-1 text-xl font-semibold tracking-[-.025em]">Good opportunities. Clear evidence.</h2>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">{sources} employer sources · scan {lastScan ? relative(lastScan) : "pending"} · private application tracking</p>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <Button onClick={setup} className="rounded-xl"><Radar size={16} /> Personalize radar</Button>
-        <Button onClick={internships} variant="outline" className="rounded-xl"><GraduationCap size={16} /> Internships</Button>
-      </div>
-    </section>
-  );
-}
-
-function OnboardingStep({ number, text }: { number: string; text: string }) {
-  return (
-    <div className="flex items-center gap-3 rounded-2xl bg-muted p-3">
-      <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-xs font-black text-primary-foreground">
-        {number}
-      </span>
-      <span className="text-sm font-bold">{text}</span>
-    </div>
-  );
+function WelcomeCard({setup,dismiss}:{setup:()=>void;dismiss:()=>void}) {
+  return <section className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4">
+    <p className="text-sm text-muted-foreground">Find jobs for your skills, experience, and cities.</p>
+    <div className="flex gap-2"><Button onClick={setup} className="rounded-xl">Set up my search</Button><Button onClick={dismiss} variant="outline" className="rounded-xl">Use defaults</Button></div>
+  </section>;
 }
 
 function SearchPreferencesPanel({
@@ -1599,18 +1502,18 @@ function SystemCard({
               ? "SCAN FAILED SOURCES"
               : "SCAN HEALTHY";
   return (
-    <div
-      className={`m-4 rounded-2xl border p-4 ${attention ? "border-warning/40 bg-warning-soft" : "border-border bg-success-soft"}`}
+    <details
+      className={`m-4 rounded-xl border p-3 ${attention ? "border-warning/40 bg-warning-soft" : "border-border bg-success-soft"}`}
     >
-      <div
-        className={`mb-2 flex items-center gap-2 text-xs font-bold ${attention ? "text-warning" : "text-success"}`}
+      <summary
+        className={`cursor-pointer text-xs font-bold ${attention ? "text-warning" : "text-success"}`}
       >
         <span
           className={`size-2 rounded-full ${loading && !run ? "animate-pulse bg-slate-400" : attention ? "bg-amber-500" : "bg-[#22a060]"}`}
         />
-        {label}
-      </div>
-      <p className="text-xs text-muted-foreground">
+        {label === "SCAN FAILED SOURCES" ? `${failed} sources need attention` : label === "SCAN HEALTHY" ? "Jobs updated" : label.toLowerCase()}
+      </summary>
+      <p className="mt-2 text-xs text-muted-foreground">
         {loading && !run
           ? "Checking latest run…"
           : run?.finished_at
@@ -1623,7 +1526,7 @@ function SystemCard({
           {empty} empty · {failed} failed
         </p>
       )}
-    </div>
+    </details>
   );
 }
 function Loading() {
@@ -1679,10 +1582,11 @@ function JobList({now,jobs,resetKey,preferences,getTracking,saveTracking}: {
   now:number; jobs:ApiJob[]; resetKey:string; preferences:SearchPreferences;
   getTracking:(j:ApiJob)=>Tracking; saveTracking:(j:ApiJob,p:Partial<Tracking>)=>void;
 }) {
-  return jobs.length ? <JobPagination jobs={jobs} resetKey={resetKey} renderJob={job=><JobCard
-    now={now} key={trackingKey(job)} job={job} preferences={preferences}
-    tracking={getTracking(job)} saveTracking={saveTracking}
-  />} /> : <Empty />;
+  const renderJob=(job:ApiJob)=><JobCard now={now} key={trackingKey(job)} job={job} preferences={preferences} tracking={getTracking(job)} saveTracking={saveTracking} />;
+  return jobs.length ? <JobPagination jobs={jobs} resetKey={resetKey} renderPage={page=>groupSimilarOpenings(page).map(group=><div key={trackingKey(group[0])}>
+    {renderJob(group[0])}
+    {group.length>1&&<details className="mt-2 rounded-xl border bg-card p-3"><summary className="cursor-pointer text-sm font-semibold">{group.length-1} more {group.length===2?'opening':'openings'} at {group[0].company} · {group[0].title}</summary><p className="mt-2 text-xs text-muted-foreground">Separate employer listings. Each keeps its own apply link and tracking.</p><div className="mt-3 space-y-3">{group.slice(1).map(renderJob)}</div></details>}
+  </div>)} /> : <Empty />;
 }
 
 function ApplicationSummary({
@@ -1766,9 +1670,8 @@ const JobCard = memo(function JobCard({
     match = personalMatch(job, preferences),
     requirements = requirementsFor(job),
     attribution = boardAttribution(job),
-    opportunity = opportunityPriority(job, preferences, now, match),
     skills = parseSkills(job.skills),
-    age = freshnessAge(job),
+    age = postingAge(job,now),
     fresh = postedToday(job)
       ? "POSTED TODAY"
       : age === null
@@ -1821,9 +1724,6 @@ const JobCard = memo(function JobCard({
                 {tracking.status}
               </Badge>
             )}
-            <span className="ml-auto text-xs text-muted-foreground">
-              First detected <b>{relative(job.first_seen_at)}</b>
-            </span>
           </div>
           <div className="flex gap-4">
             <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-muted font-black text-success">
@@ -1844,7 +1744,7 @@ const JobCard = memo(function JobCard({
                   <BriefcaseBusiness size={14} />
                   {job.experience_min!==null&&/^[\d.+–-]+$/.test(job.experience_label)?`${job.experience_label} years`:job.experience_label}
                 </span>
-                <span>Work arrangement: {requirements.workMode === "Unknown" ? "Not stated" : requirements.workMode}</span>
+                {requirements.workMode !== "Unknown" && <span>{requirements.workMode}</span>}
                 <span>{postingText(job)}</span>
               </div>
             </div>
@@ -1887,24 +1787,19 @@ const JobCard = memo(function JobCard({
           <div>
             <div className="flex items-end justify-between">
               <span className="text-xs font-bold uppercase text-muted-foreground">
-                Opportunity priority
+                Profile fit
               </span>
               <span className="text-3xl font-black text-success">
-                {opportunity.score}
+                {match.score}
                 <small className="text-xs">/100</small>
               </span>
             </div>
-            <Progress value={opportunity.score} className="mt-3 h-2" />
-            <p className="mt-2 text-xs font-semibold">Match: {match.score}/100 · {opportunity.freshness.basis === "discovered" ? "Posting age unknown" : "Employer posting age"}</p>
+            <Progress value={match.score} className="mt-3 h-2" />
+            <p className="mt-2 text-[11px] text-muted-foreground">Based on your search preferences</p>
             {match.missingSkills.length > 0 && <p className="mt-2 text-[11px] text-muted-foreground">Not in your profile: {match.missingSkills.slice(0, 3).join(", ")}</p>}
-            <p className="mt-2 text-[11px] text-muted-foreground">
-              {match.reasons.slice(0, 3).join(" · ") || "Target role to review"}
-            </p>
-            <p className="mt-2 text-[11px] capitalize text-muted-foreground">
-              {job.ats_provider} · official source
-            </p>
+
           </div>
-          <div className="mt-6 grid grid-cols-2 gap-2">
+          <div className="mt-6 grid grid-cols-[1fr_auto] gap-2">
             <a
               href={job.application_url}
               target="_blank"
@@ -1918,26 +1813,6 @@ const JobCard = memo(function JobCard({
             >
               Apply now <ExternalLink size={15} />
             </a>
-            <a
-              href={attribution.careerUrl || job.career_page_url}
-              target="_blank"
-              rel="noreferrer"
-              className="flex h-11 items-center justify-center gap-2 rounded-xl border text-xs font-black"
-            >
-              Official listing <ExternalLink size={14} />
-            </a>
-          </div>
-          {isInternship(job) && (
-            <a
-              href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in (recruiter OR \"talent acquisition\" OR \"campus hiring\") \"${job.company}\"`)}`}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 flex h-10 items-center justify-center gap-2 rounded-xl border bg-card text-xs font-bold text-success"
-            >
-              Find public hiring contacts <ExternalLink size={14} />
-            </a>
-          )}
-          <div className="mt-3 grid grid-cols-[auto_1fr] gap-2">
             <button
               aria-label={tracking.saved ? "Remove saved job" : "Save job"}
               onClick={() => saveTracking(job, { saved: !tracking.saved })}
@@ -1948,6 +1823,20 @@ const JobCard = memo(function JobCard({
                 fill={tracking.saved ? "currentColor" : "none"}
               />
             </button>
+          </div>
+          <details className="mt-3 rounded-xl border bg-card p-3">
+            <summary className="cursor-pointer text-xs font-semibold">Track & give feedback</summary>
+          {isInternship(job) && (
+            <a
+              href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in (recruiter OR \"talent acquisition\" OR \"campus hiring\") \"${job.company}\"`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 flex h-10 items-center justify-center gap-2 rounded-xl border bg-card text-xs font-bold text-success"
+            >
+              Find public hiring contacts <ExternalLink size={14} />
+            </a>
+          )}
+          <div className="mt-3 grid gap-2">
             <select
               aria-label={`Application stage for ${job.title}`}
               value={tracking.status}
@@ -1984,11 +1873,14 @@ const JobCard = memo(function JobCard({
               ? "Hide application details"
               : "Add notes or referral status"}
           </button>
+          </details>
         </div>
       </div>
       {details && (
         <div className="grid gap-4 border-t bg-muted p-5 md:grid-cols-2">
           <div className="md:col-span-2 rounded-xl border bg-card p-4">
+            <p className="mb-3 text-xs text-muted-foreground">First detected {relative(job.first_seen_at)} · Source: {job.ats_provider}. {match.reasons.join(" · ")}</p>
+            {(attribution.careerUrl || job.career_page_url) !== job.application_url && <a href={attribution.careerUrl || job.career_page_url} target="_blank" rel="noreferrer" className="mb-3 inline-block text-xs font-semibold underline">Company careers <ExternalLink size={12} className="inline" /></a>}
             <h4 className="font-bold">Requirements to check before applying</h4>
             <p className="mt-1 text-xs text-muted-foreground">Extracted employer statements. Your education and graduation year have not been verified.</p>
             <dl className="mt-3 grid gap-3 text-sm md:grid-cols-2">
