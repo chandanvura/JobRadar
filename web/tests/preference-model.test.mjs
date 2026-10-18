@@ -31,3 +31,29 @@ test('learning cannot bypass experience, activation or freshness constraints',()
  }
  const old=job('Cloud','old');assert.equal(matchesCareerView(old,'Recommended',0,3,false),false);
 });
+
+test('explicit fit feedback teaches ranking; experience reports never penalize an entire role family',async()=>{
+ const {learningLabel,hideRecommendation,preferenceTime}=await import('../lib/recommendation-feedback.ts');
+ const {feedbackByFamily}=await import('../lib/job-match.ts');
+ assert.equal(learningLabel({saved:true,status:'Ignored'}),0);
+ assert.equal(learningLabel({feedback:'good'}),1);
+ for(const reason of ['experience','location']){
+  assert.equal(learningLabel({feedback:reason,saved:true}),null);
+  assert.equal(hideRecommendation({feedback:reason}),true);
+  assert.equal(feedbackByFamily([{job:job('Cloud','x'),feedback:reason}]).size,0);
+ }
+ assert.equal(hideRecommendation({feedback:'good',status:'Ignored'}),false);
+ assert.equal(feedbackByFamily([{job:job('Cloud','x'),saved:true,status:'Ignored'}]).get('Cloud'),-1);
+ assert.equal(preferenceTime({preference_at:'original'}, {status:'Viewed'},'now'),'original');
+ assert.equal(preferenceTime({preference_at:'original'}, {feedback:'experience'},'now'),'now');
+ const explicit=history().map((row,i)=>({...row,saved:false,status:'New',feedback:i<6?'good':'skills'}));
+ assert.equal(fitPreferenceModel(explicit,prefs).trained,true);
+});
+test('recent choices outweigh stale opposite choices and duplicate trackers do not inflate learning',()=>{
+ const now=Date.parse('2026-10-18T00:00:00Z'),old='2025-01-01T00:00:00Z',recent='2026-10-17T00:00:00Z';
+ const rows=Array.from({length:24},(_,i)=>({job:job(i%2?'Cloud':'Data Engineering',`recent-${i}`),feedback:i<12?(i%2?'good':'role'):(i%2?'role':'good'),preference_at:i<12?old:recent}));
+ const model=fitPreferenceModel(rows,prefs,now);assert.equal(model.trained,true);
+ assert.ok(model.boost(job('Cloud','new'))<0);assert.ok(model.boost(job('Data Engineering','new'))>0);
+ const repeated=Array.from({length:20},(_,i)=>({feedback:'good',job:job('Cloud','same',{application_url:`https://example.com/jobs/same?utm_source=${i}`})}));
+ assert.equal(fitPreferenceModel(repeated,prefs).samples,1);
+});

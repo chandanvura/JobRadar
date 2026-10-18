@@ -6,6 +6,7 @@ from pathlib import Path
 
 SECTIONS = json.loads((Path(__file__).parents[1] / 'config/requirement-sections.json').read_text())
 HEADER = re.compile(r'\b(' + SECTIONS['headers'] + r')\s*:?', re.I)
+EXPERIENCE_HEADER = re.compile(SECTIONS['experience_heading'], re.I | re.M)
 COMPANY = re.compile(SECTIONS['company_clause'], re.I)
 
 
@@ -14,6 +15,7 @@ def candidate_clauses(description):
     text = html.unescape(re.sub(r'<[^>]+>', '\n', description or ''))[:20000]
     text = text.replace('’', "'").replace('‘', "'")
     text = HEADER.sub(lambda m: '\n§' + m.group(1).lower() + '\n', text)
+    text = EXPERIENCE_HEADER.sub('\n§experience\n', text)
     section = 'unspecified'
     result = []
     for part in re.split(r'[\n;•]|(?<=[.!?])\s+', text):

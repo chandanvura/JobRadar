@@ -45,8 +45,6 @@ test('internship product area is isolated and uses explicit board filters',async
  assert.match(source,/active !== "Internships"[\s\S]*!\["Saved", "Applications"\]\.includes\(active\)[\s\S]*isInternship\(j\)/);
  assert.match(source,/f_JT=I&f_E=1%2C2&sortBy=DD/);
  assert.match(source,/f_JT=F&f_E=2&sortBy=DD/);
- assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Bengaluru"\)\)/);
- assert.match(source,/visibleJobs\.filter\(j => j\.normalized_location\.includes\("Hyderabad"\)\)/);
  assert.doesNotMatch(source,/label="Chennai"/);
  assert.doesNotMatch(source,/label="Pune"/);
  assert.match(source,/site:myworkdayjobs\.com OR site:greenhouse\.io OR site:lever\.co OR site:icims\.com/);

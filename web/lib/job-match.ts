@@ -1,3 +1,5 @@
+import {canonicalApplyUrl} from './job-feed.ts';
+import {learningLabel} from './recommendation-feedback.ts';
 import {requirementsFor, experienceUnverified} from './job-requirements.ts';
 import { classifyRoleTitle } from "./role-taxonomy.ts";
 import { RANKING_CONFIG as config } from "./ranking-config.ts";
@@ -9,7 +11,7 @@ export type MatchJob = {
   normalized_location?: string; ats_provider?: string; application_url?: string; is_active?: number;
 };
 export type MatchPreferences = {titles: string[]; skills: string[]; experienceMin: number; experienceMax: number; locations?: string[]};
-export type LearningRecord = {saved?: boolean; status?: string; job: MatchJob};
+export type LearningRecord = {saved?: boolean; status?: string; feedback?:string;updated_at?:string;preference_at?:string;job: MatchJob};
 const clamp = (n: number) => Math.max(0, Math.min(100, n));
 const stop = new Set(['engineer', 'engineering', 'developer', 'software', 'the', 'and', 'for']);
 const words = (value: string) => [...new Set(value.toLowerCase().replace(/[^a-z0-9+#]+/g, ' ').split(/\s+/).filter(x => x.length > 1 && !stop.has(x)))];
@@ -71,20 +73,16 @@ export function opportunityPriority(job: MatchJob, p: MatchPreferences, now = Da
 }
 // Bounded category feedback cannot overwhelm relevance; rejected applications
 // are deliberately excluded because they do not explain why rejection happened.
-export function feedbackBoost(job: MatchJob, history: LearningRecord[]) {
-  let boost = 0;
-  for (const record of history) {
-    const positive = record.saved || ['Applied','Interview','Offer'].includes(record.status || '');
-    if (!positive && record.status !== 'Ignored') continue;
-    if (record.job.role_category === job.role_category) boost += positive ? 1 : -1;
-  }
-  return Math.max(-config.feedbackLimit, Math.min(config.feedbackLimit, boost));
+export function feedbackBoost(job:MatchJob,history:LearningRecord[]) {
+ return feedbackByFamily(history).get(job.role_category)||0;
 }
-export function feedbackByFamily(history: LearningRecord[]) {
-  const scores = new Map<string, number>();
-  for (const record of history) {
-    const positive = record.saved || ['Applied','Interview','Offer'].includes(record.status || '');
-    if (positive || record.status === 'Ignored') scores.set(record.job.role_category, (scores.get(record.job.role_category) || 0) + (positive ? 1 : -1));
-  }
-  return new Map([...scores].map(([family, score]) => [family, Math.max(-config.feedbackLimit, Math.min(config.feedbackLimit, score))]));
+export function feedbackByFamily(history:LearningRecord[]) {
+ const scores=new Map<string,number>(),seen=new Set<string>();
+ for(const record of [...history].reverse().sort((a,b)=>(Date.parse(b.preference_at||b.updated_at||'')||0)-(Date.parse(a.preference_at||a.updated_at||'')||0))) {
+  const label=learningLabel(record);if(label===null)continue;
+  const key=(record.job.application_url&&canonicalApplyUrl(record.job.application_url))||[record.job.title,record.job.role_category,record.job.skills].join('\u001f');
+  if(seen.has(key))continue;seen.add(key);
+  scores.set(record.job.role_category,(scores.get(record.job.role_category)||0)+(label?1:-1));
+ }
+ return new Map([...scores].map(([family,score])=>[family,Math.max(-config.feedbackLimit,Math.min(config.feedbackLimit,score))]));
 }

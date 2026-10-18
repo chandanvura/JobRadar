@@ -25,7 +25,8 @@ test('unknown dates use discounted discovery priority and never invented posting
  assert.ok(freshnessScore(job({posted_at:null,reported_age_hours:2}),now).score>50);
 });
 test('feedback stays small and never learns from rejection',()=>{
- assert.equal(feedbackBoost(job(),Array(50).fill({saved:true,job:job()})),5);
+ assert.equal(feedbackBoost(job(),Array(50).fill({saved:true,job:job()})),1);
+ assert.equal(feedbackBoost(job(),Array.from({length:50},(_,i)=>({saved:true,job:job({application_url:`https://example.com/jobs/${i}`})}))),5);
  assert.equal(feedbackBoost(job(),[{status:'Rejected',job:job()}]),0);
 });
 test('canonical URLs remove trackers but preserve requisition identifiers',()=>{

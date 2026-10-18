@@ -1,3 +1,5 @@
+import {learningLabel} from './recommendation-feedback.ts';
+import {canonicalApplyUrl} from './job-feed.ts';
 import {personalMatch, normalizeSkill} from './job-match.ts';
 import type {LearningRecord, MatchJob, MatchPreferences} from './job-match.ts';
 import {ROLE_FAMILIES} from './role-taxonomy.ts';
@@ -21,22 +23,24 @@ function features(job:MatchJob, preferences:MatchPreferences):number[] {
   }
   return vector;
 }
-export function fitPreferenceModel(history:LearningRecord[], preferences:MatchPreferences) {
-  const examples=new Map<string,{job:MatchJob;label:number}>();
-  for(const record of history.slice(-500)) {
-    // Rejection is an employer outcome, not an explicit preference label.
-    if(record.status==='Rejected')continue;
-    const label=record.status==='Ignored'?0:record.saved||['Applied','Interview','Offer'].includes(record.status||'')?1:null;
+export function fitPreferenceModel(history:LearningRecord[], preferences:MatchPreferences,now=Date.now()) {
+  const examples=new Map<string,{job:MatchJob;label:number;weight:number}>();
+  const recent=[...history].sort((a,b)=>(Date.parse(a.preference_at||a.updated_at||'')||0)-(Date.parse(b.preference_at||b.updated_at||'')||0)).slice(-500);
+  for(const record of recent) {
+    const label=learningLabel(record);
     if(label===null)continue;
     const job=record.job;
-    const key=job.application_url||[job.title,job.role_category,job.skills].join('\u001f');
-    examples.set(key,{job,label});
+    const key=(job.application_url&&canonicalApplyUrl(job.application_url))||[job.title,job.role_category,job.skills].join('\u001f');
+    const age=(now-Date.parse(record.preference_at||record.updated_at||''))/86400000;
+    const weight=Number.isFinite(age)&&age>=0?Math.max(.25,Math.pow(.5,age/90)):1;
+    examples.set(key,{job,label,weight});
   }
   const rows=[...examples.values()];
   const positives=rows.filter(row=>row.label===1).length, negatives=rows.length-positives;
   const trained=rows.length>=12&&positives>=4&&negatives>=4;
   const weights=new Array<number>(dimensions).fill(0);
   if(trained) {
+    const positiveWeight=rows.filter(row=>row.label===1).reduce((sum,row)=>sum+row.weight,0),negativeWeight=rows.filter(row=>row.label===0).reduce((sum,row)=>sum+row.weight,0);
     const samples=rows.map(row=>({...row,x:features(row.job,preferences)}));
     // Deterministic full-batch gradients and class balance prevent one repeated
     // choice or a majority of saved jobs from dominating the tiny model.
@@ -44,7 +48,7 @@ export function fitPreferenceModel(history:LearningRecord[], preferences:MatchPr
       const gradient=weights.map(w=>.08*w);
       for(const row of samples) {
         const prediction=sigmoid(row.x.reduce((sum,value,i)=>sum+value*weights[i],0));
-        const balance=1/(2*(row.label?positives:negatives));
+        const balance=row.weight/(2*(row.label?positiveWeight:negativeWeight));
         const error=(prediction-row.label)*balance;
         row.x.forEach((value,i)=>{gradient[i]+=error*value;});
       }

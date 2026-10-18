@@ -1,4 +1,4 @@
-import {groupDuplicateJobs} from './job-feed.ts';
+import {experienceWithinPolicy} from './job-experience.ts';
 import type {FeedJob} from './job-feed.ts';
 import {experienceUnverified} from './job-requirements.ts';
 import {internshipRole} from './job-sections.ts';
@@ -12,7 +12,7 @@ export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,
   if(view==='All Jobs')return !internshipRole(job);
   if(view==='Internships')return internshipRole(job);
   if(internshipRole(job))return false;
-  if(verifiedView(view)&&(experienceUnverified(job)||!job.is_eligible||!currentPosting))return false;
+  if(verifiedView(view)&&(experienceUnverified(job)||!job.is_eligible||!currentPosting||!experienceWithinPolicy(job.experience_min,job.experience_max)))return false;
   const known=!experienceUnverified(job)&&(job.experience_min!==null||job.experience_max!==null);
   if(known&&((job.experience_min??0)>max||(job.experience_max??Infinity)<min))return false;
   if(!known&&senior(job.title))return false;
@@ -20,7 +20,7 @@ export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,
   return true;
 }
 
-export function visibleCareerJobs<T extends FeedJob>(view:string,filtered:T[],review:T[]) {
- // Dashboard already includes review leads; a fallback would bypass its filters.
- return view==='Recommended'&&!filtered.length?groupDuplicateJobs(review).map(group=>group.job):filtered;
+export function visibleCareerJobs<T extends FeedJob>(_view:string,filtered:T[],_review:T[]) {
+ // Verified recommendations never silently substitute unverified review leads.
+ return filtered;
 }

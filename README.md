@@ -255,3 +255,27 @@ prints navigation timings. A real worker test parses 2,000 full descriptions whi
 checking that the main event loop continues running. Worker failure/abort and
 search stalls are injected. Timings describe the test environment; DOM and request
 bounds are the release assertions, not a guarantee about every device or network.
+
+### Experience evidence and recommendation feedback
+
+Both the collector and browser use shared experience regex rules and review
+fixtures. Experience headings, decimal years, month ranges and mixed month/year
+ranges retain their employer wording. Preferred experience is separate from
+required constraints; company history and degree duration are excluded. Conditional
+education/experience alternatives and contradictory bounds need review. The
+strictest stated requirement wins; an incomplete JD excerpt cannot relax a
+stricter scan result. Fresh/active/city/role and 0–3-year alert gates remain in place,
+including the existing explicit 1+/2+ minimum policy. Recommendations never replace
+an empty verified feed with unverified leads.
+
+Each card exposes experience evidence and a private recommendation-feedback menu.
+Good fit, saved/applied choices and role/skill feedback help rank future matches.
+Ignored overrides a saved inference. Experience reports hide that job from verified
+recommendations and place it in Needs Review, without teaching the model to reject
+an entire role family. Feedback can be cleared in All Jobs. The model needs at
+least 12 distinct examples including four positives and four negatives; URL
+trackers do not create extra examples, recent choices have a 90-day half-life,
+and the learned adjustment stays within ±5 points. Rejections, passive views,
+notes and experience/location reports do not count as preference training.
+Everything remains private to the current browser/workspace and is included in
+tracking exports; learning never changes employer requirements or alert eligibility.

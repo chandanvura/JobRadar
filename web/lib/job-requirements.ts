@@ -1,20 +1,10 @@
 import sections from '../../config/requirement-sections.json' with {type:'json'};
-const headersPattern=new RegExp('\\b('+sections.headers+')\\s*:?','gi');
-const boilerplatePattern=new RegExp(sections.boilerplate,'i');
-const companyPattern=new RegExp(sections.company_clause,'i');
+import {candidateClauses} from './requirement-clauses.ts';
+import {analyzeExperience,experienceWithinPolicy} from './job-experience.ts';
+export {candidateClauses} from './requirement-clauses.ts';
 const preferredPattern=new RegExp(sections.preferred,'i');
 const requiredPattern=new RegExp(sections.required,'i');
 export type RequirementEvidence = {value:string; evidence:string; certainty:'stated'};
-export function candidateClauses(description:string) {
- const text=description.slice(0,20000).replace(/[‘’]/g,"'").replace(/<[^>]+>/g,'\n').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&#39;|&apos;/g,"'")
-  .replace(headersPattern,(_,heading:string)=>'\n§'+heading.toLowerCase()+'\n');
- let section='unspecified';const clauses:{text:string;section:string}[]=[];
- for(const part of text.split(/[\n;•]|(?<=[.!?])\s+/)) {
-  const value=part.trim();if(value.startsWith('§')){section=value.slice(1);continue;}
-  if(value&&!boilerplatePattern.test(section)&&!companyPattern.test(value))clauses.push({text:value,section});
- }
- return clauses;
-}
 import skillPatterns from '../../config/skills.json' with {type:'json'};
 const compiledSkills=Object.entries(skillPatterns).map(([skill,pattern])=>[skill,new RegExp(pattern,'i')] as const);
 
@@ -37,13 +27,25 @@ export function extractRequirements(description:string,location='',clauses=candi
   if(/\b(?:remote|work from home)\b/i.test(text)&&!/\b(?:not remote|no remote|remote (?:customers|teams|systems|support))\b/i.test(text))modes.add('Remote');
   if(/\b(?:onsite|on[ -]site|work from (?:an? |the )?office)\b/i.test(text))modes.add('Onsite');
  }
- return {requiredSkills:requiredSkills.filter(x=>!conflicts.includes(x.value)),preferredSkills:preferredSkills.filter(x=>!conflicts.includes(x.value)),mentionedSkills,skillConflicts:conflicts,education,batches,workMode:modes.size===1?[...modes][0]:modes.size>1?'Conflicting':'Unknown',workModeEvidence:modeEvidence.slice(0,3),reviewNeeded:true};
+ return {experience:analyzeExperience(description,clauses),requiredSkills:requiredSkills.filter(x=>!conflicts.includes(x.value)),preferredSkills:preferredSkills.filter(x=>!conflicts.includes(x.value)),mentionedSkills,skillConflicts:conflicts,education,batches,workMode:modes.size===1?[...modes][0]:modes.size>1?'Conflicting':'Unknown',workModeEvidence:modeEvidence.slice(0,3),reviewNeeded:true};
 }
-export function experienceUnverified(job:{experience_label?:string}) {return /^Entry-level title/i.test(job.experience_label||'');}
-export function normalizeExperience<T extends {experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string}>(job:T):T {
- if(!experienceUnverified(job))return job;
- const normalized={...job,experience_min:null,experience_max:null,experience_label:'Entry-level title — experience unverified',is_eligible:0,eligibility_reason:'Entry-level title — experience unverified'};
- const requirements=requirementCache.get(job);if(requirements)requirementCache.set(normalized,requirements);
+export function experienceUnverified(job:{experience_label?:string}) {return /^(?:Entry-level title|Conditional experience|Conflicting experience)/i.test(job.experience_label||'');}
+export function normalizeExperience<T extends {description?:string|null;experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string}>(job:T):T {
+ const requirements=typeof job.description==='string'&&job.description.trim()?requirementsFor(job):null;
+ const analysis=requirements?.experience;
+ let normalized=job;
+ if(analysis&&analysis.status!=='unknown') {
+  const stated=analysis.status==='stated',policy=stated&&experienceWithinPolicy(analysis.min,analysis.max);
+  const scanStricter=stated&&job.experience_min!==null&&(job.experience_min>analysis.min!||(job.experience_max!==null&&analysis.max!==null&&job.experience_max>analysis.max));
+  if(scanStricter){const review={...job,is_eligible:0,eligibility_reason:'Experience differs between scan and JD — verify'};if(requirements)requirementCache.set(review,requirements);return review;}
+
+  normalized={...job,experience_min:analysis.min,experience_max:analysis.max,experience_label:analysis.label,
+   is_eligible:policy?job.is_eligible:0,
+   eligibility_reason:!stated?analysis.label:!policy?'Experience exceeds 0–3 YOE policy':!job.is_eligible&&/Experience not stated|Entry-level title/.test(job.eligibility_reason)?'JD experience found — awaiting scan verification':job.eligibility_reason};
+ } else if(experienceUnverified(job)||analysis?.preferred.length) {
+  normalized={...job,experience_min:null,experience_max:null,experience_label:analysis?.preferred.length?'Only preferred experience stated — verify':'Entry-level title — experience unverified',is_eligible:0,eligibility_reason:analysis?.preferred.length?'Only preferred experience stated — verify':'Entry-level title — experience unverified'};
+ }
+ if(requirements&&normalized!==job)requirementCache.set(normalized,requirements);
  return normalized;
 }
 

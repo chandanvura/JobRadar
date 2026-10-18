@@ -1,3 +1,4 @@
+import {cleanFeedback} from './recommendation-feedback.ts';
 let invitedWorkspace: string | null = null;
 export const profileId = () => {
   if (typeof window === 'undefined') return 'default';
@@ -41,7 +42,7 @@ export function safeTracking(value: unknown): Record<string,unknown> {
     for(const field of ['experience_label','posted_precision','eligibility_reason','last_seen_at'])cleanJob[field]=typeof j[field]==='string'?j[field]:'';
     for(const field of ['description','posted_at','posted_label','hiring_signal'])cleanJob[field]=typeof j[field]==='string'?j[field]:null;
     try{const skills=JSON.parse(String(j.skills));cleanJob.skills=JSON.stringify(Array.isArray(skills)?skills.filter(x=>typeof x==='string'):[])}catch{cleanJob.skills='[]'}
-    valid[canonical]={...t,saved:t.saved===true,status:['New','Viewed','Applied','Interview','Offer','Rejected','Ignored'].includes(String(t.status))?t.status:'New',notes:typeof t.notes==='string'?t.notes.slice(0,10000):'',job:cleanJob};
+    valid[canonical]={...t,feedback:cleanFeedback(t.feedback),preference_at:typeof t.preference_at==='string'?t.preference_at:typeof t.updated_at==='string'?t.updated_at:undefined,saved:t.saved===true,status:['New','Viewed','Applied','Interview','Offer','Rejected','Ignored'].includes(String(t.status))?t.status:'New',notes:typeof t.notes==='string'?t.notes.slice(0,10000):'',job:cleanJob};
   }
   return valid;
 }

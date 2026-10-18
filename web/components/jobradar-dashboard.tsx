@@ -1,4 +1,6 @@
 "use client";
+import {feedbackOptions,cleanFeedback,hideRecommendation,preferenceTime} from "@/lib/recommendation-feedback";
+import type {RecommendationFeedback} from "@/lib/recommendation-feedback";
 import { useJobSearch } from "@/lib/use-job-search";
 import { fitPreferenceModel } from "@/lib/preference-model";
 import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
@@ -154,6 +156,8 @@ type Payload = {
   };
 };
 type Tracking = {
+  feedback?:RecommendationFeedback;
+  preference_at?:string;
   saved: boolean;
   status: string;
   updated_at: string;
@@ -580,6 +584,7 @@ function DashboardContent() {
           ...prior,
           ...patch,
           job,
+          preference_at: preferenceTime(prior,patch,new Date().toISOString()),
           updated_at: new Date().toISOString(),
         },
       };
@@ -626,7 +631,9 @@ function DashboardContent() {
     const reviewView = active === "Needs Review";
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j), match = ranking.get(trackingKey(j))!.match;
-      if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, postingStillCurrent(j))) return false;
+      if (verifiedView(active) && hideRecommendation(track)) return false;
+      const reportedExperience = active === "Needs Review" && track.feedback === "experience" && j.is_active && !isInternship(j);
+      if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, postingStillCurrent(j)) && !reportedExperience) return false;
       if (deferredQuery && !searchPending && !searchScores.has(j)) return false;
       if (workMode !== "All arrangements" && requirementsFor(j).workMode !== workMode) return false;
       if (active === "Internships" && !isInternship(j)) return false;
@@ -808,10 +815,7 @@ function DashboardContent() {
       const age = freshnessAge(j);
       return age !== null && age < 3 && j.posted_precision !== "day";
     }),
-    internshipUltra = internships.filter((j) => {
-      const age = freshnessAge(j);
-      return age !== null && age < 3 && j.posted_precision !== "day";
-    });
+    internshipCount = internships.length;
   const exportTracking = () => {
     const blob = new Blob([JSON.stringify(tracking, null, 2)], {
         type: "application/json",
@@ -862,6 +866,16 @@ function DashboardContent() {
   const showJobs = jobViews.has(active),
     companySearch = active === "Companies" ? deferredQuery : "";
   const visibleJobs = visibleCareerJobs(active, filtered, reviewPreview);
+  const viewStats = useMemo(() => {
+    let bengaluru=0,hyderabad=0,ultra=0;
+    for(const job of visibleJobs){
+      if(job.normalized_location.includes('Bengaluru'))bengaluru++;
+      if(job.normalized_location.includes('Hyderabad'))hyderabad++;
+      const age=postingAge(job,rankingNow);
+      if(job.is_eligible&&!hideRecommendation(jobTracking(job))&&currentPosting(job,rankingNow)&&age!==null&&age<3&&job.posted_precision!=='day')ultra++;
+    }
+    return {bengaluru,hyderabad,ultra};
+  },[visibleJobs,rankingNow,jobTracking]);
   const resultsKey = JSON.stringify([active,deferredQuery,location,ats,workMode,role,freshness,preferences,sort,applicationStage,matchMode]);
   const navGroup = (title: string, items: Set<string>) => (
     <div className="mb-4">
@@ -880,8 +894,8 @@ function DashboardContent() {
           {label === "Ultra Fresh" && ultra.length > 0 && (
             <span className="ml-auto rounded-full bg-[#ff5c45] px-2 py-0.5 text-[10px] text-white">{ultra.length}</span>
           )}
-          {label === "Internships" && internships.length > 0 && (
-            <span className="ml-auto rounded-full bg-[#7651c9] px-2 py-0.5 text-[10px] text-white">{internships.length}</span>
+          {label === "Internships" && internshipCount > 0 && (
+            <span className="ml-auto rounded-full bg-[#7651c9] px-2 py-0.5 text-[10px] text-white">{internshipCount}</span>
           )}
         </button>
       ))}
@@ -1043,9 +1057,7 @@ function DashboardContent() {
                     <h2 className="text-3xl font-semibold tracking-[-.045em] md:text-5xl">
                       {loading && !data
                         ? "Checking live jobs…"
-                        : active === "Recommended" && !filtered.length && reviewPreview.length
-                          ? `${reviewPreview.length} roles to review`
-                          : `${filtered.length} ${active === "Internships" ? (filtered.length === 1 ? "internship" : "internships") : (filtered.length === 1 ? "job" : "jobs")} in this view`}
+                        : `${filtered.length} ${active === "Internships" ? (filtered.length === 1 ? "internship" : "internships") : (filtered.length === 1 ? "job" : "jobs")} in this view`}
                     </h2>
                     <p className="mt-2 text-sm text-white/80">
                       {preferences.locations.join(" + ")} ·{" "}
@@ -1058,9 +1070,9 @@ function DashboardContent() {
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    <Metric value={active === "Internships" ? internshipUltra.length : active === "Recommended" && !filtered.length ? reviewPreview.length : ultra.length} label={active === "Recommended" && !filtered.length ? "Review leads" : "Verified < 3h"} />
-                    <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Bengaluru")).length} label="Bengaluru" />
-                    <Metric value={visibleJobs.filter(j => j.normalized_location.includes("Hyderabad")).length} label="Hyderabad" />
+                    <Metric value={viewStats.ultra} label="Verified < 3h" />
+                    <Metric value={viewStats.bengaluru} label="Bengaluru" />
+                    <Metric value={viewStats.hyderabad} label="Hyderabad" />
                   </div>
                 </div>
               </section>
@@ -1178,7 +1190,7 @@ function DashboardContent() {
                     <div>
                       <h3 className="text-sm font-semibold">Your {preferences.experienceMin}–{preferences.experienceMax} YOE search</h3>
                       <p className="mt-1 text-xs leading-5 text-muted-foreground">{filtered.length} matching listings from {data?.companies.length || 0} employer sources. Older postings and unknown experience stay visible for review. Freshness is a filter, not a reason to lose an active opening.</p>
-                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{preferenceModel.trained ? `Personal ranking adapts to ${preferenceModel.samples} saved, applied and ignored choices in this browser.` : "Save jobs you like and mark unwanted jobs Ignored. Personal ranking adapts once it has enough examples of both."} Your choices stay private in this browser.</p>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{preferenceModel.trained ? `Personal ranking adapts to ${preferenceModel.samples} explicit choices in this browser. Recent choices count more; experience and location reports never weaken eligibility.` : "Save or apply to good matches, or use recommendation feedback on a card. Ranking learns from good fits and role/skill feedback; experience reports flag a job for review."} Your choices stay private in this browser.</p>
                     </div>
                     <Button variant="outline" onClick={() => navigate("All Jobs")} className="rounded-xl">Browse full catalogue <ExternalLink size={14} /></Button>
                   </div>
@@ -1215,7 +1227,7 @@ function DashboardContent() {
                 <section className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5">
                   <h3 className="font-black text-warning">No verified 24-hour matches right now</h3>
                   <p className="mt-1 text-sm leading-6 text-warning/80">
-                    These roles were seen in the latest employer feeds, but their posting date or experience range needs checking. They are not counted as fresh matches and will not trigger alerts. Open the official listing before applying.
+                    Experience or posting dates for other roles still need verification. <button className="font-bold underline" onClick={() => navigate("Needs Review")}>Open Needs Review</button> to inspect those separately.
                   </p>
                 </section>
               )}
@@ -1750,6 +1762,7 @@ const JobCard = memo(function JobCard({
   saveTracking: (j: ApiJob, p: Partial<Tracking>) => void;
 }) {
   const [details, setDetails] = useState(false),
+    manualExperienceReview = tracking.feedback === 'experience',
     match = personalMatch(job, preferences),
     requirements = requirementsFor(job),
     attribution = boardAttribution(job),
@@ -1782,20 +1795,20 @@ const JobCard = memo(function JobCard({
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Badge
               className={
-                job.is_eligible
+                job.is_eligible && !manualExperienceReview
                   ? "bg-success-soft text-success"
                   : "bg-warning-soft text-warning"
               }
             >
-              {job.is_eligible ? fresh : "REVIEW"}
+              {job.is_eligible && !manualExperienceReview ? fresh : "REVIEW"}
             </Badge>
             <Badge variant="outline">{job.role_category}</Badge>
             {isInternship(job) && (
               <Badge className="bg-info-soft text-info">INTERNSHIP</Badge>
             )}
-            {!job.is_eligible && (
+            {(!job.is_eligible || manualExperienceReview) && (
               <span className="text-xs text-warning">
-                {job.eligibility_reason}
+                {manualExperienceReview ? 'Experience feedback — verify JD' : job.eligibility_reason}
               </span>
             )}
             {!job.is_active && (
@@ -1829,13 +1842,21 @@ const JobCard = memo(function JobCard({
                 </span>
                 <span className="flex items-center gap-1">
                   <BriefcaseBusiness size={14} />
-                  {job.experience_label}
+                  {job.experience_min!==null&&/^[\d.+–-]+$/.test(job.experience_label)?`${job.experience_label} years`:job.experience_label}
                 </span>
                 <span>Work arrangement: {requirements.workMode === "Unknown" ? "Not stated" : requirements.workMode}</span>
                 <span>{postingText(job)}</span>
               </div>
             </div>
           </div>
+          <details className="mt-3 rounded-xl border border-border p-3 text-xs">
+            <summary className="cursor-pointer font-semibold">Experience evidence · {requirements.experience.status==='stated'?'JD stated':requirements.experience.status==='unknown'?'Verify wording':'Needs review'}</summary>
+            <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===null?'Experience cannot be confirmed.':match.experienceMatch?'Requested experience overlaps your search.':'Requested experience is outside your search.'}</p>
+            {requirements.experience.required.length?requirements.experience.required.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}</blockquote>):<p className="mt-2">No required experience was found in the available JD text. Scan values may come from a longer employer description; verify the official listing.</p>}
+            {requirements.experience.preferred.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}
+            {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">Upper experience limit is not stated. This is not a capped 0–3-year requirement.</p>}
+            {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">Alternative or conflicting requirements need verification; no single range is assumed.</p>}
+          </details>
           <div className="mt-5 flex flex-wrap gap-2">
             {skills.length ? (
               skills.slice(0, 6).map((s: string) => (
@@ -1938,6 +1959,12 @@ const JobCard = memo(function JobCard({
               ))}
             </select>
           </div>
+          <label className="mt-3 text-xs font-semibold">Recommendation feedback
+            <select aria-label={`Recommendation feedback for ${job.title}`} value={tracking.feedback||''} onChange={event=>saveTracking(job,{feedback:cleanFeedback(event.target.value)})} className="mt-1 h-10 w-full rounded-xl border bg-card px-3 text-xs font-normal">
+              {feedbackOptions.map(([value,label])=><option key={value} value={value}>{label}</option>)}
+            </select>
+          </label>
+          {tracking.feedback&&tracking.feedback!=='good'&&<p className="mt-2 text-xs text-muted-foreground">Hidden from Recommended. Change this feedback in All Jobs to restore it. Experience reports do not change the employer’s requirements.</p>}
           <button
             onClick={() =>
               window.dispatchEvent(

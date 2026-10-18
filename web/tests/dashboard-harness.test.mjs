@@ -15,7 +15,7 @@ const output=await build({entryPoints:[new URL('../components/jobradar-dashboard
 await writeFile(`${directory}/dashboard.mjs`,output.outputFiles[0].text);
 const {JobRadarDashboard}=await import(`${directory}/dashboard.mjs`);
 const now=new Date().toISOString();
-const jobs=Array.from({length:7000},(_,i)=>({id:i+1,company:`Company ${i%700}`,external_job_id:String(i+1),title:`Java Engineer ${i}`,description:'Must know Java and AWS. Preferred: Terraform.',normalized_location:i%2?'Hyderabad':'Bengaluru',location:'India',experience_min:0,experience_max:2,experience_label:'0–2',skills:'["Java","AWS"]',role_category:'Java / Backend',ats_provider:'test',application_url:`https://employer.test/jobs/${i+1}`,career_page_url:'https://employer.test',posted_at:now,posted_label:null,posted_precision:'exact',reported_age_hours:null,first_seen_at:now,last_seen_at:now,relevance_score:70,is_active:1,is_eligible:1,eligibility_reason:''}));
+const jobs=Array.from({length:7000},(_,i)=>({id:i+1,company:`Company ${i%700}`,external_job_id:String(i+1),title:`Java Engineer ${i}`,description:i===0?'Experience: 0–2 years. Must know Java and AWS. Preferred Experience: 5 years.':'Must know Java and AWS. Preferred: Terraform.',normalized_location:i%2?'Hyderabad':'Bengaluru',location:'India',experience_min:0,experience_max:2,experience_label:'0–2',skills:'["Java","AWS"]',role_category:'Java / Backend',ats_provider:'test',application_url:`https://employer.test/jobs/${i+1}`,career_page_url:'https://employer.test',posted_at:now,posted_label:null,posted_precision:'exact',reported_age_hours:null,first_seen_at:now,last_seen_at:now,relevance_score:70,is_active:1,is_eligible:1,eligibility_reason:''}));
 const companies=Array.from({length:700},(_,i)=>({name:`Company ${i}`,careers_url:'https://employer.test',ats_provider:'test',last_checked_at:now,last_success_at:now,error_count:0,jobs_found:10,candidate_jobs:10,eligible_jobs:10,warning:null}));
 const payload={jobs:jobs.slice(0,100),companies,latest_run:{finished_at:now,status:'success',companies_checked:700,companies_successful:700},runs:[],notifications:[],configured:true,server_time:now,policy:{cities:['Bengaluru','Hyderabad']}};
 const fetcher=globalThis.fetch;let holdRefresh=false,releaseRefresh;
@@ -42,6 +42,18 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
    assert.equal(document.querySelector('h1').textContent,view);
    assert.ok(document.querySelectorAll('[aria-label="Job results"] article').length<=30);
   }
+  await click('Recommended');
+  const feedback=document.querySelector('select[aria-label^="Recommendation feedback"]'),label=feedback.getAttribute('aria-label');
+  await act(()=>{feedback.value='experience';feedback.dispatchEvent(new window.Event('change',{bubbles:true}));});
+  assert.equal([...document.querySelectorAll('select')].some(node=>node.getAttribute('aria-label')===label),false);
+  assert.ok(Object.values(JSON.parse(localStorage.getItem('jobradar-tracking-v2'))).some(row=>row.feedback==='experience'&&row.preference_at));
+  const metric=label=>[...document.querySelectorAll('p')].find(node=>node.textContent===label)?.previousElementSibling?.textContent;
+  assert.equal(Number(metric('Verified < 3h')?.replaceAll(',','')),6999);
+  await click('Needs Review');assert.ok(document.body.textContent.includes('Experience feedback — verify JD'));
+  assert.equal(document.querySelectorAll('[aria-label="Job results"] article').length,1);
+  await click('All Jobs');
+  const restore=[...document.querySelectorAll('select')].find(node=>node.getAttribute('aria-label')===label);assert.ok(restore);
+  await act(()=>{restore.value='';restore.dispatchEvent(new window.Event('change',{bubbles:true}));});
   await act(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.startsWith('Show more jobs')).click());
   assert.match(results(),/Page 2/);
   holdRefresh=true;await act(()=>document.querySelector('[aria-label="Refresh jobs"]').click());
