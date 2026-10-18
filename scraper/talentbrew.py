@@ -114,13 +114,22 @@ class TalentBrewCareerAdapter:
                 if not likely_target(item['title'], item['location']): return None
                 async with semaphore: response = await cached_get(x, item['url'])
                 if response.status_code in (404, 410): return None
-                response.raise_for_status(); soup = BeautifulSoup(response.text, 'html.parser')
-                details = list(jsonld_objects(soup))
-                job = details[0] if details else {}
-                description = clean(job.get('description', ''))
+                def parse_detail(response):
+                    response.raise_for_status(); soup = BeautifulSoup(response.text, 'html.parser')
+                    details = list(jsonld_objects(soup))
+                    job = details[0] if details else {}
+                    description = clean(job.get('description', ''))
+                    if not description:
+                        full = soup.select_one('.ats-description,#job-description,[itemprop="description"]')
+                        description = full.get_text(' ', strip=True) if full else ''
+                    return job, description
+                job, description = parse_detail(response)
                 if not description:
-                    full = soup.select_one('.ats-description,#job-description,[itemprop="description"]')
-                    description = full.get_text(' ', strip=True) if full else ''
+                    # A temporary HTTP 200 error page may have entered the detail
+                    # cache. Revalidate once instead of replaying it for 30 hours.
+                    async with semaphore: response = await cached_get(x, item['url'], ttl_hours=0)
+                    if response.status_code in (404, 410): return None
+                    job, description = parse_detail(response)
                 if not description: raise ValueError('TalentBrew job detail is missing the full description')
                 locations = job.get('jobLocation') or []
                 if not isinstance(locations, list): locations = [locations]

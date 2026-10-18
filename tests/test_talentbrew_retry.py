@@ -63,3 +63,38 @@ def test_snapshot_retry_preserves_india_and_checks_complete_count(monkeypatch):
     jobs, count = asyncio.run(TalentBrewCareerAdapter().fetch_jobs(Company('Employer', 'https://careers.example/search', 'talentbrew', '123')))
     assert jobs == [] and count == 1
     assert len(calls) == 3
+
+
+@pytest.mark.parametrize('fresh_status,fresh_description', [(200, 'Java and 2 years experience'), (200, ''), (404, ''), (503, '')])
+def test_missing_cached_requirements_revalidate_once_without_accepting_incomplete_jobs(monkeypatch, fresh_status, fresh_description):
+    import httpx
+    from scraper import adapters
+    from scraper.models import Company
+    calls = []
+    listing = ('<section id="search-results" data-organization-ids="123" data-total-results="1">'
+               '<ul id="search-results-list"><li><a data-job-id="1" href="/job/1"><h2>Software Engineer</h2></a>'
+               '<span class="location">Hyderabad</span></li></ul></section>')
+    async def request(client, method, url, **kwargs):
+        return httpx.Response(200, text=listing, request=httpx.Request(method, url))
+    async def cached(client, url, **kwargs):
+        calls.append(kwargs)
+        if len(calls) == 1:
+            return httpx.Response(200, text='<title>Temporarily unavailable</title>', request=httpx.Request('GET', url))
+        return httpx.Response(fresh_status, text='<div id="job-description">' + fresh_description + '</div>', request=httpx.Request('GET', url))
+    monkeypatch.setattr(adapters, 'request', request)
+    monkeypatch.setattr(adapters, 'cached_get', cached)
+    company = Company('Employer', 'https://careers.example/search', 'talentbrew', '123')
+    if fresh_status == 503:
+        with pytest.raises(httpx.HTTPStatusError):
+            asyncio.run(TalentBrewCareerAdapter().fetch_jobs(company))
+    elif fresh_status == 200 and not fresh_description:
+        with pytest.raises(ValueError, match='missing the full description'):
+            asyncio.run(TalentBrewCareerAdapter().fetch_jobs(company))
+    else:
+        jobs, count = asyncio.run(TalentBrewCareerAdapter().fetch_jobs(company))
+        assert count == 1
+        assert len(jobs) == (0 if fresh_status == 404 else 1)
+        if jobs:
+            assert jobs[0].description == fresh_description
+            assert jobs[0].posted_at is None
+    assert calls == [{}, {'ttl_hours': 0}]
