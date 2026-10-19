@@ -299,3 +299,24 @@ tracking by its update time instead of erasing newer applications. Storage failu
 show an explicit warning; export tracking before leaving if that warning appears.
 History remains local to this browser: export a private backup before clearing
 browser data or moving devices. Recovery copies cannot survive browser-data removal.
+
+### Bounded company discovery
+
+A separate daily workflow finds candidate company boards from Freehire. It makes
+at most four search requests. It does not use production credentials, change the
+registry, publish jobs, or send alerts. It requires a target city in the location
+text and removes known board identities. Candidates remain disabled until an
+operator verifies the official employer link and the actual feed. Deferred
+candidates remain in the report. See
+[the decision log](docs/decisions/2026-10-19-discovery-and-language.md).
+
+Run an offline review with existing public API responses:
+
+```bash
+python -m scripts.discover_companies --input java.json devops.json --output artifacts/company-discovery/candidates.json
+```
+
+The edited portal messages use short sentences and direct instructions based on
+ASD-STE100 principles. The sentence checks do not certify the full vocabulary.
+Employer descriptions are displayed as readable text. Their original content
+remains available for requirement extraction and stored application records.

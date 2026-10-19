@@ -69,3 +69,14 @@ def test_complete_workday_removed_relevant_detail_keeps_coverage_warning(monkeyp
     jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
     assert count==1 and len(jobs)==0
     assert 'Limited coverage' in jobs.coverage_warning
+
+
+def test_shifted_records_across_valid_pages_are_a_restartable_snapshot(monkeypatch):
+    from scraper.snapshot import SnapshotChanged
+    async def request(client,method,url,**kwargs):
+        offset=kwargs['json']['offset']
+        rows=[{'externalPath':f'/job/X/R{i}','title':'Sales'} for i in (range(20) if offset==0 else [0])]
+        return httpx.Response(200,request=httpx.Request(method,url),json={'total':21,'jobPostings':rows})
+    monkeypatch.setattr(adapters,'request',request)
+    with pytest.raises(SnapshotChanged,match='shifted across valid pages'):
+        asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))

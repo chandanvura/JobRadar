@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "source": "https://freehire.me",
+  "reviewed_at": "2026-10-19T11:54:04.235892+00:00",
+  "status": "review_required",
+  "candidates": [
+    {
+      "company": "DataHub",
+      "aliases": [
+        "DataHub"
+      ],
+      "board_identity": "greenhouse:acryldata",
+      "provider_hint": "greenhouse",
+      "status": "needs_official_verification",
+      "enabled": false,
+      "evidence": [
+        {
+          "url": "https://job-boards.greenhouse.io/acryldata/jobs/5180972007",
+          "location": "Bengaluru, Karnataka, India",
+          "title": "DevOps",
+          "aggregator_posted_at": "2026-10-12T21:55:05Z",
+          "employer_date_verified": false
+        }
+      ]
+    },
+    {
+      "company": "Gloify",
+      "aliases": [
+        "Gloify"
+      ],
+      "board_identity": "smartrecruiters:gloify",
+      "provider_hint": "smartrecruiters",
+      "status": "needs_official_verification",
+      "enabled": false,
+      "evidence": [
+        {
+          "url": "https://jobs.smartrecruiters.com/Gloify/743999741970976-java",
+          "location": "Bengaluru, KA, in",
+          "title": "Java",
+          "aggregator_posted_at": "2021-04-08T10:30:14Z",
+          "employer_date_verified": false
+        }
+      ]
+    },
+    {
+      "company": "PradeepIT Consulting Services Pvt Ltd",
+      "aliases": [
+        "PradeepIT Consulting Services Pvt Ltd"
+      ],
+      "board_identity": "manatal:pradeepit",
+      "provider_hint": "manatal",
+      "status": "needs_official_verification",
+      "enabled": false,
+      "evidence": [
+        {
+          "url": "https://www.careers-page.com/pradeepit/job/L9WR5WY6",
+          "location": "Hyderabad, Telangana, India",
+          "title": "DevOps",
+          "aggregator_posted_at": "2026-08-17T22:28:26Z",
+          "employer_date_verified": false
+        }
+      ]
+    },
+    {
+      "company": "SQUIRCLE IT CONSULTING SERVICES PVT. LTD",
+      "aliases": [
+        "SQUIRCLE IT CONSULTING SERVICES PVT. LTD"
+      ],
+      "board_identity": "smartrecruiters:squircleitconsultingservicespvtltd",
+      "provider_hint": "smartrecruiters",
+      "status": "needs_official_verification",
+      "enabled": false,
+      "evidence": [
+        {
+          "url": "https://jobs.smartrecruiters.com/SQUIRCLEITCONSULTINGSERVICESPVTLTD/106459812-devops",
+          "location": "Bengaluru, KA, in",
+          "title": "Devops",
+          "aggregator_posted_at": "2017-01-24T05:11:45Z",
+          "employer_date_verified": false
+        }
+      ]
+    },
+    {
+      "company": "thales",
+      "aliases": [
+        "thales"
+      ],
+      "board_identity": "workday:thales.wd3.myworkdayjobs.com|equest",
+      "provider_hint": "workday",
+      "status": "needs_official_verification",
+      "enabled": false,
+      "evidence": [
+        {
+          "url": "https://thales.wd3.myworkdayjobs.com/equest/job/Bangalore---Indraprastha/Tech-Lead---Cloud---DevOps--C--_R0328465-1",
+          "location": "Bangalore - Indraprastha",
+          "title": "Devops Engineer",
+          "aggregator_posted_at": "2026-10-14T00:00:00Z",
+          "employer_date_verified": false
+        }
+      ]
+    },
+    {
+      "company": "UptimeAI",
+      "aliases": [
+        "UptimeAI"
+      ],
+      "board_identity": "ashby:uptimeai",
+      "provider_hint": "ashby",
+      "status": "needs_official_verification",
+      "enabled": false,
+      "evidence": [
+        {
+          "url": "https://jobs.ashbyhq.com/uptimeai/29a206e1-146e-4348-8b73-3fe7f9fcdca2",
+          "location": "Bangalore (India)",
+          "title": "DevOps Engineer",
+          "aggregator_posted_at": "2026-10-16T12:38:33Z",
+          "employer_date_verified": false
+        }
+      ]
+    },
+    {
+      "company": "Zensar",
+      "aliases": [
+        "Zensar",
+        "Zensar Technologies"
+      ],
+      "board_identity": "oracle:fa-etvl-saasfaprod1.fa.ocs.oraclecloud.com",
+      "provider_hint": "oracle",
+      "status": "needs_official_verification",
+      "enabled": false,
+      "evidence": [
+        {
+          "url": "https://fa-etvl-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/152570",
+          "location": "Hyderabad, Telangana, India",
+          "title": "Java AWS Full Stack Lead",
+          "aggregator_posted_at": "2026-10-19T00:00:00Z",
+          "employer_date_verified": false
+        },
+        {
+          "url": "https://fa-etvl-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/152570",
+          "location": "Hyderabad, Telangana, India",
+          "title": "Java AWS Full Stack Lead",
+          "aggregator_posted_at": "2026-10-19T00:00:00Z",
+          "employer_date_verified": false
+        }
+      ]
+    }
+  ],
+  "candidate_count_before_limit": 7,
+  "deferred_candidates": 0,
+  "deferred_review": [],
+  "skipped": {
+    "wrong_location": 72,
+    "invalid_company": 2,
+    "unsupported_source": 11,
+    "existing_source": 7
+  },
+  "production_writes": 0
+}

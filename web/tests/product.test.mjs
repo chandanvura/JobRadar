@@ -1,3 +1,4 @@
+import {portalMessages} from '../lib/portal-messages.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {cleanSearch,privateKey,writePrivate,readPrivate,safeTracking,trackingIdentity} from '../lib/private-profile.ts';
@@ -56,7 +57,7 @@ test('unknown experience jobs have a separate review area and no alert eligibili
  const source=await (await import('node:fs/promises')).readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
  assert.match(source,/\["Needs Review", AlertTriangle\]/);
  assert.match(source,/matchesCareerView\(j, active/);
- assert.match(source,/never trigger automatic alerts/);
+ assert.match(portalMessages.review,/do not send automatic alerts/);
 });
 
 test('company coverage has safe career and contact fallback discovery',async()=>{

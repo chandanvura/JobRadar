@@ -1,4 +1,6 @@
 "use client";
+import {portalMessages} from "@/lib/portal-messages";
+import {employerText} from "@/lib/employer-text";
 import {readTracking,saveTrackingPatch,mergeTracking,trackingStorageKey,recoveryStorageKey,clearTrackingStorage} from "@/lib/tracking-store";
 import {feedbackOptions,cleanFeedback,hideRecommendation,preferenceTime} from "@/lib/recommendation-feedback";
 import type {RecommendationFeedback} from "@/lib/recommendation-feedback";
@@ -452,9 +454,9 @@ function DashboardContent() {
       setRankingNow(Date.now());
       setData(payload);
       if (!silent) setNotice(null);
-    } catch (e) {
+    } catch {
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
-      setNotice({tone:"error",title:"Dashboard could not refresh",text:e instanceof Error?e.message:"Unable to load JobRadar"});
+      setNotice({tone:"error",title:portalMessages.refreshFailedTitle,text:portalMessages.refreshFailed});
     } finally {
       if (generation === loadGeneration.current) {
         setCatalogLoading(false);
@@ -518,7 +520,7 @@ function DashboardContent() {
       setNotice({
         tone: "error",
         title: "Browser storage is unavailable or full",
-        text: "Export your tracking before leaving. Changes may not survive a refresh.",
+        text: portalMessages.storageFull,
       });
     const resume = (event: Event) => {
       const job = (event as CustomEvent<ApiJob>).detail;
@@ -983,8 +985,13 @@ function DashboardContent() {
           {notice && <Notice {...notice} close={() => setNotice(null)} />}{" "}
           {data?.data_mode === "backup" && (
             <div role="status" className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5 text-warning">
-              <h2 className="font-bold">Backup mode — saved job catalog</h2>
-              <p className="mt-2 text-sm">Live data is temporarily unavailable. Showing the catalog saved {data.snapshot_at ? new Date(data.snapshot_at).toLocaleString() : "earlier"}. {data.coverage === "partial" ? "This backup contains a limited selection of jobs. " : ""}{data.description_mode === "excerpt" ? "Long descriptions are excerpts; open the employer link for full details. " : ""}Listings and scan history may be outdated; verify openings on the employer site. Saving jobs, notes and application tracking still work in this browser. Refresh retries live data automatically.</p>
+              <h2 className="font-bold">{portalMessages.backupTitle}</h2>
+              <p className="mt-2 text-sm">{portalMessages.backupIntro}</p>
+              <p className="mt-2 text-sm">Saved: {data.snapshot_at ? new Date(data.snapshot_at).toLocaleString() : "Time unknown"}.</p>
+              {data.coverage === "partial" && <p className="mt-2 text-sm">This saved list contains only some jobs.</p>}
+              {data.description_mode === "excerpt" && <p className="mt-2 text-sm">Some descriptions contain only an extract. Open the employer website for the full description.</p>}
+              <p className="mt-2 text-sm">{portalMessages.backupCheck}</p>
+              <p className="mt-2 text-sm">{portalMessages.backupLocal} {portalMessages.backupRetry}</p>
             </div>
           )}
           {!notice && !data?.configured && !loading && (
@@ -1163,7 +1170,7 @@ function DashboardContent() {
                 <section className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5">
                   <h3 className="font-black text-warning">Date or experience needs verification</h3>
                   <p className="mt-1 text-sm leading-6 text-warning/80">
-                    These active postings need a date, experience or eligibility check. They stay separate from confirmed matches and never trigger automatic alerts. Check the official description before applying.
+                    {portalMessages.review}
                   </p>
                 </section>
               )}
@@ -1728,10 +1735,10 @@ const JobCard = memo(function JobCard({
           <details className="mt-3 rounded-xl border border-border p-3 text-xs">
             <summary className="cursor-pointer font-semibold">Experience evidence · {requirements.experience.status==='stated'?'JD stated':requirements.experience.status==='unknown'?'Verify wording':'Needs review'}</summary>
             <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===null?'Experience cannot be confirmed.':match.experienceMatch?'Requested experience overlaps your search.':'Requested experience is outside your search.'}</p>
-            {requirements.experience.required.length?requirements.experience.required.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}</blockquote>):<p className="mt-2">No required experience was found in the available JD text. Scan values may come from a longer employer description; verify the official listing.</p>}
+            {requirements.experience.required.length?requirements.experience.required.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}</blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
             {requirements.experience.preferred.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}
-            {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">Upper experience limit is not stated. This is not a capped 0–3-year requirement.</p>}
-            {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">Alternative or conflicting requirements need verification; no single range is assumed.</p>}
+            {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">{portalMessages.openExperience}</p>}
+            {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">{portalMessages.conflictingExperience}</p>}
           </details>
           <div className="mt-5 flex flex-wrap gap-2">
             {skills.length ? (
@@ -1829,7 +1836,7 @@ const JobCard = memo(function JobCard({
               {feedbackOptions.map(([value,label])=><option key={value} value={value}>{label}</option>)}
             </select>
           </label>
-          {tracking.feedback&&tracking.feedback!=='good'&&<p className="mt-2 text-xs text-muted-foreground">Hidden from Recommended. Change this feedback in All Jobs to restore it. Experience reports do not change the employer’s requirements.</p>}
+          {tracking.feedback&&tracking.feedback!=='good'&&<p className="mt-2 text-xs text-muted-foreground">{portalMessages.feedback}</p>}
           <button
             onClick={() =>
               window.dispatchEvent(
@@ -1858,7 +1865,7 @@ const JobCard = memo(function JobCard({
             <p className="mb-3 text-xs text-muted-foreground">First detected {relative(job.first_seen_at)} · Source: {job.ats_provider}. {match.reasons.join(" · ")}</p>
             {(attribution.careerUrl || job.career_page_url) !== job.application_url && <a href={attribution.careerUrl || job.career_page_url} target="_blank" rel="noreferrer" className="mb-3 inline-block text-xs font-semibold underline">Company careers <ExternalLink size={12} className="inline" /></a>}
             <h4 className="font-bold">Requirements to check before applying</h4>
-            <p className="mt-1 text-xs text-muted-foreground">Extracted employer statements. Your education and graduation year have not been verified.</p>
+            <p className="mt-1 text-xs text-muted-foreground">{portalMessages.evidence}</p>
             <dl className="mt-3 grid gap-3 text-sm md:grid-cols-2">
               {([
                 ["Required skills", requirements.requiredSkills],
@@ -1874,7 +1881,7 @@ const JobCard = memo(function JobCard({
             <div className="md:col-span-2">
               <h4 className="font-bold">Employer description</h4>
               <p className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap text-sm text-muted-foreground">
-                {job.description}
+                {employerText(job.description)}
               </p>
             </div>
           )}

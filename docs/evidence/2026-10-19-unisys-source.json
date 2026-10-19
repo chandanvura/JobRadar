@@ -1,0 +1,32 @@
+{
+  "company": "Unisys",
+  "total": 423,
+  "details": 4,
+  "target_city_details": 4,
+  "unique_ids": 4,
+  "missing_descriptions": 0,
+  "warning": null,
+  "official_page": "https://www.unisys.com/careers/",
+  "careers_url": "https://unisys.wd5.myworkdayjobs.com/External",
+  "provider": "workday",
+  "identifier": "unisys|External",
+  "examples": [
+    {
+      "url": "https://unisys.wd5.myworkdayjobs.com/External/job/Bangalore-KA-India/Major-Incident-Management---Engineer-Service-Management_REQ576418",
+      "location": "Bangalore, KA, India",
+      "title": "Major Incident Management - Engineer Service Management"
+    },
+    {
+      "url": "https://unisys.wd5.myworkdayjobs.com/External/job/Bangalore-KA-India/Major-Incident-Management---Engineer-Service-Management_REQ576417",
+      "location": "Bangalore, KA, India",
+      "title": "Major Incident Management - Engineer Service Management"
+    }
+  ],
+  "observed_at": "2026-10-19T11:52:56.081294+00:00",
+  "official_chain": [
+    "https://www.unisys.com/careers/",
+    "https://unisys.wd5.myworkdayjobs.com/External"
+  ],
+  "detail_scope": "Existing Workday adapter: recent technical details from employer-published target-city facets. The detail count is not the complete global job inventory.",
+  "registry_status": "Enabled; first scheduled production scan remains pending."
+}

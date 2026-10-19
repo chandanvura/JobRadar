@@ -1,0 +1,9 @@
+{
+  "source": "https://freehire.me",
+  "queries": ["Java", "DevOps", "Spring Boot", "Cloud Engineer"],
+  "page_size": 50,
+  "max_candidates": 50,
+  "request_timeout_seconds": 12,
+  "run_timeout_seconds": 55,
+  "target_location_pattern": "\\b(?:bengaluru|bangalore|hyderabad)\\b"
+}

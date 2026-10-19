@@ -1,5 +1,6 @@
-import asyncio,csv,json,os,sys
+import asyncio,csv,json,os,sys,math
 from datetime import datetime,timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 import httpx
 from .adapters import ADAPTERS
@@ -50,6 +51,23 @@ def run_health_status(failures):
     """
     return "success" if failures == 0 else "degraded"
 
+def source_retry_delay(response, attempt):
+    """Honor a published cooldown, or stop when it exceeds this scan's retry budget."""
+    raw = response.headers.get('Retry-After', '').strip()
+    if raw:
+        try:
+            delay = float(raw)
+        except ValueError:
+            try:
+                delay = (parsedate_to_datetime(raw) - datetime.now(timezone.utc)).total_seconds()
+            except (TypeError, ValueError, OverflowError):
+                delay = 2 ** attempt
+        if not math.isfinite(delay) or delay > 60:
+            return None
+        return max(0, delay)
+    return min(30, 5 * 2 ** attempt) if response.status_code == 429 else 2 ** attempt
+
+
 async def fetch_company_jobs(company,attempts=3):
     """Retry a complete source scan when the failure is transient."""
     if company.ats_provider=="custom": attempts=min(attempts,2)
@@ -59,7 +77,7 @@ async def fetch_company_jobs(company,attempts=3):
             return await ADAPTERS[company.ats_provider].fetch_jobs(company)
         except SnapshotChanged as exc:
             # Discard the entire attempt. Two full snapshots at most; malformed
-            # pages, duplicates within a page, missing details and caps are never retried.
+            # pages, duplicates within one page, missing details and caps are never retried.
             last=exc
             if attempt >= min(attempts,2)-1:
                 raise
@@ -73,7 +91,10 @@ async def fetch_company_jobs(company,attempts=3):
             status=exc.response.status_code
             if status not in {429,500,502,503,504} or attempt+1>=attempts:
                 raise
-            await asyncio.sleep(2**attempt)
+            delay = source_retry_delay(exc.response, attempt)
+            if delay is None:
+                raise
+            await asyncio.sleep(delay)
     raise last or RuntimeError("Source scan failed")
 
 async def scrape(company,sem,custom_sem):
