@@ -48,4 +48,35 @@ Do not approve an action if one field is missing.
 
 - **Justification:** Prepare 1,200 recruiter records for company coverage review without exposing personal contacts.
 - **Evidence:** Existing audited CSV and the JobRadar company registry. Recruiter identity and live hiring are not independently verified.
-- **Verification:** Unit tests added. Test execution and live-source checks remain unconfirmed. No production merge is authorized.
+- **Verification:** The corrected code passes 638 Python tests and 189 web tests, security audits, the production build, UI type checks, and local Worker/D1 integration. Live company-source verification is a separate, ongoing review. No private CSV or new company source is included in this code change.
+
+## PR correction and verification — 2026-10-19
+
+- **Justification:** The first import gate had a failing output-column test. URL
+  syntax checks also allowed private hosts, credentials, and arbitrary ports.
+  Untrusted row IDs and URL parameters could carry personal contact data.
+- **Evidence:** The original test failed with `KeyError: official_career_url`.
+  The exporter correctly used the name `candidate_career_url`; a candidate is
+  not an approved official source. Company fields also contain title fragments.
+  Substring matching can confuse Apollo Microsystems with Apollo.
+- **Verification:** The corrected gate checks URL boundaries, strips URL query
+  parameters and fragments, preserves all source-row links, rejects duplicate
+  source IDs, and produces the same file without rewriting an unchanged import.
+  Company comparisons never approve recruiter identities or alerts. Meaningful
+  brand words cannot be removed during alias matching.
+
+Run these commands from the repository root:
+
+```sh
+python -m scripts.recruiter_company_candidates /private/master.csv /private/candidates.csv
+python -m scripts.recruiter_company_review /private/candidates.csv companies/companies.csv /private/review.csv
+bash scripts/verify-harness.sh all
+```
+
+The review queue stays private and UNVERIFIED until independent source evidence
+is recorded. Registry matches identify possible existing coverage. They do not
+establish a recruiter's employer affiliation. The scripts have no database,
+notification, or outbound-contact path. There is no schema migration.
+
+Rollback: revert the PR commit. Keep the private source CSV and review evidence.
+Do not delete application history or production jobs to roll back this tool.
