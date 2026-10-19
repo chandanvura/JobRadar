@@ -11,7 +11,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 COLUMNS = ("company_key", "company_name", "source_rows", "source_count",
-           "official_career_url", "evidence_url", "review_status")
+           "candidate_career_url", "evidence_url", "review_status")
 OUTPUT_COLUMNS = list(COLUMNS)
 PUBLIC_HOSTS = {"scribd.com", "slideshare.net", "docs.google.com", "linkedin.com",
                 "facebook.com", "indeed.com", "naukri.com", "glassdoor.com"}
@@ -50,12 +50,12 @@ def extract(input_path, output_path):
         writer.writeheader()
         for key, rows in sorted(grouped.items()):
             # Evidence URLs are only retained when HTTPS; never infer verification.
-            official = next((r[2] for r in rows if valid_https(r[2]) and
+            candidate = next((r[2] for r in rows if valid_https(r[2]) and
                              urlparse(r[2]).hostname.lower().removeprefix("www.") not in PUBLIC_HOSTS), "")
             evidence = next((r[3] for r in rows if valid_https(r[3])), "")
             writer.writerow(dict(company_key=key, company_name=rows[0][0],
                                  source_rows=";".join(r[1] for r in rows),
-                                 source_count=len(rows), official_career_url=official,
+                                 source_count=len(rows), candidate_career_url=candidate,
                                  evidence_url=evidence, review_status="UNVERIFIED"))
     return len(grouped)
 
