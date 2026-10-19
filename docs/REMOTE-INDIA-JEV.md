@@ -30,7 +30,8 @@ self-approve by supplying `VERIFIED` in that column.
 The production catalog returned a backup while the health read still worked.
 The deploy workflow now checks all four actual dashboard database reads before
 release. It prints only result counts and query metadata. A failed read stops
-deployment. This check makes a database fault visible without exposing job rows.
+deployment, except for the existing daily-quota recovery path after schema
+verification. This check makes a database fault visible without exposing job rows.
 
 ## Verification and rollback
 
