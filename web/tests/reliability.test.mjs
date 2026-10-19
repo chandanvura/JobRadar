@@ -50,3 +50,24 @@ test('7,000 live jobs load in 14 bounded pages and wait for initial preparation'
   });
   assert.equal(pages,14);assert.equal(result.jobs.length,7000);assert.equal(result.jobs.at(-1).id,7000);
 });
+
+test('hung response bodies and ignored abort signals still fall back within the request budget',async()=>{
+ const keepAlive=setInterval(()=>{},100);
+ try{
+  for(const body of [false,true]){
+   const result=await loadPublicCatalog(()=>{},async path=>path==='/backup/catalog.json'?Response.json(saved):body?{ok:true,json:()=>new Promise(()=>{})}:new Promise(()=>{}),undefined,{requestMs:20,liveMs:100});
+   assert.equal(result.data_mode,'backup');
+  }
+ }finally{clearInterval(keepAlive);}
+});
+test('overall live budget stops a long chain of otherwise healthy pages',async()=>{
+ let pages=0;const keepAlive=setInterval(()=>{},100);
+ try{
+ const result=await loadPublicCatalog(()=>{},async path=>{
+  if(path==='/api/dashboard')return Response.json(live);
+  if(path==='/backup/catalog.json')return Response.json(saved);
+  await new Promise(resolve=>setTimeout(resolve,12));pages++;return Response.json({jobs:[{id:pages*1000}],next_cursor:pages*1000});
+ },undefined,{requestMs:100,liveMs:30});
+ assert.equal(result.data_mode,'backup');assert.ok(pages<10);
+ }finally{clearInterval(keepAlive);}
+});

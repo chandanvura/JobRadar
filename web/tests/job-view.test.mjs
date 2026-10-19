@@ -36,3 +36,10 @@ test('fresher labels distinguish inferred associate ranges from employer zero-ex
  assert.equal(fresherRole(job({title:'Graduate Software Engineer',experience_label:'Entry-level title'})),true);
  assert.equal(fresherRole(job({title:'Member of Technical Staff',experience_min:0})),true);
 });
+
+test('an eligible scan record moves out of verified views when its posting proof expires',()=>{
+ const job={title:'Java Developer',is_active:1,is_eligible:1,experience_min:0,experience_max:2,experience_label:'0–2',eligibility_reason:'Eligible'};
+ assert.equal(matchesCareerView(job,'Recommended',0,3,false),false);
+ assert.equal(matchesCareerView(job,'Needs Review',0,3,false),true);
+ assert.equal(matchesCareerView(job,'Saved',0,3,false),true);
+});

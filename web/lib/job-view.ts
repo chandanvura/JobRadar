@@ -16,7 +16,7 @@ export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,
   const known=!experienceUnverified(job)&&(job.experience_min!==null||job.experience_max!==null);
   if(known&&((job.experience_min??0)>max||(job.experience_max??Infinity)<min))return false;
   if(!known&&senior(job.title))return false;
-  if(view==='Needs Review')return !job.is_eligible;
+  if(view==='Needs Review')return !job.is_eligible||!currentPosting;
   return true;
 }
 

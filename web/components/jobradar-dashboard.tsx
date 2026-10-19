@@ -1,4 +1,5 @@
 "use client";
+import {readTracking,saveTrackingPatch,mergeTracking,trackingStorageKey,recoveryStorageKey,clearTrackingStorage} from "@/lib/tracking-store";
 import {feedbackOptions,cleanFeedback,hideRecommendation,preferenceTime} from "@/lib/recommendation-feedback";
 import type {RecommendationFeedback} from "@/lib/recommendation-feedback";
 import { useJobSearch } from "@/lib/use-job-search";
@@ -50,20 +51,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { postingAge, currentPosting } from "@/lib/job-time";
+import { postingAge, currentPosting, postingText } from "@/lib/job-time";
 const ProfilePanel = lazy(() => import("./profile-panel").then(module => ({default: module.ProfilePanel})));
 const ResumeWorkspace = lazy(() => import("./resume-workspace").then(module => ({default: module.ResumeWorkspace})));
 import {
   cleanSearch,
   profileId,
-  safeTracking,
   trackingIdentity,
   readPrivate,
   writePrivate,
-  removePrivate,
+  privateKey,
 } from "@/lib/private-profile";
 import { Progress } from "@/components/ui/progress";
-import { feedbackByFamily, opportunityPriority, personalMatch } from "@/lib/job-match";
+import { feedbackByFamily, opportunityPriority, personalMatch, recommendedPreferenceMatch } from "@/lib/job-match";
 import { diversifyFeed, groupDuplicateJobs, groupSimilarOpenings } from "@/lib/job-feed";
 import { fresherRole, internshipRole as isInternship, technicalInternshipRole } from "@/lib/job-sections";
 
@@ -156,6 +156,7 @@ type Payload = {
   };
 };
 type Tracking = {
+  history?:{at:string;status:string}[];
   feedback?:RecommendationFeedback;
   preference_at?:string;
   saved: boolean;
@@ -274,11 +275,6 @@ const exactAge = (iso: string | null | undefined) => {
   return Number.isFinite(age) ? Math.max(0, age) : null;
 };
 const freshnessAge = (job: ApiJob) => postingAge(job);
-const postingText = (job: ApiJob) =>
-  job.posted_label ||
-  (job.posted_at
-    ? `Posted ${relative(job.posted_at)}`
-    : "Posting time unknown");
 const postedToday = (job: ApiJob) =>
   job.posted_precision === "day" &&
   job.posted_at !== null &&
@@ -299,16 +295,7 @@ const initialView = () =>
   typeof window === "undefined"
     ? "Dashboard"
     : labelBySlug.get(window.location.hash.slice(1)) || "Dashboard";
-const initialTracking = () => {
-  if (typeof window === "undefined") return {};
-  try {
-    return safeTracking(
-      JSON.parse(readPrivate("jobradar-tracking-v2") || "{}"),
-    ) as Record<string, Tracking>;
-  } catch {
-    return {};
-  }
-};
+const initialTracking = () => typeof window === "undefined" ? {} : readTracking() as Record<string,Tracking>;
 const defaultPreferences: SearchPreferences = {
   titles: [],
   skills: [],
@@ -410,6 +397,7 @@ function DashboardContent() {
   const loadGeneration = useRef(0);
   const activeLoad = useRef<AbortController | null>(null);
   const [rankingNow, setRankingNow] = useState(() => Date.now());
+  useEffect(()=>{const tick=()=>setRankingNow(Date.now());const timer=window.setInterval(tick,60000);window.addEventListener('focus',tick);return()=>{window.clearInterval(timer);window.removeEventListener('focus',tick);};},[]);
   useEffect(() => {
     if (!mobile) return;
     const previousFocus = document.activeElement as HTMLElement | null;
@@ -560,28 +548,14 @@ function DashboardContent() {
     history.pushState(null, "", `#${slug(label)}`);
     window.dispatchEvent(new HashChangeEvent("hashchange"));
   };
-  const saveTracking = useCallback((job: ApiJob, patch: Partial<Tracking>) =>
-    setTracking((current) => {
-      const key = trackingKey(job),
-        prior = current[key] || {
-          saved: false,
-          status: "New",
-          updated_at: new Date().toISOString(),
-          job,
-        };
-      const next = {
-        ...current,
-        [key]: {
-          ...prior,
-          ...patch,
-          job,
-          preference_at: preferenceTime(prior,patch,new Date().toISOString()),
-          updated_at: new Date().toISOString(),
-        },
-      };
-      writePrivate("jobradar-tracking-v2", JSON.stringify(next));
-      return next;
-    }), []);
+  const saveTracking = useCallback((job:ApiJob,patch:Partial<Tracking>)=>setTracking(current=>{
+    const now=new Date().toISOString(),prior=current[trackingKey(job)]||{};
+    return saveTrackingPatch(current,job,{...patch,preference_at:preferenceTime(prior,patch,now)},now) as Record<string,Tracking>;
+  }),[]);
+  useEffect(()=>{
+    const sync=(event:StorageEvent)=>{if(event.key===null||(event.key===privateKey(trackingStorageKey)&&event.newValue===null)){setTracking({});return;}if(event.key===privateKey(trackingStorageKey)||event.key===privateKey(recoveryStorageKey))setTracking(current=>mergeTracking(current,readTracking()) as Record<string,Tracking>);};
+    window.addEventListener('storage',sync);return()=>window.removeEventListener('storage',sync);
+  },[]);
   const currentJobs = useMemo(() => (data?.jobs || []).map(normalizeExperience), [data?.jobs]);
   const mergedJobs = useMemo(() => {
     const map = new Map(currentJobs.map((j) => [trackingKey(j), j]));
@@ -624,9 +598,9 @@ function DashboardContent() {
       const track = jobTracking(j), match = ranking.get(trackingKey(j))!.match;
       if (verifiedView(active) && hideRecommendation(track)) return false;
       const reportedExperience = active === "Needs Review" && track.feedback === "experience" && j.is_active && !isInternship(j);
-      if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, postingStillCurrent(j)) && !reportedExperience) return false;
+      if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, currentPosting(j,rankingNow)) && !reportedExperience) return false;
       if (deferredQuery && !searchPending && !searchScores.has(j)) return false;
-      if (workMode !== "All arrangements" && requirementsFor(j).workMode !== workMode) return false;
+      if (!["Saved", "Applications"].includes(active) && workMode !== "All arrangements" && requirementsFor(j).workMode !== workMode) return false;
       if (active === "Internships" && !isInternship(j)) return false;
       if (active === "Internships" && !technicalInternshipRole(j)) return false;
       if (active === "Fresher Roles" && !fresherRole(j)) return false;
@@ -677,7 +651,7 @@ function DashboardContent() {
         active !== "Saved" &&
         active !== "Applications" &&
         verifiedView(active) &&
-        !postingStillCurrent(j)
+        !currentPosting(j,rankingNow)
       )
         return false;
       if (active !== "Saved" && active !== "Applications" && !j.is_active)
@@ -688,7 +662,7 @@ function DashboardContent() {
         if (age === null || age >= 3 || j.posted_precision === "day")
           return false;
       }
-      if (active === "Recommended" && match.score < 30) return false;
+      if (active === "Recommended" && !recommendedPreferenceMatch(j,preferences,match)) return false;
       if (
         active === "DevOps & Cloud" &&
         !/DevOps|Cloud|SRE|Platform|Infrastructure/.test(j.role_category)
@@ -718,7 +692,7 @@ function DashboardContent() {
         if (
           freshness === "24 hours" &&
           !verifiedView(active) &&
-          !postingStillCurrent(j)
+          !currentPosting(j,rankingNow)
         ) return false;
         if (
           freshness === "3 hours" &&
@@ -769,6 +743,7 @@ function DashboardContent() {
     applicationStage,
     matchMode,
     ranking,
+    rankingNow,
   ]);
   const applyPreferences = (next: SearchPreferences) => {
     setPreferences(next);
@@ -827,7 +802,7 @@ function DashboardContent() {
       )
     )
       return;
-    removePrivate("jobradar-tracking-v2");
+    if(!clearTrackingStorage())return;
     setTracking({});
     setNotice({
       tone: "success",
@@ -1667,6 +1642,7 @@ const JobCard = memo(function JobCard({
 }) {
   const [details, setDetails] = useState(false),
     manualExperienceReview = tracking.feedback === 'experience',
+    dateNeedsReview = !currentPosting(job,now),
     match = personalMatch(job, preferences),
     requirements = requirementsFor(job),
     attribution = boardAttribution(job),
@@ -1698,20 +1674,20 @@ const JobCard = memo(function JobCard({
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Badge
               className={
-                job.is_eligible && !manualExperienceReview
+                job.is_eligible && !manualExperienceReview && !dateNeedsReview
                   ? "bg-success-soft text-success"
                   : "bg-warning-soft text-warning"
               }
             >
-              {job.is_eligible && !manualExperienceReview ? fresh : "REVIEW"}
+              {job.is_eligible && !manualExperienceReview && !dateNeedsReview ? fresh : "REVIEW"}
             </Badge>
             <Badge variant="outline">{job.role_category}</Badge>
             {isInternship(job) && (
               <Badge className="bg-info-soft text-info">INTERNSHIP</Badge>
             )}
-            {(!job.is_eligible || manualExperienceReview) && (
+            {(!job.is_eligible || manualExperienceReview || dateNeedsReview) && (
               <span className="text-xs text-warning">
-                {manualExperienceReview ? 'Experience feedback — verify JD' : job.eligibility_reason}
+                {manualExperienceReview ? 'Experience feedback — verify JD' : dateNeedsReview && job.is_eligible ? 'Posting date is outside the verified 24-hour window or needs verification' : job.eligibility_reason}
               </span>
             )}
             {!job.is_active && (
@@ -1902,6 +1878,7 @@ const JobCard = memo(function JobCard({
               </p>
             </div>
           )}
+          {Boolean(tracking.history?.length)&&<section className="md:col-span-2"><h4 className="font-bold">Application history</h4><ol className="mt-2 space-y-1 text-sm">{tracking.history!.map((event,index)=><li key={index}>{event.status} · <time dateTime={event.at}>{new Date(event.at).toLocaleString()}</time></li>)}</ol></section>}
           <label className="text-sm font-bold">
             Referral status
             <select

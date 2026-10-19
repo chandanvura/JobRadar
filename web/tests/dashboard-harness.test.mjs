@@ -18,11 +18,11 @@ const now=new Date().toISOString();
 const jobs=Array.from({length:7000},(_,i)=>({id:i+1,company:`Company ${i%700}`,external_job_id:String(i+1),title:`Java Engineer ${i}`,description:i===0?'Experience: 0–2 years. Must know Java and AWS. Preferred Experience: 5 years.':'Must know Java and AWS. Preferred: Terraform.',normalized_location:i%2?'Hyderabad':'Bengaluru',location:'India',experience_min:0,experience_max:2,experience_label:'0–2',skills:'["Java","AWS"]',role_category:'Java / Backend',ats_provider:'test',application_url:`https://employer.test/jobs/${i+1}`,career_page_url:'https://employer.test',posted_at:now,posted_label:null,posted_precision:'exact',reported_age_hours:null,first_seen_at:now,last_seen_at:now,relevance_score:70,is_active:1,is_eligible:1,eligibility_reason:''}));
 const companies=Array.from({length:700},(_,i)=>({name:`Company ${i}`,careers_url:'https://employer.test',ats_provider:'test',last_checked_at:now,last_success_at:now,error_count:0,jobs_found:10,candidate_jobs:10,eligible_jobs:10,warning:null}));
 const payload={jobs:jobs.slice(0,100),companies,latest_run:{finished_at:now,status:'success',companies_checked:700,companies_successful:700},runs:[],notifications:[],configured:true,server_time:now,policy:{cities:['Bengaluru','Hyderabad']}};
-const fetcher=globalThis.fetch;let holdRefresh=false,releaseRefresh;
+const fetcher=globalThis.fetch;let holdRefresh=false,releaseRefresh,omitTrackedJob=false;
 globalThis.fetch=async path=>{
  if(path==='/api/dashboard'){
   if(holdRefresh)await new Promise(resolve=>releaseRefresh=resolve);
-  return Response.json(payload);
+  return Response.json({...payload,jobs:payload.jobs.filter(job=>!omitTrackedJob||job.id!==1)});
  }
  const url=new URL(path,'https://test.example'),after=Number(url.searchParams.get('after'));
  const batch=jobs.filter(job=>job.id>after).slice(0,500);
@@ -32,7 +32,7 @@ const click=async text=>{const node=[...document.querySelectorAll('button')].fin
 const results=()=>document.querySelector('[aria-label="Job results"]')?.textContent;
 async function settle(predicate){for(let i=0;i<150;i++){await act(()=>new Promise(resolve=>setTimeout(resolve,10)));if(predicate())return;}assert.fail('Dashboard did not settle');}
 test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and refresh cancellation',async()=>{
- const root=createRoot(document.getElementById('root'));
+ let root=createRoot(document.getElementById('root'));
  try{
   await act(()=>root.render(React.createElement(JobRadarDashboard)));
   await settle(()=>results()?.includes('of 7000 jobs'));
@@ -70,6 +70,24 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   assert.equal(document.querySelectorAll('tbody tr').length,30);assert.equal(document.querySelectorAll('article').length,30);
   const more=[...document.querySelectorAll('button')].find(b=>b.textContent.startsWith('Show more companies'));await act(()=>more.click());
   assert.match(document.querySelector('[aria-label="Company results"]').textContent,/Page 2/);
+  await click('All Jobs');
+  const stage=document.querySelector('[aria-label="Application stage for Java Engineer 0"]');assert.ok(stage);
+  await act(()=>{stage.value='Applied';stage.dispatchEvent(new window.Event('change',{bubbles:true}));});
+  await act(()=>{stage.value='Interview';stage.dispatchEvent(new window.Event('change',{bubbles:true}));});
+  if(!document.querySelector('[aria-label="Work arrangement filter"]'))await click('More filters');
+  const arrangement=document.querySelector('[aria-label="Work arrangement filter"]');
+  await act(()=>{arrangement.value='Remote';arrangement.dispatchEvent(new window.Event('change',{bubbles:true}));});
+  await click('Applications');assert.equal(document.querySelectorAll('article').length,1);
+  await click('Add notes or referral status');
+  assert.ok(document.body.textContent.includes('Application history'));
+  assert.ok(document.body.textContent.includes('Applied ·'));
+  assert.ok(document.body.textContent.includes('Interview ·'));
+  // Simulate a fresh page after the employer removes the opening.
+  omitTrackedJob=true;await act(()=>root.unmount());root=createRoot(document.getElementById('root'));
+  await act(()=>root.render(React.createElement(JobRadarDashboard)));
+  await settle(()=>Boolean(document.querySelector('[aria-label="Application stage for Java Engineer 0"]')));
+  assert.equal(document.querySelector('[aria-label="Application stage for Java Engineer 0"]').value,'Interview');
+  assert.ok(document.body.textContent.includes('No longer in live feed'));
   await click('Dashboard');assert.equal(document.querySelector('h1').textContent,'Dashboard');
   console.log(`HARNESS PERF: full dashboard navigation ${durations.join(', ')} ms; bounded 30 job cards / 30 company rows`);
  }finally{await act(()=>root.unmount());globalThis.fetch=fetcher;dom.window.close();await rm(directory,{recursive:true,force:true});}

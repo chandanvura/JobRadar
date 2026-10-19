@@ -28,7 +28,7 @@ export function cleanSearch(value: unknown) {
 export function safeTracking(value: unknown): Record<string,unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
   const valid: Record<string,unknown> = {};
-  for (const [key,item] of Object.entries(value).slice(0,5000)) {
+  for (const [key,item] of Object.entries(value)) {
     if (!item || typeof item !== 'object') continue;
     const t=item as Record<string,unknown>, j=t.job as Record<string,unknown>;
     if (!j || typeof j !== 'object') continue;
@@ -42,7 +42,7 @@ export function safeTracking(value: unknown): Record<string,unknown> {
     for(const field of ['experience_label','posted_precision','eligibility_reason','last_seen_at'])cleanJob[field]=typeof j[field]==='string'?j[field]:'';
     for(const field of ['description','posted_at','posted_label','hiring_signal'])cleanJob[field]=typeof j[field]==='string'?j[field]:null;
     try{const skills=JSON.parse(String(j.skills));cleanJob.skills=JSON.stringify(Array.isArray(skills)?skills.filter(x=>typeof x==='string'):[])}catch{cleanJob.skills='[]'}
-    valid[canonical]={...t,feedback:cleanFeedback(t.feedback),preference_at:typeof t.preference_at==='string'?t.preference_at:typeof t.updated_at==='string'?t.updated_at:undefined,saved:t.saved===true,status:['New','Viewed','Applied','Interview','Offer','Rejected','Ignored'].includes(String(t.status))?t.status:'New',notes:typeof t.notes==='string'?t.notes.slice(0,10000):'',job:cleanJob};
+    valid[canonical]={...t,history:Array.isArray(t.history)?t.history.filter((event):event is {at:string;status:string}=>Boolean(event&&typeof event==='object'&&typeof event.at==='string'&&Number.isFinite(Date.parse(event.at))&&['New','Viewed','Applied','Interview','Offer','Rejected','Ignored'].includes(event.status))):[],feedback:cleanFeedback(t.feedback),preference_at:typeof t.preference_at==='string'?t.preference_at:typeof t.updated_at==='string'?t.updated_at:undefined,saved:t.saved===true,status:['New','Viewed','Applied','Interview','Offer','Rejected','Ignored'].includes(String(t.status))?t.status:'New',notes:typeof t.notes==='string'?t.notes:'',job:cleanJob};
   }
   return valid;
 }

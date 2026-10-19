@@ -1,11 +1,15 @@
 type Catalog = {jobs:{id:number}[];companies:unknown[];data_mode?:'backup'};
 type Fetcher = typeof fetch;
-export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)=>void|Promise<void>, fetcher:Fetcher=fetch, signal?:AbortSignal):Promise<T> {
+export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)=>void|Promise<void>, fetcher:Fetcher=fetch, signal?:AbortSignal, limits={requestMs:10000,liveMs:45000}):Promise<T> {
+  const liveSignal=AbortSignal.timeout(limits.liveMs);
   const read = async (path:string) => {
     signal?.throwIfAborted();
-    const response=await fetcher(path,{cache:'no-store',signal:signal?AbortSignal.any([signal,AbortSignal.timeout(20000)]):AbortSignal.timeout(20000)});
-    if(!response.ok) throw Error(`Catalog request returned ${response.status}`);
-    return response.json();
+    const bounded=AbortSignal.any([...(signal?[signal]:[]),...(path.startsWith('/api/')?[liveSignal]:[]),AbortSignal.timeout(limits.requestMs)]);
+    bounded.throwIfAborted();
+    return new Promise<unknown>((resolve,reject)=>{
+      const abort=()=>reject(bounded.reason);bounded.addEventListener('abort',abort,{once:true});
+      void (async()=>{const response=await fetcher(path,{cache:'no-store',signal:bounded});if(!response.ok)throw Error(`Catalog request returned ${response.status}`);return response.json();})().then(resolve,reject).finally(()=>bounded.removeEventListener('abort',abort));
+    });
   };
   const validate = (value:unknown):T => {
     const data=value as T;
@@ -26,12 +30,14 @@ export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)
   try {
     for(let pages=0;pages<200;pages++){
       const batch=await read(`/api/jobs?limit=500&after=${cursor}`);
-      if(batch.data_mode==='backup')return backup();
-      if(!Array.isArray(batch.jobs) || batch.jobs.some((job:{id:number})=>!job || !Number.isSafeInteger(job.id) || job.id<=cursor))throw Error('Invalid job page');
-      for(const job of batch.jobs)collected.set(job.id,job);
-      if(batch.next_cursor===null){signal?.throwIfAborted();return {...payload,jobs:[...collected.values()]};}
-      if(!Number.isSafeInteger(batch.next_cursor) || batch.next_cursor<=cursor)throw Error('Invalid job pagination cursor');
-      cursor=batch.next_cursor;
+      if(!batch || typeof batch!=="object")throw Error("Invalid job page");
+      const page=batch as {jobs:{id:number}[];next_cursor:number|null;data_mode?:string};
+      if(page.data_mode==='backup')return backup();
+      if(!Array.isArray(page.jobs) || page.jobs.some((job:{id:number})=>!job || !Number.isSafeInteger(job.id) || job.id<=cursor))throw Error('Invalid job page');
+      for(const job of page.jobs)collected.set(job.id,job);
+      if(page.next_cursor===null){signal?.throwIfAborted();return {...payload,jobs:[...collected.values()]};}
+      if(!Number.isSafeInteger(page.next_cursor) || page.next_cursor<=cursor)throw Error('Invalid job pagination cursor');
+      cursor=page.next_cursor;
     }
     throw Error('Catalog pagination exceeded safety limit');
   }catch{return backup();}

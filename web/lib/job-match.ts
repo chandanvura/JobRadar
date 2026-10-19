@@ -86,3 +86,7 @@ export function feedbackByFamily(history:LearningRecord[]) {
  }
  return new Map([...scores].map(([family,score])=>[family,Math.max(-config.feedbackLimit,Math.min(config.feedbackLimit,score))]));
 }
+
+export function recommendedPreferenceMatch(job:MatchJob,preferences:MatchPreferences,match=personalMatch(job,preferences)) {
+ return match.score>=30&&(!preferences.titles.length||match.titleMatch);
+}

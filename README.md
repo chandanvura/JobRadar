@@ -279,3 +279,23 @@ and the learned adjustment stays within ±5 points. Rejections, passive views,
 notes and experience/location reports do not count as preference training.
 Everything remains private to the current browser/workspace and is included in
 tracking exports; learning never changes employer requirements or alert eligibility.
+
+### Posting proof and private application recovery
+
+Recommendations respect chosen role families, experience bounds, target cities and
+current employer posting evidence. Future/invalid timestamps and negative relative
+ages never certify freshness. Date-only evidence expires at the India day boundary;
+relative ages advance from their observation time. The portal rechecks freshness
+on focus and every minute, and keeps stale records available for review.
+
+Live catalogue requests have a 10-second request budget and a 45-second overall
+live budget before switching to the labelled saved catalogue. Refresh failure does
+not clear the displayed catalogue or private application history.
+
+Application changes merge the latest workspace state before saving. Stage changes
+keep a timestamped history, another tab's records are retained, and a previous good
+tracking copy can recover a corrupted primary copy. A private-backup restore merges
+tracking by its update time instead of erasing newer applications. Storage failures
+show an explicit warning; export tracking before leaving if that warning appears.
+History remains local to this browser: export a private backup before clearing
+browser data or moving devices. Recovery copies cannot survive browser-data removal.

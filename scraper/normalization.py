@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from .models import Job
 from .requirements import candidate_text
 from .experience import analyze_experience
+from .posting import posting_current
 from .source_ownership import correct_board_owner
 from .roles import classify_role, NON_TECHNICAL
 
@@ -77,11 +78,7 @@ def enrich(job: Job, company_priority: int=3):
     age=posted_age_hours(job.posted_at)
     reported=job.reported_age_hours
     employer_says_today=bool(job.posted_label and re.search(r"\b(?:posted\s+)?today\b",job.posted_label,re.I))
-    calendar_today=False
-    if job.posted_at and job.posted_precision=="day":
-        try: calendar_today=datetime.fromisoformat(job.posted_at.replace("Z","+00:00")).astimezone(INDIA_TZ).date()==datetime.now(INDIA_TZ).date()
-        except (TypeError,ValueError): pass
-    recent=(age is not None and -6 <= age <= MAX_JOB_AGE_HOURS) or (reported is not None and 0 <= reported <= MAX_JOB_AGE_HOURS) or employer_says_today or calendar_today
+    recent=posting_current(job)
     bounded_experience=job.experience_min is not None and job.experience_max is not None and job.experience_min >= 0 and job.experience_max <= MAX_EXPERIENCE_YEARS
     accepted_plus=job.experience_min is not None and job.experience_max is None and 0 <= job.experience_min <= 2
     experience_ok=bounded_experience or accepted_plus
