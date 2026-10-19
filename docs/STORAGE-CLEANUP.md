@@ -1,8 +1,8 @@
 # Disposable storage cleanup
 
 The `Clean disposable JobRadar storage` workflow removes rebuildable GitHub
-Actions caches once when installed or manually run. Its daily run removes
-job-detail caches older than 48 hours and dependency caches unused for seven days.
+job-detail caches on each run. Job details are now fetched fresh, with no disk
+cache to restore. Dependency caches are removed only after seven unused days.
 Useful caches can rebuild on the next validation or scan.
 
 Scan shard artifacts expire after two days. Cleanup also removes older shard

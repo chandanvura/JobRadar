@@ -25,7 +25,7 @@ def test_full_scope_reads_non_target_jobs_and_rechecks_after_details(monkeypatch
         return httpx.Response(404 if failure=='missing_detail' else 200,json={'jobPostingInfo':info},request=req)
     monkeypatch.setattr(adapters,'request',request)
     async def cache(*_):raise AssertionError('Full public details must be freshly collected')
-    monkeypatch.setattr(adapters,'cached_get',cache)
+    monkeypatch.setattr(adapters,'fetch_detail',cache)
     company=Company('Employer','https://employer.wd1.myworkdayjobs.com/External','workday_all','employer|External')
     adapter=adapters.ADAPTERS['workday_all']
     if failure in ['duplicate_id','missing_description','changed_title','changed_final']:

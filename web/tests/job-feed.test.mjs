@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {canonicalApplyUrl,groupDuplicateJobs,diversifyFeed} from '../lib/job-feed.ts';
-import {personalMatch,opportunityPriority,freshnessScore,feedbackBoost} from '../lib/job-match.ts';
+import {personalMatch,opportunityPriority,freshnessScore,feedbackByFamily} from '../lib/job-match.ts';
 const now=Date.parse('2026-10-05T12:00:00Z');
 const prefs={titles:['DevOps Engineer'],skills:['AWS','k8s','Java'],experienceMin:0,experienceMax:3,locations:['Bengaluru']};
 const job=(changes={})=>({company:'Example',title:'DevOps Engineer',role_category:'DevOps',normalized_location:'Bengaluru',ats_provider:'lever',external_job_id:'1',application_url:'https://jobs.lever.co/example/1',skills:'["AWS","Kubernetes","JavaScript"]',experience_min:1,experience_max:2,is_eligible:1,is_active:1,relevance_score:99,posted_at:'2026-10-05T11:00:00Z',posted_label:null,reported_age_hours:null,last_seen_at:'2026-10-05T11:30:00Z',first_seen_at:'2026-10-05T11:30:00Z',...changes});
@@ -25,9 +25,9 @@ test('unknown dates use discounted discovery priority and never invented posting
  assert.ok(freshnessScore(job({posted_at:null,reported_age_hours:2}),now).score>50);
 });
 test('feedback stays small and never learns from rejection',()=>{
- assert.equal(feedbackBoost(job(),Array(50).fill({saved:true,job:job()})),1);
- assert.equal(feedbackBoost(job(),Array.from({length:50},(_,i)=>({saved:true,job:job({application_url:`https://example.com/jobs/${i}`})}))),5);
- assert.equal(feedbackBoost(job(),[{status:'Rejected',job:job()}]),0);
+ assert.equal(feedbackByFamily(Array(50).fill({saved:true,job:job()})).get(job().role_category),1);
+ assert.equal(feedbackByFamily(Array.from({length:50},(_,i)=>({saved:true,job:job({application_url:`https://example.com/jobs/${i}`})}))).get(job().role_category),5);
+ assert.equal((feedbackByFamily([{status:'Rejected',job:job()}]).get(job().role_category)||0),0);
 });
 test('canonical URLs remove trackers but preserve requisition identifiers',()=>{
  assert.equal(canonicalApplyUrl('https://EXAMPLE.com/apply?utm_source=x&jobId=1&ref=y#top'),'https://example.com/apply?jobId=1');

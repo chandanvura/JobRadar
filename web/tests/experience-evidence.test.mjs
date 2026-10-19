@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fixtures from '../../config/experience-fixtures.json' with {type:'json'};
 import {analyzeExperience,experienceWithinPolicy,experienceDecision} from '../lib/job-experience.ts';
 import {normalizeExperience} from '../lib/job-requirements.ts';
-import {matchesCareerView,visibleCareerJobs} from '../lib/job-view.ts';
+import {matchesCareerView} from '../lib/job-view.ts';
 for(const fixture of fixtures)test(`experience: ${fixture.name}`,()=>{
  const result=analyzeExperience(fixture.text);
  assert.deepEqual([result.min,result.max,result.status],[fixture.min,fixture.max,fixture.status]);
@@ -33,5 +33,4 @@ test('verified recommendations reject unknown and open 3+ requirements; no fallb
  assert.equal(matchesCareerView(job(),'Recommended',0,3,true),false);
  assert.equal(matchesCareerView(job({experience_min:3}),'Recommended',0,3,true),false);
  assert.equal(experienceWithinPolicy(2,null),true);assert.equal(experienceWithinPolicy(1,3),true);
- assert.deepEqual(visibleCareerJobs('Recommended',[],[job()]),[]);
 });

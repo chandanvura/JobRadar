@@ -8,7 +8,7 @@ import type {RecommendationFeedback} from "@/lib/recommendation-feedback";
 import { useJobSearch } from "@/lib/use-job-search";
 import { fitPreferenceModel } from "@/lib/preference-model";
 import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
-import { defaultFreshness, matchesCareerView, verifiedView, visibleCareerJobs } from "@/lib/job-view";
+import { defaultFreshness, matchesCareerView, verifiedView } from "@/lib/job-view";
 import { PrivateNotes } from "./private-notes";
 import { JobPagination } from "./job-pagination";
 import { prepareCatalog } from "@/lib/prepare-catalog";
@@ -836,7 +836,7 @@ function DashboardContent() {
   };
   const showJobs = jobViews.has(active),
     companySearch = active === "Companies" ? deferredQuery : "";
-  const visibleJobs = visibleCareerJobs(active, filtered, reviewPreview);
+  const visibleJobs = filtered;
   const viewStats = useMemo(() => {
     let bengaluru=0,hyderabad=0,ultra=0;
     for(const job of visibleJobs){

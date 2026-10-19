@@ -55,7 +55,7 @@ def test_xml_only_fetches_relevant_details_and_preserves_unknown_dates(monkeypat
         return httpx.Response(200, text='<meta itemprop="validThrough" content="2026-11-04">', request=httpx.Request('GET', url))
     monkeypatch.setattr(adapters, 'client', lambda **kwargs: Client())
     monkeypatch.setattr(adapters, 'request', get)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     jobs, count = asyncio.run(adapters.PublicXMLAdapter().fetch_jobs(Company('Example', 'https://jobs.example', 'xml', 'https://jobs.example/googlefeed.xml')))
     assert count == 2 and len(jobs) == 1
     assert jobs[0].posted_at is None
@@ -79,7 +79,7 @@ def test_oracle_pagination_details_and_secondary_city(monkeypatch):
                               request=httpx.Request('GET', url))
     monkeypatch.setattr(adapters, 'client', lambda **kwargs: Client())
     monkeypatch.setattr(adapters, 'request', get)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     jobs, count = asyncio.run(adapters.OracleCareerAdapter().fetch_jobs(Company('Example', 'https://acme.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1', 'oracle', 'CX_1')))
     assert count == 3 and len(jobs) == 1
     assert 'offset=2' in calls[1]['finder']

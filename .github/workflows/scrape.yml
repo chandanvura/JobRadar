@@ -83,15 +83,6 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Set daily cache key
-        id: cache-date
-        run: echo "value=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
-      - name: Restore shard-local immutable job-detail cache
-        uses: actions/cache@v6
-        with:
-          path: .cache/jobradar-http
-          key: jobradar-details-${{ runner.os }}-shard-${{ matrix.shard }}-${{ steps.cache-date.outputs.value }}
-          restore-keys: jobradar-details-${{ runner.os }}-shard-${{ matrix.shard }}-
       - name: Discover shard ${{ matrix.shard }}
         run: |
           for attempt in 1 2; do

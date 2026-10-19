@@ -4,7 +4,7 @@ import httpx
 import pytest
 from scraper.models import Job
 from bs4 import BeautifulSoup
-from scraper.adapters import cached_get, discover_ats, job_like_url, jobvite_config, likely_target, location_text, parse_jobvite_xml, parse_posted_at, parse_posting, request_bucket, workday_config
+from scraper.adapters import fetch_detail, discover_ats, job_like_url, jobvite_config, likely_target, location_text, parse_jobvite_xml, parse_posting, request_bucket, workday_config
 from scraper.models import Company
 from scraper.main import fetch_company_jobs, ingest_chunks, ingest_scan, private_start_chat_id, run_health_status, source_job_key, telegram_chat_id, telegram_error
 from scraper.distributed import load_artifacts, merge_artifacts, source_shard
@@ -140,7 +140,7 @@ def test_relative_posting_labels_are_normalized():
     assert parse_posting("Posted 30 minutes ago",now)==(None,"Posted 30 minutes ago","relative",0.5)
     assert parse_posting("2 hours ago",now)==(None,"2 hours ago","relative",2.0)
     assert parse_posting("Posted few hours ago",now)==(None,"Posted a few hours ago","relative",3.0)
-    assert parse_posted_at("Posted Yesterday",now) is None
+    assert parse_posting("Posted Yesterday",now)[0] is None
 
 def test_today_label_is_eligible_without_invented_timestamp():
     job=sample(posted_at=recent())
@@ -208,21 +208,22 @@ def test_malformed_relative_urls_do_not_break_custom_source_indexing():
     soup=BeautifulSoup('<a href="//[broken">Broken</a>',"html.parser")
     assert discover_ats(soup,"https://company.example/careers") is None
 
-def test_job_details_are_reused_without_skipping_live_listings(monkeypatch,tmp_path):
-    import scraper.adapters as adapters
+def test_job_details_are_fresh_and_outages_never_replay_prior_content():
     class FakeClient:
         calls=0
         async def request(self,method,url,**kwargs):
             self.calls+=1
-            return httpx.Response(200,text="fresh detail",request=httpx.Request(method,url))
-    monkeypatch.setattr(adapters,"CACHE_ROOT",tmp_path)
+            status=200 if self.calls<3 else 404
+            text="Experience: 0–2 years" if self.calls==1 else "Experience: 5–7 years"
+            return httpx.Response(status,text=text,request=httpx.Request(method,url))
     client=FakeClient(); url="https://jobs.example/job/123"
     async def exercise():
-        first=await cached_get(client,url)
-        second=await cached_get(client,url)
-        return first.text,second.text
-    assert asyncio.run(exercise()) == ("fresh detail","fresh detail")
-    assert client.calls == 1
+        first=await fetch_detail(client,url)
+        second=await fetch_detail(client,url)
+        missing=await fetch_detail(client,url)
+        return first.text,second.text,missing.status_code
+    assert asyncio.run(exercise()) == ("Experience: 0–2 years","Experience: 5–7 years",404)
+    assert client.calls == 3
 
 def test_health_uses_request_failures_not_opening_counts():
     assert run_health_status(0) == "success"

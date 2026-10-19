@@ -52,7 +52,7 @@ class LegacyEightfoldCareerAdapter:
         self.complete=complete
 
     async def fetch_jobs(self, company):
-        from .adapters import cached_get, clean, client, likely_target, location_text, make_job, request
+        from .adapters import fetch_detail, clean, client, likely_target, location_text, make_job, request
         host, domain = company.ats_identifier.split('|', 1)
         parsed = urlparse(company.careers_url)
         if (parsed.scheme != 'https' or parsed.hostname != host or parsed.path != '/careers'
@@ -89,7 +89,7 @@ class LegacyEightfoldCareerAdapter:
                 query = urlencode({'domain': domain, 'pid': identifier})
                 url = base + '/careers?' + query
                 async with semaphore:
-                    detail = await cached_get(x, base + '/api/apply/v2/jobs/' + identifier + '?' + urlencode({'domain': domain}))
+                    detail = await fetch_detail(x, base + '/api/apply/v2/jobs/' + identifier + '?' + urlencode({'domain': domain}))
                     if detail.status_code in (404, 410):
                         if self.complete:raise SnapshotChanged('Legacy Eightfold listed detail disappeared')
                         return None
@@ -99,7 +99,7 @@ class LegacyEightfoldCareerAdapter:
                     description = clean(job.get('job_description', ''))
                     if not description:
                         raise ValueError('Legacy Eightfold detail is missing its full description')
-                    page = await cached_get(x, url); page.raise_for_status()
+                    page = await fetch_detail(x, url); page.raise_for_status()
                     posting = posted_date(page.text, host, domain, identifier, job.get('name'))
                 # t_create and t_update describe ingestion/updates, not original posting.
                 return make_job(identifier if self.complete else str(job.get('ats_job_id') or identifier), job.get('name'), company.name,

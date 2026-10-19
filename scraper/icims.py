@@ -6,7 +6,7 @@ from urllib.parse import parse_qs, urljoin, urlparse
 from bs4 import BeautifulSoup
 class ICIMSCareerAdapter:
     async def fetch_jobs(self, company):
-        from .adapters import cached_get, clean, client, jsonld_objects, likely_target, location_text, make_job, request
+        from .adapters import fetch_detail, clean, client, jsonld_objects, likely_target, location_text, make_job, request
         if urlparse(company.careers_url).scheme != 'https':
             raise ValueError('Invalid iCIMS employer source')
         host = urlparse(company.careers_url).hostname
@@ -70,7 +70,7 @@ class ICIMSCareerAdapter:
             semaphore = asyncio.Semaphore(6)
             async def convert(job_url):
                 async with semaphore: 
-                    response = await cached_get(x, job_url)
+                    response = await fetch_detail(x, job_url)
                 if response.status_code in (404, 410): return None
                 response.raise_for_status()
                 soup = BeautifulSoup(response.text, 'html.parser')

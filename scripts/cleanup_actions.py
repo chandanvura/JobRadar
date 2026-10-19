@@ -14,7 +14,7 @@ def stale_cache(cache, now, clear_all=False):
     if clear_all:
         return True
     if cache["key"].startswith("jobradar-details-"):
-        return now - timestamp(cache["created_at"]) > 48 * 3600
+        return True  # Retired job-detail caches must never be restored.
     return now - timestamp(cache["last_accessed_at"]) > 7 * 86400
 
 

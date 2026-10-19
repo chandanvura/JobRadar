@@ -38,7 +38,7 @@ def phenom_location(item):
 class PhenomCareerAdapter:
     """Use the same public search widget as the employer's careers UI."""
     async def fetch_jobs(self, company):
-        from .adapters import cached_get, clean, client, likely_target, make_job, request
+        from .adapters import fetch_detail, clean, client, likely_target, make_job, request
         async with client(timeout=45) as x:
             page=await request(x,'GET',company.careers_url)
             page.raise_for_status()
@@ -90,7 +90,7 @@ class PhenomCareerAdapter:
                     raise ValueError('Invalid public Phenom job identifier')
                 url=config['baseUrl'].rstrip('/')+'/job/'+sequence
                 async with semaphore:
-                    detail=await cached_get(x,url)
+                    detail=await fetch_detail(x,url)
                 if detail.status_code in (404,410): return None
                 detail.raise_for_status()
                 data=script_json(detail.text,r'\bphApp\.ddo\s*=\s*').get('jobDetail',{})
@@ -117,7 +117,7 @@ class PhenomCareerAdapter:
 class WorkableCareerAdapter:
     """Read published vacancies through the public Workable job-board interface."""
     async def fetch_jobs(self, company):
-        from .adapters import cached_get, clean, client, likely_target, location_text, make_job, request
+        from .adapters import fetch_detail, clean, client, likely_target, location_text, make_job, request
         slug=company.ats_identifier
         if not re.fullmatch(r'[\w-]+',slug):
             raise ValueError('Invalid Workable employer account')
@@ -153,7 +153,7 @@ class WorkableCareerAdapter:
                 if not re.fullmatch(r'[\w-]+',shortcode):
                     raise ValueError('Invalid Workable public job identifier')
                 async with semaphore:
-                    response=await cached_get(x,f'{base}/api/v2/accounts/{slug}/jobs/{shortcode}')
+                    response=await fetch_detail(x,f'{base}/api/v2/accounts/{slug}/jobs/{shortcode}')
                 if response.status_code in (404,410): return None
                 response.raise_for_status(); job=response.json()
                 if job.get('shortcode')!=shortcode or job.get('isInternal') or job.get('state')!='published':

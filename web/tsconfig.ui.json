@@ -1,1 +1,20 @@
-{"extends": "./tsconfig.json", "compilerOptions": {"incremental": false, "allowImportingTsExtensions": true}, "include": ["components/**/*.tsx", "lib/**/*.ts", "app/**/*.tsx"], "exclude": ["node_modules", "worker", "db", "dist"]}
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "allowImportingTsExtensions": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": [
+    "components/**/*.tsx",
+    "lib/**/*.ts",
+    "app/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "worker",
+    "db",
+    "dist"
+  ]
+}

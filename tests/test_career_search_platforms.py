@@ -32,7 +32,7 @@ def test_eightfold_current_search_pages_details_and_original_dates(monkeypatch, 
         identifier=parse_qs(urlparse(url).query)['position_id'][0]
         return response(url,data={'data':{'id':int(identifier),'name':'Software Engineer','locations':['Bengaluru, India'],'jobDescription':'Java; 0-2 years','postedTs':posted,'creationTs':1791244800}})
     monkeypatch.setattr(adapters,'client',lambda **kwargs:Client())
-    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',cached)
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',cached)
     jobs,count=asyncio.run(EightfoldCareerAdapter().fetch_jobs(Company('Example','https://example.eightfold.ai/careers','eightfold','example.eightfold.ai|example.com')))
     assert calls==[0,1,0] and count==2 and len(jobs)==2
     assert jobs[0].posted_at==expected
@@ -70,7 +70,7 @@ def test_talentbrew_pages_and_reads_full_public_jobposting(monkeypatch):
     async def cached(client,url):
         job={'@type':'JobPosting','title':'Software Engineer','description':'Python APIs; 0-2 years','datePosted':'2026-10-5','jobLocation':{'address':{'addressLocality':'Hyderabad','addressCountry':'India'}}}
         return response(url,text='<script type="application/ld+json">'+json.dumps(job)+'</script>')
-    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',cached)
+    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',cached)
     jobs,count=asyncio.run(TalentBrewCareerAdapter().fetch_jobs(Company('Example','https://careers.example/search','talentbrew','123')))
     assert len(calls)==2 and count==2 and len(jobs)==2
     assert jobs[0].posted_at=='2026-10-05T00:00:00+00:00' and jobs[0].posted_precision=='day'
@@ -109,7 +109,7 @@ def test_talentbrew_duplicate_view_link_and_sibling_location(monkeypatch):
         return response(url,text='<section id="search-results" data-organization-ids="123" data-total-results="1"><section id="search-results-list"><li><h2><a data-job-id="1" href="/job/1">Software Engineer</a></h2><span class="location">Bengaluru, India</span><a data-job-id="1" href="/job/1">View Role</a></li></section></section>')
     async def cached(client,url):
         return response(url,text='<div class="ats-description">Full requirements: Java; 0-2 years</div>')
-    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',cached)
+    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',cached)
     jobs,count=asyncio.run(TalentBrewCareerAdapter().fetch_jobs(Company('Example','https://careers.example/search','talentbrew','123')))
     assert count==1 and len(jobs)==1
     assert jobs[0].location=='Bengaluru, India' and jobs[0].description=='Full requirements: Java; 0-2 years'
@@ -126,7 +126,7 @@ def test_workday_country_locations_exclude_similarly_named_us_states(monkeypatch
         return response(url,data={'jobPostings':[{'title':'Software Engineer','locationsText':'2 Locations','externalPath':'/job/1','postedOn':'Posted Today'}]})
     async def cached(client,url):
         return response(url,data={'jobPostingInfo':{'title':'Software Engineer','location':'Hyderabad, India','jobReqId':'1','jobDescription':'Java; 0-2 years'}})
-    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',cached)
+    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',cached)
     jobs,count=asyncio.run(adapters.WorkdayAdapter().fetch_jobs(Company('Example','https://example.wd1.myworkdayjobs.com/Jobs','workday','example|Jobs|India')))
     assert count==1 and len(jobs)==1 and len(calls)==2
 

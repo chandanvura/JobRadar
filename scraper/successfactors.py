@@ -16,7 +16,7 @@ def public_posting(value):
 
 class SuccessFactorsCareerAdapter:
     async def fetch_jobs(self, company):
-        from .adapters import cached_get, clean, client, jsonld_objects, likely_role, likely_target, location_text, make_job, request
+        from .adapters import fetch_detail, clean, client, jsonld_objects, likely_role, likely_target, location_text, make_job, request
         from .models import JobBatch
         origin = urlparse(company.careers_url)
         prefix = company.ats_identifier
@@ -97,7 +97,7 @@ class SuccessFactorsCareerAdapter:
                 # visible location is outside the target cities.
                 if not likely_target(title, row_location) and not (re.search(r'\+\d+\s+more', row_location) and likely_role(title)):
                     return None
-                async with semaphore: response = await cached_get(x, job_url)
+                async with semaphore: response = await fetch_detail(x, job_url)
                 if response.status_code in (404, 410):
                     missing.append(identifier); return None
                 response.raise_for_status()

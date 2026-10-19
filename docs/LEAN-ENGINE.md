@@ -5,7 +5,7 @@
 | Feature | Decision | Reason |
 | --- | --- | --- |
 | React UI + Worker API + D1 | Keep | Already a single edge application; a Python server/PostgreSQL rewrite would add operations and cost. |
-| Python source adapters | Keep | Existing bounded requests, source isolation, detail caches and fixture coverage. |
+| Python source adapters | Keep | Existing bounded requests, source isolation, fresh detail reads and fixture coverage. |
 | Eight parallel scan shards | Keep for now | Stateless jobs, not persistent microservices. Removing them without timing the registry could break scan deadlines. |
 | Quota guard, conditional upserts, public snapshot | Keep | Protect the free account and preserve browsing during database outages. |
 | Existing title/experience/eligibility rules | Improve aliases | Preserve strict employer-date alert policy and current target cities. |

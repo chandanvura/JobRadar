@@ -47,7 +47,7 @@ def test_workday_uses_published_city_ids_and_reads_secondary_locations(monkeypat
         return httpx.Response(200,request=httpx.Request(method,url),json=result)
     async def detail(client,url):
         return httpx.Response(200,request=httpx.Request('GET',url),json={'jobPostingInfo':{'title':'Cloud Developer','jobReqId':'R1','jobDescription':'0–2 years with Python','location':'London','additionalLocations':['Bengaluru']}})
-    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',detail)
     company=Company('HPE','https://hpe.wd5.myworkdayjobs.com/Jobsathpe','workday','hpe|Jobsathpe')
     jobs,total=asyncio.run(adapters.WorkdayAdapter().fetch_jobs(company))
     assert total==len(jobs)==1 and jobs[0].title=='Cloud Developer' and 'Bengaluru' in jobs[0].location
@@ -79,7 +79,7 @@ def test_workday_skips_only_definitely_old_details_and_keeps_unknown_dates(monke
     async def detail(client,url):
         requested.append(url.rsplit('/',1)[-1])
         return httpx.Response(200,request=httpx.Request('GET',url),json={'jobPostingInfo':{'title':'Cloud Developer','jobReqId':url.rsplit('/',1)[-1],'jobDescription':'0-2 years Java','location':'Bengaluru'}})
-    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',detail)
     company=Company('Example','https://example.wd1.myworkdayjobs.com/Jobs','workday','example|Jobs')
     jobs,total=asyncio.run(adapters.WorkdayAdapter().fetch_jobs(company))
     assert total==6

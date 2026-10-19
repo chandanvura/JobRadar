@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from urllib.parse import parse_qs, urlencode, urljoin, urlparse
-from pathlib import Path
-from hashlib import sha256
-import asyncio, html, json, os, re, time
+import asyncio, html, json, os, re
 import httpx
 from bs4 import BeautifulSoup
 from defusedxml import ElementTree as ET
@@ -12,7 +10,6 @@ from .snapshot import SnapshotChanged
 from .roles import likely_technical_title
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
-CACHE_ROOT=Path(os.getenv("JOBRADAR_HTTP_CACHE",".cache/jobradar-http"))
 _DOMAIN_LIMITERS={}
 def clean(value): return re.sub(r"\s+"," ",html.unescape(re.sub(r"<[^>]+>"," ",value or ""))).strip()
 def client(timeout=20):
@@ -60,25 +57,10 @@ async def request(x,method,url,**kwargs):
         # Release the provider semaphore while backing off; never retry 403/429.
         await asyncio.sleep(0.5 * 2**attempt)
 
-def _cache_path(url): return CACHE_ROOT/(sha256(url.encode()).hexdigest()+".json")
+async def fetch_detail(x,url):
+    """Read current employer details; JDs and posting labels can change."""
+    return await request(x,"GET",url)
 
-async def cached_get(x,url,ttl_hours=30):
-    """Cache immutable job-detail pages; listing feeds are always fetched live."""
-    path=_cache_path(url)
-    try:
-        saved=json.loads(path.read_text(encoding="utf-8"))
-        if time.time()-float(saved["saved_at"]) < ttl_hours*3600:
-            return httpx.Response(200,text=saved["text"],headers=saved.get("headers",{}),request=httpx.Request("GET",url))
-    except (OSError,ValueError,KeyError,TypeError,json.JSONDecodeError):
-        pass
-    response=await request(x,"GET",url)
-    if response.status_code==200:
-        try:
-            path.parent.mkdir(parents=True,exist_ok=True)
-            path.write_text(json.dumps({"saved_at":time.time(),"text":response.text,"headers":{"content-type":response.headers.get("content-type","")}}),encoding="utf-8")
-        except OSError:
-            pass
-    return response
 def epoch_ms(value):
     try: return datetime.fromtimestamp(int(value)/1000,tz=timezone.utc).isoformat()
     except (TypeError,ValueError,OSError): return None
@@ -120,7 +102,6 @@ def parse_posting(value, now=None):
     if exact:
         precision="day" if re.fullmatch(r"\d{4}-\d{2}-\d{2}",raw) else "exact"
         return exact,None,precision,None
-    reference=now or datetime.now(timezone.utc)
     label=raw.lower()
     if re.search(r"\b(posted\s+)?today\b",label):
         return None,"Posted today","day",None
@@ -135,16 +116,9 @@ def parse_posting(value, now=None):
         return None,"Posted a few hours ago","relative",3.0
     return None,raw,"unknown",None
 
-def parse_posted_at(value, now=None):
-    """Compatibility helper returning only a genuine employer timestamp."""
-    return parse_posting(value,now)[0]
-
-def posting_fields(value, now=None):
-    return parse_posting(value,now)
-
 def make_job(*args, posting=None, **kwargs):
     job=Job(*args,**kwargs)
-    job.posted_at,job.posted_label,job.posted_precision,job.reported_age_hours=posting_fields(posting)
+    job.posted_at,job.posted_label,job.posted_precision,job.reported_age_hours=parse_posting(posting)
     return job
 
 class JobSource(ABC):
@@ -162,11 +136,11 @@ class GreenhouseAdapter(JobSource):
                 # first_published, including boards with JavaScript-only job pages.
                 if likely_target(j.get("title",""),location):
                     try:
-                        detail=await cached_get(x,f"https://boards-api.greenhouse.io/v1/boards/{c.ats_identifier}/jobs/{j['id']}")
+                        detail=await fetch_detail(x,f"https://boards-api.greenhouse.io/v1/boards/{c.ats_identifier}/jobs/{j['id']}")
                         if detail.status_code==200:
                             posting=detail.json().get("first_published")
                         if not posting:
-                            page=await cached_get(x,url)
+                            page=await fetch_detail(x,url)
                             if page.status_code==200:
                                 item=next(jsonld_objects(BeautifulSoup(page.text,"html.parser")),None)
                                 if item: posting=item.get("datePosted")
@@ -273,7 +247,7 @@ class SmartRecruitersAdapter(JobSource):
                 item_location=item.get("location") or {}
                 location_hint=", ".join(str(item_location.get(k,"")) for k in ("city","region","country") if item_location.get(k))
                 if not likely_target(item.get("name",""),location_hint): return None
-                async with semaphore: detail_response=await cached_get(x,f"{base}/{item['id']}")
+                async with semaphore: detail_response=await fetch_detail(x,f"{base}/{item['id']}")
                 if detail_response.status_code != 200: return None
                 detail=detail_response.json(); sections=detail.get("jobAd",{}).get("sections",{})
                 description=" ".join(clean((sections.get(k) or {}).get("text","")) for k in ("jobDescription","qualifications","additionalInformation"))
@@ -398,7 +372,7 @@ class WorkdayAdapter(JobSource):
                 if not path: return None
                 async with semaphore:
                     detail_response=(await request(x,'GET',f"{api}{path}") if self.all_details
-                                     else await cached_get(x,f"{api}{path}"))
+                                     else await fetch_detail(x,f"{api}{path}"))
                 if detail_response.status_code in (404,410):
                     if self.complete: missing.append(path)
                     return None
@@ -539,7 +513,6 @@ class PublicXMLAdapter(JobSource):
     async def fetch_jobs(self,c):
         parsed=urlparse(c.ats_identifier)
         if parsed.scheme!="https" or not parsed.hostname: raise ValueError("Public XML feed requires an HTTPS URL")
-        # Listings remain live. Only employer detail pages reuse the detail cache.
         async with client(timeout=45) as x:
             response=await request(x,"GET",c.ats_identifier); response.raise_for_status()
             jobs,count=parse_public_xml(response.content,c.name,c.careers_url)
@@ -549,10 +522,10 @@ class PublicXMLAdapter(JobSource):
                 if job.posted_at: return job
                 async with semaphore:
                     try:
-                        detail=await cached_get(x,job.job_url)
+                        detail=await fetch_detail(x,job.job_url)
                         if detail.status_code==200:
                             posting=employer_posted_date(BeautifulSoup(detail.text,"html.parser"))
-                            job.posted_at,job.posted_label,job.posted_precision,job.reported_age_hours=posting_fields(posting)
+                            job.posted_at,job.posted_label,job.posted_precision,job.reported_age_hours=parse_posting(posting)
                     except (httpx.HTTPError,ValueError): pass
                 return job
             return list(await asyncio.gather(*(dated(job) for job in targets))),count
@@ -598,7 +571,7 @@ class OracleCareerAdapter(JobSource):
                 identifier=str(item["Id"])
                 params={"onlyData":"true","expand":"all","finder":f'ById;Id="{identifier}",siteNumber={site}'}
                 detail_url=base+"recruitingCEJobRequisitionDetails?"+urlencode(params)
-                async with semaphore: detail=await cached_get(x,detail_url)
+                async with semaphore: detail=await fetch_detail(x,detail_url)
                 detail.raise_for_status(); records=detail.json().get("items")
                 if not records: raise ValueError("Oracle public job detail missing")
                 info=records[0]
@@ -728,7 +701,7 @@ class CustomCareerAdapter(JobSource):
             semaphore=asyncio.Semaphore(8)
             async def fetch(url):
                 async with semaphore:
-                    try:return await cached_get(x,url)
+                    try:return await fetch_detail(x,url)
                     except httpx.HTTPError:return None
             responses=[listing,*await asyncio.gather(*(fetch(url) for url in urls))]
             for response in responses[1:]:

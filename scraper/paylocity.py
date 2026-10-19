@@ -55,7 +55,7 @@ def detail_description(text, identifier, title):
 
 class PaylocityCareerAdapter:
     async def fetch_jobs(self, company):
-        from .adapters import cached_get, clean, client, likely_target, location_text, make_job, request
+        from .adapters import fetch_detail, clean, client, likely_target, location_text, make_job, request
         board = company.ats_identifier
         parsed = urlparse(company.careers_url)
         if (parsed.scheme != 'https' or parsed.hostname != 'recruiting.paylocity.com'
@@ -76,7 +76,7 @@ class PaylocityCareerAdapter:
                 identifier = str(row['JobId'])
                 url = f'https://recruiting.paylocity.com/Recruiting/Jobs/Details/{identifier}'
                 async with semaphore:
-                    detail = await cached_get(x, url)
+                    detail = await fetch_detail(x, url)
                 if detail.status_code in (404, 410):
                     return None
                 detail.raise_for_status()

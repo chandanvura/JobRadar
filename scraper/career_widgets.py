@@ -129,7 +129,7 @@ class KulaCareerAdapter:
 
 class BambooCareerAdapter:
     async def fetch_jobs(self, company):
-        from .adapters import client, clean, cached_get, likely_target, location_text, make_job, request
+        from .adapters import client, clean, fetch_detail, likely_target, location_text, make_job, request
         if not re.fullmatch(r'[\w-]+', company.ats_identifier): raise ValueError('Invalid BambooHR employer identifier')
         host = company.ats_identifier + '.bamboohr.com'; base = 'https://' + host
         if urlparse(company.careers_url).hostname != host: raise ValueError('BambooHR employer host does not match its registered source')
@@ -146,7 +146,7 @@ class BambooCareerAdapter:
                 location = location_text(item.get('location'), item.get('atsLocation'))
                 if not likely_target(item.get('jobOpeningName', ''), location): return None
                 identifier = str(item['id']); url = base + '/careers/' + identifier
-                async with semaphore: response = await cached_get(x, url + '/detail')
+                async with semaphore: response = await fetch_detail(x, url + '/detail')
                 if response.status_code in (404, 410): return None
                 response.raise_for_status(); job = response.json().get('result', {}).get('jobOpening', {})
                 if job.get('jobOpeningStatus') != 'Open': return None
@@ -163,7 +163,7 @@ class BambooCareerAdapter:
 
 class PyjamaCareerAdapter:
     async def fetch_jobs(self, company):
-        from .adapters import client, clean, cached_get, location_text, make_job, request
+        from .adapters import client, clean, fetch_detail, location_text, make_job, request
         parsed = urlparse(company.careers_url)
         if parsed.hostname != 'jobs.pyjamahr.com' or not re.fullmatch(r'[\w-]+', company.ats_identifier):
             raise ValueError('PyjamaHR employer host does not match its registered source')
@@ -198,7 +198,7 @@ class PyjamaCareerAdapter:
                 if item.get('published_internally'): return None
                 identifier = str(item['id'])
                 endpoint = base + '/api/career/jobs/' + identifier + '/?' + urlencode({'company_uuid': company.ats_identifier, 'is_careers_page': 'true'})
-                async with semaphore: response = await cached_get(x, endpoint)
+                async with semaphore: response = await fetch_detail(x, endpoint)
                 if response.status_code in (404, 410): return None
                 response.raise_for_status(); job = response.json()
                 if str(job.get('id')) != identifier: raise ValueError('PyjamaHR detail does not match its listing')

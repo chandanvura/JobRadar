@@ -71,7 +71,7 @@ def test_avature_collects_all_advertised_offsets_and_full_details(monkeypatch):
         text = '<article class="article--details"><div class="article__header">Description and Requirements</div><div class="article__content">Java, AWS; zero to two years experience</div></article>'
         return httpx.Response(200, request=httpx.Request('GET', url), text=text)
     monkeypatch.setattr(adapters, 'request', request)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     jobs, count = asyncio.run(AvatureCareerAdapter().fetch_jobs(Company('Employer', 'https://careers.example/jobs', 'avature', 'careers.example')))
     assert count == 2 and len(jobs) == 2
     assert len(calls) == 3 and 'jobOffset=1' in calls[1]
@@ -89,7 +89,7 @@ def test_avature_disappeared_relevant_detail_remains_partial(monkeypatch):
     async def detail(client, url):
         return httpx.Response(410, request=httpx.Request('GET', url))
     monkeypatch.setattr(adapters, 'request', request)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     jobs, count = asyncio.run(AvatureCareerAdapter().fetch_jobs(
         Company('Employer', 'https://careers.example/jobs', 'avature', 'careers.example')))
     assert not jobs and count == 1
@@ -139,7 +139,7 @@ def test_overlapping_valid_pages_restart_whole_snapshot_once(monkeypatch, always
         pass
 
     monkeypatch.setattr(adapters, 'request', request)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     monkeypatch.setattr(main.asyncio, 'sleep', sleep)
     company = Company('Employer', 'https://careers.example/jobs', 'avature', 'careers.example')
     if always_changed:

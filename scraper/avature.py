@@ -67,7 +67,7 @@ def detail_section(soup):
 
 class AvatureCareerAdapter:
     async def fetch_jobs(self, company):
-        from .adapters import cached_get, clean, client, jsonld_objects, likely_target, location_text, make_job, request
+        from .adapters import fetch_detail, clean, client, jsonld_objects, likely_target, location_text, make_job, request
         parsed = urlparse(company.careers_url); host = parsed.hostname
         if parsed.scheme != 'https' or host != company.ats_identifier:
             raise ValueError('Avature employer host does not match its registered source')
@@ -108,7 +108,7 @@ class AvatureCareerAdapter:
             missing = []
             async def convert(identifier, item):
                 if not likely_target(item['title'], item['location']): return None
-                async with semaphore: result = await cached_get(x, item['url'])
+                async with semaphore: result = await fetch_detail(x, item['url'])
                 if result.status_code in (404, 410):
                     missing.append(identifier)
                     return None

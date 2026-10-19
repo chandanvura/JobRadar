@@ -38,7 +38,7 @@ class EightfoldCareerAdapter:
         self.complete = complete
 
     async def fetch_jobs(self, company):
-        from .adapters import cached_get, clean, client, epoch_ms, likely_target, location_text, make_job, request
+        from .adapters import fetch_detail, clean, client, epoch_ms, likely_target, location_text, make_job, request
         host, domain = company.ats_identifier.split('|', 1)
         parsed = urlparse(company.careers_url)
         if parsed.scheme != 'https' or parsed.hostname != host or not re.fullmatch(r'[\w.-]+', domain):
@@ -79,7 +79,7 @@ class EightfoldCareerAdapter:
                 from urllib.parse import urlencode
                 detail_url = base + '/api/pcsx/position_details?' + urlencode({'domain': domain, 'position_id': identifier, 'hl': 'en'})
                 async with semaphore:
-                    response = await request(x, 'GET', detail_url) if self.complete else await cached_get(x, detail_url)
+                    response = await request(x, 'GET', detail_url) if self.complete else await fetch_detail(x, detail_url)
                 if response.status_code in (404, 410):
                     raise SnapshotChanged('Eightfold listed detail disappeared during collection')
                 response.raise_for_status(); job = response.json().get('data', {})

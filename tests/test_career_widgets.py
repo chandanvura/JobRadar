@@ -96,7 +96,7 @@ def test_widget_collection_excludes_private_jobs_and_keeps_unknown_dates(monkeyp
                                         'location': 'Bengaluru', 'published_internally': False,
                                         'created_at': '2026-10-05T11:00:00Z'}, request=httpx.Request('GET', url))
     monkeypatch.setattr(adapters, 'request', request)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     async def run():
         jobs, count = await KulaCareerAdapter().fetch_jobs(Company('Example', 'https://careers.kula.ai/example', 'kula', 'example'))
         assert count == 1 and [j.title for j in jobs] == ['Software Engineer']

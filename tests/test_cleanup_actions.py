@@ -4,9 +4,11 @@ from scripts.cleanup_actions import cleanup, stale_cache
 NOW = datetime(2026, 10, 5, tzinfo=timezone.utc).timestamp()
 
 
-def test_cache_age_uses_creation_for_details_and_access_for_dependencies():
+def test_retired_detail_caches_are_removed_and_recent_dependencies_preserved():
     cache = {"key": "jobradar-details-linux-old", "created_at": "2026-10-01T00:00:00Z",
              "last_accessed_at": "2026-10-04T00:00:00Z"}
+    assert stale_cache(cache, NOW)
+    cache["created_at"] = "2026-10-05T00:00:00Z"
     assert stale_cache(cache, NOW)
     cache["key"] = "setup-python-pip"
     assert not stale_cache(cache, NOW)

@@ -60,7 +60,7 @@ def test_legacy_pagination_collects_all_pages_and_full_details(monkeypatch):
         identifier = int(url.split('pid=')[1])
         return httpx.Response(200, request=httpx.Request('GET', url), text=posting(identifier))
     monkeypatch.setattr(adapters, 'request', request)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     company = Company('Employer', 'https://jobs.example/careers?domain=employer.example',
                       'eightfold_legacy', 'jobs.example|employer.example')
     jobs, count = asyncio.run(LegacyEightfoldCareerAdapter().fetch_jobs(company))
@@ -96,7 +96,7 @@ def test_complete_mode_collects_non_target_roles_and_checks_final_snapshot(monke
         if '/api/' in url:
             return httpx.Response(200,request=httpx.Request('GET',url),json={'id':1,'ats_job_id':'REQ1','isPrivate':False,'name':'Sales','location':'Delhi, India','job_description':'Full requirements'})
         return httpx.Response(200,request=httpx.Request('GET',url),text='<p>No original date published</p>')
-    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',detail)
     jobs,count=asyncio.run(LegacyEightfoldCareerAdapter(complete=True).fetch_jobs(Company('Employer','https://jobs.example/careers?domain=employer.example','eightfold_legacy_complete','jobs.example|employer.example')))
     assert count==len(jobs)==1 and offsets==[0,0] and len(details)==2
     assert jobs[0].external_job_id=='1' and jobs[0].posted_at is None

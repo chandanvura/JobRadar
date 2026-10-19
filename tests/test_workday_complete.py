@@ -18,7 +18,7 @@ def test_complete_workday_reads_secondary_locations_and_all_pages(monkeypatch):
         return httpx.Response(200,request=httpx.Request(method,url),json={'total':21 if offset==0 else 0,'jobPostings':rows})
     async def detail(client,url):
         return httpx.Response(200,request=httpx.Request('GET',url),json={'jobPostingInfo':{'jobReqId':url.rsplit('_',1)[-1],'title':'Software Engineer','jobDescription':'Java requirements; 0 to 2 years experience','location':'London','additionalLocations':['Bengaluru, India'],'startDate':'2026-10-06'}})
-    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',detail)
     jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
     assert offsets==[0,20,0] and count==21 and len(jobs)==21
     assert all('Bengaluru, India' in job.location and 'Java requirements' in job.description for job in jobs)
@@ -44,7 +44,7 @@ def test_complete_workday_missing_requirements_fail_visibly(monkeypatch):
         return httpx.Response(200,request=httpx.Request(method,url),json={'total':1,'jobPostings':[{'externalPath':'/job/X/R1','title':'Software Engineer','locationsText':'2 Locations'}]})
     async def detail(client,url):
         return httpx.Response(200,request=httpx.Request('GET',url),json={'jobPostingInfo':{'title':'Software Engineer','location':'Bengaluru'}})
-    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',detail)
     with pytest.raises(ValueError,match='description'):
         asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
 
@@ -65,7 +65,7 @@ def test_complete_workday_removed_relevant_detail_keeps_coverage_warning(monkeyp
         return httpx.Response(200,request=httpx.Request(method,url),json={'total':1,'jobPostings':[{'externalPath':'/job/X/R1','title':'Software Engineer','locationsText':'Bengaluru'}]})
     async def detail(client,url):
         return httpx.Response(410,request=httpx.Request('GET',url))
-    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'cached_get',detail)
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',detail)
     jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
     assert count==1 and len(jobs)==0
     assert 'Limited coverage' in jobs.coverage_warning

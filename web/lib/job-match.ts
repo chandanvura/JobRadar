@@ -73,9 +73,6 @@ export function opportunityPriority(job: MatchJob, p: MatchPreferences, now = Da
 }
 // Bounded category feedback cannot overwhelm relevance; rejected applications
 // are deliberately excluded because they do not explain why rejection happened.
-export function feedbackBoost(job:MatchJob,history:LearningRecord[]) {
- return feedbackByFamily(history).get(job.role_category)||0;
-}
 export function feedbackByFamily(history:LearningRecord[]) {
  const scores=new Map<string,number>(),seen=new Set<string>();
  for(const record of [...history].reverse().sort((a,b)=>(Date.parse(b.preference_at||b.updated_at||'')||0)-(Date.parse(a.preference_at||a.updated_at||'')||0))) {

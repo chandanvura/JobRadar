@@ -16,7 +16,7 @@ neutral custom domain can be attached without changing the application.
 - Employer/ATS/external-ID deduplication, database uniqueness constraints, idempotent scan history, and notification history
 - Telegram alerts with official application links
 - Redundant GitHub Actions scheduling, bounded retries, overlap protection, and manual dispatch
-- Automatic official-page ATS discovery, domain-aware concurrency, and cached immutable job details
+- Automatic official-page ATS discovery, domain-aware concurrency, and fresh employer job details
 - Live run history, stale-run detection, per-source raw/candidate/eligible counts, notification history, and policy views
 - Browser-private Saved and application-stage tracking with JSON export
 - 700-company registry covering major enterprises, MNCs, startups and scaleups; [coverage notes](docs/COMPANY-COVERAGE.md)
@@ -116,7 +116,7 @@ Changes under `web/` deploy automatically from `main`; the workflow can also be 
 
 Add ATS adapters only after source-level job counts and fixtures prove they work. Workday uses full pagination and tenant-specific configuration. Browser-rendered and custom pages remain last-resort adapters. LinkedIn, Naukri, and Instahyre may be used only through permitted APIs or user-authorized exports; never bypass authentication, CAPTCHAs, access controls, or anti-bot protections.
 
-Each distributed worker refreshes its deterministic share of listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-worker provider limits and separate Workday listing/detail buckets bound each process, while immutable daily detail caches reduce repeated work. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries. The coordinator refuses incomplete or duplicate shard ownership and finalizes a run only after every ingestion batch succeeds.
+Each distributed worker refreshes its deterministic share of listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-worker provider limits and separate Workday listing/detail buckets bound each process, and employer details are read fresh on each scan. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries. The coordinator refuses incomplete or duplicate shard ownership and finalizes a run only after every ingestion batch succeeds.
 
 ## Troubleshooting
 

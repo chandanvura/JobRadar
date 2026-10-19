@@ -20,7 +20,7 @@ class TalentBrewCareerAdapter:
                 # Restart from page one; never accept a partial or deduplicated scan.
 
     async def _fetch_jobs(self, company, use_snapshot=False):
-        from .adapters import cached_get, clean, client, jsonld_objects, likely_target, location_text, make_job, request
+        from .adapters import fetch_detail, clean, client, jsonld_objects, likely_target, location_text, make_job, request
         host = urlparse(company.careers_url).hostname
         if urlparse(company.careers_url).scheme != 'https' or not company.ats_identifier.isdigit():
             raise ValueError('Invalid TalentBrew employer source')
@@ -112,7 +112,7 @@ class TalentBrewCareerAdapter:
             semaphore = asyncio.Semaphore(6)
             async def convert(identifier, item):
                 if not likely_target(item['title'], item['location']): return None
-                async with semaphore: response = await cached_get(x, item['url'])
+                async with semaphore: response = await fetch_detail(x, item['url'])
                 if response.status_code in (404, 410): return None
                 def parse_detail(response):
                     response.raise_for_status(); soup = BeautifulSoup(response.text, 'html.parser')
@@ -125,9 +125,8 @@ class TalentBrewCareerAdapter:
                     return job, description
                 job, description = parse_detail(response)
                 if not description:
-                    # A temporary HTTP 200 error page may have entered the detail
-                    # cache. Revalidate once instead of replaying it for 30 hours.
-                    async with semaphore: response = await cached_get(x, item['url'], ttl_hours=0)
+                    # Retry a temporary HTTP 200 error page once.
+                    async with semaphore: response = await fetch_detail(x, item['url'])
                     if response.status_code in (404, 410): return None
                     job, description = parse_detail(response)
                 if not description: raise ValueError('TalentBrew job detail is missing the full description')

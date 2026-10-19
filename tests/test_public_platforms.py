@@ -43,7 +43,7 @@ def test_phenom_pages_and_gets_full_descriptions_without_ingestion_dates(monkeyp
         return httpx.Response(200,text='phApp.ddo = '+json.dumps({'jobDetail':{'data':{'job':job}}}),request=httpx.Request('GET',url))
     monkeypatch.setattr(adapters,'client',lambda **kwargs:Client())
     monkeypatch.setattr(adapters,'request',request)
-    monkeypatch.setattr(adapters,'cached_get',cached)
+    monkeypatch.setattr(adapters,'fetch_detail',cached)
     jobs,count=asyncio.run(PhenomCareerAdapter().fetch_jobs(Company('Example',CONFIG['baseUrl'],'phenom','EXAMPLE')))
     assert count==2 and len(jobs)==2
     assert [p['from'] for p in calls]==[0,1]
@@ -77,7 +77,7 @@ def test_workable_uses_opaque_tokens_and_full_public_requirements(monkeypatch):
         return httpx.Response(200,json={'shortcode':code,'title':'Software Engineer','location':{'city':'Pune'},'locations':[{'city':'Hyderabad'}],'state':'published','isInternal':False,'description':'Build APIs','requirements':'0-2 years; Java','published':'2026-10-05T00:00:00Z'},request=httpx.Request('GET',url))
     monkeypatch.setattr(adapters,'client',lambda **kwargs:Client())
     monkeypatch.setattr(adapters,'request',request)
-    monkeypatch.setattr(adapters,'cached_get',cached)
+    monkeypatch.setattr(adapters,'fetch_detail',cached)
     jobs,count=asyncio.run(WorkableCareerAdapter().fetch_jobs(Company('Example','https://apply.workable.com/example/','workable','example')))
     assert count==2 and len(jobs)==2
     assert calls[1]['token']=='opaque-token'

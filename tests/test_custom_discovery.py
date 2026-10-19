@@ -48,7 +48,7 @@ def test_custom_source_discovers_board_on_secondary_official_page(monkeypatch):
             return [], 42
     monkeypatch.setattr(adapters, 'client', lambda **kwargs: Client())
     monkeypatch.setattr(adapters, 'request', get)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     monkeypatch.setitem(adapters.ADAPTERS, 'lever', Feed())
     jobs, total = asyncio.run(adapters.CustomCareerAdapter().fetch_jobs(Company('Example', 'https://employer.test/careers', 'custom', 'example')))
     assert jobs == [] and total == 42
@@ -103,7 +103,7 @@ def test_greenhouse_public_detail_date_handles_javascript_only_pages(monkeypatch
         return httpx.Response(200, json={'first_published': '2026-10-05T10:00:00Z'}, request=httpx.Request('GET', url))
     monkeypatch.setattr(adapters, 'client', lambda **kwargs: Client())
     monkeypatch.setattr(adapters, 'request', get)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     jobs, count = asyncio.run(adapters.GreenhouseAdapter().fetch_jobs(Company('Example', 'https://employer.test/careers', 'greenhouse', 'example')))
     assert count == 1
     assert jobs[0].posted_at == '2026-10-05T10:00:00+00:00'

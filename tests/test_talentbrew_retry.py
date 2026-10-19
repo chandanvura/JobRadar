@@ -66,7 +66,7 @@ def test_snapshot_retry_preserves_india_and_checks_complete_count(monkeypatch):
 
 
 @pytest.mark.parametrize('fresh_status,fresh_description', [(200, 'Java and 2 years experience'), (200, ''), (404, ''), (503, '')])
-def test_missing_cached_requirements_revalidate_once_without_accepting_incomplete_jobs(monkeypatch, fresh_status, fresh_description):
+def test_missing_requirements_retry_once_without_accepting_incomplete_jobs(monkeypatch, fresh_status, fresh_description):
     import httpx
     from scraper import adapters
     from scraper.models import Company
@@ -82,7 +82,7 @@ def test_missing_cached_requirements_revalidate_once_without_accepting_incomplet
             return httpx.Response(200, text='<title>Temporarily unavailable</title>', request=httpx.Request('GET', url))
         return httpx.Response(fresh_status, text='<div id="job-description">' + fresh_description + '</div>', request=httpx.Request('GET', url))
     monkeypatch.setattr(adapters, 'request', request)
-    monkeypatch.setattr(adapters, 'cached_get', cached)
+    monkeypatch.setattr(adapters, 'fetch_detail', cached)
     company = Company('Employer', 'https://careers.example/search', 'talentbrew', '123')
     if fresh_status == 503:
         with pytest.raises(httpx.HTTPStatusError):
@@ -97,4 +97,4 @@ def test_missing_cached_requirements_revalidate_once_without_accepting_incomplet
         if jobs:
             assert jobs[0].description == fresh_description
             assert jobs[0].posted_at is None
-    assert calls == [{}, {'ttl_hours': 0}]
+    assert calls == [{}, {}]

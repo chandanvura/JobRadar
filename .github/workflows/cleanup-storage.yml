@@ -26,7 +26,6 @@ jobs:
       - name: Clear disposable caches and expired scan artifacts
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          # Push/manual runs clear all rebuildable caches once. Daily maintenance
-          # keeps current dependencies and removes detail caches older than 48h.
-          CLEAR_ALL_CACHES: ${{ github.event_name != 'schedule' }}
+          # Remove retired detail caches; retain recently used dependencies.
+          CLEAR_ALL_CACHES: "false"
         run: python scripts/cleanup_actions.py

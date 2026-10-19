@@ -1,5 +1,4 @@
 import {experienceWithinPolicy} from './job-experience.ts';
-import type {FeedJob} from './job-feed.ts';
 import {experienceUnverified} from './job-requirements.ts';
 import {internshipRole} from './job-sections.ts';
 export type ViewJob={title:string;is_active:number;is_eligible:number;experience_min:number|null;experience_max:number|null;experience_label?:string;employment_type?:string|null;eligibility_reason:string};
@@ -18,9 +17,4 @@ export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,
   if(!known&&senior(job.title))return false;
   if(view==='Needs Review')return !job.is_eligible||!currentPosting;
   return true;
-}
-
-export function visibleCareerJobs<T extends FeedJob>(_view:string,filtered:T[],_review:T[]) {
- // Verified recommendations never silently substitute unverified review leads.
- return filtered;
 }

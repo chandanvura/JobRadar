@@ -30,7 +30,7 @@ def response(url, body):
 def install(monkeypatch, listing, detail):
     monkeypatch.setattr(adapters, 'client', lambda **kwargs: Client())
     monkeypatch.setattr(adapters, 'request', listing)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
 
 
 def test_collects_small_pages_and_reads_authoritative_microdata(monkeypatch):

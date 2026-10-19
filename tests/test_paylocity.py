@@ -63,7 +63,7 @@ def test_adapter_reads_complete_list_and_fetches_full_target_detail(monkeypatch)
         <div class="job-listing-header">Description</div><div>Full Java description</div>
         <div class="job-listing-header">Requirements</div><div>0 to 2 years experience</div>''')
     monkeypatch.setattr(adapters, 'request', request)
-    monkeypatch.setattr(adapters, 'cached_get', detail)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
     jobs, count = asyncio.run(PaylocityCareerAdapter().fetch_jobs(Company('Employer',
         'https://recruiting.paylocity.com/recruiting/jobs/all/' + BOARD, 'paylocity', BOARD)))
     assert count == 2 and len(jobs) == 1
