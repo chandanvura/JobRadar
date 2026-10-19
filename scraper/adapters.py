@@ -170,7 +170,18 @@ class LeverAdapter(JobSource):
                 sections.extend([section.get('text',''),section.get('content','')])
             sections.append(j.get('additionalPlain') or j.get('additional',''))
             return clean(' '.join(sections))
-        jobs=[make_job(str(j["id"]),j["text"],c.name,location_text(j.get("categories",{}).get("location",""),j.get("categories",{}).get("allLocations",[])),description(j),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
+        def location(j):
+            categories=j.get('categories') or {}
+            secondary=categories.get('allLocations') or []
+            values=[categories.get('location',''),*(secondary if isinstance(secondary,list) else [secondary])]
+            text=location_text(*values)
+            if j.get('workplaceType')=='remote':
+                # The employer's structured flag applies to its published locations.
+                # A missing country or a different country cannot imply India.
+                india=any(isinstance(value,str) and value.strip().casefold()=='india' for value in values)
+                text=location_text(text,'Remote - India' if india else 'Remote')
+            return text
+        jobs=[make_job(str(j["id"]),j["text"],c.name,location(j),description(j),"lever","company_career",j.get("hostedUrl",c.careers_url),j.get("applyUrl") or j.get("hostedUrl",c.careers_url),c.careers_url,posting=epoch_ms(j.get("createdAt"))) for j in data]
         missing=sum(likely_role(job.title) and not job.description for job in jobs)
         warning=f'Limited coverage: {missing} relevant Lever jobs lack full requirements' if missing else None
         return JobBatch(jobs,warning),len(data)
