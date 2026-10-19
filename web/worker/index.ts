@@ -4,8 +4,9 @@ import { safeUrl } from "./urls";
 import { jobDelta, JOB_INSERT_COLUMNS } from "./job-delta";
 import { publicRead } from "./public-backup";
 import { apiFailure, quotaExceeded } from "./api-failure";
+import { cachedCatalog } from "./catalog-cache";
 
-interface Env { ASSETS: Fetcher; DB: D1Database; JOBRADAR_INGEST_SECRET?: string; IMAGES: { input(stream: ReadableStream): { transform(options: Record<string, unknown>): { output(options: { format: string; quality: number }): Promise<{ response(): Response }> } } } }
+interface Env { JOBRADAR_DISABLE_PUBLIC_CATALOG_CACHE?:string; ASSETS: Fetcher; DB: D1Database; JOBRADAR_INGEST_SECRET?: string; IMAGES: { input(stream: ReadableStream): { transform(options: Record<string, unknown>): { output(options: { format: string; quality: number }): Promise<{ response(): Response }> } } } }
 interface ExecutionContext { waitUntil(promise: Promise<unknown>): void; passThroughOnException(): void }
 type RecordValue = Record<string, unknown>;
 
@@ -133,6 +134,7 @@ async function health(env:Env){
 
 const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<Response>{
   const url=new URL(request.url);
+  const catalogRead=(read:()=>Promise<Response>)=>env.JOBRADAR_DISABLE_PUBLIC_CATALOG_CACHE==='1'?read():cachedCatalog(request,read,(caches as CacheStorage & {default:Cache}).default,ctx);
   if(["/favicon.ico","/apple-touch-icon.png","/apple-touch-icon-precomposed.png"].includes(url.pathname)){
     const asset=await env.ASSETS.fetch(new Request(new URL("/favicon.svg",request.url),request));
     const headers=new Headers(asset.headers);headers.set("Cache-Control","public, max-age=86400");
@@ -140,8 +142,8 @@ const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<
   }
   try{
     if(url.pathname==="/api/health"&&request.method==="GET")return await health(env);
-    if(url.pathname==="/api/dashboard"&&request.method==="GET")return await publicRead(request,env.ASSETS,()=>dashboard(env),SECURITY_HEADERS);
-    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw),limit=Number(url.searchParams.get("limit")||"100");if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);if(!Number.isSafeInteger(limit)||limit<1||limit>500)return json({error:"Invalid page size"},400);return await publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE id IN (SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Bengaluru' AND id>? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Hyderabad' AND id>? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Remote (India)' AND id>? ORDER BY id LIMIT ${limit+1})) ORDER BY id LIMIT ${limit+1}`).bind(after,after,after).all();const jobs=result.results.slice(0,limit);return json({jobs,next_cursor:result.results.length>limit?jobs[jobs.length-1].id:null})},SECURITY_HEADERS)}
+    if(url.pathname==="/api/dashboard"&&request.method==="GET")return await catalogRead(()=>publicRead(request,env.ASSETS,()=>dashboard(env),SECURITY_HEADERS));
+    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw),limit=Number(url.searchParams.get("limit")||"100");if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);if(!Number.isSafeInteger(limit)||limit<1||limit>500)return json({error:"Invalid page size"},400);return await catalogRead(()=>publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE id IN (SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Bengaluru' AND id>? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Hyderabad' AND id>? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Remote (India)' AND id>? ORDER BY id LIMIT ${limit+1})) ORDER BY id LIMIT ${limit+1}`).bind(after,after,after).all();const jobs=result.results.slice(0,limit);return json({jobs,next_cursor:result.results.length>limit?jobs[jobs.length-1].id:null})},SECURITY_HEADERS))}
     if(url.pathname==="/api/ingest"&&request.method==="POST")return await ingest(request,env);
     if(url.pathname==="/api/notifications"&&request.method==="POST")return await recordNotification(request,env);
     const statusMatch=url.pathname.match(/^\/api\/jobs\/(\d+)\/status$/);if(statusMatch&&request.method==="PATCH")return updateStatus();

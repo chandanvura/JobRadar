@@ -5,7 +5,7 @@ const saved={version:1,data_mode:'backup',snapshot_at:new Date().toISOString(),j
 const serverRoot=new URL('../dist/server/',import.meta.url);
 const modulePaths=['index.js',...(await readdir(serverRoot,{recursive:true})).filter(path=>path.endsWith('.js') && path!=='index.js')];
 const modules=modulePaths.map(path=>({type:'ESModule',path:new URL(path,serverRoot).pathname}));
-const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"jobradar-api-audit",modules,modulesRoot:new URL('../dist/server/',import.meta.url).pathname,scriptPath:new URL('../dist/server/index.js',import.meta.url).pathname,compatibilityDate:'2026-09-26',compatibilityFlags:['nodejs_compat'],d1Databases:{DB:'audit-db'},bindings:{JOBRADAR_INGEST_SECRET:'local-audit-only'},serviceBindings:{ASSETS:async()=>Response.json(saved)}}]}));
+const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"jobradar-api-audit",modules,modulesRoot:new URL('../dist/server/',import.meta.url).pathname,scriptPath:new URL('../dist/server/index.js',import.meta.url).pathname,compatibilityDate:'2026-09-26',compatibilityFlags:['nodejs_compat'],d1Databases:{DB:'audit-db'},bindings:{JOBRADAR_INGEST_SECRET:'local-audit-only',JOBRADAR_DISABLE_PUBLIC_CATALOG_CACHE:'1'},serviceBindings:{ASSETS:async()=>Response.json(saved)}}]}));
 const request=(path,body,authorized=true)=>mf.dispatchFetch(`https://audit.example${path}`,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json',...(authorized?{Authorization:'Bearer local-audit-only'}:{})},body:JSON.stringify(body)});
 try {
   assert.equal((await request('/api/ingest',{},false)).status,401);
