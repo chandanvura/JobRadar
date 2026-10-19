@@ -3,6 +3,7 @@ import httpx
 import pytest
 from scraper import adapters
 from scraper.models import Company
+from scraper.normalization import enrich
 
 
 @pytest.mark.parametrize('duplicate', [False, True])
@@ -32,3 +33,18 @@ def test_lever_missing_relevant_requirements_remain_partial(monkeypatch):
     jobs, count = asyncio.run(adapters.LeverAdapter().fetch_jobs(
         Company('Example', 'https://jobs.lever.co/example', 'lever', 'example')))
     assert count == 1 and jobs.coverage_warning.startswith('Limited coverage: 1 relevant Lever')
+
+
+@pytest.mark.parametrize('country,workplace,expected', [('India','remote',True),('United States','remote',False),('India','hybrid',False),('India',None,False),('', 'remote',False)])
+def test_employer_remote_flag_requires_an_explicit_india_location(monkeypatch,country,workplace,expected):
+    row=dict(id='one',text='Java Engineer',categories={'location':country,'allLocations':[country]},
+             workplaceType=workplace,descriptionPlain='Required experience: 1-2 years.',
+             hostedUrl='https://jobs.lever.co/example/one',createdAt=1780000000000)
+    async def request(client,method,url,**kwargs):
+        return httpx.Response(200,request=httpx.Request(method,url),json=[row])
+    monkeypatch.setattr(adapters,'request',request)
+    jobs,_=asyncio.run(adapters.LeverAdapter().fetch_jobs(Company('Example','https://jobs.lever.co/example','lever','example')))
+    job=enrich(jobs[0])
+    assert (job.city=='Remote (India)') is expected
+    # A location fix cannot turn an old posting into an eligible job.
+    assert not job.is_eligible
