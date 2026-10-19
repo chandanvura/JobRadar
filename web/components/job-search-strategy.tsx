@@ -11,7 +11,7 @@ export function JobSearchStrategy({titles}: {titles:string[]}) {
     <p className="text-sm text-muted-foreground">Search related role titles together on employer portals, verify the posting, then apply.</p>
     <div className="grid gap-3 md:grid-cols-3">
       <label className="text-sm font-bold">Role<select value={role} onChange={e=>setRole(e.target.value)} className="mt-2 h-11 w-full rounded-xl border bg-card px-3 font-normal">{roles.map(r=><option key={r}>{r}</option>)}</select></label>
-      <label className="text-sm font-bold">City<select value={city} onChange={e=>setCity(e.target.value)} className="mt-2 h-11 w-full rounded-xl border bg-card px-3 font-normal"><option>Bengaluru</option><option>Hyderabad</option></select></label>
+      <label className="text-sm font-bold">City<select value={city} onChange={e=>setCity(e.target.value)} className="mt-2 h-11 w-full rounded-xl border bg-card px-3 font-normal"><option>Bengaluru</option><option>Hyderabad</option><option>Remote (India)</option></select></label>
       <label className="text-sm font-bold">Google search window<select value={period} onChange={e=>setPeriod(e.target.value)} className="mt-2 h-11 w-full rounded-xl border bg-card px-3 font-normal"><option value="day">Past 24 hours</option><option value="week">Past week</option></select></label>
     </div>
     <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{groupedAtsSearches(role,city,period).map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="rounded-xl border p-3 text-sm font-bold text-success hover:border-primary">Search {link.name} ↗</a>)}</div>

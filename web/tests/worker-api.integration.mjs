@@ -100,8 +100,18 @@ try {
   assert.equal(failedCheck.last_checked_at,'2026-10-08T08:07:00+00:00');assert.equal(failedCheck.last_success_at,'2026-10-08T04:07:00+00:00');
   const live=await (await request('/api/dashboard')).json();assert.equal(live.jobs.length,1);assert.equal(live.data_mode,undefined);
   const page=await (await request('/api/jobs?after=0')).json();assert.equal(page.jobs.length,1);assert.equal(page.next_cursor,null);
+  const remote={...job,external_job_id:'REMOTE-IN',city:'Remote (India)',location:'Remote - India',normalized_location:'Remote (India)'};
+  const outside={...job,external_job_id:'REMOTE-US',city:null,location:'Remote - USA',normalized_location:'Remote - USA'};
+  assert.equal((await request('/api/ingest',{jobs:[remote,outside]})).status,200);
+  for(const endpoint of ['/api/dashboard','/api/jobs?after=0']){
+    const response=await (await request(endpoint)).json();
+    assert.ok(response.jobs.some(row=>row.external_job_id==='REMOTE-IN'));
+    assert.ok(!response.jobs.some(row=>row.external_job_id==='REMOTE-US'));
+    if(endpoint==='/api/dashboard')assert.ok(response.policy.cities.includes('Remote (India)'));
+  }
+  await db.prepare("DELETE FROM jobs WHERE external_job_id IN ('REMOTE-IN','REMOTE-US')").run();
   for(let offset=0;offset<505;offset+=125){
-    const rows=Array.from({length:Math.min(125,505-offset)},(_,i)=>({...job,external_job_id:`PAGE-${offset+i}`,city:i%2?'Hyderabad':'Bengaluru'}));
+    const rows=Array.from({length:Math.min(125,505-offset)},(_,i)=>({...job,external_job_id:`PAGE-${offset+i}`,city:['Bengaluru','Hyderabad','Remote (India)'][i%3]}));
     assert.equal((await request('/api/ingest',{jobs:rows})).status,200);
   }
   assert.equal((await (await request('/api/jobs?after=0')).json()).jobs.length,100);

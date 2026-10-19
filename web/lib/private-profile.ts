@@ -14,7 +14,7 @@ export const privateKey = (key: string) => profileId() === 'default' ? key : `${
 export function readPrivate(key: string) { try { return localStorage.getItem(privateKey(key)); } catch { return null; } }
 export function writePrivate(key: string, value: string) { try { localStorage.setItem(privateKey(key), value); } catch { window.dispatchEvent(new Event('jobradar-storage-error')); } }
 export function removePrivate(key: string) { try { localStorage.removeItem(privateKey(key)); } catch { window.dispatchEvent(new Event('jobradar-storage-error')); } }
-export const defaultSearch = {titles: [] as string[], skills: [] as string[], experienceMin: 0, experienceMax: 3, locations: ['Bengaluru','Hyderabad']};
+export const defaultSearch = {titles: [] as string[], skills: [] as string[], experienceMin: 0, experienceMax: 3, locations: ['Bengaluru','Hyderabad','Remote (India)']};
 export const trackingIdentity = (job:{company:unknown;ats_provider:unknown;external_job_id:unknown}) =>
   `${String(job.company)}\u001f${String(job.ats_provider)}\u001f${String(job.external_job_id)}`;
 export function cleanSearch(value: unknown) {
@@ -22,7 +22,7 @@ export function cleanSearch(value: unknown) {
   const terms = (x: unknown) => Array.isArray(x) ? [...new Set(x.filter((s): s is string => typeof s === 'string').map(s=>s.trim().slice(0,100)).filter(Boolean))].slice(0,30) : [];
   const min = typeof v.experienceMin === 'number' && Number.isFinite(v.experienceMin) ? Math.max(0,Math.min(40,v.experienceMin)) : 0;
   const max = typeof v.experienceMax === 'number' && Number.isFinite(v.experienceMax) ? Math.max(min,Math.min(40,v.experienceMax)) : Math.max(min,3);
-  const locations = terms(v.locations).filter(s=>['Bengaluru','Hyderabad'].includes(s));
+  const locations = terms(v.locations).filter(s=>['Bengaluru','Hyderabad','Remote (India)'].includes(s));
   return {titles:terms(v.titles),skills:terms(v.skills),experienceMin:min,experienceMax:max,locations:locations.length?locations:defaultSearch.locations};
 }
 export function safeTracking(value: unknown): Record<string,unknown> {

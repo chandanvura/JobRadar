@@ -101,6 +101,8 @@ jobs:
             # Update these fingerprints only after a successful migration deployment.
             node scripts/verify-quota-deployment.mjs migration-result.log
           fi
+      - name: Verify all live dashboard database reads
+        run: node scripts/verify-dashboard-queries.mjs
       - name: Build and deploy production Worker
         run: |
           npm run build

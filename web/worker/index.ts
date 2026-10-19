@@ -37,13 +37,13 @@ const dedupeCompanies=(companies:RecordValue[])=>{
 
 async function dashboard(env:Env){
   const [jobResult,companyResult,runResult,notificationResult]=await Promise.all([
-    env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') ORDER BY CASE WHEN is_eligible=1 THEN 0 WHEN eligibility_reason IN ('Experience not stated — verify','Posting date not verified within 24 hours') THEN 1 ELSE 2 END,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 100`).all(),
+    env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad','Remote (India)') ORDER BY CASE WHEN is_eligible=1 THEN 0 WHEN eligibility_reason IN ('Experience not stated — verify','Posting date not verified within 24 hours') THEN 1 ELSE 2 END,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 100`).all(),
     env.DB.prepare("SELECT name,careers_url,ats_provider,last_checked_at,last_success_at,error_count,jobs_found,candidate_jobs,eligible_jobs,warning FROM companies WHERE enabled=1 ORDER BY priority DESC,name").all(),
     env.DB.prepare("SELECT * FROM scraper_runs ORDER BY id DESC LIMIT 24").all(),
     env.DB.prepare("SELECT n.id,n.channel,n.status,n.sent_at,NULL AS error,j.title,j.company FROM notifications n JOIN jobs j ON j.id=n.job_id ORDER BY n.id DESC LIMIT 50").all(),
   ]);
   const runs=runResult.results;const latest=runs[0]||null;
-  return json({jobs:jobResult.results,companies:dedupeCompanies(companyResult.results as RecordValue[]),latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],max_age_hours:24,max_experience_years:3,skills_required:false}});
+  return json({jobs:jobResult.results,companies:dedupeCompanies(companyResult.results as RecordValue[]),latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad","Remote (India)"],max_age_hours:24,max_experience_years:3,skills_required:false}});
 }
 
 async function ingest(request:Request,env:Env){
@@ -141,7 +141,7 @@ const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<
   try{
     if(url.pathname==="/api/health"&&request.method==="GET")return await health(env);
     if(url.pathname==="/api/dashboard"&&request.method==="GET")return await publicRead(request,env.ASSETS,()=>dashboard(env),SECURITY_HEADERS);
-    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw),limit=Number(url.searchParams.get("limit")||"100");if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);if(!Number.isSafeInteger(limit)||limit<1||limit>500)return json({error:"Invalid page size"},400);return await publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE id IN (SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Bengaluru' AND id>? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Hyderabad' AND id>? ORDER BY id LIMIT ${limit+1})) ORDER BY id LIMIT ${limit+1}`).bind(after,after).all();const jobs=result.results.slice(0,limit);return json({jobs,next_cursor:result.results.length>limit?jobs[jobs.length-1].id:null})},SECURITY_HEADERS)}
+    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw),limit=Number(url.searchParams.get("limit")||"100");if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);if(!Number.isSafeInteger(limit)||limit<1||limit>500)return json({error:"Invalid page size"},400);return await publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE id IN (SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Bengaluru' AND id>? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Hyderabad' AND id>? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Remote (India)' AND id>? ORDER BY id LIMIT ${limit+1})) ORDER BY id LIMIT ${limit+1}`).bind(after,after,after).all();const jobs=result.results.slice(0,limit);return json({jobs,next_cursor:result.results.length>limit?jobs[jobs.length-1].id:null})},SECURITY_HEADERS)}
     if(url.pathname==="/api/ingest"&&request.method==="POST")return await ingest(request,env);
     if(url.pathname==="/api/notifications"&&request.method==="POST")return await recordNotification(request,env);
     const statusMatch=url.pathname.match(/^\/api\/jobs\/(\d+)\/status$/);if(statusMatch&&request.method==="PATCH")return updateStatus();
