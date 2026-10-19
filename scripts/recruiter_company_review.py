@@ -43,7 +43,8 @@ def compare(candidates, registry):
     for row in candidates:
         match, kind = registry_match(row['company_name'], registry)
         invalid = row['company_key'] in INVALID_IDENTIFIERS
-        output.append({**row, 'registry_match_kind': kind,
+        output.append({**row, 'review_status': 'REJECTED' if invalid else 'UNVERIFIED',
+                       'registry_match_kind': kind,
                        'registry_company': match['company_name'] if match else '',
                        'registry_career_url': match['careers_url'] if match else '',
                        'registry_ats_provider': match['ats_provider'] if match else '',

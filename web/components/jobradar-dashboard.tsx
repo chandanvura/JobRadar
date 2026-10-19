@@ -304,9 +304,9 @@ const defaultPreferences: SearchPreferences = {
   skills: [],
   experienceMin: 0,
   experienceMax: 3,
-  locations: ["Bengaluru", "Hyderabad"],
+  locations: ["Bengaluru", "Hyderabad", "Remote (India)"],
 };
-const TARGET_CITIES = ["Bengaluru", "Hyderabad"];
+const TARGET_CITIES = ["Bengaluru", "Hyderabad", "Remote (India)"];
 const DEFAULT_JOB_TITLES = SUGGESTED_JOB_TITLES;
 const OFFICIAL_ATS_DOMAINS = "site:myworkdayjobs.com OR site:greenhouse.io OR site:lever.co OR site:icims.com OR site:jobs.jobvite.com OR site:ashbyhq.com OR site:smartrecruiters.com";
 const AGGREGATOR_DOMAINS = [
@@ -1164,7 +1164,7 @@ function DashboardContent() {
               )}
               {active === "All Jobs" && (
                 <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
-                  All active target-city listings, including roles outside your experience range. Review each card’s eligibility reason before applying.
+                  All active target-location listings, including roles outside your experience range. Review each card’s eligibility reason before applying.
                 </section>
               )}
               {active === "Needs Review" && (
@@ -2439,7 +2439,7 @@ function SettingsView({
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <Info
           label="Locations"
-          value={policy?.cities.join(" + ") || "Bengaluru + Hyderabad"}
+          value={policy?.cities.join(" + ") || "Bengaluru + Hyderabad + Remote (India)"}
         />
         <Info
           label="Experience"

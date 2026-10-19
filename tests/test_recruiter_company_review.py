@@ -24,3 +24,12 @@ def test_comparison_preserves_lineage_and_never_approves_recruiters_or_alerts():
     assert len(result)==2 and result[0]['source_rows']=='R0001;R0002'
     assert [r['verification_status'] for r in result]==['UNVERIFIED','REJECTED']
     assert all(r['automatic_alert_eligible']=='false' and r['recruiter_identity_status']=='UNVERIFIED' for r in result)
+
+
+def test_input_cannot_self_approve_its_review_status():
+    result=compare([{'company_key':'ibm','company_name':'IBM','review_status':'VERIFIED',
+                     'verification_status':'VERIFIED','recruiter_identity_status':'VERIFIED',
+                     'automatic_alert_eligible':'true'}],REGISTRY)[0]
+    assert result['review_status']==result['verification_status']=='UNVERIFIED'
+    assert result['recruiter_identity_status']=='UNVERIFIED'
+    assert result['automatic_alert_eligible']=='false'

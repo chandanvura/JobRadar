@@ -8,6 +8,7 @@ from .experience import analyze_experience
 from .posting import posting_current
 from .source_ownership import correct_board_owner
 from .roles import classify_role, NON_TECHNICAL
+from .locations import TARGET_LOCATIONS, REMOTE_INDIA, explicit_remote_india
 
 INTERNSHIP_ROLE_PATTERNS = {
     "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b",
@@ -22,7 +23,7 @@ SKILL_RULES=json.loads((Path(__file__).parents[1]/'config/skills.json').read_tex
 SKILLS=list(SKILL_RULES)
 MAX_JOB_AGE_HOURS = 24
 MAX_EXPERIENCE_YEARS = 3
-TARGET_CITIES = {"Bengaluru", "Hyderabad"}
+TARGET_CITIES = TARGET_LOCATIONS
 INDIA_TZ = timezone(timedelta(hours=5, minutes=30))
 LEADERSHIP_TITLE = re.compile(r"\b(?:architect|director|head|lead|manager|principal|staff|vice president|vp)\b", re.I)
 
@@ -30,6 +31,7 @@ def normalize_location(value: str):
     low=value.lower(); hybrid=" · Hybrid" if "hybrid" in low else ""
     if re.search(r"\bbangalore\b|\bbengaluru\b",low): return "Bengaluru"+hybrid,"Bengaluru"
     if re.search(r"\bhyderabad\b",low): return "Hyderabad"+hybrid,"Hyderabad"
+    if explicit_remote_india(value): return REMOTE_INDIA,REMOTE_INDIA
     if re.search(r"\bchennai\b|\bmadras\b",low): return "Chennai"+hybrid,"Chennai"
     if re.search(r"\bpune\b|\bpoona\b",low): return "Pune"+hybrid,"Pune"
     return value.strip() or "Not specified",None

@@ -8,6 +8,7 @@ from defusedxml import ElementTree as ET
 from .models import Company, Job, JobBatch
 from .snapshot import SnapshotChanged
 from .roles import likely_technical_title
+from .locations import explicit_remote_india
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
 _DOMAIN_LIMITERS={}
@@ -68,7 +69,7 @@ def likely_role(title):
     return likely_technical_title(title)
 
 def likely_target(title, location):
-    return bool(likely_role(title) and re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I))
+    return bool(likely_role(title) and (re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I) or explicit_remote_india(location)))
 
 def location_text(*values):
     """Flatten ATS primary and secondary locations without guessing a city."""

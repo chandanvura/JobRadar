@@ -61,8 +61,8 @@ def test_public_pagination_merges_bounded_city_index_pages_without_sorting_full_
     source=(ROOT/'web'/'worker'/'index.ts').read_text()
     sql=re.search(r'prepare\(`(SELECT \$\{PUBLIC_JOB_COLUMNS\} FROM jobs WHERE id IN [^`]+)`\)',source).group(1).replace('${PUBLIC_JOB_COLUMNS}','id').replace('${limit+1}','501')
     for i in range(1000):
-        db.execute("INSERT INTO jobs(external_job_id,company,title,normalized_title,role_category,location,normalized_location,city,ats_provider,source,job_url,application_url,career_page_url,first_seen_at,last_seen_at,relevance_score,freshness_score,priority_score) VALUES (?,'Example','Engineer','engineer','Java / Backend','City','City',?,'workday','company_career','https://example.test','https://example.test','https://example.test','2026-09-30','2026-09-30',1,1,1)",(str(i),['Bengaluru','Hyderabad','Pune'][i%3]))
-    expected=db.execute("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') AND id>100 ORDER BY id LIMIT 501").fetchall()
-    assert db.execute(sql,(100,100)).fetchall()==expected
-    plan=' '.join(row[3] for row in db.execute('EXPLAIN QUERY PLAN '+sql,(100,100)))
-    assert plan.count('SEARCH jobs USING COVERING INDEX jobs_active_city_id_idx (is_active=? AND city=? AND id>?)')==2,plan
+        db.execute("INSERT INTO jobs(external_job_id,company,title,normalized_title,role_category,location,normalized_location,city,ats_provider,source,job_url,application_url,career_page_url,first_seen_at,last_seen_at,relevance_score,freshness_score,priority_score) VALUES (?,'Example','Engineer','engineer','Java / Backend','City','City',?,'workday','company_career','https://example.test','https://example.test','https://example.test','2026-09-30','2026-09-30',1,1,1)",(str(i),['Bengaluru','Hyderabad','Remote (India)','Pune'][i%4]))
+    expected=db.execute("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad','Remote (India)') AND id>100 ORDER BY id LIMIT 501").fetchall()
+    assert db.execute(sql,(100,100,100)).fetchall()==expected
+    plan=' '.join(row[3] for row in db.execute('EXPLAIN QUERY PLAN '+sql,(100,100,100)))
+    assert plan.count('SEARCH jobs USING COVERING INDEX jobs_active_city_id_idx (is_active=? AND city=? AND id>?)')==3,plan
