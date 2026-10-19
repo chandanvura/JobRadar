@@ -9,6 +9,7 @@ const words=new RegExp('\\b('+Object.keys(rules.words).join('|')+')\\b','gi');
 const optionalPattern=new RegExp(rules.optional,'i'),requiredPattern=new RegExp(sections.required,'i'),preferredPattern=new RegExp(sections.preferred,'i'),juniorPattern=new RegExp(rules.junior,'i'),excludedPattern=new RegExp(rules.exclude,'i');
 const factor=(unit:string|undefined)=>/^mo/i.test(unit||'')?1/12:1;
 const rounded=(value:number)=>Math.round(value*1e6)/1e6;
+const juniorExcludedPattern=new RegExp(rules.junior_excluded,'i');
 export function analyzeExperience(description:string,clauses=candidateClauses(description)):ExperienceAnalysis {
  const required:ExperienceEvidence[]=[],preferred:ExperienceEvidence[]=[];let conditional=false;
  for(const {text:original,section} of clauses)for(const fragment of original.split(fragmentPattern)) {
@@ -27,7 +28,7 @@ export function analyzeExperience(description:string,clauses=candidateClauses(de
    rows.push({min:rounded(min),max:max===null?null:rounded(max),kind,evidence:fragment.trim().slice(0,400),section});spans.push([start,end]);
   }
   if(rows.length>1&&/\bor\b/i.test(text)&&!optional)conditional=true;
-  if(!rows.length&&juniorPattern.test(text))rows.push({min:0,max:null,kind:'junior',evidence:fragment.trim().slice(0,400),section});
+  if(!rows.length&&juniorPattern.test(text)&&!juniorExcludedPattern.test(text))rows.push({min:0,max:null,kind:'junior',evidence:fragment.trim().slice(0,400),section});
   (optional?preferred:required).push(...rows);
  }
  const unique=(rows:ExperienceEvidence[])=>[...new Map(rows.map(row=>[JSON.stringify([row.min,row.max,row.kind,row.evidence,row.section]),row])).values()];
@@ -44,3 +45,6 @@ export function analyzeExperience(description:string,clauses=candidateClauses(de
  return {...result,min,max,label,status:'stated'};
 }
 export function experienceWithinPolicy(min:number|null,max:number|null) {return min!==null&&min>=0&&(max===null?min<=2:max>=min&&max<=3);}
+export function experienceDecision(analysis:ExperienceAnalysis) {
+ return analysis.status!=='stated'?'Verify JD before shortlisting':experienceWithinPolicy(analysis.min,analysis.max)?'Shortlist by experience':'Do not shortlist by experience';
+}

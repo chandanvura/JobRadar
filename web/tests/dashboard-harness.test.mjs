@@ -15,7 +15,7 @@ const output=await build({entryPoints:[new URL('../components/jobradar-dashboard
 await writeFile(`${directory}/dashboard.mjs`,output.outputFiles[0].text);
 const {JobRadarDashboard}=await import(`${directory}/dashboard.mjs`);
 const now=new Date().toISOString();
-const jobs=Array.from({length:7000},(_,i)=>({id:i+1,company:`Company ${i%700}`,external_job_id:String(i+1),title:`Java Engineer ${i}`,description:i===0?'Experience: 0–2 years. Must know Java and AWS. Preferred Experience: 5 years.':'Must know Java and AWS. Preferred: Terraform.',normalized_location:i%2?'Hyderabad':'Bengaluru',location:'India',experience_min:0,experience_max:2,experience_label:'0–2',skills:'["Java","AWS"]',role_category:'Java / Backend',ats_provider:'test',application_url:`https://employer.test/jobs/${i+1}`,career_page_url:'https://employer.test',posted_at:now,posted_label:null,posted_precision:'exact',reported_age_hours:null,first_seen_at:now,last_seen_at:now,relevance_score:70,is_active:1,is_eligible:1,eligibility_reason:''}));
+const jobs=Array.from({length:7000},(_,i)=>({id:i+1,company:`Company ${i%700}`,external_job_id:String(i+1),title:`Java Engineer ${i}`,description:i===0?'Experience: 0–2 years. Must know Java and AWS. Preferred Experience: 5 years.':'Experience: 0–2 years. Must know Java and AWS. Preferred: Terraform.',normalized_location:i%2?'Hyderabad':'Bengaluru',location:'India',experience_min:0,experience_max:2,experience_label:'0–2',skills:'["Java","AWS"]',role_category:'Java / Backend',ats_provider:'test',application_url:`https://employer.test/jobs/${i+1}`,career_page_url:'https://employer.test',posted_at:now,posted_label:null,posted_precision:'exact',reported_age_hours:null,first_seen_at:now,last_seen_at:now,relevance_score:70,is_active:1,is_eligible:1,eligibility_reason:''}));
 const companies=Array.from({length:700},(_,i)=>({name:`Company ${i}`,careers_url:'https://employer.test',ats_provider:'test',last_checked_at:now,last_success_at:now,error_count:0,jobs_found:10,candidate_jobs:10,eligible_jobs:10,warning:null}));
 const payload={jobs:jobs.slice(0,100),companies,latest_run:{finished_at:now,status:'success',companies_checked:700,companies_successful:700},runs:[],notifications:[],configured:true,server_time:now,policy:{cities:['Bengaluru','Hyderabad']}};
 const fetcher=globalThis.fetch;let holdRefresh=false,releaseRefresh,omitTrackedJob=false;
@@ -44,6 +44,7 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   }
   assert.equal([...document.querySelectorAll('nav[aria-label="JobRadar views"] button')].some(node=>node.textContent.trim()==='Fresher Roles'),false);
   assert.equal(document.querySelectorAll('article details').length>0,true);
+  assert.ok([...document.querySelectorAll('article summary')].some(node=>node.textContent==='Shortlist by experience'));
   assert.equal([...document.querySelectorAll('article details')].find(node=>node.querySelector('summary')?.textContent==='Track & give feedback').open,false);
   await click('More filters');
   const experience=document.querySelector('[aria-label="Experience view"]');

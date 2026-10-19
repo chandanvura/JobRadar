@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fixtures from '../../config/experience-fixtures.json' with {type:'json'};
-import {analyzeExperience,experienceWithinPolicy} from '../lib/job-experience.ts';
+import {analyzeExperience,experienceWithinPolicy,experienceDecision} from '../lib/job-experience.ts';
 import {normalizeExperience} from '../lib/job-requirements.ts';
 import {matchesCareerView,visibleCareerJobs} from '../lib/job-view.ts';
 for(const fixture of fixtures)test(`experience: ${fixture.name}`,()=>{
@@ -9,6 +9,17 @@ for(const fixture of fixtures)test(`experience: ${fixture.name}`,()=>{
  assert.deepEqual([result.min,result.max,result.status],[fixture.min,fixture.max,fixture.status]);
  if('preferred' in fixture)assert.equal(result.preferred.length,fixture.preferred);
  assert.ok([...result.required,...result.preferred].every(item=>item.evidence&&item.section));
+ const expected=fixture.status!=='stated'?'Verify JD before shortlisting':experienceWithinPolicy(fixture.min,fixture.max)?'Shortlist by experience':'Do not shortlist by experience';
+ assert.equal(experienceDecision(result),expected);
+ const normalized=normalizeExperience(job({description:fixture.text,experience_min:fixture.min,experience_max:fixture.max,experience_label:result.label}));
+ assert.equal(matchesCareerView(normalized,'Recommended',0,3,true),expected==='Shortlist by experience');
+});
+test('old numeric scan values cannot approve missing, unsupported or negated JD evidence',()=>{
+ for(const description of [undefined,'','Build APIs using Java.','Experience: 2 years of Java is not required']){
+  const result=normalizeExperience(job({experience_min:1,experience_max:2,experience_label:'1–2',description}));
+  assert.equal(result.is_eligible,0);assert.equal(result.experience_min,null);assert.equal(result.experience_max,null);
+  assert.equal(matchesCareerView(result,'Recommended',0,3,true),false);
+ }
 });
 const job=(changes={})=>({title:'Java Developer',is_active:1,is_eligible:1,experience_min:null,experience_max:null,experience_label:'Unknown',eligibility_reason:'Experience not stated — verify',...changes});
 test('JD extraction repairs labels without fabricating scan approval or weakening stricter scan evidence',()=>{

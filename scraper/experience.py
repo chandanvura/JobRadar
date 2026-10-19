@@ -11,6 +11,7 @@ OPTIONAL = re.compile(RULES['optional'], re.I)
 REQUIRED = re.compile(SECTIONS['required'], re.I)
 PREFERRED = re.compile(SECTIONS['preferred'], re.I)
 JUNIOR = re.compile(RULES['junior'], re.I)
+JUNIOR_EXCLUDED = re.compile(RULES['junior_excluded'], re.I)
 
 
 def analyze_experience(description):
@@ -50,7 +51,7 @@ def analyze_experience(description):
                     spans.append((start, end))
             if len(rows) > 1 and re.search(r'\bor\b', text, re.I) and not optional:
                 conditional = True
-            if not rows and JUNIOR.search(text):
+            if not rows and JUNIOR.search(text) and not JUNIOR_EXCLUDED.search(text):
                 rows.append(dict(min=0, max=None, kind='junior', evidence=fragment.strip()[:400], section=section))
             (preferred if optional else required).extend(rows)
     def unique(rows):

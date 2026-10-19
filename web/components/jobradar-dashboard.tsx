@@ -1,6 +1,7 @@
 "use client";
 import {portalMessages} from "@/lib/portal-messages";
 import {employerText} from "@/lib/employer-text";
+import {experienceDecision} from "@/lib/job-experience";
 import {readTracking,saveTrackingPatch,mergeTracking,trackingStorageKey,recoveryStorageKey,clearTrackingStorage} from "@/lib/tracking-store";
 import {feedbackOptions,cleanFeedback,hideRecommendation,preferenceTime} from "@/lib/recommendation-feedback";
 import type {RecommendationFeedback} from "@/lib/recommendation-feedback";
@@ -1733,7 +1734,8 @@ const JobCard = memo(function JobCard({
             </div>
           </div>
           <details className="mt-3 rounded-xl border border-border p-3 text-xs">
-            <summary className="cursor-pointer font-semibold">Experience evidence · {requirements.experience.status==='stated'?'JD stated':requirements.experience.status==='unknown'?'Verify wording':'Needs review'}</summary>
+            <summary className="cursor-pointer font-semibold">{experienceDecision(requirements.experience)}</summary>
+            <p className="mt-2">This decision uses the JD and the 0–3 year policy. Posting date, location, and role checks also apply.</p>
             <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===null?'Experience cannot be confirmed.':match.experienceMatch?'Requested experience overlaps your search.':'Requested experience is outside your search.'}</p>
             {requirements.experience.required.length?requirements.experience.required.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}</blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
             {requirements.experience.preferred.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}

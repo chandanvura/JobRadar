@@ -1,5 +1,5 @@
 {
-  "optional": "\\b(?:preferred|preferably|nice to have|good to have|a plus|desirable|bonus|optional)\\b",
+  "optional": "\\b(?:preferred|preferably|nice to have|good to have|a plus|desirable|bonus|optional|not (?:required|mandatory|necessary|essential))\\b",
   "junior": "\\b(?:freshers?|fresh graduates?|new graduates?|entry.?level|early career|campus hire|university graduate|recent graduates?|no (?:prior |professional |work )?experience (?:is )?required)\\b",
   "exclude": "\\b(?:degree|course|contract|tenure|warranty|bond|graduation|bachelor|master|phd)\\b",
   "words": {
@@ -27,6 +27,10 @@
       "pattern": "\\b(?:up\\s*to|less than|maximum(?: of)?|max\\.?)\\s*(\\d+(?:\\.\\d+)?)\\s*(years?|yrs?|yoe|months?|mos?)\\b"
     },
     {
+      "kind": "upper",
+      "pattern": "\\b(\\d+(?:\\.\\d+)?)\\s*(years?|yrs?|yoe|months?|mos?)\\s*(?:or less|or fewer|maximum|at most)\\b"
+    },
+    {
       "kind": "lower",
       "pattern": "\\b(?:at least|minimum(?: of)?|more than|over|minimum\\s+(?:relevant\\s+|professional\\s+|work\\s+)?experience(?:\\s+of)?\\s*[:=-]?)\\s*(\\d+(?:\\.\\d+)?)\\s*\\+?\\s*(years?|yrs?|yoe|months?|mos?)\\b"
     },
@@ -43,5 +47,6 @@
       "pattern": "\\b(\\d+(?:\\.\\d+)?)\\s*(years?|yrs?|yoe|months?|mos?)\\b"
     }
   ],
-  "fragment_split": "(?:,\\s*|\\s+(?:and|but)\\s+)(?=(?:\\d|zero\\b|one\\b|two\\b|three\\b|four\\b|five\\b|six\\b|seven\\b|eight\\b|nine\\b|ten\\b|eleven\\b|twelve\\b))"
+  "fragment_split": "(?:,\\s*|\\s+(?:and|but)\\s+)(?=(?:(?:preferably|preferred|minimum(?: of)?|at least|maximum(?: of)?|up to)\\s+)?(?:\\d|zero\\b|one\\b|two\\b|three\\b|four\\b|five\\b|six\\b|seven\\b|eight\\b|nine\\b|ten\\b|eleven\\b|twelve\\b))",
+  "junior_excluded": "\\b(?:no freshers?|(?:freshers?|fresh graduates?|new graduates?|entry.?level|recent graduates?)\\s+(?:are\\s+|is\\s+)?(?:not\\s+(?:eligible|accepted|suitable)|(?:need|should)\\s+not\\s+apply)|(?:not (?:open|suitable) (?:to|for))\\s+(?:freshers?|graduates?))\\b"
 }
