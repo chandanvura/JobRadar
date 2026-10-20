@@ -1,3 +1,4 @@
+import {remoteEligibility} from './remote-eligibility.ts';
 import sections from '../../config/requirement-sections.json' with {type:'json'};
 import {candidateClauses} from './requirement-clauses.ts';
 import {analyzeExperience,experienceWithinPolicy} from './job-experience.ts';
@@ -27,7 +28,7 @@ export function extractRequirements(description:string,location='',clauses=candi
   if(/\b(?:remote|work from home)\b/i.test(text)&&!/\b(?:not remote|no remote|remote (?:customers|teams|systems|support))\b/i.test(text))modes.add('Remote');
   if(/\b(?:onsite|on[ -]site|work from (?:an? |the )?office)\b/i.test(text))modes.add('Onsite');
  }
- return {experience:analyzeExperience(description,clauses),requiredSkills:requiredSkills.filter(x=>!conflicts.includes(x.value)),preferredSkills:preferredSkills.filter(x=>!conflicts.includes(x.value)),mentionedSkills,skillConflicts:conflicts,education,batches,workMode:modes.size===1?[...modes][0]:modes.size>1?'Conflicting':'Unknown',workModeEvidence:modeEvidence.slice(0,3),reviewNeeded:true};
+ return {experience:analyzeExperience(description,clauses),requiredSkills:requiredSkills.filter(x=>!conflicts.includes(x.value)),preferredSkills:preferredSkills.filter(x=>!conflicts.includes(x.value)),mentionedSkills,skillConflicts:conflicts,education,batches,workMode:modes.size===1?[...modes][0]:modes.size>1?'Conflicting':'Unknown',workModeEvidence:modeEvidence.slice(0,3),remoteEligibility:remoteEligibility(location,clauses),reviewNeeded:true};
 }
 export function experienceUnverified(job:{experience_label?:string}) {return /^(?:Entry-level title|Conditional experience|Conflicting experience|JD extract)/i.test(job.experience_label||'');}
 export function normalizeExperience<T extends {description?:string|null;experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string;description_truncated?:boolean}>(job:T):T {
