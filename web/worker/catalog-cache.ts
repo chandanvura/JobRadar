@@ -1,6 +1,6 @@
 type PublicCache = {match(request:Request):Promise<Response|undefined>;put(request:Request,response:Response):Promise<unknown>};
 type Context = {waitUntil(promise:Promise<unknown>):void};
-const TTL_MS=60000;
+const TTL_MS=300000;
 
 // Only public catalog reads. Health, tracking, ingestion and alerts stay live.
 export async function cachedCatalog(request:Request,read:()=>Promise<Response>,cache:PublicCache,ctx:Context):Promise<Response>{
@@ -27,7 +27,7 @@ export async function cachedCatalog(request:Request,read:()=>Promise<Response>,c
   const response=await read();
   if(response.status===200&&response.headers.get('Content-Type')?.includes('application/json')&&!response.headers.has('Set-Cookie')&&response.headers.get('Vary')!=='*'&&response.headers.get('X-JobRadar-Data-Mode')!=='backup'){
     const stored=response.clone(),headers=new Headers(stored.headers);
-    headers.set('Cache-Control','public, max-age=60');headers.set('X-JobRadar-Cache-Until',String(Date.now()+TTL_MS));
+    headers.set('Cache-Control','public, max-age=300');headers.set('X-JobRadar-Cache-Until',String(Date.now()+TTL_MS));
     ctx.waitUntil(Promise.resolve().then(()=>cache.put(key,new Response(stored.body,{status:200,headers}))).catch(()=>undefined));
   }
   return response;

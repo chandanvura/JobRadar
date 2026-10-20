@@ -7,7 +7,7 @@ const columns=/const PUBLIC_JOB_COLUMNS="([^"]+)";/.exec(source)?.[1];
 const dashboard=source.split('async function dashboard(env:Env){')[1]?.split('async function ingest(')[0];
 if(!columns||!dashboard)throw Error('Dashboard source was not found');
 const queries=[...dashboard.matchAll(/env\.DB\.prepare\((`[^`]+`|"[^"\n]+")\)\.all\(\)/g)].map(match=>match[1].startsWith('`')?match[1].slice(1,-1).replace('${PUBLIC_JOB_COLUMNS}',columns):JSON.parse(match[1]));
-if(queries.length!==4||queries.some(sql=>!sql.startsWith('SELECT ')||sql.includes('${')))throw Error('Dashboard query verification must cover all four reads');
+if(queries.length!==5||queries.some(sql=>!sql.startsWith('SELECT ')||sql.includes('${')))throw Error('Dashboard query verification must cover all five reads');
 for(const [index,sql] of queries.entries()){
   let raw;
   try{
