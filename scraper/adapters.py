@@ -872,3 +872,5 @@ ADAPTERS["eightfold_complete"] = EightfoldCareerAdapter(complete=True)
 ADAPTERS["workday_all"] = WorkdayAdapter(complete=True, all_details=True)
 from .kissflow import KissflowCareerAdapter
 ADAPTERS['kissflow'] = KissflowCareerAdapter()
+from .accenture import AccentureCareerAdapter
+ADAPTERS['accenture'] = AccentureCareerAdapter()

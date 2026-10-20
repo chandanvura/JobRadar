@@ -111,7 +111,7 @@ Oracle,https://careers.oracle.com/jobs/,custom,oracle,5,true
 SAP,https://careers.sap.com/,xml,https://careers.sap.com/googlefeed.xml,5,true
 Cisco,https://cisco.wd5.myworkdayjobs.com/Cisco_Careers,workday,cisco|Cisco_Careers,5,true
 IBM,https://www.ibm.com/careers/search,custom,ibm,5,true
-Accenture,https://accenture.wd103.myworkdayjobs.com/AccentureCareers,workday,accenture|AccentureCareers,5,true
+Accenture,https://www.accenture.com/in-en/careers/jobsearch,accenture,https://www.accenture.com/api/accenture/elastic/findjobs,5,true
 Deloitte,https://southasiacareers.deloitte.com/,xml,https://southasiacareers.deloitte.com/googlefeed.xml,4,true
 EY,https://careers.ey.com/,xml,https://careers.ey.com/googlefeed.xml,4,true
 PwC,https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers,workday,pwc|Global_Experienced_Careers,4,true

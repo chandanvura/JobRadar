@@ -1,0 +1,36 @@
+{
+  "records": 200,
+  "unique_links": 200,
+  "warning": "Limited coverage: 200 newest records from official India experience-band searches; not a complete inventory",
+  "verified_dates": 0,
+  "eligible": 0,
+  "samples": [
+    {
+      "title": "Trust & Safety New Associate",
+      "url": "https://www.accenture.com/in-en/careers/jobdetails?id=AIOC-S01670397_en&title=Trust+%26+Safety+New+Associate",
+      "city": "Hyderabad",
+      "reason": "Role outside target list"
+    },
+    {
+      "title": "Pharmacovigilance Services Associate",
+      "url": "https://www.accenture.com/in-en/careers/jobdetails?id=AIOC-S01664803_en&title=Pharmacovigilance+Services+Associate",
+      "city": "Other India",
+      "reason": "Outside shortlist cities \u2014 Bengaluru and Hyderabad only"
+    },
+    {
+      "title": "Trust & Safety New Associate",
+      "url": "https://www.accenture.com/in-en/careers/jobdetails?id=AIOC-S01670508_en&title=Trust+%26+Safety+New+Associate",
+      "city": "Hyderabad",
+      "reason": "Role outside target list"
+    },
+    {
+      "title": "Order to Cash Operations Associate",
+      "url": "https://www.accenture.com/in-en/careers/jobdetails?id=AIOC-S01670941_en&title=Order+to+Cash+Operations+Associate",
+      "city": "Other India",
+      "reason": "Outside shortlist cities \u2014 Bengaluru and Hyderabad only"
+    }
+  ],
+  "official_search": "https://www.accenture.com/in-en/careers/jobsearch",
+  "endpoint": "https://www.accenture.com/api/accenture/elastic/findjobs",
+  "checked_date": "2026-10-20"
+}
