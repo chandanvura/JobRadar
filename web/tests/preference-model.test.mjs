@@ -57,3 +57,17 @@ test('recent choices outweigh stale opposite choices and duplicate trackers do n
  const repeated=Array.from({length:20},(_,i)=>({feedback:'good',job:job('Cloud','same',{application_url:`https://example.com/jobs/same?utm_source=${i}`})}));
  assert.equal(fitPreferenceModel(repeated,prefs).samples,1);
 });
+
+test('skill-only feedback does not penalise an entire role family before training',async()=>{
+ const {feedbackByFamily}=await import('../lib/job-match.ts');
+ assert.equal(feedbackByFamily([{job:job('Cloud','skills'),feedback:'skills'}]).size,0);
+ assert.equal(feedbackByFamily([{job:job('Cloud','role'),feedback:'role'}]).get('Cloud'),-1);
+});
+test('prepared matching components preserve the trained score and latest corrections replace earlier feedback',async()=>{
+ const {personalMatch}=await import('../lib/job-match.ts');
+ const rows=history().map((row,i)=>({...row,feedback:i<6?'good':'role',preference_at:'2026-10-19T00:00:00Z'}));
+ const model=fitPreferenceModel(rows,prefs,Date.parse('2026-10-20T00:00:00Z')),candidate=job('Cloud','prepared');
+ assert.equal(model.boost(candidate),model.boost(candidate,personalMatch(candidate,prefs).components));
+ const corrected=fitPreferenceModel([...rows,{...rows[0],feedback:'role',preference_at:'2026-10-20T00:00:00Z'}],prefs);
+ assert.equal(corrected.samples,12);assert.equal(corrected.positives,5);assert.equal(corrected.negatives,7);
+});

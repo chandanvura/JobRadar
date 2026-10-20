@@ -1,0 +1,39 @@
+{
+  "name": "Schrodinger",
+  "careers_url": "https://job-boards.greenhouse.io/schrdinger",
+  "ats_provider": "greenhouse",
+  "ats_identifier": "schrdinger",
+  "official": "https://www.schrodinger.com/company/careers/",
+  "official_links": [
+    "https://www.schrodinger.com/company/careers/",
+    "https://ir.schrodinger.com/press-releases/news-details/2025/Schrdinger-Receives-Fast-Track-Designation-for-SGR-1505-for-the-Treatment-of-RelapsedRefractory-Waldenstrm-Macroglobulinemia/default.aspx",
+    "https://ir.schrodinger.com/press-releases/news-details/2025/Schrdinger-Receives-Fast-Track-Designation-for-SGR-1505-for-the-Treatment-of-RelapsedRefractory-Waldenstrm-Macroglobulinemia/default.aspx",
+    "https://ir.schrodinger.com/press-releases/news-details/2025/Schrdinger-Reports-Encouraging-Initial-Phase-1-Clinical-Data-for-SGR-1505-at-EHA-Annual-Congress/default.aspx",
+    "https://ir.schrodinger.com/press-releases/news-details/2025/Schrdinger-Reports-Encouraging-Initial-Phase-1-Clinical-Data-for-SGR-1505-at-EHA-Annual-Congress/default.aspx",
+    "https://www.schrodinger.com/auth/logout?redirect_to=https%3A%2F%2Fwww.schrodinger.com%2Fcompany%2Fcareers",
+    "https://www.schrodinger.com/auth/logout?redirect_to=https%3A%2F%2Fwww.schrodinger.com%2Fcompany%2Fcareers",
+    "https://www.schrodinger.com/auth/login?redirect_to=https%3A%2F%2Fwww.schrodinger.com%2Fcompany%2Fcareers",
+    "https://www.schrodinger.com/auth/login?redirect_to=https%3A%2F%2Fwww.schrodinger.com%2Fcompany%2Fcareers",
+    "https://www.schrodinger.com/auth/logout?redirect_to=https%3A%2F%2Fwww.schrodinger.com%2Fcompany%2Fcareers"
+  ],
+  "raw": 33,
+  "jobs": 33,
+  "unique": 33,
+  "warning": null,
+  "target": [
+    {
+      "title": "Software Developer, LiveDesign Infrastructure - Hyderabad",
+      "location": "Hyderabad",
+      "experience": "1\u20133",
+      "posted_at": "2026-03-16T11:17:16+00:00",
+      "url": "https://job-boards.greenhouse.io/schrdinger/jobs/7657123003",
+      "jd_sentence": "<div> <p>Schr\u00f6dinger is on the cutting edge of computer-aided drug discovery and materials science. Our software platform continues to revolutionize the design of therapeutics and "
+    }
+  ],
+  "ownership_evidence": {
+    "selector": "a.open-career-link[data-position-id=\"7657123003\"]",
+    "official_title": "Software Developer, LiveDesign Infrastructure \u2013 Hyderabad",
+    "job_id": "7657123003",
+    "matched_current_feed": true
+  }
+}

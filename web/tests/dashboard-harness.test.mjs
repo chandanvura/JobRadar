@@ -48,12 +48,27 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   await click('Edit search');await click('Reset defaults');await click('Save & search jobs');
   assert.equal(fetchCalls,loadedCalls);
   console.log(`HARNESS PERF: 7,000-job preference edit, save and reset ${Math.round(performance.now()-editStarted)} ms; no catalog refetch`);
+  // Mobile navigation logic must isolate the drawer and restore keyboard focus.
+  const openNavigation=document.querySelector('[aria-label="Open navigation"]');openNavigation.focus();
+  const originalRects=window.HTMLElement.prototype.getClientRects;
+  window.HTMLElement.prototype.getClientRects=function(){return [{width:1,height:1}];};
+  try{
+   await act(()=>openNavigation.click());
+   const drawer=document.querySelector('[role="dialog"][aria-label="Navigation"]');assert.ok(drawer);
+   assert.equal(document.body.style.overflow,'hidden');assert.equal(document.querySelector('main').hasAttribute('inert'),true);
+   const controls=[...drawer.querySelectorAll('button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),[tabindex="0"]')];
+   controls[0].focus();await act(()=>document.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Tab',shiftKey:true,bubbles:true,cancelable:true})));
+   assert.equal(document.activeElement,controls.at(-1));
+   await act(()=>document.dispatchEvent(new window.KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true})));
+   assert.equal(document.querySelector('[role="dialog"][aria-label="Navigation"]'),null);assert.equal(document.body.style.overflow,'');assert.equal(document.activeElement,openNavigation);
+  }finally{window.HTMLElement.prototype.getClientRects=originalRects;}
   const durations=[];
   for(const view of ['All Jobs','Recommended','Needs Review','Internships','Saved','Applications','All Jobs']){
    const started=performance.now();await click(view);durations.push(Math.round(performance.now()-started));
    assert.equal(document.querySelector('h1').textContent,view);
    assert.ok(document.querySelectorAll('[aria-label="Job results"] article').length<=30);
   }
+  assert.ok(durations.every(ms=>ms<2000),`Navigation exceeded the 2-second regression budget: ${durations}`);
   assert.equal([...document.querySelectorAll('nav[aria-label="JobRadar views"] button')].some(node=>node.textContent.trim()==='Fresher Roles'),false);
   assert.equal(document.querySelectorAll('article details').length>0,true);
   assert.ok([...document.querySelectorAll('article summary')].some(node=>node.textContent==='Shortlist by experience'));

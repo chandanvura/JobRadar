@@ -233,6 +233,8 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
     url=endpoint.rstrip("/")+"/api/ingest"
     company_result=(await post_with_retry(url,headers,{"jobs":[],"companies":companies})).json()
     rows_written=int(company_result.get("d1_rows_written",0))
+    rows_read=int(company_result.get("d1_rows_read",0))
+    reads_known="d1_rows_read" in company_result
     new_external_ids=[]; new_job_keys=[]; notification_keys=[]; rejected=0
     for batch in ingest_chunks(jobs):
         result=(await post_with_retry(url,headers,{"jobs":batch,"companies":[]})).json()
@@ -240,6 +242,8 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
         new_job_keys.extend(result.get("new_job_keys",[]))
         notification_keys.extend(result.get("notification_keys",[]))
         rows_written+=int(result.get("d1_rows_written",0))
+        rows_read+=int(result.get("d1_rows_read",0))
+        reads_known=reads_known and "d1_rows_read" in result
         rejected+=int(result.get("rejected",0))
         if rejected:
             raise RuntimeError(f"Ingestion rejected records: {result.get('errors', [])}; scan finalization withheld to protect existing data")
@@ -257,7 +261,10 @@ async def ingest_scan(endpoint,headers,jobs,companies,run):
     }
     final_result=(await post_with_retry(url,headers,{"jobs":[],"companies":[],"run":final_run})).json()
     rows_written+=int(final_result.get("d1_rows_written",0))
-    print(f"D1 ingestion rows written: {rows_written} across {len(jobs)} candidate jobs and {len(companies)} sources")
+    rows_read+=int(final_result.get("d1_rows_read",0))
+    reads_known=reads_known and "d1_rows_read" in final_result
+    reads_display=rows_read if reads_known else "unavailable (older API response)"
+    print(f"D1 ingestion rows read: {reads_display}; rows written: {rows_written} across {len(jobs)} candidate jobs and {len(companies)} sources")
     return {"new_external_ids":list(dict.fromkeys(new_external_ids)),"new_job_keys":list(dict.fromkeys(new_job_keys)),"notification_keys":list(dict.fromkeys(notification_keys)),"rejected":rejected}
 
 class _NoopAsyncContext:

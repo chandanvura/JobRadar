@@ -4,6 +4,7 @@ import { safeUrl } from "./urls";
 import { jobDelta, JOB_INSERT_COLUMNS } from "./job-delta";
 import { publicRead } from "./public-backup";
 import { apiFailure, quotaExceeded } from "./api-failure";
+import {d1Metrics} from "./d1-metrics";
 import { cachedCatalog } from "./catalog-cache";
 import { enforceShortlistLocation } from "../lib/location-policy";
 
@@ -47,8 +48,9 @@ async function dashboard(env:Env){
   ]);
   const ids=idResult.results as {id:number}[];
   const catalog_ranges=ids.length<=100000?Array.from({length:Math.ceil(ids.length/500)},(_,i)=>({after:i?ids[i*500-1].id:0,through:ids[Math.min((i+1)*500,ids.length)-1].id})):undefined;
+  const usage=d1Metrics("/api/dashboard",[jobResult,companyResult,runResult,notificationResult,idResult]);
   const runs=runResult.results;const latest=runs[0]||null;
-  return json({catalog_ranges,jobs:jobResult.results.map(enforceShortlistLocation),companies:dedupeCompanies(companyResult.results as RecordValue[]),latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],discovery_locations:["Bengaluru","Hyderabad","Remote (India)","Other India"],max_age_hours:24,max_experience_years:3,skills_required:false}});
+  return json({catalog_ranges,jobs:jobResult.results.map(enforceShortlistLocation),companies:dedupeCompanies(companyResult.results as RecordValue[]),latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],discovery_locations:["Bengaluru","Hyderabad","Remote (India)","Other India"],max_age_hours:24,max_experience_years:3,skills_required:false}},200,usage.headers);
 }
 
 async function ingest(request:Request,env:Env){
@@ -72,7 +74,14 @@ async function ingest(request:Request,env:Env){
   const newExternalIds=newJobs.map(j=>textValue(j.external_job_id));
   const newJobKeys=newJobs.map(j=>`${textValue(j.company)}\u001f${textValue(j.ats_provider)}\u001f${textValue(j.external_job_id)}`);
   const statements=[];
-  const companyExistence=companyUpdates.length?await env.DB.batch(companyUpdates.map(c=>env.DB.prepare("SELECT * FROM companies WHERE name=? COLLATE NOCASE OR (ats_provider=? AND ats_identifier=?)").bind(textValue(c.name),textValue(c.ats_provider),textValue(c.ats_identifier)))):[];
+  // One bounded inventory lookup replaces one full-table OR scan per source.
+  const companyRead=companyUpdates.length?await env.DB.prepare("SELECT * FROM companies WHERE lower(name) IN (SELECT value FROM json_each(?)) OR (ats_provider || char(31) || ats_identifier) IN (SELECT value FROM json_each(?))").bind(JSON.stringify(companyUpdates.map(c=>textValue(c.name).toLocaleLowerCase())),JSON.stringify(companyUpdates.map(c=>`${textValue(c.ats_provider)}\u001f${textValue(c.ats_identifier)}`))).all():null;
+  const byName=new Map<string,RecordValue[]>(),bySource=new Map<string,RecordValue[]>();
+  for(const row of (companyRead?.results||[]) as RecordValue[]){
+    const name=textValue(row.name).toLocaleLowerCase(),key=`${textValue(row.ats_provider)}\u001f${textValue(row.ats_identifier)}`;
+    byName.set(name,[...(byName.get(name)||[]),row]);bySource.set(key,[...(bySource.get(key)||[]),row]);
+  }
+  const companyExistence=companyUpdates.map(c=>({results:[...new Map([...(byName.get(textValue(c.name).toLocaleLowerCase())||[]),...(bySource.get(`${textValue(c.ats_provider)}\u001f${textValue(c.ats_identifier)}`)||[])].map(row=>[row.id,row])).values()]}));
   for(const [companyIndex,c] of companyUpdates.entries()){
     const provider=textValue(c.ats_provider),identifier=textValue(c.ats_identifier),name=textValue(c.name),warning=textValue(c.warning);if(!provider||!identifier||!name)continue;
     const values=[name,safeUrl(c.careers_url)||"https://invalid.local/",provider,identifier,numberValue(c.priority,3),nullableText(c.last_checked_at),nullableText(c.last_success_at),numberValue(c.error_count),numberValue(c.jobs_found),numberValue(c.candidate_jobs),numberValue(c.eligible_jobs),nullableText(c.warning)];
@@ -111,7 +120,8 @@ async function ingest(request:Request,env:Env){
   const eligibleIncoming=validJobs.filter(j=>Boolean(j.is_eligible));
   const notificationChecks=eligibleIncoming.length?await env.DB.batch(eligibleIncoming.map(j=>env.DB.prepare("SELECT n.status FROM jobs j LEFT JOIN notifications n ON n.job_id=j.id AND n.channel='telegram' WHERE j.company=? COLLATE NOCASE AND j.ats_provider=? AND j.external_job_id=?").bind(textValue(j.company),textValue(j.ats_provider),textValue(j.external_job_id)))):[];
   const notificationKeys=eligibleIncoming.filter((_,i)=>{const status=notificationChecks[i]?.results?.[0]?.status;return status!=="sent"}).map(j=>`${textValue(j.company)}\u001f${textValue(j.ats_provider)}\u001f${textValue(j.external_job_id)}`);
-  return json({d1_rows_written:d1RowsWritten,accepted:validJobs.length,rejected:errors.length,errors:errors.slice(0,20),new_external_ids:newExternalIds,new_job_keys:newJobKeys,notification_keys:notificationKeys});
+  const usage=d1Metrics("/api/ingest",[...existence,...(companyRead?[companyRead]:[]),...writeResults,...notificationChecks]);
+  return json({d1_rows_read:usage.rows_read,d1_rows_written:d1RowsWritten,accepted:validJobs.length,rejected:errors.length,errors:errors.slice(0,20),new_external_ids:newExternalIds,new_job_keys:newJobKeys,notification_keys:notificationKeys},200,usage.headers);
 }
 
 async function updateStatus(){
@@ -126,14 +136,15 @@ async function recordNotification(request:Request,env:Env){
 }
 
 async function health(env:Env){
-  const run=await env.DB.prepare("SELECT started_at,finished_at,status,companies_checked,companies_successful,companies_failed,companies_empty,jobs_scanned,candidate_jobs FROM scraper_runs ORDER BY id DESC LIMIT 1").first<RecordValue>();
+  const result=await env.DB.prepare("SELECT started_at,finished_at,status,companies_checked,companies_successful,companies_failed,companies_empty,jobs_scanned,candidate_jobs FROM scraper_runs ORDER BY id DESC LIMIT 1").all<RecordValue>();
+  const run=result.results[0]||null,usage=d1Metrics("/api/health",[result]);
   const elapsed=run?.finished_at?(Date.now()-Date.parse(String(run.finished_at)))/3600000:null;
   const age=elapsed!==null&&Number.isFinite(elapsed)?elapsed:null;
   const stale=age===null||age<0||age>=5;
   const pipelineOk=Boolean(env.DB)&&Boolean(env.JOBRADAR_INGEST_SECRET)&&!stale;
   const scanOk=run?.status==="success"&&numberValue(run?.companies_failed)===0;
   const ok=pipelineOk&&scanOk;
-  return json({ok,pipeline_ok:pipelineOk,scan_ok:scanOk,database:Boolean(env.DB),ingestion_configured:Boolean(env.JOBRADAR_INGEST_SECRET),latest_run:run,run_age_hours:age,stale},ok?200:503);
+  return json({ok,pipeline_ok:pipelineOk,scan_ok:scanOk,database:Boolean(env.DB),ingestion_configured:Boolean(env.JOBRADAR_INGEST_SECRET),latest_run:run,run_age_hours:age,stale},ok?200:503,usage.headers);
 }
 
 const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<Response>{
@@ -147,7 +158,7 @@ const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<
   try{
     if(url.pathname==="/api/health"&&request.method==="GET")return await health(env);
     if(url.pathname==="/api/dashboard"&&request.method==="GET")return await catalogRead(()=>publicRead(request,env.ASSETS,()=>dashboard(env),SECURITY_HEADERS));
-    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw),limit=Number(url.searchParams.get("limit")||"100"),through=Number(url.searchParams.get("through")||String(Number.MAX_SAFE_INTEGER));if(!Number.isSafeInteger(through)||through<=after)return json({error:"Invalid range"},400);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);if(!Number.isSafeInteger(limit)||limit<1||limit>500)return json({error:"Invalid page size"},400);return await catalogRead(()=>publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE id IN (SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Bengaluru' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Hyderabad' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Remote (India)' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Other India' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1})) ORDER BY id LIMIT ${limit+1}`).bind(after,through,after,through,after,through,after,through).all();const jobs=result.results.slice(0,limit).map(enforceShortlistLocation);return json({jobs,next_cursor:result.results.length>limit?jobs[jobs.length-1].id:null})},SECURITY_HEADERS))}
+    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw),limit=Number(url.searchParams.get("limit")||"100"),through=Number(url.searchParams.get("through")||String(Number.MAX_SAFE_INTEGER));if(!Number.isSafeInteger(through)||through<=after)return json({error:"Invalid range"},400);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);if(!Number.isSafeInteger(limit)||limit<1||limit>500)return json({error:"Invalid page size"},400);return await catalogRead(()=>publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE id IN (SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Bengaluru' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Hyderabad' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Remote (India)' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Other India' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1})) ORDER BY id LIMIT ${limit+1}`).bind(after,through,after,through,after,through,after,through).all();const jobs=result.results.slice(0,limit).map(enforceShortlistLocation);const usage=d1Metrics("/api/jobs",[result]);return json({jobs,next_cursor:result.results.length>limit?jobs[jobs.length-1].id:null},200,usage.headers)},SECURITY_HEADERS))}
     if(url.pathname==="/api/ingest"&&request.method==="POST")return await ingest(request,env);
     if(url.pathname==="/api/notifications"&&request.method==="POST")return await recordNotification(request,env);
     const statusMatch=url.pathname.match(/^\/api\/jobs\/(\d+)\/status$/);if(statusMatch&&request.method==="PATCH")return updateStatus();

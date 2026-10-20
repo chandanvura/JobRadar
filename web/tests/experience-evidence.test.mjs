@@ -34,3 +34,12 @@ test('verified recommendations reject unknown and open 3+ requirements; no fallb
  assert.equal(matchesCareerView(job({experience_min:3}),'Recommended',0,3,true),false);
  assert.equal(experienceWithinPolicy(2,null),true);assert.equal(experienceWithinPolicy(1,3),true);
 });
+
+test('full experience sentences survive long clauses and explanations separate required from preferred',async()=>{
+ const {experienceExplanation}=await import('../lib/job-experience.ts');
+ const sentence='Candidate must have 1–3 years of professional experience '+('working with Java and AWS systems '.repeat(18)).trim()+'.';
+ const result=analyzeExperience(sentence);
+ assert.equal(result.required[0].evidence,sentence);assert.ok(result.required[0].evidence.length>400);
+ assert.match(experienceExplanation(result),/meets the portal experience rule/);
+ assert.match(experienceExplanation(analyzeExperience('Preferred experience: 2 years')),/Only preferred/);
+});

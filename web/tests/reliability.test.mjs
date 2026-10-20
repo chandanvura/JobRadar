@@ -107,3 +107,19 @@ test('a failed parallel page cancels siblings before recovering to a complete ba
  });assert.equal(aborted,true);assert.deepEqual(result,saved);
  }finally{clearInterval(keepAlive);}
 });
+
+test('slow network publishes the preview first, keeps the event loop responsive and completes all ranges',async()=>{
+ const ranges=Array.from({length:8},(_,i)=>({after:i*500,through:(i+1)*500}));
+ let preview=false,complete=false,beats=0;const timer=setInterval(()=>beats++,10),started=performance.now();
+ try{
+ const pending=loadPublicCatalog(data=>{assert.equal(data.jobs.length,100);preview=true;},async path=>{
+  if(path==='/api/dashboard')return Response.json({...live,catalog_ranges:ranges});
+  assert.equal(preview,true);await new Promise(resolve=>setTimeout(resolve,100));
+  const u=new URL(path,'https://test.invalid'),after=Number(u.searchParams.get('after'));
+  return Response.json({jobs:Array.from({length:500},(_,i)=>({id:after+i+1})),next_cursor:null});
+ }).then(value=>{complete=true;return value;});
+ await new Promise(resolve=>setTimeout(resolve,30));assert.equal(preview,true);assert.equal(complete,false);assert.ok(beats>0);
+ const result=await pending;assert.equal(result.jobs.length,4000);assert.ok(beats>=5);
+ assert.ok(performance.now()-started<2000,'slow-network completion exceeded the release regression budget');
+ }finally{clearInterval(timer);}
+});

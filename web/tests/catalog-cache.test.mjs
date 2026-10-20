@@ -59,3 +59,10 @@ test('public catalog edge cache lasts five minutes to bound repeated database re
  const stored=[...f.memory.values()][0];assert.equal(stored.headers.get('Cache-Control'),'public, max-age=300');
  const remaining=Number(stored.headers.get('X-JobRadar-Cache-Until'))-Date.now();assert.ok(remaining>290000&&remaining<=300000);
 });
+
+test('edge hits report zero new database reads rather than replaying original query cost',async()=>{
+ const f=fixture();const read=async()=>Response.json({live:true},{headers:{'X-JobRadar-D1-Rows-Read':'9000','Server-Timing':'d1;dur=40'}});
+ await cachedCatalog(req('/api/dashboard'),read,f.cache,f.ctx);await f.flush();
+ const hit=await cachedCatalog(req('/api/dashboard'),read,f.cache,f.ctx);
+ assert.equal(hit.headers.get('X-JobRadar-D1-Rows-Read'),'0');assert.equal(hit.headers.get('Server-Timing'),'edge-cache;desc=hit');
+});
