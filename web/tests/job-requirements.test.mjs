@@ -50,3 +50,10 @@ test('actual HPE education abbreviations and preferred-experience headings are e
  assert.deepEqual(r.preferredSkills.map(x=>x.value).sort(),['Docker','Kubernetes']);
  assert.ok(![...r.requiredSkills,...r.preferredSkills,...r.mentionedSkills].some(x=>x.value==='Java'));
 });
+
+test('a truncated JD stays unverified even if its visible extract states suitable experience',()=>{
+ const original={description:'Required: Java and 1–2 years experience.',description_truncated:true,experience_label:'1–2',experience_min:1,experience_max:2,is_eligible:1,eligibility_reason:''};
+ const result=normalizeExperience(original);
+ assert.equal(result.is_eligible,0);assert.equal(result.experience_min,null);assert.equal(result.experience_max,null);
+ assert.match(result.eligibility_reason,/JD extract/);assert.equal(original.is_eligible,1);
+});

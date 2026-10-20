@@ -12,8 +12,9 @@ const normalize=(value:string)=>value.normalize('NFKC').toLowerCase()
   .replace(/\bgolang\b/g,'go').replace(/\bnode[ .]?js\b/g,'nodejs')
   .replace(/\bdotnet\b|\.net\b/g,'dotnet').replace(/\bbangalore\b/g,'bengaluru')
   .replace(/[^a-z0-9+#]+/g,' ').trim();
+const exactSkills=new Set(['java','javascript','c','c++','c#','go','r','sql']);
 const stop=new Set(['a','an','the','of','for','and','in','at','with','jobs','job','role','roles']);
-const tokens=(text:string)=>normalize(text).split(/\s+/).filter(token=>token.length>1&&!stop.has(token));
+const tokens=(text:string)=>normalize(text).split(/\s+/).filter(token=>(token.length>1||token==='c'||token==='r')&&!stop.has(token));
 function oneEdit(a:string,b:string) {
   if(Math.abs(a.length-b.length)>1)return false;
   let i=0,j=0,edits=0;
@@ -46,7 +47,7 @@ function createLexicalJobSearchIndex<T extends SearchableJob>(jobs:T[]) {
       const alternatives=new Map<string,number>();
       if(postings.has(term))alternatives.set(term,1);
       for(const word of byInitial.get(term[0])||[]){
-        if(word!==term&&term.length>=3&&word.startsWith(term))alternatives.set(word,.8);
+        if(word!==term&&term.length>=3&&!exactSkills.has(term)&&word.startsWith(term))alternatives.set(word,.8);
         else if(!postings.has(term)&&term.length>=5&&oneEdit(term,word))alternatives.set(word,.6);
       }
       const matches=new Map<number,number>();

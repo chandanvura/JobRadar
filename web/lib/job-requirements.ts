@@ -29,8 +29,9 @@ export function extractRequirements(description:string,location='',clauses=candi
  }
  return {experience:analyzeExperience(description,clauses),requiredSkills:requiredSkills.filter(x=>!conflicts.includes(x.value)),preferredSkills:preferredSkills.filter(x=>!conflicts.includes(x.value)),mentionedSkills,skillConflicts:conflicts,education,batches,workMode:modes.size===1?[...modes][0]:modes.size>1?'Conflicting':'Unknown',workModeEvidence:modeEvidence.slice(0,3),reviewNeeded:true};
 }
-export function experienceUnverified(job:{experience_label?:string}) {return /^(?:Entry-level title|Conditional experience|Conflicting experience)/i.test(job.experience_label||'');}
-export function normalizeExperience<T extends {description?:string|null;experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string}>(job:T):T {
+export function experienceUnverified(job:{experience_label?:string}) {return /^(?:Entry-level title|Conditional experience|Conflicting experience|JD extract)/i.test(job.experience_label||'');}
+export function normalizeExperience<T extends {description?:string|null;experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string;description_truncated?:boolean}>(job:T):T {
+ if(job.description_truncated)return {...job,experience_min:null,experience_max:null,is_eligible:0,experience_label:"JD extract — verify full requirements",eligibility_reason:"JD extract — verify full requirements"};
  const requirements=typeof job.description==='string'&&job.description.trim()?requirementsFor(job):null;
  const analysis=requirements?.experience;
  let normalized=job;

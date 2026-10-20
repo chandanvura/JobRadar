@@ -57,3 +57,12 @@ test("generic entry titles are searchable suggestions without assumed technical 
   assert.equal(classifyRoleTitle(title),"Other");
  }
 });
+
+test('complete language names stay distinct while partial words still autocomplete',()=>{
+ const java=job('Java Developer','Example','Java and Spring Boot'),js=job('Javascript Developer','Example','JavaScript and React'),c=job('C Developer','Example','C programming'),r=job('R Analyst','Example','R statistics');
+ const index=createJobSearchIndex([java,js,c,r]);
+ assert.deepEqual([...index.search('Java').keys()],[java]);
+ assert.deepEqual([...index.search('JavaScript').keys()],[js]);
+ assert.ok(index.search('jav').has(java));assert.ok(index.search('jav').has(js));
+ assert.deepEqual([...index.search('C').keys()],[c]);assert.deepEqual([...index.search('R').keys()],[r]);
+});
