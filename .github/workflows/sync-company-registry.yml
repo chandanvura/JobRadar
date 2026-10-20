@@ -2,7 +2,7 @@ name: Publish company registry updates
 on:
   push:
     branches: [main]
-    paths: ["companies/companies.csv", "scripts/sync_company_registry.py", ".github/workflows/sync-company-registry.yml"]
+    paths: ["companies/companies.csv", "scripts/sync_company_registry.py", "config/source-rechecks.json", ".github/workflows/sync-company-registry.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,4 +30,5 @@ jobs:
           done
         env:
           JOBRADAR_VERIFY_SOURCE_UPDATES: "true"
+          JOBRADAR_SOURCE_RECHECKS: "config/source-rechecks.json"
           JOBRADAR_INGEST_SECRET: ${{ secrets.JOBRADAR_INGEST_SECRET }}

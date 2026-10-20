@@ -8,7 +8,7 @@ from defusedxml import ElementTree as ET
 from .models import Company, Job, JobBatch
 from .snapshot import SnapshotChanged
 from .roles import likely_technical_title
-from .locations import explicit_remote_india
+from .locations import explicit_remote_india, india_discovery_location
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
 _DOMAIN_LIMITERS={}
@@ -69,7 +69,7 @@ def likely_role(title):
     return likely_technical_title(title)
 
 def likely_target(title, location):
-    return bool(likely_role(title) and (re.search(r"\b(bangalore|bengaluru|hyderabad)\b",str(location),re.I) or explicit_remote_india(location)))
+    return bool(likely_role(title) and india_discovery_location(location))
 
 def location_text(*values):
     """Flatten ATS primary and secondary locations without guessing a city."""
@@ -80,7 +80,9 @@ def location_text(*values):
             for item in value: add(item)
         elif isinstance(value,dict):
             for key in ("name","Name","location","city","region","country","addressLocality"):
-                if key in value: add(value.get(key))
+                if key in value:
+                    raw=value.get(key)
+                    add('India' if key=='country' and raw in ('IN','IND') else raw)
     for value in values: add(value)
     return " · ".join(dict.fromkeys(found))
 
@@ -329,12 +331,14 @@ def workday_country_facets(nodes,country):
 
 def workday_city_facets(nodes):
     """Use only employer-published location IDs; never search guessed city strings."""
+    country=workday_country_facets(nodes,'India')
+    if country:return country
     found=[]
     def visit(entries):
         for node in entries:
             if node.get("facetParameter")=="locations":
                 found.extend(value["id"] for value in node.get("values",[]) if value.get("id")
-                             and re.search(r"\b(?:bangalore|bengaluru|hyderabad)\b", value.get("descriptor", ""), re.I))
+                             and india_discovery_location(value.get("descriptor", "")))
             visit(node.get("values", []))
     visit(nodes)
     return {"locations":list(dict.fromkeys(found))} if found else {}
@@ -356,12 +360,20 @@ class WorkdayAdapter(JobSource):
         async with client() as x:
             postings=[]; offset=0; facets={}; expected=None; identifiers=set(); advertised=None; duplicate_paths=False
             bound=2000
+            partition_first=None
             country=c.ats_identifier.split("|")[2] if len(c.ats_identifier.split("|"))>2 else None
             if country:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":0,"searchText":""})
                 response.raise_for_status()
                 facets=workday_country_facets(response.json().get("facets",[]),country)
                 if not facets: raise ValueError("Workday does not expose the configured country locations")
+            if self.complete and tenant=='maersk' and site=='Maersk_Careers' and not country:
+                from .workday_partitions import category_postings
+                initial=await request(x,'POST',f'{api}/jobs',json={'appliedFacets':{},'limit':20,'offset':0,'searchText':''})
+                initial.raise_for_status();initial_page=initial.json()
+                postings,expected=await category_postings(x,api,initial_page,request)
+                partition_first=[item.get('externalPath') for item in initial_page.get('jobPostings',[])]
+                offset=bound
             while offset < bound:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
@@ -392,6 +404,7 @@ class WorkdayAdapter(JobSource):
                         raise ValueError(f"Workday complete pagination changed, repeated or omitted records: offset={offset}, total={total}, expected={expected}, rows={len(batch)}, first_path={paths[0] if paths else None}")
                     identifiers.update(paths)
                 postings.extend(batch)
+                if self.complete and len(postings)==expected:break
                 if len(batch)<20: break
                 offset+=20
             if self.complete:
@@ -402,7 +415,7 @@ class WorkdayAdapter(JobSource):
                 check=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":0,"searchText":""})
                 check.raise_for_status(); snapshot=check.json()
                 if (snapshot.get("total")!=expected or [item.get("externalPath") for item in snapshot.get("jobPostings",[])]
-                        !=[item.get("externalPath") for item in postings[:20]]):
+                        !=(partition_first if partition_first is not None else [item.get("externalPath") for item in postings[:20]])):
                     raise SnapshotChanged("Workday complete listing changed during final verification")
             semaphore=asyncio.Semaphore(8); missing=[]; detail_requests=0; skipped_details=0; timed_out_details=0
             async def convert(item):

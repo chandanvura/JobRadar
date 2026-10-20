@@ -101,15 +101,19 @@ try {
   const live=await (await request('/api/dashboard')).json();assert.equal(live.jobs.length,1);assert.equal(live.data_mode,undefined);
   const page=await (await request('/api/jobs?after=0')).json();assert.equal(page.jobs.length,1);assert.equal(page.next_cursor,null);
   const remote={...job,external_job_id:'REMOTE-IN',city:'Remote (India)',location:'Remote - India',normalized_location:'Remote (India)'};
+  const national={...job,external_job_id:'INDIA-PUNE',city:'Other India',location:'Pune, India',normalized_location:'Pune, India',is_eligible:1};
   const outside={...job,external_job_id:'REMOTE-US',city:null,location:'Remote - USA',normalized_location:'Remote - USA'};
-  assert.equal((await request('/api/ingest',{jobs:[remote,outside]})).status,200);
+  assert.equal((await request('/api/ingest',{jobs:[remote,outside,national]})).status,200);
   for(const endpoint of ['/api/dashboard','/api/jobs?after=0']){
     const response=await (await request(endpoint)).json();
     assert.ok(response.jobs.some(row=>row.external_job_id==='REMOTE-IN'));
+    assert.equal(response.jobs.find(row=>row.external_job_id==='REMOTE-IN').is_eligible,0);
+    assert.equal(response.jobs.find(row=>row.external_job_id==='INDIA-PUNE').is_eligible,0);
+    if(endpoint==='/api/dashboard')assert.deepEqual(response.policy.cities,['Bengaluru','Hyderabad']);
     assert.ok(!response.jobs.some(row=>row.external_job_id==='REMOTE-US'));
-    if(endpoint==='/api/dashboard')assert.ok(response.policy.cities.includes('Remote (India)'));
+    if(endpoint==='/api/dashboard')assert.ok(response.policy.discovery_locations.includes('Remote (India)'));
   }
-  await db.prepare("DELETE FROM jobs WHERE external_job_id IN ('REMOTE-IN','REMOTE-US')").run();
+  await db.prepare("DELETE FROM jobs WHERE external_job_id IN ('REMOTE-IN','REMOTE-US','INDIA-PUNE')").run();
   for(let offset=0;offset<505;offset+=125){
     const rows=Array.from({length:Math.min(125,505-offset)},(_,i)=>({...job,external_job_id:`PAGE-${offset+i}`,city:['Bengaluru','Hyderabad','Remote (India)'][i%3]}));
     assert.equal((await request('/api/ingest',{jobs:rows})).status,200);

@@ -12,12 +12,12 @@ from scraper.experience import analyze_experience
     ({'location':'India (Anywhere)','workplaceType':'Remote'},'Remote (India)'),
     ({'location':'United States','isRemote':True,'secondaryLocations':[{'location':'India','address':{'postalAddress':{'addressCountry':'India'}}}]},'Remote (India)'),
     ({'location':'Remote','isRemote':True,'address':{'postalAddress':{'addressCountry':'IN'}}},'Remote (India)'),
-    ({'location':'India','isRemote':False},None),
+    ({'location':'India','isRemote':False},'Other India'),
     ({'location':'United States','isRemote':True},None),
     ({'location':'Remote','isRemote':True},None),
-    ({'location':'India','isRemote':'false'},None),
-    ({'location':'India','isRemote':True,'workplaceType':'Hybrid'},None),
-    ({'location':'India','isRemote':False,'workplaceType':'Remote'},None),
+    ({'location':'India','isRemote':'false'},'Other India'),
+    ({'location':'India','isRemote':True,'workplaceType':'Hybrid'},'Other India'),
+    ({'location':'India','isRemote':False,'workplaceType':'Remote'},'Other India'),
 ])
 def test_remote_requires_published_india_and_remote_evidence(item,expected):
     job=adapters.make_job('1','DevOps Engineer','Example',adapters.ashby_location(item),'Required: 1-2 years.','ashby','company_career','https://jobs.example/1','https://jobs.example/1','https://jobs.example')

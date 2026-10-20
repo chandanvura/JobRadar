@@ -2,6 +2,8 @@
 import asyncio
 import json
 import os
+from datetime import datetime,timezone
+from pathlib import Path
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 from scraper.main import load_companies, scrape
@@ -43,6 +45,20 @@ def selected_repairs(companies, catalog, names):
                       warning='Source updated; awaiting verification')
         updates.append(update)
     return updates
+
+
+def requested_repairs(companies,catalog,request):
+    requested=datetime.fromisoformat(request['requested_at'].replace('Z','+00:00'))
+    if requested.tzinfo is None or requested>datetime.now(timezone.utc):
+        raise ValueError('Source recheck requires a valid past timestamp with timezone')
+    updates=selected_repairs(companies,catalog,request['companies'])
+    live={row['name']:row for row in catalog['companies']}
+    def pending(row):
+        previous=live[row['name']]
+        checked=previous.get('last_checked_at')
+        return (not checked or datetime.fromisoformat(checked.replace('Z','+00:00'))<requested
+                or bool(previous.get('error_count')) or (previous.get('warning') or '').startswith('Limited coverage'))
+    return [row for row in updates if pending(row)]
 
 
 def changed_sources(companies, catalog):
@@ -111,6 +127,11 @@ def main():
     selected = json.loads(os.environ['JOBRADAR_REPAIR_COMPANIES']) if os.environ.get('JOBRADAR_REPAIR_COMPANIES') else None
     additions = [] if selected is not None else missing_sources(companies, catalog)
     repairs = selected_repairs(companies, catalog, selected) if selected is not None else changed_sources(companies, catalog)
+    recheck_names=set()
+    if selected is None and os.environ.get('JOBRADAR_SOURCE_RECHECKS') and os.environ.get('JOBRADAR_VERIFY_SOURCE_UPDATES')=='true':
+        rechecks=requested_repairs(companies,catalog,json.loads(Path(os.environ['JOBRADAR_SOURCE_RECHECKS']).read_text()))
+        recheck_names={row['name'] for row in rechecks}
+        repairs=[row for row in repairs if row['name'] not in recheck_names]+rechecks
     if selected is not None and os.environ.get('JOBRADAR_VERIFY_SOURCE_UPDATES') != 'true':
         raise ValueError('Explicit repairs require live collection verification')
     jobs = []
@@ -151,14 +172,17 @@ def main():
             or (live_rows[row['name']].get('warning') or '').startswith(('Limited coverage','Source updated','Awaiting first'))
             or live_rows[row['name']].get('ats_provider')!=row['ats_provider']
             or normalized_source_url(live_rows[row['name']].get('careers_url'))!=normalized_source_url(row['careers_url'])))
-    if selected is not None:
+    verify_names=set(selected or [])|recheck_names
+    if verify_names:
+        if selected is not None:remaining=[]
         live_rows = {row['name']: row for row in live['companies']}
-        remaining = [row for row in pending if row['name'] not in live_rows
+        remaining += [row for row in pending if row['name'] in verify_names and (row['name'] not in live_rows
+                     or not live_rows[row['name']].get('last_checked_at')
                      or live_rows[row['name']].get('last_checked_at') != row.get('last_checked_at')
                      or live_rows[row['name']].get('error_count')
                      or (live_rows[row['name']].get('warning') or '').startswith(('Limited coverage', 'Source updated'))
                      or live_rows[row['name']].get('ats_provider') != row['ats_provider']
-                     or normalized_source_url(live_rows[row['name']].get('careers_url')) != normalized_source_url(row['careers_url'])]
+                     or normalized_source_url(live_rows[row['name']].get('careers_url')) != normalized_source_url(row['careers_url']))]
     if (selected is None and missing_sources(companies, live)) or remaining:
         raise RuntimeError("Company sources not yet verified in live catalog")
     print(f"Verified {len(pending)} company source updates in the live portal; scheduled scans remain unchanged")

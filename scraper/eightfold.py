@@ -52,7 +52,7 @@ class EightfoldCareerAdapter:
                 raise ValueError('Eightfold public career configuration does not match the employer')
             found = {}; offset = 0; total = None; first = None
             params = {'domain': domain, 'query': '', 'location': 'India', 'start': 0,
-                      'sort_by': 'timestamp'}
+                      'sort_by': 'relevance' if host=='eaton.eightfold.ai' else 'timestamp'}
             while True:
                 params['start'] = offset
                 response = await request(x, 'GET', base + '/api/pcsx/search', params=params)

@@ -1,4 +1,5 @@
 "use client";
+import {discoveryLocations,locationMatches,enforceShortlistLocation} from "@/lib/location-policy";
 import {portalMessages} from "@/lib/portal-messages";
 import {employerText} from "@/lib/employer-text";
 import {experienceDecision} from "@/lib/job-experience";
@@ -304,9 +305,9 @@ const defaultPreferences: SearchPreferences = {
   skills: [],
   experienceMin: 0,
   experienceMax: 3,
-  locations: ["Bengaluru", "Hyderabad", "Remote (India)"],
+  locations: ["Bengaluru", "Hyderabad", "Remote (India)", "Other India"],
 };
-const TARGET_CITIES = ["Bengaluru", "Hyderabad", "Remote (India)"];
+const TARGET_CITIES = discoveryLocations;
 const DEFAULT_JOB_TITLES = SUGGESTED_JOB_TITLES;
 const OFFICIAL_ATS_DOMAINS = "site:myworkdayjobs.com OR site:greenhouse.io OR site:lever.co OR site:icims.com OR site:jobs.jobvite.com OR site:ashbyhq.com OR site:smartrecruiters.com";
 const AGGREGATOR_DOMAINS = [
@@ -559,7 +560,7 @@ function DashboardContent() {
     const sync=(event:StorageEvent)=>{if(event.key===null||(event.key===privateKey(trackingStorageKey)&&event.newValue===null)){setTracking({});return;}if(event.key===privateKey(trackingStorageKey)||event.key===privateKey(recoveryStorageKey))setTracking(current=>mergeTracking(current,readTracking()) as Record<string,Tracking>);};
     window.addEventListener('storage',sync);return()=>window.removeEventListener('storage',sync);
   },[]);
-  const currentJobs = useMemo(() => (data?.jobs || []).map(normalizeExperience), [data?.jobs]);
+  const currentJobs = useMemo(() => (data?.jobs || []).map(normalizeExperience).map(enforceShortlistLocation), [data?.jobs]);
   const mergedJobs = useMemo(() => {
     const map = new Map(currentJobs.map((j) => [trackingKey(j), j]));
     const missing = Object.values(tracking).filter(t => !map.has(trackingKey(t.job)));
@@ -615,11 +616,11 @@ function DashboardContent() {
       )
         return false;
       if (!["Saved", "Applications"].includes(active)) {
-        if (location !== "All cities" && !j.normalized_location.includes(location))
+        if (location !== "All cities" && !locationMatches(j,location))
           return false;
         if (
-          !preferences.locations.some((city) =>
-            j.normalized_location.includes(city),
+          active !== "All Jobs" && !preferences.locations.some((city) =>
+            locationMatches(j,city),
           )
         )
           return false;
@@ -1164,7 +1165,7 @@ function DashboardContent() {
               )}
               {active === "All Jobs" && (
                 <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
-                  All active target-location listings, including roles outside your experience range. Review each card’s eligibility reason before applying.
+                  India-wide discovery, including remote India. Automatic shortlisting is limited to Bengaluru and Hyderabad. Review each card before applying.
                 </section>
               )}
               {active === "Needs Review" && (
@@ -1470,7 +1471,7 @@ function SystemCard({
   const run = data?.latest_run,
     age = exactAge(run?.finished_at),
     stale = !loading && (age === null || age >= 5),
-    failed = Number(run?.companies_failed || 0),
+    failed = data?.companies ? data.companies.filter(company=>company.error_count>0).length : Number(run?.companies_failed || 0),
     empty = Number(run?.companies_empty || 0),
     backup = data?.data_mode === "backup",
     attention = backup || stale || failed > 0,
@@ -1483,7 +1484,7 @@ function SystemCard({
             ? "SCAN OVERDUE"
             : failed
               ? "SCAN FAILED SOURCES"
-              : "SCAN HEALTHY";
+              : run?.status==='degraded' ? "SOURCES RECHECKED" : "SCAN HEALTHY";
   return (
     <details
       className={`m-4 rounded-xl border p-3 ${attention ? "border-warning/40 bg-warning-soft" : "border-border bg-success-soft"}`}
@@ -1505,8 +1506,9 @@ function SystemCard({
       </p>
       {run && (
         <p className="mt-3 text-xs">
-          {run.companies_successful}/{run.companies_checked} sources checked ·{" "}
-          {empty} empty · {failed} failed
+          Last full scan: {run.companies_successful}/{run.companies_checked} sources ·{" "}
+          {empty} empty · {Number(run.companies_failed||0)} failed.
+          Current company checks: {failed} failed.
         </p>
       )}
     </details>
@@ -2439,7 +2441,7 @@ function SettingsView({
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <Info
           label="Locations"
-          value={policy?.cities.join(" + ") || "Bengaluru + Hyderabad + Remote (India)"}
+          value={policy?.cities.join(" + ") || "Bengaluru + Hyderabad"}
         />
         <Info
           label="Experience"

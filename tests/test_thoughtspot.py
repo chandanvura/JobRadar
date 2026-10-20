@@ -22,6 +22,11 @@ def detail(row=ROW):
 def html(api):
     return '<script id="__NEXT_DATA__" type="application/json">'+json.dumps({'props': {'pageProps': {'apiData': api}}})+'</script>'
 
+
+def test_listed_detail_without_current_payload_restarts_snapshot():
+    with pytest.raises(SnapshotChanged,match='listed detail is unavailable'):
+        detail_record('<script id="__NEXT_DATA__">{"props":{"pageProps":{}}}</script>',ROW)
+
 @pytest.mark.parametrize('mutation', ['duplicate', 'host', 'path', 'missing_name', 'missing_locations', 'cap'])
 def test_listing_rejects_incomplete_or_unrelated_boards(mutation):
     row=copy.deepcopy(ROW);rows=[row]

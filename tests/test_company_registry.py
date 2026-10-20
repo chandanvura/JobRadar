@@ -226,3 +226,16 @@ def test_failed_new_employer_cannot_pass_as_verified_mapping(monkeypatch):
     monkeypatch.setenv('JOBRADAR_INGEST_SECRET','test-only')
     with pytest.raises(RuntimeError,match='not yet verified'):
         sync_company_registry.main()
+
+
+def test_adapter_recheck_is_bounded_and_stops_after_a_verified_check():
+    row=Company('Example','https://example.test','custom','example')
+    live={'name':'Example','last_checked_at':'2026-10-20T09:00:00Z','error_count':1}
+    catalog={'companies':[live]};request={'requested_at':'2026-10-20T08:00:00Z','companies':['Example']}
+    assert sync_company_registry.requested_repairs([row],catalog,request)[0]['name']=='Example'
+    live['error_count']=0
+    assert sync_company_registry.requested_repairs([row],catalog,request)==[]
+    live['last_checked_at']='2026-10-20T07:00:00Z'
+    assert sync_company_registry.requested_repairs([row],catalog,request)
+    with pytest.raises(ValueError):sync_company_registry.requested_repairs([row],catalog,{**request,'companies':['Unknown']})
+    with pytest.raises(ValueError):sync_company_registry.requested_repairs([row],catalog,{**request,'requested_at':'2999-01-01T00:00:00Z'})
