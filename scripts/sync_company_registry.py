@@ -55,6 +55,7 @@ def changed_sources(companies, catalog):
         pending = (row.get("warning") or "") in (
             "Limited coverage: source update awaiting verification",
             "Source updated; awaiting verification",
+            "Awaiting first scheduled scan",
         )
         if (normalized_source_url(row.get("careers_url")) == normalized_source_url(c.careers_url)
                 and row.get("ats_provider") == c.ats_provider and not pending): continue
@@ -108,9 +109,12 @@ def main():
     if selected is not None and os.environ.get('JOBRADAR_VERIFY_SOURCE_UPDATES') != 'true':
         raise ValueError('Explicit repairs require live collection verification')
     jobs = []
-    if repairs and os.environ.get("JOBRADAR_VERIFY_SOURCE_UPDATES") == "true":
-        jobs, repairs = asyncio.run(refresh_repairs(companies, repairs))
     pending = additions + repairs
+    added_names={row['name'] for row in additions}
+    verify=os.environ.get('JOBRADAR_VERIFY_SOURCE_UPDATES')=='true'
+    if pending and verify:
+        # New employers need real collected rows, not just a saved registry entry.
+        jobs, pending = asyncio.run(refresh_repairs(companies, pending))
     if not pending:
         print("All enabled company sources match the live catalog")
         return
@@ -132,6 +136,16 @@ def main():
     # A saved mapping is not a verified repair. Pending sources remain retryable
     # and fail this workflow until a real collection replaces the pending warning.
     remaining = changed_sources(companies, live)
+    if verify and added_names:
+        live_rows={row['name']:row for row in live['companies']}
+        remaining.extend(row for row in pending if row['name'] in added_names and (
+            row['name'] not in live_rows
+            or not live_rows[row['name']].get('last_checked_at')
+            or live_rows[row['name']].get('last_checked_at')!=row.get('last_checked_at')
+            or live_rows[row['name']].get('error_count')
+            or (live_rows[row['name']].get('warning') or '').startswith(('Limited coverage','Source updated','Awaiting first'))
+            or live_rows[row['name']].get('ats_provider')!=row['ats_provider']
+            or normalized_source_url(live_rows[row['name']].get('careers_url'))!=normalized_source_url(row['careers_url'])))
     if selected is not None:
         live_rows = {row['name']: row for row in live['companies']}
         remaining = [row for row in pending if row['name'] not in live_rows

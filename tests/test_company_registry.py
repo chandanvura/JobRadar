@@ -152,6 +152,7 @@ def test_unverified_source_update_keeps_existing_limited_coverage_visible():
 @pytest.mark.parametrize('warning', [
     'Limited coverage: source update awaiting verification',
     'Source updated; awaiting verification',
+    'Awaiting first scheduled scan',
 ])
 def test_saved_but_unverified_mapping_is_retried(warning):
     company = Company('Example', 'https://jobs.lever.co/example', 'lever', 'example')
@@ -184,3 +185,41 @@ def test_failed_verification_cannot_report_mapping_publication_as_success(monkey
     with pytest.raises(RuntimeError, match='not yet verified'):
         sync_company_registry.main()
     assert checks == ['Example']
+
+
+def test_new_employer_is_collected_before_verified_publication(monkeypatch):
+    row=Company('New','https://jobs.lever.co/new','lever','new')
+    status=dict(name='New',careers_url=row.careers_url,ats_provider='lever',last_checked_at='2026-10-20T10:00:00Z',last_success_at='2026-10-20T10:00:01Z',jobs_found=2,candidate_jobs=1,error_count=0,warning=None)
+    responses=iter([{'companies':[]},{'accepted':1,'rejected':0},{'companies':[status]}])
+    calls=[]
+    def read(request,timeout):
+        calls.append(request)
+        return BytesIO(json.dumps(next(responses)).encode())
+    async def refresh(companies,updates):
+        assert [r['name'] for r in updates]==['New']
+        assert updates[0]['last_checked_at'] is None
+        return [{'external_job_id':'real-job'}],[status]
+    monkeypatch.setattr(sync_company_registry,'urlopen',read)
+    monkeypatch.setattr(sync_company_registry,'load_companies',lambda:[row])
+    monkeypatch.setattr(sync_company_registry,'refresh_repairs',refresh)
+    monkeypatch.setenv('JOBRADAR_VERIFY_SOURCE_UPDATES','true')
+    monkeypatch.setenv('JOBRADAR_INGEST_SECRET','test-only')
+    sync_company_registry.main()
+    payload=json.loads(calls[1].data)
+    assert payload['jobs']==[{'external_job_id':'real-job'}]
+    assert payload['companies'][0]['jobs_found']==2
+    assert 'run' not in payload and 'authoritative_companies' not in payload
+
+
+def test_failed_new_employer_cannot_pass_as_verified_mapping(monkeypatch):
+    row=Company('New','https://jobs.lever.co/new','lever','new')
+    pending=missing_sources([row],{'companies':[]})[0]
+    responses=iter([{'companies':[]},{'accepted':0,'rejected':0},{'companies':[pending]}])
+    async def refresh(*args):return [],[pending]
+    monkeypatch.setattr(sync_company_registry,'urlopen',lambda *args,**kwargs:BytesIO(json.dumps(next(responses)).encode()))
+    monkeypatch.setattr(sync_company_registry,'load_companies',lambda:[row])
+    monkeypatch.setattr(sync_company_registry,'refresh_repairs',refresh)
+    monkeypatch.setenv('JOBRADAR_VERIFY_SOURCE_UPDATES','true')
+    monkeypatch.setenv('JOBRADAR_INGEST_SECRET','test-only')
+    with pytest.raises(RuntimeError,match='not yet verified'):
+        sync_company_registry.main()
