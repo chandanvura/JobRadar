@@ -47,7 +47,7 @@ class Client:
 
 def test_xml_only_fetches_relevant_details_and_preserves_unknown_dates(monkeypatch):
     detail_calls = []
-    xml = '<rss><channel><item><title>Software Engineer</title><location>Bengaluru</location><link>https://jobs.example/job/123</link><guid>123</guid></item><item><title>Software Engineer</title><location>London</location><link>https://jobs.example/job/124</link></item></channel></rss>'
+    xml = '<rss><channel><item><title>Software Engineer</title><description>Required experience: 0-2 years.</description><location>Bengaluru</location><link>https://jobs.example/job/123</link><guid>123</guid></item><item><title>Software Engineer</title><location>London</location><link>https://jobs.example/job/124</link></item></channel></rss>'
     async def get(client, method, url, **kwargs):
         return httpx.Response(200, text=xml, request=httpx.Request(method, url))
     async def detail(client, url):
@@ -60,6 +60,27 @@ def test_xml_only_fetches_relevant_details_and_preserves_unknown_dates(monkeypat
     assert count == 2 and len(jobs) == 1
     assert jobs[0].posted_at is None
     assert detail_calls == ['https://jobs.example/job/123']
+
+
+def test_xml_preserves_all_candidates_but_only_verifies_dates_for_possible_shortlists(monkeypatch):
+    calls=[]
+    items=[('junior','Java Engineer','Required experience: 1-2 years.'),
+           ('senior','Java Engineer','Required experience: 5-8 years.'),
+           ('unknown','Software Engineer','Build software.'),
+           ('intern','Software Engineer Intern','Learn Java.')]
+    xml='<rss><channel>'+''.join(f'<item><title>{title}</title><description>{jd}</description><location>Bengaluru</location><link>https://jobs.example/job/{identifier}</link><guid>{identifier}</guid></item>' for identifier,title,jd in items)+'</channel></rss>'
+    async def get(client,method,url,**kwargs):return httpx.Response(200,text=xml,request=httpx.Request(method,url))
+    async def detail(client,url):
+        calls.append(url)
+        return httpx.Response(200,text='<meta itemprop="datePosted" content="2026-10-19">',request=httpx.Request('GET',url))
+    monkeypatch.setattr(adapters,'client',lambda **kwargs:Client());monkeypatch.setattr(adapters,'request',get);monkeypatch.setattr(adapters,'fetch_detail',detail)
+    jobs,count=asyncio.run(adapters.PublicXMLAdapter().fetch_jobs(Company('Example','https://jobs.example','xml','https://jobs.example/feed.xml')))
+    assert count==len(jobs)==4
+    assert set(calls)=={'https://jobs.example/job/junior','https://jobs.example/job/intern'}
+    by_id={job.external_job_id:job for job in jobs}
+    assert by_id['junior'].posted_at and by_id['intern'].posted_at
+    assert by_id['senior'].posted_at is None and by_id['unknown'].posted_at is None
+    assert by_id['senior'].description=='Required experience: 5-8 years.'
 
 
 def test_oracle_pagination_details_and_secondary_city(monkeypatch):

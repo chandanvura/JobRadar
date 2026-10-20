@@ -1,8 +1,25 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {checkAndRecover,needsScan} from '../ops-scheduler/index.ts';
+import {checkAndRecover,needsScan,recoveryCoolingDown} from '../ops-scheduler/index.ts';
 
 const run=(status,conclusion=null)=>({id:7,status,conclusion,updated_at:'2026-09-26T10:00:00Z'});
+
+test('completed gate-only workflows cannot trigger recovery every five minutes',async()=>{
+  const original=globalThis.fetch,seen=[];const now=Date.parse('2026-10-19T18:55:00Z');
+  globalThis.fetch=async url=>{
+    seen.push(url);
+    if(url.endsWith('/actions/workflows/scrape.yml'))return Response.json({state:'active'});
+    if(url.includes('/workflows/scrape.yml/runs?'))return Response.json({workflow_runs:[{...run('completed','success'),updated_at:'2026-10-19T18:50:00Z'}]});
+    throw Error('A recent successful gate must not cause another dispatch');
+  };
+  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test'},now),'cooldown');assert.equal(seen.length,2);}finally{globalThis.fetch=original}
+  const recent={...run('completed','success'),updated_at:'2026-10-19T18:25:00Z'};
+  assert.equal(recoveryCoolingDown([recent],now-1),true);
+  assert.equal(recoveryCoolingDown([recent],now),false);
+  assert.equal(recoveryCoolingDown([{...recent,conclusion:'failure'}],now-1),false);
+  assert.equal(recoveryCoolingDown([{...recent,updated_at:'invalid'}],now),false);
+  assert.equal(recoveryCoolingDown([{...recent,updated_at:'2027-01-01'}],now),false);
+});
 
 test('external scheduler suppresses duplicate active scans',()=>{
   for(const status of ['queued','in_progress','pending','requested','waiting']){

@@ -12,6 +12,15 @@ export function needsScan(finished:string|null,runs:Run[],now=Date.now()){
   return !Number.isFinite(age)||age>=150*60_000;
 }
 
+// A successful gate-only run can mean quota is unavailable. Do not launch
+// another workflow on every five-minute probe while health remains old.
+export function recoveryCoolingDown(runs:Run[],now=Date.now()){
+  return runs.some(run=>{
+    const age=now-Date.parse(run.updated_at);
+    return run.status==='completed'&&run.conclusion==='success'&&Number.isFinite(age)&&age>=0&&age<30*60_000;
+  });
+}
+
 async function github(path:string,token:string,body?:unknown,method?:string){
   const response=await fetch(`${API}${path}`,{
     method:method||(body===undefined?"GET":"POST"),
@@ -35,7 +44,7 @@ async function latestCompletedScan(runs:Run[],token:string):Promise<string|null>
   return null;
 }
 
-export async function checkAndRecover(env:Env){
+export async function checkAndRecover(env:Env,now=Date.now()){
   if(!env.GITHUB_DISPATCH_TOKEN){console.log("External scheduler awaits GITHUB_DISPATCH_TOKEN");return "unconfigured"}
   const token=env.GITHUB_DISPATCH_TOKEN;
   const workflow=await github("/actions/workflows/scrape.yml",token) as {state:string};
@@ -49,6 +58,7 @@ export async function checkAndRecover(env:Env){
   const data=await github("/actions/workflows/scrape.yml/runs?per_page=30",token) as {workflow_runs:Run[]};
   const runs=data.workflow_runs;
   if(runs.some(run=>ACTIVE.has(run.status))){console.log("Scan already active");return "active"}
+  if(recoveryCoolingDown(runs,now)){console.log("Recent scan workflow completed; defer recovery dispatch for 30 minutes");return "cooldown"}
   let finished:string|null=null;
   try{
     const response=await fetch(HEALTH,{signal:AbortSignal.timeout(10_000)});
@@ -74,7 +84,7 @@ export async function checkAndRecover(env:Env){
     console.log("Production health unavailable; using GitHub finalizer history");
     finished=await latestCompletedScan(runs,token);
   }
-  if(!needsScan(finished,runs)){console.log("Scan is fresh");return "fresh"}
+  if(!needsScan(finished,runs,now)){console.log("Scan is fresh");return "fresh"}
   await github("/actions/workflows/scrape.yml/dispatches",token,{ref:"main"});
   console.log("Dispatched recovery scan");
   return "dispatched";
