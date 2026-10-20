@@ -9,7 +9,7 @@ import {feedbackOptions,cleanFeedback,hideRecommendation,preferenceTime} from "@
 import type {RecommendationFeedback} from "@/lib/recommendation-feedback";
 import { useJobSearch } from "@/lib/use-job-search";
 import { fitPreferenceModel } from "@/lib/preference-model";
-import { ROLE_FAMILIES, SUGGESTED_JOB_TITLES } from "@/lib/role-taxonomy";
+import { ROLE_FAMILIES, DEFAULT_SEARCH_TITLES, ROLE_TITLE_GROUPS } from "@/lib/role-taxonomy";
 import { defaultFreshness, matchesCareerView, verifiedView } from "@/lib/job-view";
 import { PrivateNotes } from "./private-notes";
 import { JobPagination } from "./job-pagination";
@@ -310,7 +310,7 @@ const defaultPreferences: SearchPreferences = {
   locations: ["Bengaluru", "Hyderabad", "Remote (India)", "Other India"],
 };
 const TARGET_CITIES = discoveryLocations;
-const DEFAULT_JOB_TITLES = SUGGESTED_JOB_TITLES;
+const DEFAULT_JOB_TITLES = DEFAULT_SEARCH_TITLES;
 const OFFICIAL_ATS_DOMAINS = "site:myworkdayjobs.com OR site:greenhouse.io OR site:lever.co OR site:icims.com OR site:jobs.jobvite.com OR site:ashbyhq.com OR site:smartrecruiters.com";
 const AGGREGATOR_DOMAINS = [
   ["LinkedIn", "site:linkedin.com/jobs/view"],
@@ -1278,6 +1278,7 @@ function SearchPreferencesPanel({
   apply: (value: SearchPreferences) => void;
   close: () => void;
 }) {
+  const [suggestionQuery,setSuggestionQuery] = useState("");
   const [titles, setTitles] = useState(value.titles.join(", ")),
     [skills, setSkills] = useState(value.skills.join(", ")),
     [experienceMin, setExperienceMin] = useState(value.experienceMin),
@@ -1355,6 +1356,18 @@ function SearchPreferencesPanel({
           />
         </label>
       </div>
+      <details className="mt-4 rounded-xl border bg-card p-3">
+        <summary className="cursor-pointer text-sm font-semibold">Choose related job titles</summary>
+        <p className="mt-2 text-xs text-muted-foreground">Add up to 30 titles for software, Java, DevOps, SRE, cloud, platform and infrastructure discovery. A title does not prove 0–3 years: the JD, location and posting-date checks still apply.</p>
+        <Input aria-label="Filter suggested job titles" placeholder="Find titles, e.g. Spring Boot or Cloud" value={suggestionQuery} onChange={event=>setSuggestionQuery(event.target.value)} className="mt-3" />
+        <div className="mt-3 max-h-80 space-y-4 overflow-y-auto">{ROLE_TITLE_GROUPS.map(group=>{
+          const options=group.titles.filter(title=>title.toLowerCase().includes(suggestionQuery.toLowerCase().trim()));
+          return options.length ? <section key={group.family}><h3 className="text-sm font-bold">{group.family}</h3><div className="mt-2 flex flex-wrap gap-2">{options.map(title=>{
+            const selected=splitTerms(titles).some(value=>value.toLowerCase()===title.toLowerCase());
+            return <button type="button" key={title} aria-label={`Add title: ${title}`} disabled={selected||splitTerms(titles).length>=30} onClick={()=>setTitles([...splitTerms(titles),title].join(", "))} className="rounded-lg border px-3 py-2 text-xs disabled:opacity-50">{selected?'Added: ':''}{title}</button>;
+          })}</div></section> : null;
+        })}</div>
+      </details>
       <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-[1fr_1fr_2fr]">
         <label className="text-sm font-bold">
           Minimum experience

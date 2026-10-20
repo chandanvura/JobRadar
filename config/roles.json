@@ -5,23 +5,46 @@
       "family": "DevOps",
       "patterns": [
         "\\bdev\\s*(?:sec\\s*)?ops\\b",
-        "\\b(?:build (?:and )?release|release|deployment|configuration management) (?:engineer|developer|specialist)\\b"
+        "\\b(?:build (?:and )?release|release|deployment|configuration management) (?:engineer|developer|specialist)\\b",
+        "\\b(?:ci cd|build|release automation) (?:engineer|developer)\\b"
       ],
       "titles": [
         "DevOps Engineer",
         "DevSecOps Engineer",
         "Build and Release Engineer",
-        "Release Engineer"
+        "Release Engineer",
+        "Junior DevOps Engineer",
+        "Associate DevOps Engineer",
+        "DevOps Engineer I",
+        "Graduate DevOps Engineer",
+        "DevOps Engineer Trainee",
+        "AWS DevOps Engineer",
+        "Azure DevOps Engineer",
+        "CI/CD Engineer",
+        "Build Engineer",
+        "Build and Release Engineer I",
+        "Release Automation Engineer",
+        "Deployment Engineer"
       ]
     },
     {
       "family": "SRE",
       "patterns": [
-        "\\b(?:site reliability|sre|production engineer|reliability software)\\b"
+        "\\b(?:site reliability|sre|production engineer|reliability software)\\b",
+        "\\b(?:production reliability|software reliability) engineer\\b"
       ],
       "titles": [
         "Site Reliability Engineer",
-        "Production Engineer"
+        "Production Engineer",
+        "SRE",
+        "Junior Site Reliability Engineer",
+        "Associate Site Reliability Engineer",
+        "Site Reliability Engineer I",
+        "Graduate Site Reliability Engineer",
+        "Junior SRE",
+        "SRE I",
+        "Production Reliability Engineer",
+        "Software Reliability Engineer"
       ]
     },
     {
@@ -39,7 +62,9 @@
       "family": "Cloud",
       "patterns": [
         "\\b(?:cloud|cloudops)\\b.{0,45}\\b(?:engineer(?:ing)?|developer|associate|specialist|consultant|analyst|intern|operations)\\b",
-        "\\bcloudops\\b"
+        "\\bcloudops\\b",
+        "\\b(?:aws|azure|gcp|google cloud) (?:software |support |operations |infrastructure |automation )?(?:engineer|developer|associate)\\b",
+        "\\bcloud (?:infrastructure|automation|systems?) (?:engineer|developer)\\b"
       ],
       "titles": [
         "Cloud Developer",
@@ -47,17 +72,47 @@
         "Cloud Support Associate",
         "Cloud Developer Platform",
         "AI/ML Cloud Developer",
-        "Cloud Operations Engineer"
+        "Cloud Operations Engineer",
+        "Junior Cloud Engineer",
+        "Associate Cloud Engineer",
+        "Cloud Engineer I",
+        "Graduate Cloud Engineer",
+        "Cloud Engineer Trainee",
+        "AWS Engineer",
+        "Azure Engineer",
+        "GCP Engineer",
+        "Google Cloud Engineer",
+        "Cloud Infrastructure Engineer",
+        "Cloud Automation Engineer",
+        "Cloud Support Engineer",
+        "Cloud Support Engineer I",
+        "Cloud Operations Associate",
+        "Cloud Operations Engineer I",
+        "CloudOps Engineer",
+        "Cloud Systems Engineer"
       ]
     },
     {
       "family": "Platform",
       "patterns": [
-        "\\bplatform (?:software |development )?(?:engineer|developer|intern)\\b"
+        "\\bplatform (?:software |development )?(?:engineer|developer|intern)\\b",
+        "\\bplatform (?:operations |automation )engineer\\b",
+        "\\bdeveloper (?:experience|productivity) engineer\\b"
       ],
       "titles": [
         "Platform Developer",
-        "Platform Engineer"
+        "Platform Engineer",
+        "Junior Platform Engineer",
+        "Associate Platform Engineer",
+        "Platform Engineer I",
+        "Graduate Platform Engineer",
+        "Platform Software Engineer",
+        "Developer Platform Engineer",
+        "Internal Developer Platform Engineer",
+        "Developer Experience Engineer",
+        "Developer Productivity Engineer",
+        "Platform Operations Engineer",
+        "Platform Automation Engineer"
       ]
     },
     {
@@ -79,7 +134,9 @@
         "\\b(?:infrastructure|linux|unix|network|systems?|storage|database|datacenter|data center|it operations) (?:software |automation |operations |support |cloud )?(?:engineer|developer|administrator|analyst|intern)\\b",
         "\\bsoftware engineer\\s*(?:infrastructure|systems?)\\b",
         "\\b(?:dba|network operations|noc analyst|it administrator|sysadmin)\\b",
-        "\\bnoc (?:engineer|analyst)\\b"
+        "\\bnoc (?:engineer|analyst)\\b",
+        "\\binfra (?:engineer|developer)\\b",
+        "\\b(?:linux|unix) systems? engineer\\b"
       ],
       "titles": [
         "Systems Engineer",
@@ -88,7 +145,19 @@
         "Infrastructure Automation Engineer",
         "Linux Administrator",
         "Infrastructure Engineer",
-        "NOC Engineer"
+        "NOC Engineer",
+        "Junior Infrastructure Engineer",
+        "Associate Infrastructure Engineer",
+        "Infrastructure Engineer I",
+        "Graduate Infrastructure Engineer",
+        "Infra Engineer",
+        "Infrastructure Software Engineer",
+        "Infrastructure Operations Engineer",
+        "Systems Engineer I",
+        "Junior Linux Engineer",
+        "Linux Systems Engineer",
+        "Systems Automation Engineer",
+        "Infrastructure Developer"
       ]
     },
     {
@@ -98,7 +167,8 @@
         "\\bback[ -]?end (?:software |application )?(?:developer|engineer|intern)\\b",
         "\\bsoftware engineer\\s*(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|back[ -]?end)\\b",
         "(?<!\\w)\\.net (?:software |full stack )?(?:developer|engineer|intern)\\b",
-        "\\bapi (?:developer|engineer)\\b"
+        "\\bapi (?:developer|engineer)\\b",
+        "\\b(?:spring(?: boot| framework)?|java (?:microservices|api)) (?:developer|engineer)\\b"
       ],
       "titles": [
         "Java Developer",
@@ -108,7 +178,26 @@
         "Node.js Developer",
         ".NET Developer",
         "C# Developer",
-        "API Developer"
+        "API Developer",
+        "Junior Java Developer",
+        "Associate Java Developer",
+        "Graduate Java Developer",
+        "Java Developer Trainee",
+        "Java Engineer",
+        "Java Software Engineer",
+        "Java Backend Developer",
+        "Java Backend Engineer",
+        "Java Full Stack Developer",
+        "Spring Boot Developer",
+        "Spring Boot Engineer",
+        "Spring Developer",
+        "Spring Framework Developer",
+        "Backend Developer",
+        "Backend Software Engineer",
+        "Backend Engineer I",
+        "Junior Backend Engineer",
+        "Java Microservices Developer",
+        "Java API Developer"
       ]
     },
     {
@@ -216,7 +305,23 @@
         "Graduate Software Engineer",
         "Trainee Developer",
         "Mobile Developer",
-        "iOS Developer"
+        "iOS Developer",
+        "Junior Software Engineer",
+        "Associate Software Developer",
+        "Graduate Software Developer",
+        "Software Engineer Trainee",
+        "Software Development Engineer I",
+        "Software Development Engineer 1",
+        "Software Engineer 1",
+        "SDE I",
+        "SDE 1",
+        "SWE I",
+        "SWE 1",
+        "Software Developer I",
+        "Junior Software Developer",
+        "Entry Level Software Engineer",
+        "Graduate Software Development Engineer",
+        "Software Programmer"
       ]
     }
   ],
