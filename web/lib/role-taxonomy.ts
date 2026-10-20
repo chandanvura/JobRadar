@@ -7,3 +7,7 @@ export function classifyRoleTitle(title:string) {
   if(/\b(?:non technical|nontechnical|human resources|talent acquisition|marketing|tax|civil|mechanical|chemical|electrical maintenance|sales associate|financial advisor)\b/i.test(clean)) return 'Other';
   return rules.find(rule=>rule.patterns.some(pattern=>pattern.test(clean)))?.family || 'Other';
 }
+
+// Broad discovery vocabulary does not prove JD experience or eligibility.
+export const DEFAULT_SEARCH_TITLES = ['Software Engineer','Java Developer','DevOps Engineer','Site Reliability Engineer','Cloud Engineer','Platform Engineer','Infrastructure Engineer'];
+export const ROLE_TITLE_GROUPS = taxonomy.roles.filter(role=>['Software Engineering','Java / Backend','DevOps','SRE','Cloud','Platform','Infrastructure / Operations'].includes(role.family)).map(role=>({family:role.family,titles:role.titles}));

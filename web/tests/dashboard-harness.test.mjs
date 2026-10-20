@@ -43,6 +43,13 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   await click('Edit search');
   const editor=()=>document.querySelector('[aria-label="Edit job search preferences"]');
   assert.ok(editor());
+  const titlePicker=[...editor().querySelectorAll('summary')].find(node=>node.textContent==='Choose related job titles');
+  assert.ok(titlePicker);await act(()=>titlePicker.click());
+  const springTitle=editor().querySelector('[aria-label="Add title: Spring Boot Developer"]');assert.ok(springTitle);
+  await act(()=>springTitle.click());
+  assert.equal(editor().querySelector('textarea').value,'Spring Boot Developer');assert.equal(springTitle.disabled,true);
+  assert.equal(fetchCalls,loadedCalls,'choosing a title must reuse the loaded catalogue');
+
   await act(()=>editor().querySelector('input[type="checkbox"]').click());
   const editStarted=performance.now();await click('Save & search jobs');
   assert.equal(editor(),null);assert.equal(fetchCalls,loadedCalls,'saving preferences must not refetch the catalog');
