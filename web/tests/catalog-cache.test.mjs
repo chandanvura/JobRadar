@@ -44,3 +44,12 @@ test('cache faults preserve successful live reads',async()=>{
   const response=await cachedCatalog(req('/api/dashboard'),async()=>Response.json({live:true}),cache,{waitUntil:p=>pending.push(p)});
   assert.deepEqual(await response.json(),{live:true});await Promise.all(pending);
 });
+
+test('bounded ranges have separate cache entries and invalid bounds stay uncached',async()=>{
+ const f=fixture();let reads=0;const read=async()=>Response.json({read:++reads});
+ for(const path of ['/api/jobs?after=0&through=500','/api/jobs?after=0&through=1000','/api/jobs?after=0&through=0500']){
+  await cachedCatalog(req(path),read,f.cache,f.ctx);await f.flush();
+ }
+ assert.equal(reads,2);assert.equal(f.memory.size,2);
+ await cachedCatalog(req('/api/jobs?after=500&through=400'),read,f.cache,f.ctx);await f.flush();assert.equal(f.memory.size,2);
+});

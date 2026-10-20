@@ -71,3 +71,39 @@ test('overall live budget stops a long chain of otherwise healthy pages',async()
  assert.equal(result.data_mode,'backup');assert.ok(pages<10);
  }finally{clearInterval(keepAlive);}
 });
+
+test('range manifest loads 7,000 records with at most four concurrent requests',async()=>{
+ const jobs=Array.from({length:7000},(_,i)=>({id:i+1}));
+ const catalog_ranges=Array.from({length:14},(_,i)=>({after:i*500,through:(i+1)*500}));
+ let active=0,peak=0,calls=0;
+ const started=performance.now();
+ const result=await loadPublicCatalog(()=>{},async path=>{
+  if(path==='/api/dashboard')return Response.json({...live,catalog_ranges});
+  const u=new URL(path,'https://test.invalid'),after=Number(u.searchParams.get('after')),through=Number(u.searchParams.get('through'));
+  calls++;active++;peak=Math.max(peak,active);
+  await new Promise(resolve=>setTimeout(resolve,20+(after===0?10:0)));active--;
+  return Response.json({jobs:jobs.filter(j=>j.id>after&&j.id<=through),next_cursor:null});
+ });
+ assert.equal(calls,14);assert.equal(peak,4);assert.deepEqual(result.jobs,jobs);
+ console.log(`HARNESS PERF: 7,000 jobs, 14 requests, 4 concurrent, ${Math.round(performance.now()-started)} ms with simulated network latency`);
+});
+test('range refresh discards retired preview rows and rejects out-of-range or malformed manifests',async()=>{
+ const ranges=[{after:0,through:200}];
+ const result=await loadPublicCatalog(()=>{},async path=>path==='/api/dashboard'?Response.json({...live,catalog_ranges:ranges}):Response.json({jobs:[{id:200}],next_cursor:null}));
+ assert.deepEqual(result.jobs,[{id:200}]);
+ for(const catalog_ranges of [[{after:1,through:200}],[{after:0,through:200},{after:100,through:300}],ranges]){
+  const result=await loadPublicCatalog(()=>{},async path=>path==='/api/dashboard'?Response.json({...live,catalog_ranges}):path==='/backup/catalog.json'?Response.json(saved):Response.json({jobs:[{id:201}],next_cursor:null}));
+  assert.equal(result.data_mode,'backup');
+ }
+});
+test('a failed parallel page cancels siblings before recovering to a complete backup',async()=>{
+ let aborted=false;const keepAlive=setInterval(()=>{},100);
+ try{
+ const result=await loadPublicCatalog(()=>{},async(path,options)=>{
+  if(path==='/api/dashboard')return Response.json({...live,catalog_ranges:[{after:0,through:500},{after:500,through:1000}]});
+  if(path==='/backup/catalog.json')return Response.json(saved);
+  if(path.includes('after=0')){await new Promise(resolve=>setTimeout(resolve,5));throw Error('failed');}
+  return new Promise((_,reject)=>options.signal.addEventListener('abort',()=>{aborted=true;reject(options.signal.reason);},{once:true}));
+ });assert.equal(aborted,true);assert.deepEqual(result,saved);
+ }finally{clearInterval(keepAlive);}
+});
