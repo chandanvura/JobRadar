@@ -24,15 +24,22 @@ export function roleFamily(title: string) { return classifyRoleTitle(title); }
 export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => experienceUnverified(job) || (job.experience_min === null && job.experience_max === null) ? null : (job.experience_min ?? 0) <= p.experienceMax && (job.experience_max ?? Infinity) >= p.experienceMin;
 // Relevance is independent of source, age and alert eligibility. Preferences are
 // a desired experience range, not a claim about the candidate's actual experience.
-export function personalMatch(job: MatchJob, p: MatchPreferences) {
-  const titleWords = words(job.title), preferredWords = words(p.titles.join(' '));
+export function createPersonalMatcher(p:MatchPreferences) {
+ const preferredWords=words(p.titles.join(' ')),titles=new Set(p.titles.map(x=>x.toLowerCase().trim()));
+ const families=new Set(p.titles.map(roleFamily).filter(x=>x!=='Other'));
+ const userSkills=new Set(p.skills.map(normalizeSkill));
+ return (job:MatchJob)=>matchPrepared(job,p,preferredWords,titles,families,userSkills);
+}
+export function personalMatch(job:MatchJob,p:MatchPreferences) {return createPersonalMatcher(p)(job);}
+function matchPrepared(job: MatchJob, p: MatchPreferences,preferredWords:string[],titles:Set<string>,families:Set<string>,userSkills:Set<string>) {
+  const titleWords = words(job.title);
   const titleHits = overlap(preferredWords, titleWords);
-  const exactTitle = p.titles.some(x => job.title.toLowerCase() === x.toLowerCase().trim());
-  const family = p.titles.some(x => roleFamily(x) !== 'Other' && roleFamily(x) === job.role_category);
+  const exactTitle = titles.has(job.title.toLowerCase());
+  const family = families.has(job.role_category);
   const titleFit = !p.titles.length ? 75 : exactTitle ? 100 : Math.max(family ? 85 : 0, preferredWords.length ? titleHits.length / preferredWords.length * 100 : 0);
   const requirements=requirementsFor(job);
   const structured=[...requirements.requiredSkills,...requirements.preferredSkills,...requirements.mentionedSkills];
-  const jobSkills = job.description ? [...new Set(structured.map(item=>normalizeSkill(item.value)))] : parsedSkills(job.skills), userSkills = new Set(p.skills.map(normalizeSkill));
+  const jobSkills = job.description ? [...new Set(structured.map(item=>normalizeSkill(item.value)))] : parsedSkills(job.skills);
   const matchedSkills = jobSkills.filter(x => userSkills.has(x));
   const missingSkills = jobSkills.filter(x => !userSkills.has(x));
   // Explicit candidate requirements carry more weight than preferences and mentions.

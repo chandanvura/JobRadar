@@ -18,8 +18,9 @@ const now=new Date().toISOString();
 const jobs=Array.from({length:7000},(_,i)=>({id:i+1,company:`Company ${i%700}`,external_job_id:String(i+1),title:`Java Engineer ${i}`,description:i===0?'Experience: 0–2 years. Must know Java and AWS. Preferred Experience: 5 years.':'Experience: 0–2 years. Must know Java and AWS. Preferred: Terraform.',normalized_location:i%2?'Hyderabad':'Bengaluru',location:'India',experience_min:0,experience_max:2,experience_label:'0–2',skills:'["Java","AWS"]',role_category:'Java / Backend',ats_provider:'test',application_url:`https://employer.test/jobs/${i+1}`,career_page_url:'https://employer.test',posted_at:now,posted_label:null,posted_precision:'exact',reported_age_hours:null,first_seen_at:now,last_seen_at:now,relevance_score:70,is_active:1,is_eligible:1,eligibility_reason:''}));
 const companies=Array.from({length:700},(_,i)=>({name:`Company ${i}`,careers_url:'https://employer.test',ats_provider:'test',last_checked_at:now,last_success_at:now,error_count:0,jobs_found:10,candidate_jobs:10,eligible_jobs:10,warning:null}));
 const payload={jobs:jobs.slice(0,100),companies,latest_run:{finished_at:now,status:'success',companies_checked:700,companies_successful:700},runs:[],notifications:[],configured:true,server_time:now,policy:{cities:['Bengaluru','Hyderabad']}};
-const fetcher=globalThis.fetch;let holdRefresh=false,releaseRefresh,omitTrackedJob=false;
+const fetcher=globalThis.fetch;let fetchCalls=0,holdRefresh=false,releaseRefresh,omitTrackedJob=false;
 globalThis.fetch=async path=>{
+ fetchCalls++;
  if(path==='/api/dashboard'){
   if(holdRefresh)await new Promise(resolve=>releaseRefresh=resolve);
   return Response.json({...payload,jobs:payload.jobs.filter(job=>!omitTrackedJob||job.id!==1)});
@@ -36,6 +37,17 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
  try{
   await act(()=>root.render(React.createElement(JobRadarDashboard)));
   await settle(()=>results()?.includes('of 7000 jobs'));
+  const loadedCalls=fetchCalls;
+  await click('Edit search');
+  const editor=()=>document.querySelector('[aria-label="Edit job search preferences"]');
+  assert.ok(editor());
+  await act(()=>editor().querySelector('input[type="checkbox"]').click());
+  const editStarted=performance.now();await click('Save & search jobs');
+  assert.equal(editor(),null);assert.equal(fetchCalls,loadedCalls,'saving preferences must not refetch the catalog');
+  assert.equal(JSON.parse(localStorage.getItem('jobradar-search-preferences-v1')).locations.includes('Bengaluru'),false);
+  await click('Edit search');await click('Reset defaults');await click('Save & search jobs');
+  assert.equal(fetchCalls,loadedCalls);
+  console.log(`HARNESS PERF: 7,000-job preference edit, save and reset ${Math.round(performance.now()-editStarted)} ms; no catalog refetch`);
   const durations=[];
   for(const view of ['All Jobs','Recommended','Needs Review','Internships','Saved','Applications','All Jobs']){
    const started=performance.now();await click(view);durations.push(Math.round(performance.now()-started));

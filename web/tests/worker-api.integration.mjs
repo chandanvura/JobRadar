@@ -123,6 +123,11 @@ try {
   const tail=await (await request(`/api/jobs?limit=500&after=${large.next_cursor}`)).json();
   assert.equal(tail.jobs.length,6);assert.equal(tail.next_cursor,null);
   assert.equal(new Set([...large.jobs,...tail.jobs].map(job=>job.id)).size,506);
+  const manifest=(await (await request('/api/dashboard')).json()).catalog_ranges;
+  assert.equal(manifest.length,2);assert.equal(manifest[0].after,0);assert.equal(manifest[1].after,manifest[0].through);
+  const ranged=await Promise.all(manifest.map(async range=>(await (await request(`/api/jobs?limit=500&after=${range.after}&through=${range.through}`)).json())));
+  assert.ok(ranged.every(page=>page.next_cursor===null));assert.deepEqual(ranged.flatMap(page=>page.jobs).map(job=>job.id),[...large.jobs,...tail.jobs].map(job=>job.id));
+  for(const through of ['0','-1','NaN','1.5'])assert.equal((await request(`/api/jobs?after=0&through=${through}`)).status,400);
   await db.prepare("DELETE FROM jobs WHERE external_job_id LIKE 'PAGE-%'").run();
   // An explicit empty successful manifest is authoritative and can retire jobs.
   assert.equal((await request('/api/ingest',{run:{...run,seen_job_keys:[]}})).status,200);

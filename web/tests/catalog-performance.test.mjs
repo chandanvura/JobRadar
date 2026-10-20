@@ -41,3 +41,14 @@ test('worker failure falls back cooperatively; abort ends pending work without p
   try{await assert.rejects(prepareCatalog([job()],controller2.signal),{name:'AbortError'});assert.equal(stopped,true);}
   finally{delete globalThis.Worker;}
 });
+
+test('preference edits reuse compiled title families and preserve exact matching decisions',async()=>{
+ const {personalMatch,createPersonalMatcher}=await import('../lib/job-match.ts');
+ const preferences={titles:['DevOps Engineer','Java Developer','Cloud Engineer','Platform Engineer','Site Reliability Engineer','Software Engineer I','Backend Developer','Spring Boot Developer'],skills:['Java','AWS','Kubernetes','Terraform'],locations:['Bengaluru','Hyderabad'],experienceMin:0,experienceMax:3};
+ const jobs=Array.from({length:2000},(_,i)=>({...job(),title:i%2?'DevOps Engineer':'Java Developer',role_category:i%2?'DevOps / Cloud':'Software Engineering',skills:'["Java","AWS"]',relevance_score:80,posted_at:null,posted_label:null,reported_age_hours:null}));
+ await prepareCooperatively(jobs);
+ const before=performance.now(),expected=jobs.map(j=>personalMatch(j,preferences)),baseline=performance.now()-before;
+ const match=createPersonalMatcher(preferences),after=performance.now(),actual=jobs.map(match),compiled=performance.now()-after;
+ assert.deepEqual(actual,expected);
+ console.log(`HARNESS PERF: 2,000 preference matches: repeated setup ${Math.round(baseline)} ms; compiled preferences ${Math.round(compiled)} ms; exact decisions preserved`);
+});

@@ -17,7 +17,7 @@ import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { hiringManagerDraft } from "@/lib/job-search-strategy";
 import { ThemeToggle } from "./theme-toggle";
-import { lazy, memo, Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, memo, Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, startTransition } from "react";
 import {
   AlertTriangle,
   Bell,
@@ -67,7 +67,7 @@ import {
   privateKey,
 } from "@/lib/private-profile";
 import { Progress } from "@/components/ui/progress";
-import { feedbackByFamily, opportunityPriority, personalMatch, recommendedPreferenceMatch } from "@/lib/job-match";
+import { feedbackByFamily, opportunityPriority, personalMatch, createPersonalMatcher, recommendedPreferenceMatch } from "@/lib/job-match";
 import { diversifyFeed, groupDuplicateJobs, groupSimilarOpenings } from "@/lib/job-feed";
 import { fresherRole, internshipRole as isInternship, technicalInternshipRole } from "@/lib/job-sections";
 
@@ -583,7 +583,7 @@ function DashboardContent() {
     [currentJobs],
   );
   // Keep order stable while browsing; the five-minute catalog refresh advances ranking time.
-  const matches = useMemo(() => new Map(mergedJobs.map(job => [trackingKey(job),personalMatch(job,preferences)])), [mergedJobs,preferences]);
+  const matches = useMemo(() => {const match=createPersonalMatcher(preferences);return new Map(mergedJobs.map(job => [trackingKey(job),match(job)]));}, [mergedJobs,preferences]);
   const preferenceModel = useMemo(() => fitPreferenceModel(Object.values(tracking), preferences), [tracking, preferences]);
   const ranking = useMemo(() => {
     const now = rankingNow;
@@ -750,17 +750,19 @@ function DashboardContent() {
     rankingNow,
   ]);
   const applyPreferences = (next: SearchPreferences) => {
-    setPreferences(next);
-    writePrivate("jobradar-search-preferences-v1", JSON.stringify(next));
-    setLocation(next.locations.length === 1 ? next.locations[0] : "All cities");
     setEditingSearch(false);
-    setShowWelcome(false);
-    writePrivate("jobradar-onboarded-v1", "true");
-    navigate("All Jobs");
-    setNotice({
-      tone: "success",
-      title: "Search preferences saved",
-      text: `Ranking ${next.locations.join(" + ")} roles for ${next.experienceMin}–${next.experienceMax} YOE${next.titles.length ? ` using ${next.titles.length} preferred titles` : ""}${next.skills.length ? ` and ${next.skills.length} preferred skills` : ""}.`,
+    startTransition(() => {
+      setPreferences(next);
+      writePrivate("jobradar-search-preferences-v1", JSON.stringify(next));
+      setLocation(next.locations.length === 1 ? next.locations[0] : "All cities");
+      setShowWelcome(false);
+      writePrivate("jobradar-onboarded-v1", "true");
+      navigate("All Jobs");
+      setNotice({
+        tone: "success",
+        title: "Search preferences saved",
+        text: `Ranking ${next.locations.join(" + ")} roles for ${next.experienceMin}–${next.experienceMax} YOE${next.titles.length ? ` using ${next.titles.length} preferred titles` : ""}${next.skills.length ? ` and ${next.skills.length} preferred skills` : ""}.`,
+      });
     });
   };
   const eligible = useMemo(() => currentJobs.filter(

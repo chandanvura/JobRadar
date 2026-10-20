@@ -1,10 +1,11 @@
-type Catalog = {jobs:{id:number}[];companies:unknown[];data_mode?:'backup'};
+type Catalog = {jobs:{id:number}[];companies:unknown[];catalog_ranges?:{after:number;through:number}[];data_mode?:'backup'};
 type Fetcher = typeof fetch;
 export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)=>void|Promise<void>, fetcher:Fetcher=fetch, signal?:AbortSignal, limits={requestMs:10000,liveMs:45000}):Promise<T> {
   const liveSignal=AbortSignal.timeout(limits.liveMs);
+  const failedPages=new AbortController();
   const read = async (path:string) => {
     signal?.throwIfAborted();
-    const bounded=AbortSignal.any([...(signal?[signal]:[]),...(path.startsWith('/api/')?[liveSignal]:[]),AbortSignal.timeout(limits.requestMs)]);
+    const bounded=AbortSignal.any([...(signal?[signal]:[]),...(path.startsWith('/api/')?[liveSignal,failedPages.signal]:[]),AbortSignal.timeout(limits.requestMs)]);
     bounded.throwIfAborted();
     return new Promise<unknown>((resolve,reject)=>{
       const abort=()=>reject(bounded.reason);bounded.addEventListener('abort',abort,{once:true});
@@ -28,6 +29,25 @@ export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)
   if(payload.data_mode==='backup' || payload.jobs.length<100)return payload;
   const collected=new Map(payload.jobs.map(job=>[job.id,job]));let cursor=0;
   try {
+    if(payload.catalog_ranges!==undefined){
+      const ranges=payload.catalog_ranges;
+      if(!Array.isArray(ranges)||ranges.length>200||ranges.some((r,i)=>!r||!Number.isSafeInteger(r.after)||!Number.isSafeInteger(r.through)||r.after!==(i?ranges[i-1].through:0)||r.through<=r.after))throw Error('Invalid catalog ranges');
+      let next=0;
+      const batches=new Array<{id:number}[]>(ranges.length);
+      await Promise.all(Array.from({length:Math.min(4,ranges.length)},async()=>{
+        while(next<ranges.length){
+          const index=next++,range=ranges[index];
+          const value=await read(`/api/jobs?limit=500&after=${range.after}&through=${range.through}`);
+          const page=value as {jobs:{id:number}[];next_cursor:number|null;data_mode?:string};
+          if(!page||page.data_mode==='backup'||!Array.isArray(page.jobs)||page.jobs.length>500||page.next_cursor!==null||page.jobs.some((job,i)=>!job||!Number.isSafeInteger(job.id)||job.id<=range.after||job.id>range.through||(i>0&&job.id<=page.jobs[i-1].id)))throw Error('Invalid catalog range page');
+          batches[index]=page.jobs;
+        }
+      }));
+      signal?.throwIfAborted();
+      // Initial rows are a quick preview. Completed ranges are authoritative,
+      // so rows retired during this refresh do not survive from that preview.
+      return {...payload,jobs:batches.flat()};
+    }
     for(let pages=0;pages<200;pages++){
       const batch=await read(`/api/jobs?limit=500&after=${cursor}`);
       if(!batch || typeof batch!=="object")throw Error("Invalid job page");
@@ -40,5 +60,5 @@ export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)
       cursor=page.next_cursor;
     }
     throw Error('Catalog pagination exceeded safety limit');
-  }catch{return backup();}
+  }catch{failedPages.abort();return backup();}
 }
