@@ -41,11 +41,18 @@ function matchPrepared(job: MatchJob, p: MatchPreferences,preferredWords:string[
   const structured=[...requirements.requiredSkills,...requirements.preferredSkills,...requirements.mentionedSkills];
   const jobSkills = job.description ? [...new Set(structured.map(item=>normalizeSkill(item.value)))] : parsedSkills(job.skills);
   const matchedSkills = jobSkills.filter(x => userSkills.has(x));
-  const missingSkills = jobSkills.filter(x => !userSkills.has(x));
-  // Explicit candidate requirements carry more weight than preferences and mentions.
-  // Unknown wording remains a ranking signal, never a hard eligibility gate.
-  const weight=(skill:string)=>requirements.requiredSkills.some(item=>normalizeSkill(item.value)===skill)?2:requirements.preferredSkills.some(item=>normalizeSkill(item.value)===skill)?1:.5;
-  const skillFit = !p.skills.length || !jobSkills.length ? 50 : matchedSkills.reduce((sum,skill)=>sum+weight(skill),0) / jobSkills.reduce((sum,skill)=>sum+weight(skill),0) * 100;
+  const requiredSkills = requirements.requiredSkills.map(item=>normalizeSkill(item.value));
+  const preferredSkills = requirements.preferredSkills.map(item=>normalizeSkill(item.value));
+  const missingRequiredSkills = requiredSkills.filter(x=>!userSkills.has(x));
+  const matchedPreferredSkills = preferredSkills.filter(x=>userSkills.has(x));
+  const missingSkills = jobSkills.filter(x => !userSkills.has(x) && !preferredSkills.includes(x));
+  // Optional requirements can add a small bonus, never lower essential-skill fit.
+  // Unclassified mentions remain a review signal, never an eligibility gate.
+  const optionalBonus = preferredSkills.length ? matchedPreferredSkills.length / preferredSkills.length * 10 : 0;
+  const coreSkills = requiredSkills.length ? requiredSkills : jobSkills.filter(x=>!preferredSkills.includes(x));
+  const skillFit = !p.skills.length || !jobSkills.length ? 50 : coreSkills.length
+    ? Math.min(100, coreSkills.filter(x=>userSkills.has(x)).length / coreSkills.length * 100 + optionalBonus)
+    : 50 + matchedPreferredSkills.length / Math.max(1,preferredSkills.length) * 50;
   const exp = experienceCompatible(job, p);
   const gap = Math.max(0, (job.experience_min ?? 0) - p.experienceMax, p.experienceMin - (job.experience_max ?? Infinity));
   const experienceFit = exp === null ? 40 : exp ? Math.max(40, 100 - Math.max(0, (job.experience_max ?? p.experienceMax) - p.experienceMax) * config.experienceExcessPenalty - Math.max(0, (job.experience_min ?? 0) - p.experienceMin) * config.experienceMinimumPenalty) : Math.max(0, 40 - gap * 20);
@@ -53,10 +60,10 @@ function matchPrepared(job: MatchJob, p: MatchPreferences,preferredWords:string[
   const components = {title: titleFit, skills: skillFit, experience: experienceFit, location: locationFit};
   const score = Math.round(clamp(titleFit * config.match.title + skillFit * config.match.skills + experienceFit * config.match.experience + locationFit * config.match.location));
   const reasons = [/\bsenior\b/i.test(job.title) && job.experience_min !== null && job.experience_min <= 3 ? 'seniority and experience conflict — verify' : !p.titles.length ? 'role preference not specified' : exactTitle ? 'preferred title' : family ? 'preferred role family' : titleHits.length ? 'title terms overlap' : 'title to review',
-    !p.skills.length ? 'profile skills not specified' : jobSkills.length ? `${matchedSkills.length}/${jobSkills.length} extracted skills match` : 'job skills not specified',
+    !p.skills.length ? 'profile skills not specified' : jobSkills.length ? requiredSkills.length ? `${requiredSkills.length-missingRequiredSkills.length}/${requiredSkills.length} required skills match` : `${matchedSkills.length}/${jobSkills.length} extracted skills match` : 'job skills not specified',
     exp === null ? 'experience to verify' : exp ? (job.experience_max !== null && job.experience_max > p.experienceMax ? 'experience partly overlaps — verify' : 'experience overlaps') : 'experience outside preference',
     ...(p.locations?.length ? [locationFit === 100 ? 'preferred location' : 'location to verify'] : [])];
-  return {score, reasons, components, matchedSkills, missingSkills, titleMatch: exactTitle || family || titleHits.length > 0, skillMatch: matchedSkills.length > 0, experienceMatch: exp};
+  return {score, reasons, components, matchedSkills, missingSkills, missingRequiredSkills, matchedPreferredSkills, titleMatch: exactTitle || family || titleHits.length > 0, skillMatch: matchedSkills.length > 0, experienceMatch: exp};
 }
 export function freshnessScore(job: MatchJob, now = Date.now(), decayHours = config.decayHours) {
   const age = (value?: string | null) => {const n = value ? (now - Date.parse(value)) / 3600000 : NaN; return Number.isFinite(n) && n >= 0 ? n : null;};

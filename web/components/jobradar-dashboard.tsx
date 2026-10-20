@@ -1,3 +1,4 @@
+import {sourceFreshness} from '@/lib/job-trust';
 "use client";
 import {discoveryLocations,locationMatches,enforceShortlistLocation} from "@/lib/location-policy";
 import {portalMessages} from "@/lib/portal-messages";
@@ -71,7 +72,7 @@ import { feedbackByFamily, opportunityPriority, personalMatch, createPersonalMat
 import { diversifyFeed, groupDuplicateJobs, groupSimilarOpenings } from "@/lib/job-feed";
 import { fresherRole, internshipRole as isInternship, technicalInternshipRole } from "@/lib/job-sections";
 
-import {requirementsFor, normalizeExperience} from "@/lib/job-requirements";
+import {requirementsFor, primeRequirements, normalizeExperience} from "@/lib/job-requirements";
 import {boardAttribution} from "@/lib/source-ownership";
 
 type ApiJob = {
@@ -103,6 +104,7 @@ type ApiJob = {
   is_active: number;
   is_eligible: number;
   eligibility_reason: string;
+  duplicate_sources?: ApiJob[];
 };
 type Company = {
   name: string;
@@ -554,7 +556,8 @@ function DashboardContent() {
   };
   const saveTracking = useCallback((job:ApiJob,patch:Partial<Tracking>)=>setTracking(current=>{
     const now=new Date().toISOString(),prior=current[trackingKey(job)]||{};
-    return saveTrackingPatch(current,job,{...patch,preference_at:preferenceTime(prior,patch,now)},now) as Record<string,Tracking>;
+    const snapshot={...job};delete snapshot.duplicate_sources;
+    return saveTrackingPatch(current,snapshot,{...patch,preference_at:preferenceTime(prior,patch,now)},now) as Record<string,Tracking>;
   }),[]);
   useEffect(()=>{
     const sync=(event:StorageEvent)=>{if(event.key===null||(event.key===privateKey(trackingStorageKey)&&event.newValue===null)){setTracking({});return;}if(event.key===privateKey(trackingStorageKey)||event.key===privateKey(recoveryStorageKey))setTracking(current=>mergeTracking(current,readTracking()) as Record<string,Tracking>);};
@@ -568,11 +571,11 @@ function DashboardContent() {
     missing.forEach(t => map.set(trackingKey(t.job), {...t.job,is_active:0}));
     return [...map.values()];
   }, [currentJobs, tracking]);
-  const defaultTracking = useMemo(() => new Map(mergedJobs.map(job => [job, {
+  const defaultTracking = useMemo(() => new Map(mergedJobs.map(job => [trackingKey(job), {
     saved: false, status: "New", updated_at: "", job,
   }])), [mergedJobs]);
   const jobTracking = useCallback(
-    (job: ApiJob) => tracking[trackingKey(job)] || defaultTracking.get(job)!,
+    (job: ApiJob) => tracking[trackingKey(job)] || defaultTracking.get(trackingKey(job))!,
     [tracking, defaultTracking],
   );
   const atsOptions = useMemo(
@@ -726,7 +729,11 @@ function DashboardContent() {
               trackingKey(a).localeCompare(trackingKey(b));
     result.sort(compare);
     // Saved/application views retain each original source and tracking identity.
-    const unique = ["Saved", "Applications"].includes(active) ? result : groupDuplicateJobs(result).map(group => group.job).sort(compare);
+    const unique = ["Saved", "Applications"].includes(active) ? result : groupDuplicateJobs(result).map(group => {
+      if(group.sources.length===1)return group.job;
+      const job={...group.job,duplicate_sources:group.sources.filter(source=>source!==group.job)};
+      primeRequirements(job,requirementsFor(group.job));return job;
+    }).sort(compare);
     const ordered = !deferredQuery && sort === "Best match" && active !== "Latest Jobs"
       ? diversifyFeed(unique, job => ranking.get(trackingKey(job))!.priority) : unique;
     return ordered;
@@ -1202,6 +1209,8 @@ function DashboardContent() {
                 now={rankingNow}
                 resetKey={resultsKey}
                 jobs={visibleJobs}
+                companies={data?.companies}
+                backup={data?.data_mode === "backup"}
                 preferences={preferences}
                 getTracking={jobTracking}
                 saveTracking={saveTracking}
@@ -1565,11 +1574,13 @@ function Pills({
     </div>
   );
 }
-function JobList({now,jobs,resetKey,preferences,getTracking,saveTracking}: {
+function JobList({now,jobs,resetKey,preferences,getTracking,saveTracking,companies,backup}: {
+  companies?:Company[]; backup?:boolean;
   now:number; jobs:ApiJob[]; resetKey:string; preferences:SearchPreferences;
   getTracking:(j:ApiJob)=>Tracking; saveTracking:(j:ApiJob,p:Partial<Tracking>)=>void;
 }) {
-  const renderJob=(job:ApiJob)=><JobCard now={now} key={trackingKey(job)} job={job} preferences={preferences} tracking={getTracking(job)} saveTracking={saveTracking} />;
+  const sourceByName=useMemo(()=>new Map(companies?.map(source=>[source.name,source])),[companies]);
+  const renderJob=(job:ApiJob)=><JobCard source={sourceByName.get(job.company)} backup={backup} now={now} key={trackingKey(job)} job={job} preferences={preferences} tracking={getTracking(job)} saveTracking={saveTracking} />;
   return jobs.length ? <JobPagination jobs={jobs} resetKey={resetKey} renderPage={page=>groupSimilarOpenings(page).map(group=><div key={trackingKey(group[0])}>
     {renderJob(group[0])}
     {group.length>1&&<details className="mt-2 rounded-xl border bg-card p-3"><summary className="cursor-pointer text-sm font-semibold">{group.length-1} more {group.length===2?'opening':'openings'} at {group[0].company} · {group[0].title}</summary><p className="mt-2 text-xs text-muted-foreground">Separate employer listings. Each keeps its own apply link and tracking.</p><div className="mt-3 space-y-3">{group.slice(1).map(renderJob)}</div></details>}
@@ -1640,12 +1651,14 @@ function ApplicationSummary({
   );
 }
 const JobCard = memo(function JobCard({
+  source,backup,
   now,
   job,
   preferences,
   tracking,
   saveTracking,
 }: {
+  source?:Company; backup?:boolean;
   now: number;
   job: ApiJob;
   preferences: SearchPreferences;
@@ -1658,6 +1671,7 @@ const JobCard = memo(function JobCard({
     match = personalMatch(job, preferences),
     requirements = requirementsFor(job),
     attribution = boardAttribution(job),
+    freshness = sourceFreshness(source,Boolean(backup),job.last_seen_at,now),
     skills = parseSkills(job.skills),
     age = postingAge(job,now),
     fresh = postedToday(job)
@@ -1737,6 +1751,15 @@ const JobCard = memo(function JobCard({
               </div>
             </div>
           </div>
+          <details className="mt-3 text-xs text-muted-foreground">
+            <summary className="cursor-pointer">{freshness.label}</summary>
+            <p className="mt-2">Source check: {freshness.checked ? <time dateTime={freshness.checked}>{new Date(freshness.checked).toLocaleString()}</time> : 'Not available'}. Listing last seen: {freshness.seen ? <time dateTime={freshness.seen}>{new Date(freshness.seen).toLocaleString()}</time> : 'Not available'}. These are check times, not posting dates.</p>
+            {freshness.success && <p className="mt-1">Last successful source check: {new Date(freshness.success).toLocaleString()}.</p>}
+            {freshness.warning && <p className="mt-1">{freshness.warning}</p>}
+            <p className="mt-1">Check that the employer still accepts applications before applying.</p>
+          </details>
+          {requirements.remoteEligibility.label && <details className="mt-2 text-xs text-muted-foreground"><summary className="cursor-pointer">{requirements.remoteEligibility.label}</summary>{requirements.remoteEligibility.evidence.map((text,index)=><blockquote className="mt-2 border-l-2 pl-2" key={index}>{text}</blockquote>)}<p className="mt-2">Remote availability does not change the Bengaluru and Hyderabad shortlist rule.</p></details>}
+          {Boolean(job.duplicate_sources?.length) && <details className="mt-2 text-xs"><summary className="cursor-pointer">{job.duplicate_sources!.length+1} source records for this opening</summary><p className="mt-2 text-muted-foreground">Grouped for browsing. Saved jobs and applications keep every original record and its history.</p><ul className="mt-2 space-y-2">{[job,...job.duplicate_sources!].map((item,index)=><li key={`${trackingKey(item)}-${index}`}><a href={item.application_url} target="_blank" rel="noreferrer" className="underline">{boardAttribution(item).employer} · {item.ats_provider} · {item.external_job_id}</a></li>)}</ul></details>}
           <details className="mt-3 rounded-xl border border-border p-3 text-xs">
             <summary className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</summary>
             <p className="mt-2">{job.experience_label.startsWith("JD extract")?"Only a JD extract is available. Verify the full employer description before shortlisting.":experienceExplanation(requirements.experience)} Posting date, location and role checks also apply.</p>
@@ -1746,6 +1769,7 @@ const JobCard = memo(function JobCard({
             {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">{portalMessages.openExperience}</p>}
             {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">{portalMessages.conflictingExperience}</p>}
           </details>
+          <details className="mt-3 text-xs"><summary className="cursor-pointer font-semibold">Why this match?</summary><p className="mt-2">{match.reasons.join(' · ')}.</p><p className="mt-2">Required skills missing from your profile: {match.missingRequiredSkills.join(', ') || 'None identified'}. Matching preferred skills: {match.matchedPreferredSkills.join(', ') || 'None identified'}. Optional skills do not reduce required-skill fit. Unclear requirements still need review.</p>{requirements.skillConflicts.length>0&&<p className="mt-2 text-warning">Conflicting skill requirements: {requirements.skillConflicts.join(', ')} — verify the JD.</p>}</details>
           <div className="mt-5 flex flex-wrap gap-2">
             {skills.length ? (
               skills.slice(0, 6).map((s: string) => (
@@ -1785,7 +1809,7 @@ const JobCard = memo(function JobCard({
             </div>
             <Progress value={match.score} className="mt-3 h-2" />
             <p className="mt-2 text-[11px] text-muted-foreground">Based on your search preferences</p>
-            {match.missingSkills.length > 0 && <p className="mt-2 text-[11px] text-muted-foreground">Not in your profile: {match.missingSkills.slice(0, 3).join(", ")}</p>}
+            {match.missingSkills.length > 0 && <p className="mt-2 text-[11px] text-muted-foreground">{match.missingRequiredSkills.length ? "Required skills missing from profile" : "Other JD skills to review"}: {(match.missingRequiredSkills.length ? match.missingRequiredSkills : match.missingSkills).slice(0, 3).join(", ")}</p>}
 
           </div>
           <div className="mt-6 grid grid-cols-[1fr_auto] gap-2">

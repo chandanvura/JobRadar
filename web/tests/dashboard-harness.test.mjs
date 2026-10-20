@@ -118,5 +118,18 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   assert.ok(document.body.textContent.includes('No longer in live feed'));
   await click('Dashboard');assert.equal(document.querySelector('h1').textContent,'Dashboard');
   console.log(`HARNESS PERF: full dashboard navigation ${durations.join(', ')} ms; bounded 30 job cards / 30 company rows`);
+  // Same opening from two sources stays inspectable without rewriting private history.
+  const storedHistory=localStorage.getItem('jobradar-tracking-v2');
+  await act(()=>root.unmount());
+  globalThis.fetch=async path=>{fetchCalls++;return Response.json(path==='/api/dashboard'?{...payload,jobs:[jobs[0],{...jobs[0],id:8001,external_job_id:'alternate-1',ats_provider:'custom'}]}:{jobs:[],next_cursor:null});};
+  root=createRoot(document.getElementById('root'));await act(()=>root.render(React.createElement(JobRadarDashboard)));
+  await settle(()=>document.body.textContent.includes('2 source records for this opening'));
+  const duplicates=[...document.querySelectorAll('details')].find(node=>node.querySelector('summary')?.textContent==='2 source records for this opening');
+  assert.equal(duplicates.querySelectorAll('a').length,2);
+  assert.ok(duplicates.textContent.includes('alternate-1'));
+  assert.ok(document.body.textContent.includes('Live catalogue · Source checked'));
+  assert.ok(document.body.textContent.includes('Why this match?'));
+  assert.equal(localStorage.getItem('jobradar-tracking-v2'),storedHistory);
+  await click('Applications');assert.equal(document.querySelector('[aria-label="Application stage for Java Engineer 0"]').value,'Interview');
  }finally{await act(()=>root.unmount());globalThis.fetch=fetcher;dom.window.close();await rm(directory,{recursive:true,force:true});}
 });
