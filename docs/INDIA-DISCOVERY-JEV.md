@@ -73,3 +73,14 @@ Run regression, security, build, type and compiled database checks. After
 release, verify the live source rows, stored job rows and shortlist exclusions.
 The wording follows short, direct instructions inspired by ASD-STE100. This
 is not a claim of formal compliance or certification.
+
+
+## Accenture official search follow-up
+
+Justification: replace the rate-limited Workday source with the public search used by Accenture's current India careers page.
+
+Evidence: the official careers JavaScript publishes `/api/accenture/elastic/findjobs`. A live check on 20 October 2026 returned 200 unique official India job links with full employer descriptions. The adapter requests the newest 100 records from each employer-published experience band (0–2 and 2–5 years). JD requirements still determine eligibility.
+
+Verification: the adapter validates India, employer URLs, job identity, descriptions and counts. Tests reject wrong-country records, external links, missing requirements and duplicate page identities. Index update timestamps never become posting dates. Exact dates require matching employer JobPosting evidence. The live sample had zero verified posting dates and zero automatic eligible records.
+
+Coverage remains explicitly limited to these two bounded search partitions. This is not a complete Accenture inventory. Existing records and application history are preserved. HubSpot remains unresolved.
