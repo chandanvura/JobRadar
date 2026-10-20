@@ -309,6 +309,10 @@ def workday_city_facets(nodes):
     return {"locations":list(dict.fromkeys(found))} if found else {}
 
 
+WORKDAY_DETAIL_LIMIT = 200
+WORKDAY_DETAIL_BUDGET_SECONDS = 240
+
+
 class WorkdayAdapter(JobSource):
     def __init__(self, complete=False, all_details=False):
         if all_details and not complete:
@@ -369,8 +373,9 @@ class WorkdayAdapter(JobSource):
                 if (snapshot.get("total")!=expected or [item.get("externalPath") for item in snapshot.get("jobPostings",[])]
                         !=[item.get("externalPath") for item in postings[:20]]):
                     raise SnapshotChanged("Workday complete listing changed during final verification")
-            semaphore=asyncio.Semaphore(8); missing=[]
+            semaphore=asyncio.Semaphore(8); missing=[]; detail_requests=0; skipped_details=0; timed_out_details=0
             async def convert(item):
+                nonlocal detail_requests,skipped_details
                 # Complete mode reads relevant titles even if listing locations hide
                 # secondary offices; actual detail fields alone establish the city.
                 relevant=likely_role(item.get("title","")) if self.complete or facets else likely_target(item.get("title",""),item.get("locationsText",""))
@@ -382,6 +387,10 @@ class WorkdayAdapter(JobSource):
                 if not self.complete and old and int(old.group(1))>=2: return None
                 path=item.get("externalPath")
                 if not path: return None
+                if not self.complete and detail_requests>=WORKDAY_DETAIL_LIMIT:
+                    skipped_details+=1
+                    return None
+                detail_requests+=1
                 async with semaphore:
                     detail_response=(await request(x,'GET',f"{api}{path}") if self.all_details
                                      else await fetch_detail(x,f"{api}{path}"))
@@ -399,7 +408,22 @@ class WorkdayAdapter(JobSource):
                 posting=item.get("postedOn") or info.get("startDate")
                 location=location_text(info.get("location"),info.get("additionalLocations"),item.get("locationsText"))
                 return make_job(str(info.get("jobReqId") or info.get("jobPostingId") or path),info.get("title") or item.get("title",""),c.name,location,clean(info.get("jobDescription","")),"workday","company_career",public_url,info.get("externalUrl") or public_url,c.careers_url,posting=posting)
-            converted=await asyncio.gather(*(convert(item) for item in postings))
+            if self.complete:
+                converted=await asyncio.gather(*(convert(item) for item in postings))
+            else:
+                tasks=[asyncio.create_task(convert(item)) for item in postings]
+                converted=[]
+                if tasks:
+                    try:
+                        done,pending=await asyncio.wait(tasks,timeout=WORKDAY_DETAIL_BUDGET_SECONDS,return_when=asyncio.FIRST_EXCEPTION)
+                    finally:
+                        for task in tasks:
+                            if not task.done():task.cancel()
+                        await asyncio.gather(*tasks,return_exceptions=True)
+                    timed_out_details=len(pending)
+                    # Preserve completed results in employer listing order. A bad
+                    # response still fails; a budget limit is explicitly partial.
+                    converted=[task.result() for task in tasks if task in done]
             jobs=[job for job in converted if job]
             if self.all_details:
                 if len({job.external_job_id for job in jobs})!=len(jobs):
@@ -420,6 +444,10 @@ class WorkdayAdapter(JobSource):
             warnings.append(f"collected {len(postings)} of {advertised} advertised Workday listings")
         if duplicate_paths:
             warnings.append("Workday listing pagination repeated records")
+        if skipped_details:
+            warnings.append(f"detailed verification limited to {detail_requests} of {detail_requests+skipped_details} relevant Workday jobs")
+        if timed_out_details:
+            warnings.append(f"{timed_out_details} Workday detail tasks exceeded the bounded verification time")
         unique=list({job.external_job_id:job for job in jobs}.values())
         warning="Limited coverage: "+"; ".join(warnings) if warnings else None
         return JobBatch(unique,warning),len(postings)
@@ -523,6 +551,7 @@ def parse_public_xml(xml,company,careers_url):
 
 class PublicXMLAdapter(JobSource):
     async def fetch_jobs(self,c):
+        from .normalization import enrich
         parsed=urlparse(c.ats_identifier)
         if parsed.scheme!="https" or not parsed.hostname: raise ValueError("Public XML feed requires an HTTPS URL")
         async with client(timeout=45) as x:
@@ -532,6 +561,10 @@ class PublicXMLAdapter(JobSource):
             semaphore=asyncio.Semaphore(6)
             async def dated(job):
                 if job.posted_at: return job
+                # Feed descriptions already contain the JD. A date cannot make
+                # an otherwise ineligible role qualify. Keep these records with
+                # an unknown date instead of requesting thousands of pages.
+                if enrich(job).eligibility_reason!='Posting date not verified within 24 hours':return job
                 async with semaphore:
                     try:
                         detail=await fetch_detail(x,job.job_url)
