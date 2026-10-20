@@ -1,5 +1,5 @@
-import {sourceFreshness} from '@/lib/job-trust';
 "use client";
+import {sourceFreshness} from '@/lib/job-trust';
 import {discoveryLocations,locationMatches,enforceShortlistLocation} from "@/lib/location-policy";
 import {portalMessages} from "@/lib/portal-messages";
 import {employerText} from "@/lib/employer-text";

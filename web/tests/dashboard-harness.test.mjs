@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,writeFile,rm} from 'node:fs/promises';
+import {mkdtemp,writeFile,readFile,rm} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 import React,{act} from 'react';
@@ -11,6 +11,8 @@ globalThis.localStorage=dom.window.localStorage;globalThis.IS_REACT_ACT_ENVIRONM
 window.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
 const {createRoot}=await import('react-dom/client');
 const directory=await mkdtemp(new URL('../node_modules/.dashboard-harness-',import.meta.url).pathname);
+const dashboardSource=await readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
+assert.match(dashboardSource,/^\s*[\"']use client[\"'];/, 'Dashboard must declare its client boundary before imports');
 const output=await build({entryPoints:[new URL('../components/jobradar-dashboard.tsx',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm',packages:'external',alias:{'next/link':'next/link.js'},jsx:'automatic',logLevel:'silent'});
 await writeFile(`${directory}/dashboard.mjs`,output.outputFiles[0].text);
 const {JobRadarDashboard}=await import(`${directory}/dashboard.mjs`);
