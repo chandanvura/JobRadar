@@ -120,3 +120,18 @@ test('oversized browsing backup keeps all listings and labels description excerp
   assert.equal(full.jobs[0].description.length,12000);
   assert.throws(()=>serializeCatalog(full,20),/refusing to drop listings/);
 });
+
+test('confirmed quota failures use a short binding-isolated cooldown and recover at UTC reset',async()=>{
+ const {createPublicReader}=await import('../worker/public-backup.ts');
+ let now=Date.parse('2026-10-20T23:59:50Z'),calls=0;
+ const read=createPublicReader(()=>now),binding={fetch:assets.fetch},other={fetch:assets.fetch};
+ const quota=async()=>{calls++;throw Error("Your account has exceeded D1's free tier daily row read limit");};
+ await read(req('/api/dashboard'),binding,quota,{});
+ await read(req('/api/dashboard'),binding,quota,{});assert.equal(calls,1);
+ const health=await read(req('/api/health'),binding,async()=>new Response('',{status:503}),{});assert.equal(health.status,503);
+ assert.deepEqual(await (await read(req('/api/dashboard'),other,async()=>Response.json({live:true}),{})).json(),{live:true});
+ now=Date.parse('2026-10-21T00:00:00Z');
+ assert.deepEqual(await (await read(req('/api/dashboard'),binding,async()=>{calls++;return Response.json({live:true});},{})).json(),{live:true});assert.equal(calls,2);
+ now=Date.parse('2026-10-21T12:00:00Z');await read(req('/api/dashboard'),binding,quota,{});now+=60000;
+ assert.deepEqual(await (await read(req('/api/dashboard'),binding,async()=>Response.json({recovered:true}),{})).json(),{recovered:true});
+});

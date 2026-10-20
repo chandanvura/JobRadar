@@ -1738,7 +1738,7 @@ const JobCard = memo(function JobCard({
             </div>
           </div>
           <details className="mt-3 rounded-xl border border-border p-3 text-xs">
-            <summary className="cursor-pointer font-semibold">{experienceDecision(requirements.experience)}</summary>
+            <summary className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</summary>
             <p className="mt-2">This decision uses the JD and the 0–3 year policy. Posting date, location, and role checks also apply.</p>
             <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===null?'Experience cannot be confirmed.':match.experienceMatch?'Requested experience overlaps your search.':'Requested experience is outside your search.'}</p>
             {requirements.experience.required.length?requirements.experience.required.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}</blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
