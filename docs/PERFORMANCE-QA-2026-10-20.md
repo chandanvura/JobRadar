@@ -19,3 +19,9 @@ The full dashboard harness also exercises 7,000 jobs and 700 companies, navigati
 ## Limits
 
 Network speed and first-time full JD analysis still affect cold loading. Initial jobs remain available while the complete catalogue loads. Public source health is separate from interface performance.
+
+## Deployment follow-up
+
+The deployment-only SQL verifier now checks all five dashboard reads, including the range manifest. The public edge-cache lifetime is five minutes, aligned with the browser refresh interval, to reduce repeated database reads. Responses to browsers remain no-store. Posting eligibility is still rechecked against current time. No private tracking, health or write response enters this cache.
+
+Cloudflare reported daily D1 read quota exhaustion during deployment on 20 October. Static backup recovery remains available. Live database range verification must wait for quota recovery; do not claim current backup rows are live.

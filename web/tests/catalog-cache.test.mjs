@@ -53,3 +53,9 @@ test('bounded ranges have separate cache entries and invalid bounds stay uncache
  assert.equal(reads,2);assert.equal(f.memory.size,2);
  await cachedCatalog(req('/api/jobs?after=500&through=400'),read,f.cache,f.ctx);await f.flush();assert.equal(f.memory.size,2);
 });
+
+test('public catalog edge cache lasts five minutes to bound repeated database reads',async()=>{
+ const f=fixture();await cachedCatalog(req('/api/dashboard'),async()=>Response.json({live:true}),f.cache,f.ctx);await f.flush();
+ const stored=[...f.memory.values()][0];assert.equal(stored.headers.get('Cache-Control'),'public, max-age=300');
+ const remaining=Number(stored.headers.get('X-JobRadar-Cache-Until'))-Date.now();assert.ok(remaining>290000&&remaining<=300000);
+});
