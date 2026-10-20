@@ -186,13 +186,44 @@ class LeverAdapter(JobSource):
         warning=f'Limited coverage: {missing} relevant Lever jobs lack full requirements' if missing else None
         return JobBatch(jobs,warning),len(data)
 
+def ashby_description(item):
+    # Keep paragraph and list boundaries so a later preferred section cannot
+    # turn the required experience on the same flattened line into a preference.
+    raw=item.get('descriptionPlain') or item.get('descriptionHtml','')
+    raw=re.sub(r'</?(?:p|div|li|ul|ol|h[1-6]|br)\b[^>]*>','\n',raw,flags=re.I)
+    return '\n'.join(line for part in raw.splitlines() if (line:=clean(part)))
+
+
+def ashby_location(item):
+    locations=[item.get('location',''),*(item.get('secondaryLocations') or [])]
+    text=location_text(*locations)
+    countries=[]
+    for value in [item,*[v for v in locations if isinstance(v,dict)]]:
+        address=value.get('address') or {}
+        postal=address.get('postalAddress') or {}
+        countries.append(postal.get('addressCountry',''))
+    india=any(str(country).strip().casefold() in {'india','in'} for country in countries)
+    india=india or any(re.fullmatch(r'India(?:\s*\(Anywhere\))?',str(value.get('location','') if isinstance(value,dict) else value).strip(),re.I) for value in locations)
+    remote=(item.get('isRemote') is True and item.get('workplaceType') in (None,'Remote')) or (
+        'isRemote' not in item and item.get('workplaceType')=='Remote')
+    return location_text(text,'Remote - India') if remote and india else text
+
+
 class AshbyAdapter(JobSource):
     async def fetch_jobs(self,c):
         async with client() as x:
             response=await request(x,"GET",f"https://api.ashbyhq.com/posting-api/job-board/{c.ats_identifier}"); response.raise_for_status(); data=response.json()
-        listed=[j for j in data.get("jobs",[]) if j.get("isListed",True)]
-        jobs=[make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,location_text(j.get("location",""),j.get("secondaryLocations",[])),clean(j.get("descriptionPlain") or j.get("descriptionHtml","")),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in listed]
-        return jobs,len(listed)
+        if (not isinstance(data,dict) or not isinstance(data.get('jobs'),list)
+                or any(not isinstance(row,dict) for row in data['jobs'])):
+            raise ValueError('Ashby public board returned an unexpected schema')
+        listed=[j for j in data['jobs'] if j.get("isListed",True)]
+        identifiers=[j.get('id') or j.get('jobUrl') for j in listed]
+        if any(not isinstance(i,str) or not i for i in identifiers) or len(set(identifiers))!=len(identifiers):
+            raise ValueError('Ashby public board omitted or repeated job identifiers')
+        jobs=[make_job(str(j.get("id") or j["jobUrl"]),j["title"],c.name,ashby_location(j),ashby_description(j),"ashby","company_career",j.get("jobUrl",c.careers_url),j.get("applyUrl") or j.get("jobUrl",c.careers_url),c.careers_url,posting=j.get("publishedAt")) for j in listed]
+        missing=sum(likely_role(job.title) and not job.description for job in jobs)
+        warning=f'Limited coverage: {missing} relevant Ashby jobs lack full requirements' if missing else None
+        return JobBatch(jobs,warning),len(listed)
 
 def amazon_location(item):
     locations=[item.get("location"),item.get("normalized_location")]
