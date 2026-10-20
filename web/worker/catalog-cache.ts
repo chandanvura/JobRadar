@@ -6,7 +6,7 @@ const TTL_MS=60000;
 export async function cachedCatalog(request:Request,read:()=>Promise<Response>,cache:PublicCache,ctx:Context):Promise<Response>{
   const url=new URL(request.url);
   if(request.method!=='GET'||!['/api/dashboard','/api/jobs'].includes(url.pathname)||url.searchParams.get('source')==='backup'||request.headers.has('Authorization')||request.headers.has('Cookie'))return read();
-  const keyUrl=new URL(`/__catalog_cache_v1${url.pathname}`,url.origin);
+  const keyUrl=new URL(`/__catalog_cache_v2${url.pathname}`,url.origin);
   if(url.pathname==='/api/jobs'){
     const after=Number(url.searchParams.get('after')||'0'),limit=Number(url.searchParams.get('limit')||'100');
     if(!Number.isSafeInteger(after)||after<0||!Number.isSafeInteger(limit)||limit<1||limit>500)return read();

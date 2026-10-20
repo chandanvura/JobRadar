@@ -8,7 +8,7 @@ from .experience import analyze_experience
 from .posting import posting_current
 from .source_ownership import correct_board_owner
 from .roles import classify_role, NON_TECHNICAL
-from .locations import TARGET_LOCATIONS, REMOTE_INDIA, explicit_remote_india
+from .locations import TARGET_LOCATIONS, SHORTLIST_LOCATIONS, REMOTE_INDIA, OTHER_INDIA, explicit_remote_india, india_discovery_location
 
 INTERNSHIP_ROLE_PATTERNS = {
     "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b",
@@ -29,11 +29,11 @@ LEADERSHIP_TITLE = re.compile(r"\b(?:architect|director|head|lead|manager|princi
 
 def normalize_location(value: str):
     low=value.lower(); hybrid=" · Hybrid" if "hybrid" in low else ""
+    if not india_discovery_location(value): return value.strip() or "Not specified",None
     if re.search(r"\bbangalore\b|\bbengaluru\b",low): return "Bengaluru"+hybrid,"Bengaluru"
     if re.search(r"\bhyderabad\b",low): return "Hyderabad"+hybrid,"Hyderabad"
     if explicit_remote_india(value): return REMOTE_INDIA,REMOTE_INDIA
-    if re.search(r"\bchennai\b|\bmadras\b",low): return "Chennai"+hybrid,"Chennai"
-    if re.search(r"\bpune\b|\bpoona\b",low): return "Pune"+hybrid,"Pune"
+    if india_discovery_location(value): return value.strip(),OTHER_INDIA
     return value.strip() or "Not specified",None
 
 def classify_title(title: str, description: str=""):
@@ -90,7 +90,7 @@ def enrich(job: Job, company_priority: int=3):
     if job.experience_min is None and explicit_entry_title and job.experience_label=="Unknown":
         job.experience_label="Entry-level title — experience unverified"
         experience_ok=False
-    if job.city not in TARGET_CITIES: reason="Outside target cities"
+    if job.city not in SHORTLIST_LOCATIONS: reason="Outside shortlist cities — Bengaluru and Hyderabad only"
     elif leadership: reason="Leadership-level title"
     elif job.role_category=="Other": reason="Role outside target list"
     elif job.employment_type=="Internship" and not recent: reason="Posting date not verified within 24 hours"

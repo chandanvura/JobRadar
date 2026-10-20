@@ -47,7 +47,10 @@ def detail_record(text, row):
     data = soup.select_one('script#__NEXT_DATA__')
     if data is None:
         raise ValueError('Rippling detail has no public server-rendered data')
-    api = json.loads(data.string or data.get_text())['props']['pageProps']['apiData']
+    props=json.loads(data.string or data.get_text()).get('props',{}).get('pageProps',{})
+    if 'apiData' not in props:
+        raise SnapshotChanged('ThoughtSpot listed detail is unavailable; recheck the current employer snapshot')
+    api=props['apiData']
     board = api['jobBoard']; job = api['jobPost']
     if (board.get('companyName') != 'ThoughtSpot' or board.get('slug') != 'thoughtspot'
             or board.get('boardURL') != OFFICIAL or job.get('companyName') != 'ThoughtSpot'

@@ -427,14 +427,14 @@ Toshiba,https://www.global.toshiba/ww/recruit.html,custom,toshiba-india,3,true
 Mitsubishi Electric,https://www.mitsubishielectric.com/en/careers/,custom,mitsubishi-electric-india,3,true
 Carrier,https://jobs.carrier.com/en/location/india-jobs/29289/1269750/2,talentbrew,29289,4,true
 Trane Technologies,https://careers.tranetechnologies.com/global/en/,phenom,TRTEGLOBAL,4,true
-Eaton,https://eaton.eightfold.ai/careers,eightfold,eaton.eightfold.ai|eaton.com,4,true
+Eaton,https://eaton.eightfold.ai/careers?domain=eaton.com,eightfold,eaton.eightfold.ai|eaton.com,4,true
 Baker Hughes,https://careers.bakerhughes.com/global/en,custom,baker-hughes-india,4,true
 SLB,https://careers.slb.com/,custom,slb-india,4,true
 Halliburton,https://jobs.halliburton.com/,xml,https://jobs.halliburton.com/googlefeed.xml,3,true
 ExxonMobil,https://jobs.exxonmobil.com/,xml,https://jobs.exxonmobil.com/googlefeed.xml,4,true
 Chevron,https://careers.chevron.com/location/india-jobs/35016/1269750/2,talentbrew,35016,4,true
 BP,https://www.bp.com/en/global/corporate/careers.html,custom,bp-india,4,true
-Maersk,https://maersk.wd3.myworkdayjobs.com/Maersk_Careers,workday_complete,maersk|Maersk_Careers,4,true
+Maersk,https://maersk.wd3.myworkdayjobs.com/en-US/Maersk_Careers,workday_complete,maersk|Maersk_Careers,4,true
 FedEx,https://careers.fedex.com/,custom,fedex-india,4,true
 UPS,https://www.jobs-ups.com/global/en,phenom,UPBUPSGLOBAL,3,true
 DHL,https://careers.dhl.com/global/en,phenom,DPDHGLOBAL,3,true
@@ -612,7 +612,7 @@ Airwallex,https://jobs.ashbyhq.com/airwallex,ashby,airwallex,4,true
 Revolut,https://www.revolut.com/careers/,custom,revolut-india,4,true
 Tide,https://job-boards.greenhouse.io/tide,greenhouse,tide,4,true
 Payoneer,https://job-boards.greenhouse.io/payoneer,greenhouse,payoneer,4,true
-Remitly,https://remitly.wd5.myworkdayjobs.com/Remitly_Careers,workday_all,remitly|Remitly_Careers,4,true
+Remitly,https://remitly.wd5.myworkdayjobs.com/en-US/Remitly_Careers,workday_all,remitly|Remitly_Careers,4,true
 Checkout.com,https://jobs.ashbyhq.com/checkout.com,ashby,checkout.com,4,true
 Klarna,https://www.klarna.com/careers/,custom,klarna-india,4,true
 Adyen,https://job-boards.greenhouse.io/adyen,greenhouse,adyen,4,true
@@ -718,3 +718,26 @@ Skylo Technologies,https://jobs.ashbyhq.com/skylo,ashby,skylo,4,true
 SuperApp,https://job-boards.greenhouse.io/superapp,greenhouse,superapp,4,true
 Talkdesk,https://job-boards.greenhouse.io/talkdesk2,greenhouse,talkdesk2,4,true
 TEGNA India,https://job-boards.greenhouse.io/tegnaindia,greenhouse,tegnaindia,4,true
+2K,https://job-boards.greenhouse.io/2k,greenhouse,2k,4,true
+Onehouse,https://jobs.lever.co/Onehouse,lever,Onehouse,4,true
+Ontic,https://jobs.ashbyhq.com/Ontic,ashby,Ontic,4,true
+AlphaGrep Securities,https://job-boards.greenhouse.io/alphagrepsecurities,greenhouse,alphagrepsecurities,4,true
+APEXX Global,https://jobs.ashbyhq.com/apexx,ashby,apexx,4,true
+Bidgely,https://jobs.ashbyhq.com/bidgely-inc,ashby,bidgely-inc,4,true
+Careway Health,https://jobs.ashbyhq.com/careway,ashby,careway,4,true
+Drivetrain,https://jobs.lever.co/drivetrain,lever,drivetrain,4,true
+Dscout,https://job-boards.greenhouse.io/dscout,greenhouse,dscout,4,true
+Energy Exemplar,https://job-boards.greenhouse.io/energyexemplarllc,greenhouse,energyexemplarllc,4,true
+H1,https://jobs.lever.co/h1,lever,h1,4,true
+HackerOne,https://jobs.ashbyhq.com/hackerone,ashby,hackerone,4,true
+Karat,https://job-boards.greenhouse.io/karat,greenhouse,karat,4,true
+Level AI,https://jobs.ashbyhq.com/level-ai,ashby,level-ai,4,true
+Litmus,https://jobs.ashbyhq.com/litmus,ashby,litmus,4,true
+Mitsogo,https://job-boards.greenhouse.io/mitsogoinc,greenhouse,mitsogoinc,4,true
+Outmarket AI,https://jobs.ashbyhq.com/outmarket,ashby,outmarket,4,true
+TechnologyAdvice,https://job-boards.greenhouse.io/technologyadvice,greenhouse,technologyadvice,4,true
+Tempo,https://jobs.ashbyhq.com/tempo,ashby,tempo,4,true
+Together AI,https://job-boards.greenhouse.io/togetherai,greenhouse,togetherai,4,true
+Toradex,https://job-boards.greenhouse.io/toradex,greenhouse,toradex,4,true
+WPP,https://job-boards.greenhouse.io/wpp,greenhouse,wpp,4,true
+XO Health,https://job-boards.greenhouse.io/xohealthinc,greenhouse,xohealthinc,4,true

@@ -19,8 +19,8 @@ def sample(title="Associate DevOps Engineer", location="Bangalore", description=
 def test_location_aliases():
     assert normalize_location("Hybrid - Bangalore")[1] == "Bengaluru"
     assert normalize_location("Hyderabad, Telangana")[1] == "Hyderabad"
-    assert normalize_location("Chennai (Madras), Tamil Nadu")[1] == "Chennai"
-    assert normalize_location("Pune / Poona, Maharashtra")[1] == "Pune"
+    assert normalize_location("Chennai (Madras), Tamil Nadu")[1] == "Other India"
+    assert normalize_location("Pune / Poona, Maharashtra")[1] == "Other India"
 
 def test_experience_is_candidate_requirement():
     assert extract_experience("Company has 10+ years. Candidate needs 1-2 years")[:2] == (1.0,2.0)
@@ -56,7 +56,7 @@ def test_explicit_entry_title_can_fill_missing_experience_without_opening_generi
     generic=enrich(sample(title="Software Engineer",location="Bengaluru",description="Build reliable services"))
     assert not generic.is_eligible and generic.eligibility_reason == "Experience not stated — verify"
     outside=enrich(sample(title="Associate Software Engineer",location="Pune",description="Build reliable services"))
-    assert not outside.is_eligible and outside.eligibility_reason == "Outside target cities"
+    assert not outside.is_eligible and "Outside shortlist cities" in outside.eligibility_reason
 
 def test_internships_are_classified_and_eligible_without_full_time_experience():
     assert classify_employment_type("Software Engineer Intern") == "Internship"
@@ -342,8 +342,8 @@ def test_jobvite_xml_rejects_entities():
 def test_target_prefilter_excludes_removed_cities_and_accepts_broader_titles():
     assert likely_target("Junior Data Engineer","Bangalore, India")
     assert likely_target("Security Engineer I","Hyderabad, India")
-    assert not likely_target("Java Developer","Pune, India")
-    assert not likely_target("DevOps Engineer","Chennai, India")
+    assert likely_target("Java Developer","Pune, India")
+    assert likely_target("DevOps Engineer","Chennai, India")
 
 def test_distributed_merge_requires_complete_unique_shards(tmp_path):
     artifacts=[]

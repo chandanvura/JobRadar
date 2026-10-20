@@ -80,3 +80,15 @@ def test_shifted_records_across_valid_pages_are_a_restartable_snapshot(monkeypat
     monkeypatch.setattr(adapters,'request',request)
     with pytest.raises(SnapshotChanged,match='shifted across valid pages'):
         asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
+
+
+def test_complete_count_stops_before_provider_wraps_out_of_range_page(monkeypatch):
+    offsets=[]
+    async def request(client,method,url,**kwargs):
+        offsets.append(kwargs['json']['offset'])
+        # Some employers repeat a full page when offset equals the total.
+        return httpx.Response(200,request=httpx.Request(method,url),json={'total':20,'jobPostings':[{'externalPath':f'/job/London/R{i}','title':'Sales','locationsText':'London'} for i in range(20)]})
+    monkeypatch.setattr(adapters,'request',request)
+    jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
+    assert count==20 and jobs==[]
+    assert offsets==[0,0]
