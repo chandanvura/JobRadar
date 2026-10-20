@@ -2,7 +2,7 @@
 import {discoveryLocations,locationMatches,enforceShortlistLocation} from "@/lib/location-policy";
 import {portalMessages} from "@/lib/portal-messages";
 import {employerText} from "@/lib/employer-text";
-import {experienceDecision} from "@/lib/job-experience";
+import {experienceDecision,experienceExplanation} from "@/lib/job-experience";
 import {readTracking,saveTrackingPatch,mergeTracking,trackingStorageKey,recoveryStorageKey,clearTrackingStorage} from "@/lib/tracking-store";
 import {feedbackOptions,cleanFeedback,hideRecommendation,preferenceTime} from "@/lib/recommendation-feedback";
 import type {RecommendationFeedback} from "@/lib/recommendation-feedback";
@@ -591,7 +591,7 @@ function DashboardContent() {
     return new Map(mergedJobs.map(job => {
       const match = matches.get(trackingKey(job))!;
       const opportunity = opportunityPriority(job, preferences, now, match);
-      return [trackingKey(job), {match, priority: opportunity.score + (preferenceModel.trained ? preferenceModel.boost(job) : (feedback.get(job.role_category) || 0))}];
+      return [trackingKey(job), {match, priority: opportunity.score + (preferenceModel.trained ? preferenceModel.boost(job,match.components) : (feedback.get(job.role_category) || 0))}];
     }));
   }, [mergedJobs, preferences, tracking, rankingNow, preferenceModel, matches]);
   const {scores:searchScores,pending:searchPending,error:searchError} = useJobSearch(mergedJobs,deferredQuery);
@@ -1154,7 +1154,7 @@ function DashboardContent() {
                     <div>
                       <h3 className="text-sm font-semibold">Your {preferences.experienceMin}–{preferences.experienceMax} YOE search</h3>
                       <p className="mt-1 text-xs leading-5 text-muted-foreground">{filtered.length} matching listings from {data?.companies.length || 0} employer sources. Older postings and unknown experience stay visible for review. Freshness is a filter, not a reason to lose an active opening.</p>
-                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{preferenceModel.trained ? `Personal ranking adapts to ${preferenceModel.samples} explicit choices in this browser. Recent choices count more; experience and location reports never weaken eligibility.` : "Save or apply to good matches, or use recommendation feedback on a card. Ranking learns from good fits and role/skill feedback; experience reports flag a job for review."} Your choices stay private in this browser.</p>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{preferenceModel.trained ? `Personal ranking adapts to ${preferenceModel.samples} explicit choices in this browser. Recent choices count more. Skill feedback adjusts skill ranking; role feedback adjusts role ranking. Experience and location reports never weaken eligibility.` : "Save or apply to good matches, or use recommendation feedback on a card. Ranking learns from good fits and role/skill feedback; experience reports flag a job for review."} Your choices stay private in this browser.</p>
                     </div>
                     <Button variant="outline" onClick={() => navigate("All Jobs")} className="rounded-xl">Browse full catalogue <ExternalLink size={14} /></Button>
                   </div>
@@ -1739,10 +1739,10 @@ const JobCard = memo(function JobCard({
           </div>
           <details className="mt-3 rounded-xl border border-border p-3 text-xs">
             <summary className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</summary>
-            <p className="mt-2">This decision uses the JD and the 0–3 year policy. Posting date, location, and role checks also apply.</p>
+            <p className="mt-2">{job.experience_label.startsWith("JD extract")?"Only a JD extract is available. Verify the full employer description before shortlisting.":experienceExplanation(requirements.experience)} Posting date, location and role checks also apply.</p>
             <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===null?'Experience cannot be confirmed.':match.experienceMatch?'Requested experience overlaps your search.':'Requested experience is outside your search.'}</p>
-            {requirements.experience.required.length?requirements.experience.required.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}</blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
-            {requirements.experience.preferred.slice(0,4).map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}
+            {requirements.experience.required.length?requirements.experience.required.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}<span className="mt-1 block text-muted-foreground">JD section: {item.section}</span></blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
+            {requirements.experience.preferred.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}
             {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">{portalMessages.openExperience}</p>}
             {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">{portalMessages.conflictingExperience}</p>}
           </details>

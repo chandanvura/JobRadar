@@ -25,10 +25,10 @@ export function analyzeExperience(description:string,clauses=candidateClauses(de
    let min:number,max:number|null;
    if(kind==='range'){min=Number(match[1])*factor(match[2]||match[4]);max=Number(match[3])*factor(match[4]);}
    else {const value=Number(match[1])*factor(match[2]);min=kind==='upper'?0:value;max=kind==='lower'?null:value;}
-   rows.push({min:rounded(min),max:max===null?null:rounded(max),kind,evidence:fragment.trim().slice(0,400),section});spans.push([start,end]);
+   rows.push({min:rounded(min),max:max===null?null:rounded(max),kind,evidence:fragment.trim(),section});spans.push([start,end]);
   }
   if(rows.length>1&&/\bor\b/i.test(text)&&!optional)conditional=true;
-  if(!rows.length&&juniorPattern.test(text)&&!juniorExcludedPattern.test(text))rows.push({min:0,max:null,kind:'junior',evidence:fragment.trim().slice(0,400),section});
+  if(!rows.length&&juniorPattern.test(text)&&!juniorExcludedPattern.test(text))rows.push({min:0,max:null,kind:'junior',evidence:fragment.trim(),section});
   (optional?preferred:required).push(...rows);
  }
  const unique=(rows:ExperienceEvidence[])=>[...new Map(rows.map(row=>[JSON.stringify([row.min,row.max,row.kind,row.evidence,row.section]),row])).values()];
@@ -37,6 +37,8 @@ export function analyzeExperience(description:string,clauses=candidateClauses(de
  const numeric=required.filter(row=>row.kind!=='junior');let constraints=numeric.length?numeric:required;
  if(!constraints.length)return result;
  if(conditional)return {...result,status:'conditional',label:'Conditional experience — verify'};
+ const overall=numeric.filter(row=>new RegExp(rules.overall_scope,'i').test(row.evidence));
+ if(overall.length>1&&Math.max(...overall.map(row=>row.min))>Math.min(...overall.map(row=>row.max??Infinity)))return {...result,status:'conflict',label:'Conflicting experience — verify'};
  const lower=constraints.filter(row=>row.kind==='lower').map(row=>row.min),upper=constraints.filter(row=>row.kind==='upper').map(row=>row.max!);
  if(lower.length&&upper.length)constraints=[...constraints.filter(row=>row.kind!=='lower'),{min:Math.max(...lower),max:Math.min(...upper),kind:'range',evidence:'',section:''}];
  if(constraints.some(row=>row.max!==null&&row.min>row.max))return {...result,status:'conflict',label:'Conflicting experience — verify'};
@@ -47,4 +49,12 @@ export function analyzeExperience(description:string,clauses=candidateClauses(de
 export function experienceWithinPolicy(min:number|null,max:number|null) {return min!==null&&min>=0&&(max===null?min<=2:max>=min&&max<=3);}
 export function experienceDecision(analysis:ExperienceAnalysis) {
  return analysis.status!=='stated'?'Verify JD before shortlisting':experienceWithinPolicy(analysis.min,analysis.max)?'Shortlist by experience':'Do not shortlist by experience';
+}
+
+export function experienceExplanation(analysis:ExperienceAnalysis) {
+ if(analysis.status==='conflict')return 'The JD has incompatible required experience statements. Verify the full requirements with the employer.';
+ if(analysis.status==='conditional')return 'The JD gives alternative experience requirements. Review which path applies before shortlisting.';
+ if(analysis.status!=='stated')return analysis.preferred.length?'Only preferred experience is stated. It cannot prove the required experience.':'Required experience is not stated clearly. A junior title alone is not proof.';
+ const range=analysis.max===null?`${analysis.min}+`:`${analysis.min}–${analysis.max}`;
+ return experienceWithinPolicy(analysis.min,analysis.max)?`Required experience: ${range} years. It meets the portal experience rule.${analysis.max===null?' No upper limit is stated; verify the full role.':''}`:`Required experience: ${range} years. It extends outside the portal 0–3 year rule.`;
 }

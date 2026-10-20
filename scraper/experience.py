@@ -47,12 +47,12 @@ def analyze_experience(description):
                     else:
                         value = float(groups[0]) * factor(groups[1])
                         lo, hi = (0, value) if kind == 'upper' else (value, None) if kind == 'lower' else (value, value)
-                    rows.append(dict(min=round(lo, 6), max=None if hi is None else round(hi, 6), kind=kind, evidence=fragment.strip()[:400], section=section))
+                    rows.append(dict(min=round(lo, 6), max=None if hi is None else round(hi, 6), kind=kind, evidence=fragment.strip(), section=section))
                     spans.append((start, end))
             if len(rows) > 1 and re.search(r'\bor\b', text, re.I) and not optional:
                 conditional = True
             if not rows and JUNIOR.search(text) and not JUNIOR_EXCLUDED.search(text):
-                rows.append(dict(min=0, max=None, kind='junior', evidence=fragment.strip()[:400], section=section))
+                rows.append(dict(min=0, max=None, kind='junior', evidence=fragment.strip(), section=section))
             (preferred if optional else required).extend(rows)
     def unique(rows):
         return list({(row['min'], row['max'], row['kind'], row['evidence'], row['section']): row for row in rows}.values())
@@ -64,6 +64,9 @@ def analyze_experience(description):
         return result
     if conditional:
         return dict(result, status='conditional', label='Conditional experience — verify')
+    overall = [row for row in numeric if re.search(RULES['overall_scope'], row['evidence'], re.I)]
+    if len(overall)>1 and max(row['min'] for row in overall)>min(float('inf') if row['max'] is None else row['max'] for row in overall):
+        return dict(result, status='conflict', label='Conflicting experience — verify')
     lower = [row['min'] for row in constraints if row['kind'] == 'lower']
     upper = [row['max'] for row in constraints if row['kind'] == 'upper']
     if lower and upper:

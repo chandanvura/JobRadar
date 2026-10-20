@@ -351,5 +351,19 @@
     "max": 3,
     "status": "stated",
     "preferred": 0
+  },
+  {
+    "name": "Contradictory explicit overall experience ranges",
+    "text": "Candidate must have 0–2 years of overall experience. Candidate must have 5–7 years of total experience.",
+    "min": null,
+    "max": null,
+    "status": "conflict"
+  },
+  {
+    "name": "Overall and specialised minimums can coexist",
+    "text": "Candidate must have 5+ years of overall experience. Required: 2+ years of Java experience.",
+    "min": 5,
+    "max": null,
+    "status": "stated"
   }
 ]

@@ -129,6 +129,16 @@ try {
   assert.ok(ranged.every(page=>page.next_cursor===null));assert.deepEqual(ranged.flatMap(page=>page.jobs).map(job=>job.id),[...large.jobs,...tail.jobs].map(job=>job.id));
   for(const through of ['0','-1','NaN','1.5'])assert.equal((await request(`/api/jobs?after=0&through=${through}`)).status,400);
   await db.prepare("DELETE FROM jobs WHERE external_job_id LIKE 'PAGE-%'").run();
+  // Measure the previous per-company table scans against the bulk lookup.
+  const sources=Array.from({length:250},(_,i)=>({name:`Read budget ${i}`,careers_url:'https://example.test/careers',ats_provider:'test',ats_identifier:`read-budget-${i}`,priority:3}));
+  assert.equal((await request('/api/ingest',{companies:sources})).status,200);
+  const previous=await db.batch(sources.map(c=>db.prepare("SELECT * FROM companies WHERE name=? COLLATE NOCASE OR (ats_provider=? AND ats_identifier=?)").bind(c.name,c.ats_provider,c.ats_identifier)));
+  const previousReads=previous.reduce((sum,r)=>sum+(r.meta.rows_read||0),0);
+  const efficient=await (await request('/api/ingest',{companies:sources})).json();
+  assert.ok(efficient.d1_rows_read<previousReads/5,`${efficient.d1_rows_read} bulk reads versus ${previousReads} former reads`);
+  assert.equal(efficient.d1_rows_written,0,'unchanged source checks do not produce writes');
+  console.log(`D1 READ BUDGET: 250 source updates: old ${previousReads}, bulk ${efficient.d1_rows_read}`);
+  await db.prepare("DELETE FROM companies WHERE name LIKE 'Read budget %'").run();
   // An explicit empty successful manifest is authoritative and can retire jobs.
   assert.equal((await request('/api/ingest',{run:{...run,seen_job_keys:[]}})).status,200);
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,0);

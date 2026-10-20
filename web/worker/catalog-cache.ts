@@ -6,7 +6,7 @@ const TTL_MS=300000;
 export async function cachedCatalog(request:Request,read:()=>Promise<Response>,cache:PublicCache,ctx:Context):Promise<Response>{
   const url=new URL(request.url);
   if(request.method!=='GET'||!['/api/dashboard','/api/jobs'].includes(url.pathname)||url.searchParams.get('source')==='backup'||request.headers.has('Authorization')||request.headers.has('Cookie'))return read();
-  const keyUrl=new URL(`/__catalog_cache_v3${url.pathname}`,url.origin);
+  const keyUrl=new URL(`/__catalog_cache_v4${url.pathname}`,url.origin);
   if(url.pathname==='/api/jobs'){
     const through=url.searchParams.get('through');
     if(through!==null&&(!Number.isSafeInteger(Number(through))||Number(through)<=Number(url.searchParams.get('after')||'0')))return read();
@@ -19,7 +19,7 @@ export async function cachedCatalog(request:Request,read:()=>Promise<Response>,c
   try{
     const hit=await cache.match(key),until=Number(hit?.headers.get('X-JobRadar-Cache-Until'));
     if(hit&&until>Date.now()&&until<=Date.now()+TTL_MS){
-      const headers=new Headers(hit.headers);headers.set('Cache-Control','no-store');headers.set('X-JobRadar-Catalog-Cache','hit');headers.delete('X-JobRadar-Cache-Until');
+      const headers=new Headers(hit.headers);headers.set('Cache-Control','no-store');headers.set('X-JobRadar-Catalog-Cache','hit');headers.set('X-JobRadar-D1-Rows-Read','0');headers.set('Server-Timing','edge-cache;desc=hit');headers.delete('X-JobRadar-Cache-Until');
       return new Response(hit.body,{status:hit.status,headers});
     }
     void hit?.body?.cancel().catch(()=>undefined);

@@ -83,7 +83,7 @@ export function opportunityPriority(job: MatchJob, p: MatchPreferences, now = Da
 export function feedbackByFamily(history:LearningRecord[]) {
  const scores=new Map<string,number>(),seen=new Set<string>();
  for(const record of [...history].reverse().sort((a,b)=>(Date.parse(b.preference_at||b.updated_at||'')||0)-(Date.parse(a.preference_at||a.updated_at||'')||0))) {
-  const label=learningLabel(record);if(label===null)continue;
+  const label=learningLabel(record);if(label===null||record.feedback==='skills')continue;
   const key=(record.job.application_url&&canonicalApplyUrl(record.job.application_url))||[record.job.title,record.job.role_category,record.job.skills].join('\u001f');
   if(seen.has(key))continue;seen.add(key);
   scores.set(record.job.role_category,(scores.get(record.job.role_category)||0)+(label?1:-1));
