@@ -8,6 +8,9 @@ const modules=modulePaths.map(path=>({type:'ESModule',path:new URL(path,serverRo
 const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"jobradar-api-audit",modules,modulesRoot:new URL('../dist/server/',import.meta.url).pathname,scriptPath:new URL('../dist/server/index.js',import.meta.url).pathname,compatibilityDate:'2026-09-26',compatibilityFlags:['nodejs_compat'],d1Databases:{DB:'audit-db'},bindings:{JOBRADAR_INGEST_SECRET:'local-audit-only',JOBRADAR_DISABLE_PUBLIC_CATALOG_CACHE:'1'},serviceBindings:{ASSETS:async()=>Response.json(saved)}}]}));
 const request=(path,body,authorized=true)=>mf.dispatchFetch(`https://audit.example${path}`,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json',...(authorized?{Authorization:'Bearer local-audit-only'}:{})},body:JSON.stringify(body)});
 try {
+  const homepage=await request('/');
+  assert.equal(homepage.status,200,'Compiled homepage must render before API checks');
+  assert.match(await homepage.text(),/JobRadar/);
   assert.equal((await request('/api/ingest',{},false)).status,401);
   assert.equal((await request('/api/ingest',null)).status,400);
   assert.equal((await request('/api/ingest',{jobs:[null]})).status,400);
