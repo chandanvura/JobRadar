@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtemp,writeFile,readFile,rm} from 'node:fs/promises';
+import {fileURLToPath,pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 import React,{act} from 'react';
@@ -10,12 +11,12 @@ globalThis.HashChangeEvent=dom.window.HashChangeEvent;globalThis.CustomEvent=dom
 globalThis.localStorage=dom.window.localStorage;globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 window.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
 const {createRoot}=await import('react-dom/client');
-const directory=await mkdtemp(new URL('../node_modules/.dashboard-harness-',import.meta.url).pathname);
+const directory=await mkdtemp(fileURLToPath(new URL('../node_modules/.dashboard-harness-',import.meta.url)));
 const dashboardSource=await readFile(new URL('../components/jobradar-dashboard.tsx',import.meta.url),'utf8');
 assert.match(dashboardSource,/^\s*[\"']use client[\"'];/, 'Dashboard must declare its client boundary before imports');
-const output=await build({entryPoints:[new URL('../components/jobradar-dashboard.tsx',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm',packages:'external',alias:{'next/link':'next/link.js'},jsx:'automatic',logLevel:'silent'});
+const output=await build({entryPoints:[fileURLToPath(new URL('../components/jobradar-dashboard.tsx',import.meta.url))],bundle:true,write:false,platform:'node',format:'esm',packages:'external',alias:{'next/link':'next/link.js'},jsx:'automatic',logLevel:'silent'});
 await writeFile(`${directory}/dashboard.mjs`,output.outputFiles[0].text);
-const {JobRadarDashboard}=await import(`${directory}/dashboard.mjs`);
+const {JobRadarDashboard}=await import(pathToFileURL(`${directory}/dashboard.mjs`).href);
 const now=new Date().toISOString();
 const jobs=Array.from({length:7000},(_,i)=>({id:i+1,company:`Company ${i%700}`,external_job_id:String(i+1),title:`Java Engineer ${i}`,description:i===0?'Experience: 0–2 years. Must know Java and AWS. Preferred Experience: 5 years.':'Experience: 0–2 years. Must know Java and AWS. Preferred: Terraform.',normalized_location:i%2?'Hyderabad':'Bengaluru',location:'India',experience_min:0,experience_max:2,experience_label:'0–2',skills:'["Java","AWS"]',role_category:'Java / Backend',ats_provider:'test',application_url:`https://employer.test/jobs/${i+1}`,career_page_url:'https://employer.test',posted_at:now,posted_label:null,posted_precision:'exact',reported_age_hours:null,first_seen_at:now,last_seen_at:now,relevance_score:70,is_active:1,is_eligible:1,eligibility_reason:''}));
 const companies=Array.from({length:700},(_,i)=>({name:`Company ${i}`,careers_url:'https://employer.test',ats_provider:'test',last_checked_at:now,last_success_at:now,error_count:0,jobs_found:10,candidate_jobs:10,eligible_jobs:10,warning:null}));

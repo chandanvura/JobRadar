@@ -6,7 +6,7 @@ from scraper.experience import analyze_experience
 from scraper.normalization import enrich
 from scraper.models import Job
 
-FIXTURES=json.loads((Path(__file__).parents[1]/'config/experience-fixtures.json').read_text())
+FIXTURES=json.loads((Path(__file__).parents[1]/'config/experience-fixtures.json').read_text(encoding='utf-8'))
 
 @pytest.mark.parametrize('case',FIXTURES,ids=lambda case:case['name'])
 def test_experience_evidence_shared_contract(case):
