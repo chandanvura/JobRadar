@@ -206,6 +206,9 @@ def test_new_employer_is_collected_before_verified_publication(monkeypatch):
     monkeypatch.setenv('JOBRADAR_INGEST_SECRET','test-only')
     sync_company_registry.main()
     payload=json.loads(calls[1].data)
+    assert calls[0].get_header('Authorization')=='Bearer test-only'
+    assert calls[2].get_header('Authorization')=='Bearer test-only'
+    assert all(request.full_url.startswith('https://jobradar.chandanvura.workers.dev/api/') for request in calls)
     assert payload['jobs']==[{'external_job_id':'real-job'}]
     assert payload['companies'][0]['jobs_found']==2
     assert 'run' not in payload and 'authoritative_companies' not in payload

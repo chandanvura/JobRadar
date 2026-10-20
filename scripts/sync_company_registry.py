@@ -99,7 +99,12 @@ def main():
     # Fixed production origin prevents sending ingestion credentials elsewhere.
     origin = "https://jobradar.chandanvura.workers.dev"
     headers = {"User-Agent": "JobRadar/1.2 (company registry sync)", "Accept": "application/json"}
-    dashboard_request = Request(origin + "/api/dashboard", headers=headers)
+    # Credentialed reads bypass public edge reuse. Verify the post-write catalog,
+    # not a snapshot cached before this publication. The destination is fixed.
+    read_headers=dict(headers)
+    if os.environ.get('JOBRADAR_INGEST_SECRET'):
+        read_headers['Authorization']='Bearer '+os.environ['JOBRADAR_INGEST_SECRET']
+    dashboard_request = Request(origin + "/api/dashboard", headers=read_headers)
     with urlopen(dashboard_request, timeout=30) as response:  # nosec B310
         catalog = json.load(response)
     companies = load_companies()
