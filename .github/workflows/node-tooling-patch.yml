@@ -1,0 +1,49 @@
+name: Propose targeted Node tooling updates
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/node-tooling-patch.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/node-dev-audit-evidence'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/node-dev-audit-evidence
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Lockfile-consistent minimal non-major dependency upgrades
+        working-directory: web
+        run: |
+          npm install --save-dev --save-exact --ignore-scripts --no-audit --no-fund @cloudflare/vite-plugin@1.64.0 vite@8.3.4
+          npm ci --no-audit --no-fund
+      - name: Verify full web build, integration, types, lint
+        working-directory: web
+        run: |
+          npm test
+          npm run test:api
+          npm run lint
+          npm run typecheck:ui
+          npm audit --omit=dev --audit-level=high
+      - name: Propose verified package and lockfile update
+        shell: bash
+        run: |
+          git status --short
+          if git diff --quiet -- web/package.json web/package-lock.json; then
+            echo "No dependency changes to propose."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/package.json web/package-lock.json
+          git commit -m "fix(devtools): update Cloudflare plugin and Vite to audited versions"
+          git push origin HEAD:fix/node-dev-audit-evidence
