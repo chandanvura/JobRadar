@@ -199,7 +199,7 @@ imports in another browser profile. No unattended server-side recovery for that
 private history is claimed.
 
 Run the offline reliability harness with `bash scripts/verify-harness.sh all`.
-The October 21 hardening passed **832 Python tests, 224 web tests**, compiled
+The October 21 hardening passed **944 Python tests, 224 web tests**, compiled
 Worker/local D1 integration, production build, lint, UI types, Python security
 review, Python dependency audit and production npm audit. Read-only production
 HTML/static-backup probes and pipeline health passed at implementation time;

@@ -81,6 +81,64 @@ def test_zero_to_three_year_roles_are_eligible():
     for title,description in accepted:
         assert enrich(sample(title=title,description=description)).is_eligible
 
+def test_phase2_entry_engineering_tracks_eligibility():
+    tracks = [
+        # Track 1: Software Engineering
+        ("Frontend Engineer I", "Requirements: 0-2 years of frontend experience with React."),
+        ("Junior Full Stack Developer", "Experience: 1-3 years in web development."),
+        ("Mobile Engineer I", "Candidate needs 0-2 years mobile app development experience."),
+        ("Associate QA Engineer", "Requirements: 1-2 years experience with test automation."),
+        ("Firmware Engineer I", "0-2 years embedded systems experience required."),
+        # Track 2: DevOps & Cloud Engineering
+        ("DevOps Engineer I", "Requirements: 1-2 years experience with CI/CD and Kubernetes."),
+        ("Cloud Engineer I", "Experience: 0-2 years with AWS or Azure infrastructure."),
+        ("Kubernetes Engineer", "1-3 years container orchestration experience required."),
+        ("Terraform Engineer", "1-2 years infrastructure as code experience."),
+        # Track 3: Infrastructure & Reliability Engineering
+        ("SRE I", "Requirements: 0-2 years in site reliability engineering."),
+        ("Platform Engineer I", "Experience: 1-2 years in platform automation."),
+        ("Systems Engineer I", "Requirements: 0-2 years Linux administration experience."),
+        ("Database Reliability Engineer", "1-2 years database operations experience required."),
+    ]
+    for title, description in tracks:
+        job = enrich(sample(title=title, location="Bengaluru", description=description))
+        assert job.is_eligible, f"Expected {title} to be eligible, got {job.eligibility_reason}"
+        assert job.role_category != "Other", f"Expected valid category for {title}, got {job.role_category}"
+
+    # Verify unstated experience on explicit level-1 titles gets unverified status
+    for title in ["DevOps Engineer I", "Cloud Engineer 1", "SRE I", "Platform Engineer I", "Systems Engineer I", "Backend Engineer I", "Frontend Engineer 1"]:
+        job = enrich(sample(title=title, location="Hyderabad", description="Build scalable cloud services."))
+        assert not job.is_eligible
+        assert job.experience_label == "Entry-level title — experience unverified"
+        assert job.eligibility_reason == "Entry-level title — experience unverified"
+
+    # Verify unambiguous 4+ YOE is rejected
+    for title, description in [
+        ("DevOps Engineer I", "Requirements: minimum 5 years DevOps experience."),
+        ("Cloud Engineer 1", "Experience: 4-6 years in AWS architecture."),
+        ("SRE I", "Candidate needs 4+ years of production engineering experience."),
+    ]:
+        job = enrich(sample(title=title, location="Bengaluru", description=description))
+        assert not job.is_eligible
+        assert job.eligibility_reason == "Experience exceeds 0–3 YOE policy"
+
+def test_phase2_locations_shortlist_vs_discovery():
+    for city in ["Bengaluru", "Hyderabad"]:
+        job = enrich(sample(title="DevOps Engineer I", location=city, description="1-2 years experience."))
+        assert job.is_eligible
+        assert job.city == city
+
+    for loc, expected_city in [
+        ("Remote - India", "Remote (India)"),
+        ("Pune, India", "Other India"),
+        ("Chennai, India", "Other India"),
+        ("Gurugram, Haryana, India", "Other India"),
+    ]:
+        job = enrich(sample(title="DevOps Engineer I", location=loc, description="1-2 years experience."))
+        assert not job.is_eligible
+        assert "Outside shortlist cities" in job.eligibility_reason
+        assert job.city == expected_city
+
 def test_experience_above_policy_is_excluded():
     assert not enrich(sample(description="Candidate needs 3+ years experience")).is_eligible
     assert not enrich(sample(description="Candidate needs 2-4 years experience")).is_eligible
@@ -90,6 +148,14 @@ def test_leadership_titles_are_excluded_even_with_low_year_phrase():
     for title in ("Director, Software Engineering","Staff Platform Engineer","Principal DevOps Engineer","Cloud Engineering Manager","Lead Software Engineer"):
         job=enrich(sample(title=title,description="Candidate needs 1-2 years experience"))
         assert not job.is_eligible and job.eligibility_reason=="Leadership-level title"
+
+def test_senior_alone_is_not_leadership_exclusion_and_evaluates_experience():
+    senior_eligible = enrich(sample(title="Senior Software Engineer", location="Bengaluru", description="Requirements: 2 years experience in Python and backend services."))
+    assert senior_eligible.is_eligible
+    assert senior_eligible.eligibility_reason == "Eligible"
+    senior_ineligible = enrich(sample(title="Senior Software Engineer", location="Bengaluru", description="Requirements: 5+ years experience in Python."))
+    assert not senior_ineligible.is_eligible
+    assert "Experience exceeds 0" in senior_ineligible.eligibility_reason
 
 def test_real_world_experience_phrases():
     assert extract_experience("Minimum experience of 2 years")[:2] == (2.0,None)

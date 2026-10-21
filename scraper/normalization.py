@@ -11,13 +11,13 @@ from .roles import classify_role, NON_TECHNICAL
 from .locations import TARGET_LOCATIONS, SHORTLIST_LOCATIONS, REMOTE_INDIA, OTHER_INDIA, explicit_remote_india, india_discovery_location
 
 INTERNSHIP_ROLE_PATTERNS = {
-    "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b",
-    "Cloud": r"\bcloud\b",
-    "SRE": r"\bsite reliability\b|\bsre\b",
+    "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b|\bci\s*[/ -]?\s*cd\b|\bkubernetes\b|\bterraform\b",
+    "Cloud": r"\bcloud\b|\baws\b|\bazure\b|\bgcp\b",
+    "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b|\breliability\b",
     "Platform": r"\bplatform\b",
-    "Infrastructure / Operations": r"\binfrastructure\b|\blinux\b|\b(?:it|cloud|platform|systems?|network|production) operations\b|\boperations (?:engineering|engineer|infrastructure)\b",
+    "Infrastructure / Operations": r"\binfrastructure\b|\blinux\b|\b(?:it|cloud|platform|systems?|network|production) operations\b|\boperations (?:engineering|engineer|infrastructure)\b|\bsysadmin\b|\bdatabase\b",
     "Java / Backend": r"\bjava\b|\bback[ -]?end\b|\bspring\b",
-    "Software Engineering": r"\bsoftware\b|\bdeveloper\b|\bengineering\b|\bsde\b|\btechnology\b|\btechnical\b",
+    "Software Engineering": r"\bsoftware\b|\bdeveloper\b|\bengineering\b|\bsde\b|\btechnology\b|\btechnical\b|\bfrontend\b|\bfull[ -]?stack\b|\bmobile\b|\bfirmware\b|\bqa\b|\btest\b",
 }
 SKILL_RULES=json.loads((Path(__file__).parents[1]/'config/skills.json').read_text())
 SKILLS=list(SKILL_RULES)
@@ -86,7 +86,7 @@ def enrich(job: Job, company_priority: int=3):
     experience_ok=bounded_experience or accepted_plus
     leadership_title=re.sub(r"\bmember of technical staff\b", "technical contributor", job.title, flags=re.I)
     leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
-    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|qa engineer|sdet|support engineer)\s*(?:i|1)\b",job.title,re.I))
+    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|sdet|test engineer|support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer)\s*(?:i|1)\b",job.title,re.I))
     if job.experience_min is None and explicit_entry_title and job.experience_label=="Unknown":
         job.experience_label="Entry-level title — experience unverified"
         experience_ok=False
