@@ -67,11 +67,12 @@ test('quota deployment gate blocks schema changes and unrelated migration failur
 test('production config patch retains static directory and supplies the fallback binding',async()=>{
   const {mkdtemp,mkdir,writeFile,readFile,rm}=await import('node:fs/promises');const {tmpdir}=await import('node:os');
   const {execFile}=await import('node:child_process');const {promisify}=await import('node:util');
+  const {fileURLToPath}=await import('node:url');
   const dir=await mkdtemp(`${tmpdir()}/jobradar-config-`);
   try {
     await mkdir(`${dir}/dist/server`,{recursive:true});
     await writeFile(`${dir}/dist/server/wrangler.json`,JSON.stringify({assets:{directory:'../client'}}));
-    await promisify(execFile)(process.execPath,[new URL('../scripts/prepare-cloudflare.mjs',import.meta.url).pathname,'--patch-build'],{cwd:dir,env:{...process.env,CLOUDFLARE_D1_DATABASE_ID:'00000000-0000-4000-8000-000000000000'}});
+    await promisify(execFile)(process.execPath,[fileURLToPath(new URL('../scripts/prepare-cloudflare.mjs',import.meta.url)),'--patch-build'],{cwd:dir,env:{...process.env,CLOUDFLARE_D1_DATABASE_ID:'00000000-0000-4000-8000-000000000000'}});
     const config=JSON.parse(await readFile(`${dir}/dist/server/wrangler.json`));
     assert.deepEqual(config.assets,{directory:'../client',binding:'ASSETS'});
   } finally {await rm(dir,{recursive:true,force:true});}
@@ -80,8 +81,9 @@ test('production config patch retains static directory and supplies the fallback
 test('optional custom domain preserves existing routes and workers.dev; rejects URLs',async()=>{
  const {mkdtemp,mkdir,writeFile,readFile,rm}=await import('node:fs/promises');const {tmpdir}=await import('node:os');
  const {execFile}=await import('node:child_process');const {promisify}=await import('node:util');
+ const {fileURLToPath}=await import('node:url');
  const dir=await mkdtemp(`${tmpdir()}/jobradar-domain-`);
- const script=new URL('../scripts/prepare-cloudflare.mjs',import.meta.url).pathname;
+ const script=fileURLToPath(new URL('../scripts/prepare-cloudflare.mjs',import.meta.url));
  const env={...process.env,CLOUDFLARE_D1_DATABASE_ID:'00000000-0000-4000-8000-000000000000'};
  try{
   await mkdir(`${dir}/dist/server`,{recursive:true});

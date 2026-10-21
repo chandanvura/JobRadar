@@ -1,6 +1,7 @@
 import {test,mock} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,mkdtemp,writeFile,rm} from 'node:fs/promises';
+import {fileURLToPath,pathToFileURL} from 'node:url';
 import {JSDOM} from 'jsdom';
 import ts from 'typescript';
 import React,{act} from 'react';
@@ -9,18 +10,18 @@ globalThis.window=boot.window;globalThis.document=boot.window.document;
 const {createRoot}=await import('react-dom/client');
 boot.window.close();
 
-const directory=await mkdtemp(new URL('../node_modules/.jobradar-ui-',import.meta.url).pathname);
+const directory=await mkdtemp(fileURLToPath(new URL('../node_modules/.jobradar-ui-',import.meta.url)));
 async function component(name){
   const source=await readFile(new URL(`../components/${name}.tsx`,import.meta.url),'utf8');
   const compiled=ts.transpileModule(source,{compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
-  const path=`${directory}/${name}.mjs`;await writeFile(path,compiled);return import(path);
+  const path=`${directory}/${name}.mjs`;await writeFile(path,compiled);return import(pathToFileURL(path).href);
 }
 const {JobPagination,JOB_PAGE_SIZE}=await component('job-pagination');
 const {PrivateNotes}=await component('private-notes');
 const hookSource=await readFile(new URL('../lib/use-job-search.ts',import.meta.url),'utf8');
 const hookCode=ts.transpileModule(hookSource,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace("'./job-requirements.ts'","'../../lib/job-requirements.ts'");
 await writeFile(`${directory}/use-job-search.mjs`,hookCode);
-const {useJobSearch}=await import(`${directory}/use-job-search.mjs`);
+const {useJobSearch}=await import(pathToFileURL(`${directory}/use-job-search.mjs`).href);
 function setup(){
   const dom=new JSDOM('<div id="root"></div>',{url:'https://test.example'});
   globalThis.window=dom.window;globalThis.document=dom.window.document;globalThis.IS_REACT_ACT_ENVIRONMENT=true;
