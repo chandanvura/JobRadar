@@ -136,7 +136,9 @@ Open the repository's **Actions** tab for named jobs, step summaries and artifac
 
 Redundant monthly keepalive, new-company discovery, old coverage-audit and
 one-off Node audit workflows were removed. Full dependency auditing is part of
-required CI. Registry repair and Telegram setup remain explicit operational tools.
+required CI. Registry repair and Telegram setup remain explicit operational tools. Monthly
+minor/patch dependency updates are grouped by ecosystem; major upgrades need
+a separate compatibility review. Node typings stay on the Node 24 release line.
 
 The **Protect main** ruleset is active: PRs, passing `python`/`web`, up-to-date
 branches and resolved conversations are required; force push and deletion are

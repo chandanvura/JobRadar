@@ -1174,7 +1174,7 @@ function DashboardContent() {
               )}
               {active === "All Jobs" && (
                 <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
-                  India-wide discovery, including remote India. Automatic shortlisting is limited to Bengaluru and Hyderabad. Review each card before applying.
+                  Jobs in Bengaluru and Hyderabad. Review the posting date and JD evidence on each card before applying.
                 </section>
               )}
               {active === "Needs Review" && (
