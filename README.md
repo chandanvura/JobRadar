@@ -168,7 +168,9 @@ cleared private browser workspace; use Settings exports for that data.
 - [Historical readiness evidence](docs/PRODUCTION-READINESS.md): dated audits; historical observations are not current health claims.
 
 Employer feeds can change, credentials can expire, and free-tier limits apply.
-Adidas's full official feed remains unresolved until complete-source semantics
-and a real source-health check succeed. Do not replace it with an invented empty
-success or close its issue on an HTTP sample alone. No new company expansion or
-recruiter-data import is part of this maintenance scope.
+The production source check on 2026-10-21 returned **1,183 Adidas records** with
+no source error after the adapter's XML/live-pagination reconciliation; no jobs
+with a published target-city location were returned. This dated observation is
+not an uptime guarantee. Never replace a failed feed with an invented empty
+success or close a source issue on an HTTP sample alone. No new company
+expansion or recruiter-data import is part of this maintenance scope.
