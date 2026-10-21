@@ -210,3 +210,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing a maintenance repair.
 validation and known exceptions. Release notes are separate from production
 health evidence. External adoption has not been verified; no user, download or
 downstream-usage metrics are claimed.
+
+Public clones contain committed source and Git history. Deployment secret-store
+values and browser-private history are not part of the repository. See the
+[public-clone boundary](SECURITY.md#public-clone-boundary) for the dated scan scope,
+ignored local files and credential exposure response.
