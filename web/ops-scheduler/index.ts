@@ -92,7 +92,7 @@ export async function checkAndRecover(env:Env,now=Date.now()){
 
 export async function restoreInactiveSchedules(env:Env){
   if(!env.GITHUB_DISPATCH_TOKEN)return 0;
-  const allowed=new Set(["deploy-cloudflare.yml","backup-d1.yml","watchdog.yml","monthly-maintenance.yml","operational-health.yml","telegram-digest.yml"]);
+  const allowed=new Set(["deploy-cloudflare.yml","backup-d1.yml","watchdog.yml","operational-health.yml","telegram-digest.yml"]);
   const result=await github("/actions/workflows?per_page=100",env.GITHUB_DISPATCH_TOKEN) as {workflows:{path:string;state:string}[]};
   let restored=0;
   for(const workflow of result.workflows){

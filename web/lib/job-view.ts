@@ -9,6 +9,7 @@ export const defaultFreshness=(view:string)=>verifiedView(view)?'24 hours':'Any 
 export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,currentPosting:boolean) {
   if(['Saved','Applications'].includes(view))return true;
   if(!job.is_active)return false;
+  if((job.city || job.normalized_location) && !shortlistLocation(job))return false;
   if(view==='All Jobs')return !internshipRole(job);
   if(view==='Internships')return internshipRole(job);
   if(internshipRole(job))return false;

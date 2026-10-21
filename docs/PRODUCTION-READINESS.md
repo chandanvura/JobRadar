@@ -1,3 +1,9 @@
+> Current release (2026-10-21): see [maintenance scenarios](MAINTENANCE.md) and
+> [README](../README.md). The static React/Worker build replaces vinext, full npm
+> auditing runs in required CI, daily SQL backups are restore-tested, and the
+> hourly operational-health workflow replaces the former monthly keepalive.
+> The dated observations below are retained as historical evidence.
+
 # Production-readiness re-audit — 2026-09-30
 
 ## Scope and architecture

@@ -12,7 +12,7 @@ test('profile storage preserves owner keys and isolates other users',()=>{
 });
 test('untrusted search links normalize bounds and terms',()=>{
  const p=cleanSearch({titles:['Java','Java',null],locations:['Mars'],experienceMin:-5,experienceMax:'NaN'});
- assert.deepEqual(p.titles,['Java']);assert.equal(p.experienceMin,0);assert.equal(p.experienceMax,3);assert.deepEqual(p.locations,['Bengaluru','Hyderabad','Remote (India)','Other India']);
+ assert.deepEqual(p.titles,['Java']);assert.equal(p.experienceMin,0);assert.equal(p.experienceMax,3);assert.deepEqual(p.locations,['Bengaluru','Hyderabad']);
  assert.deepEqual(cleanSearch(null),cleanSearch({}));
 });
 test('search invites create a private workspace without sharing a profile id',async()=>{
@@ -95,7 +95,7 @@ test('final ingestion deactivates stale jobs only after every upload succeeds',a
  assert.match(source,/new_job_keys:newJobKeys/);
  assert.match(source,/ON CONFLICT\(started_at\) DO UPDATE/);
  assert.match(source,/company \|\| char\(31\) \|\| ats_provider/);
- assert.match(source,/city IN \('Bengaluru','Hyderabad','Remote \(India\)','Other India'\)/);
+ assert.match(source,/city IN \('Bengaluru','Hyderabad'\)/);
  assert.match(source,/dedupeCompanies\(companyResult\.results/);
  assert.match(source,/UPDATE companies SET enabled=0,updated_at=CURRENT_TIMESTAMP/);
  assert.match(source,/lower\(name\) \|\| char\(31\) \|\| ats_provider/);

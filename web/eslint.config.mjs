@@ -1,12 +1,7 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
-
-export default defineConfig([
-  ...nextCoreWebVitals,
-  {
-    // Browser-private profiles restore after hydration and paged lists reset
-    // when their filtered source changes; both are intentional effects.
-    rules: { "react-hooks/set-state-in-effect": "off" },
-  },
-  globalIgnores(["dist/**", ".next/**", "node_modules/**"]),
-]);
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
+export default tseslint.config(
+ {ignores:['dist/**','node_modules/**','.next/**']},
+ {files:['**/*.{ts,tsx}'],extends:[js.configs.recommended,...tseslint.configs.recommended],plugins:{'react-hooks':reactHooks},rules:{...reactHooks.configs.recommended.rules,'react-hooks/set-state-in-effect':'off'}},
+);

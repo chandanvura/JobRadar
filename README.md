@@ -1,359 +1,172 @@
 # JobRadar
 
-JobRadar is a production-oriented job discovery system for explicit 0–3 YOE roles posted within the last 24 hours in Bengaluru and Hyderabad. It checks a broad, continuously reviewed registry of official company career sources, preserves employer date precision, separates discovery candidates from eligible alerts, avoids duplicate Telegram delivery, and reports empty or failed sources honestly.
+**Verified early-career jobs in Bengaluru and Hyderabad, with private application tracking.**
 
-The production address is emitted and verified by the deployment workflow. A
-neutral custom domain can be attached without changing the application.
+[Open JobRadar](https://jobradar.chandanvura.workers.dev) ·
+[CI and operational pipelines](https://github.com/chandanvura/JobRadar/actions) ·
+[Security policy](SECURITY.md) · [Recovery runbook](ops/RECOVERY.md)
 
-## Included
+JobRadar collects jobs from the existing employer registry, checks the original
+job description, and separates verified matches from listings that need review.
+Public browsing is restricted to **Bengaluru/Bangalore and Hyderabad**. No new
+companies are added automatically. A lack of eligible jobs is a valid result;
+unknown dates or experience are never invented to fill the page.
 
-- React/TypeScript dashboard, Cloudflare Worker API, and D1 schema
-- Python adapters for Greenhouse (including employer JSON-LD posting dates), Lever, Jobvite XML, Ashby, paginated Workday/SmartRecruiters, and conservative JSON-LD career pages that follow only official ATS links
-- User-initiated Google searches across official Workday, Greenhouse, Lever, iCIMS, Jobvite, Ashby, and SmartRecruiters portals with a broader baked-in title set
-- Last-24-hour fallback discovery for limited sources through user-initiated LinkedIn, Indeed, Glassdoor, and Naukri searches without scraping those services or consuming D1 writes
-- Title, location, strictest-experience, skill, and freshness analysis
-- Immutable first-seen tracking and employer-relative date labels without invented timestamps
-- Employer/ATS/external-ID deduplication, database uniqueness constraints, idempotent scan history, and notification history
-- Telegram alerts with official application links
-- Redundant GitHub Actions scheduling, bounded retries, overlap protection, and manual dispatch
-- Automatic official-page ATS discovery, domain-aware concurrency, and fresh employer job details
-- Live run history, stale-run detection, per-source raw/candidate/eligible counts, notification history, and policy views
-- Browser-private Saved and application-stage tracking with JSON export
-- 700-company registry covering major enterprises, MNCs, startups and scaleups; [coverage notes](docs/COMPANY-COVERAGE.md)
+## Product rules
 
-Architecture: `freshness-gated GitHub scheduler → 8 stateless discovery workers → immutable shard artifacts → ingestion coordinator → Worker API → D1 → dashboard`. Discovery workers, coordinator/notifications, edge application, and database are independent execution or persistence boundaries. Scans are due every 150 minutes from the previous scan start, backed by hourly GitHub and five-minute Cloudflare recovery checks. A watchdog dispatches only when the latest scan start is at least 150 minutes old and none is running. Every scan uses one source revision; failed discovery shards get one bounded retry. The API and frontend intentionally share one edge deployment because separating them would add free-tier requests and deployment complexity without removing the scan bottleneck. Eligible jobs scoring 65+ are Telegram candidates. Failed deliveries remain retry candidates. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the HLD, LLD, contracts, load controls, and failure model.
+- Verified recommendations require employer posting evidence within 24 hours,
+  explicit experience compatible with **0–3 years**, and a target city.
+- Show the JD evidence behind experience decisions and distinguish mandatory,
+  preferred, conditional and conflicting requirements.
+- Keep unknown or conflicting requirements reviewable, without treating a junior
+  title as proof of experience. Leadership exclusions remain enforced.
+- All Jobs includes older/reviewable target-city listings; freshness and eligibility
+  labels explain why a job does not enter the verified recommendation view.
+- Other-city source records may remain internally for source reconciliation. They
+  are excluded from public live browsing and normal job views. Historical private
+  Saved/Applications entries remain accessible even if their job disappears.
+- Personal preferences, resumes, notes, saved jobs and application history stay in
+  this browser. Export a private backup from Settings before clearing storage.
 
-## Local dashboard
+## Architecture
 
-Requires Node.js 22.13+ and GNU `timeout` (Linux/WSL).
+| Component | Responsibility |
+|---|---|
+| React + TypeScript | Search, ranking, evidence, accessible navigation and browser-private tools |
+| Vite | Build static frontend assets and the small API Worker separately |
+| Cloudflare Worker + D1 | Public catalogue, indexed pagination, authenticated ingestion and deduplication |
+| Python collectors | Employer adapters, date/experience/location validation and bounded source retries |
+| GitHub Actions | CI, eight discovery shards, validated finalization, backup, deployment and diagnostics |
+| Separate Cloudflare Cron Worker | Independent recovery checks and allowlisted inactivity recovery |
 
-```bash
+The interface uses static assets rather than server-rendered pages, React Server
+Components or runtime image optimization. Next/vinext, the unused framework
+plugins and the custom braces installation patch were removed. Source HTML is
+extracted into plain text; it is never injected into the page as employer HTML.
+
+The application uses the same existing D1 database and browser-storage keys.
+There is no new cloud account, paid service or private-data migration.
+
+## Reliability behavior
+
+| Failure | Behavior |
+|---|---|
+| One feed fails or changes while paginating | Retry within bounds, isolate the source and keep failure visible; an incomplete snapshot must not retire valid jobs |
+| A scan is missed | Freshness gate and independent recovery dispatch one scan when due, without overlapping active runs |
+| Repeated scan failure | Both recovery schedulers apply a 30-minute cooldown after completed workflows |
+| D1 fails or exhausts its daily quota | Public browsing can use the dated static catalogue; ingestion/notification writes fail honestly and quota-aware recovery pauses |
+| Live snapshot capture fails | Preserve the previous valid snapshot; refuse an empty replacement when no valid source exists |
+| SQL export is unusable | Reject it before upload unless an isolated SQLite restore passes schema, integrity, foreign-key and query checks |
+| A refresh races or a tab becomes stale | Cancel obsolete loads, avoid mixed live/backup catalogues, retain private tracking and its recovery copy |
+| A dependency becomes vulnerable | Dependency alerts and tested PRs; no unrestricted force upgrade or automatic production merge |
+
+Static fallback protects browsing during a D1 outage, not a Cloudflare-wide
+outage. It can be stale. SQL snapshots do not back up private browser history.
+No one-year zero-maintenance or continuous-uptime guarantee is claimed.
+
+## Local development
+
+Use **Node 24 LTS**, Python 3.12 and npm. Application packages are pinned and
+`package-lock.json` is committed. Start from a clean installation:
+
+```sh
+python -m pip install -r requirements-dev.txt
 cd web
-npm ci
+npm ci --no-audit --no-fund
 npm run build
-# Initialize an empty local database; these commands never contact production.
-for migration in drizzle/*.sql; do
-  npx wrangler d1 execute jobradar-db --local --config dist/server/wrangler.json --file "$migration"
-done
+npm run db:migrate:local
 npm run dev
 ```
 
-The dashboard reads `GET /api/dashboard` and automatically refreshes every five minutes while visible. A fresh local database starts empty. `npm run test:api` creates an isolated in-memory test database, applies all migrations and verifies the compiled Worker without production credentials.
+`npm run dev` uses Wrangler's **local** runtime on `127.0.0.1:8787`; it does not
+connect to the production database. For optional UI hot reload, leave it running
+and use `npm run dev:ui` in another terminal. Vite proxies API requests to that
+local Worker. Rerun the build when verifying the packaged application.
 
-## Local scraper
+Authenticated local ingestion requires a local-only `JOBRADAR_INGEST_SECRET` in
+`web/.dev.vars` (ignored by Git). Never copy a production token into a source
+file. An empty local database is expected until local fixtures are loaded.
 
-Requires Python 3.12+.
+Build and frontend commands are Node-based and do not require the former WSL
+shell-wrapper setup. The all-in-one harness below still requires Bash and GNU
+`timeout`; individual npm/Python checks can be run directly on Windows.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python -m scraper.main
+## Validation
+
+```sh
+bash scripts/verify-harness.sh all
 ```
 
-Without `JOBRADAR_API_URL`, this performs a safe discovery run without storage or notifications.
+The harness fails on Python regression/security/dependency checks, **full npm and
+production npm high-severity audits**, the production build, web regressions,
+compiled Worker/local D1 integration, lint, or UI types. Full audits include
+developer tools; their exposure is not dismissed simply because they are absent
+from the deployed Worker.
 
-## Telegram setup
+Local release validation on 2026-10-21 passed **945 Python tests**, **217 web
+tests**, compiled Worker/D1 integration, build, lint and UI types. Both full and
+production npm audits reported **zero vulnerabilities**; Bandit and pip-audit passed.
+CI and deployment are separately verified for the published commit.
 
-1. Create a bot with `@BotFather` and save its token as the GitHub Actions repository secret `TELEGRAM_BOT_TOKEN`.
-2. Send `/start` to your bot from the Telegram account that should receive alerts.
-3. In GitHub Actions, run **Telegram destination setup**. The bot will privately message you your numeric chat ID; it does not appear in Actions logs.
-4. Save that number as the GitHub Actions repository secret `TELEGRAM_CHAT_ID` (never the bot's ID or username).
-5. Run **JobRadar free-tier scan** once and verify the finalizer says `Telegram health check: bot authentication and chat validation passed.`
+Coverage includes hostile/malformed/chunked requests, byte limits without
+Content-Length, source snapshot changes, rejected finalization, notification
+replay, quota deferral, static fallback, bounded pagination, private-history
+recovery and a 7,000-job dashboard interaction harness. Database telemetry reports
+measured reads/writes, not assumed percentage savings across SQLite versions.
 
-The configured chat ID must be saved permanently. Telegram retains incoming `/start` updates for at most 24 hours, so automatic recovery from an incorrect ID cannot keep alerts working indefinitely.
+GitHub-managed CodeQL scans Actions, Python and JavaScript/TypeScript on changes
+and weekly. Dependency graph, Dependabot alerts/security-update proposals,
+malware alerts, private vulnerability reporting and secret/push protection are
+enabled. A passing scan is evidence, not a proof that all vulnerabilities are absent.
 
-Never commit these values.
+## Pipelines and operations
 
-## Required GitHub secrets
+Open the repository's **Actions** tab for named jobs, step summaries and artifacts.
 
-| Secret | Purpose |
+| Pipeline | Purpose / cadence |
 |---|---|
-| `JOBRADAR_INGEST_SECRET` | Long random value shared with the Worker |
-| `TELEGRAM_BOT_TOKEN` | Telegram bot credential |
-| `TELEGRAM_CHAT_ID` | Destination chat |
-| `CLOUDFLARE_API_TOKEN` | Scoped Workers Scripts and D1 deployment credential |
-| `CLOUDFLARE_ACCOUNT_ID` | Optional; the deployment resolves it when the token can access exactly one account |
-
-The deployment workflow installs the ingest secret on the Worker. Generate one with `openssl rand -hex 32`.
-
-## Adding companies
-
-Edit `companies/companies.csv`:
-
-```csv
-company_name,careers_url,ats_provider,ats_identifier,priority,enabled
-Example,https://example.com/careers,greenhouse,example,5,true
-```
-
-The identifier is the company/board segment from the official ATS URL. Company names and ATS provider/identifier pairs must both be unique. Verify each source and test small batches before expanding.
-
-## Tests
-
-```bash
-python -m pytest -q
-cd web && npm test
-npm audit --omit=dev
-```
-
-## Independent Cloudflare deployment
-
-The standalone application lives under `web/` and does not require ChatGPT Sites at runtime. The **Deploy independent JobRadar** workflow creates an Asia-Pacific D1 database when needed, applies versioned migrations, builds the vinext application, deploys the Worker, configures protected ingestion, and verifies the deployment.
-
-Changes under `web/` deploy automatically from `main`; the workflow can also be run manually. The scheduler checks every 30 minutes and the freshness gate permits scans every 150 minutes from the previous scan start (about 9–10 scans/day). Verify the **Deploy independent JobRadar** and **JobRadar free-tier scan** workflows in GitHub Actions after changing infrastructure or matching logic.
-
-## Matching guarantees
-
-- Bengaluru or Hyderabad and a supported role are required.
-- Only verifiable 0–3 YOE requirements are accepted; skills are optional. Unknown experience remains visible in All Jobs but is not alerted.
-- Senior engineer titles may qualify when the requirement is explicitly within policy. Leadership titles such as manager, director, architect, principal, and staff are rejected. Unknown experience and ranges exceeding 3 YOE are rejected; 1+ and 2+ are accepted.
-- An employer-supplied timestamp within 24 hours or an explicit employer “posted today” label is mandatory for alerts.
-- Skills improve ranking but are not mandatory.
-- `posted_at` is employer-supplied only; relative labels remain labels; `first_seen_at` is never overwritten.
-- Applicant counts and hiring signals are never guessed.
-
-## Expansion
-
-Add ATS adapters only after source-level job counts and fixtures prove they work. Workday uses full pagination and tenant-specific configuration. Browser-rendered and custom pages remain last-resort adapters. LinkedIn, Naukri, and Instahyre may be used only through permitted APIs or user-authorized exports; never bypass authentication, CAPTCHAs, access controls, or anti-bot protections.
-
-Each distributed worker refreshes its deterministic share of listing feeds, then fetches details only for target-city engineering roles. Official pages that link Greenhouse, Lever, Ashby, SmartRecruiters, or Workday are automatically indexed into the structured adapter. Per-worker provider limits and separate Workday listing/detail buckets bound each process, and employer details are read fresh on each scan. Slow custom pages receive one bounded retry per scan; structured feeds retain transient retries. The coordinator refuses incomplete or duplicate shard ownership and finalizes a run only after every ingestion batch succeeds.
-
-## Troubleshooting
-
-- `401 Unauthorized`: Worker and GitHub ingest secrets differ.
-- No Telegram alert: message the bot first and verify the chat ID.
-- One company fails: verify the ATS identifier; other companies continue.
-- No matching jobs: inspect location, title, seniority, and experience rules.
-- A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and the latest scan start is at least 150 minutes old. GitHub may delay both schedules; no GitHub Actions schedule is guaranteed to run at an exact minute.
-- An untouched public repository may have scheduled workflows disabled after 60 days of inactivity. Monthly maintenance uploads a read-only operational report; it does not push to protected `main` or keep the repository active. The independent Cloudflare dispatcher can restore allowlisted workflows disabled for inactivity when its token is valid. Check Actions if that dispatcher is unavailable.
-
-### Independent Cloudflare recovery schedule
-
-The deployment also creates a small Cloudflare Cron Worker (`jobradar-ops-scheduler`) on the existing free account. It checks every five minutes, avoids duplicate running scans, and dispatches a GitHub scan only if the latest scan start is at least 150 minutes old. If GitHub disables the scan workflow for inactivity, it re-enables it; an intentionally disabled workflow remains disabled. If the production health endpoint blocks the check, it uses completed GitHub finalizer jobs. Its scheduler is independent of GitHub's scheduled-event delivery.
-
-To activate it, create a fine-grained GitHub personal access token restricted to **this repository** with **Actions: Read and write** permission. Save it as the repository Actions secret `JOBRADAR_DISPATCH_TOKEN`, then rerun **Deploy independent JobRadar** once. The deployment copies it into the Cloudflare Worker's secret store. Set the token expiration beyond the intended unattended period and rotate it before expiry. Do not put the token in a URL, commit, issue, or chat. Without this credential, the Cloudflare Worker is deployed but dormant; the existing GitHub scheduler and watchdog continue working.
-
-The reliability path uses deterministic checks and retries. Free hosted AI services have rate limits and can produce incorrect fixes, so they are not allowed to edit code, change job eligibility, or deploy automatically. This keeps confirmed matching and alerts predictable without a ChatGPT dependency.
-
-## Cost protection
-
-The system avoids paid APIs, proxies, browsers, and continuously running servers. D1 ingestion uses conditional upserts: unchanged job records cause zero row writes; company check timestamps refresh on each scan, while a compact final manifest deactivates only jobs actually missing from a successful scan. Code pushes deploy safely but never start a full discovery scan automatically. Monitor Actions duration and Cloudflare requests/database usage while expanding the company registry.
-
-### Free D1 outage fallback
-
-Production deployments capture the complete public job catalog into a static Worker asset before deploying. If a public dashboard or catalog query fails (including a D1 daily quota error), the portal automatically serves that snapshot without another database. Personal saved jobs, notes, resume and application tracking remain in the browser. The portal clearly labels backup mode and its capture time; listings, source health and notifications may be stale. A subsequent refresh retries D1 and returns to live data when it recovers.
-
-The snapshot refreshes on deployment, not on every scan. It is a browsing continuity backup, not a SQL restore point or a queue for new ingestion. Ingestion and Telegram recording are never reported successful when their database writes fail. The separate scheduled D1 SQL backup remains the recovery mechanism. This fallback does not bypass Workers request/CPU limits or a Cloudflare-wide outage.
-
-Deployments preserve the prior public snapshot if live capture fails, and fail rather than publish an empty backup if neither source is valid. `/api/dashboard?source=backup` explicitly serves the packaged snapshot for read-only verification. `/backup/catalog.json` contains only the already-public catalog API data; never add private profile or credential data to it.
-
-
-## Unattended operation and availability target
-
-The deployment workflow now refreshes the public fallback every day at 01:17 UTC
-(06:47 IST), after the first scheduled scan. GitHub schedules are best effort; a
-failed capture preserves the previous valid snapshot. The first emergency
-snapshot is explicitly marked partial. A full snapshot requires D1 to be
-available. No payment plan or paid dependency was added.
-
-The Cloudflare recovery Worker samples the portal HTML and independent backup
-API every five minutes and emits structured `availability` logs. With a valid
-`JOBRADAR_DISPATCH_TOKEN`, it restores known operational workflows disabled
-for inactivity, while leaving manually disabled workflows alone. Quota-aware
-health returns HTTP 503 with a reset time and `Retry-After`; schedulers stop
-dispatching expensive scans while the daily quota is exhausted.
-
-The **99.9% target is not a measured or guaranteed SLA**. Over 30 days its error
-budget is 43 minutes 12 seconds. Portal availability and fresh-job coverage
-are separate: the saved catalog can remain usable while ingestion is blocked.
-Free Workers/D1 quotas, employer-feed changes, provider outages and credential
-expiry still apply. Five-minute probes can miss short outages; their logs
-are evidence of samples, not a full-month uptime percentage. Recovery token
-expiry must extend beyond the intended unattended period.
-
-### Operational safeguards
-
-| Safeguard | Behavior and limit |
-|---|---|
-| Hourly operational check | At minute 23, check portal/static-backup HTTP status and content type, public pipeline health, completed-scan freshness and backup artifact availability. Missing evidence fails visibly. |
-| Failure thresholds | Fail for a missing/completed scan at least 5 hours old, failed sources, unavailable database/ingestion, exhausted quota, backup at least 36 hours old, or missing/expired/empty backup artifact. |
-| SQL restore verification | Daily backup must restore into disposable in-memory SQLite, pass schema/integrity/foreign-key checks and query row counts before compression/upload. Input is bounded to 250 MB. This does not prove a production D1 restore. |
-| Recovery storm protection | Both schedulers wait 30 minutes after a completed workflow, including failure/cancellation, while preserving active-run and quota guards. |
-| Evidence retention | Hourly JSON reports: 7 days. Monthly reports and SQL backups: 90 days. Reports are artifacts, never automatic commits to `main`. |
-| Dependency maintenance | Monthly Dependabot PRs for Actions, Python and npm; no automatic merge. Existing CI and branch rules apply. |
-
-The **Protect main** ruleset requires PRs, successful `python` and `web` GitHub
-Actions checks, up-to-date branches and resolved conversations. It blocks force
-pushes/deletion, requires zero approvals for solo maintenance, and has no bypass
-actors. Routine maintenance must not work around those protections.
-
-Enable GitHub Actions failure notifications in your account. Operational check
-failures produce a step summary and JSON artifact; this does not configure or
-verify email/Telegram incident delivery. GitHub checks cannot detect their own
-scheduler disappearing. Cloudflare recovery logs are separate evidence, and a
-provider-independent uptime service is still needed for independent outage alerts.
-
-SQL artifacts do **not** back up browser-private applications, notes or resumes.
-Export private backups from Settings before clearing browser storage and verify
-imports in another browser profile. No unattended server-side recovery for that
-private history is claimed.
-
-Run the offline reliability harness with `bash scripts/verify-harness.sh all`.
-The October 21 hardening passed **944 Python tests, 224 web tests**, compiled
-Worker/local D1 integration, production build, lint, UI types, Python security
-review, Python dependency audit and production npm audit. Read-only production
-HTML/static-backup probes and pipeline health passed at implementation time;
-future uptime, all live employer feeds, notification receipt and production D1
-restore remain unverified. These safeguards take effect only after the PR is
-merged; scheduler Worker changes also require an approved deployment.
-
-See [the production-readiness audit](docs/PRODUCTION-READINESS.md) and
-[recovery instructions](ops/RECOVERY.md) for incident diagnosis, isolated restore,
-release/rollback steps and remaining limitations.
-
-Collector health checks require `curl` on PATH. GitHub's Ubuntu runners include it; local collector/watchdog runs must install it too. Health uses the same bounded curl transport as deployment verification and accepts explicit HTTP 503 quota responses.
-
-
-### Repeatable reliability harness
-
-On Linux/WSL with Python 3.12, Node 22 and GNU timeout, install dependencies
-from the lock files and run the same entry point used by GitHub validation:
-
-```bash
-python -m venv .venv
-.venv/bin/python -m pip install -r requirements-dev.txt
-npm --prefix web ci --no-audit --no-fund
-JOBRADAR_HARNESS_PYTHON="$PWD/.venv/bin/python" bash scripts/verify-harness.sh all
-```
-
-Use `python` or `web` instead of `all` to select one suite. Each check has a
-10-minute deadline, fails immediately on errors, and prints named START/PASS/FAIL
-results. CI runs the two suites in parallel on fresh runners. The harness does
-not deploy, dispatch collectors or write production D1. Worker integration uses
-fresh local Miniflare databases; collector faults use fixtures.
-
-Coverage includes malformed/duplicate inputs, concurrent imports, notification
-replay, migrations, pagination, quota and static fallback, network failures,
-retry bounds, freshness boundaries and deferred finalization. Passing these
-checks is release evidence, not a promise of future uptime or employer coverage.
-The production-only npm audit is a required gate. The October 4 `braces` development-tool advisory is locally mitigated by a
-hash-checked postinstall depth patch and exploit regression tests. Upstream has
-no patched release, so full npm audit still reports the affected version; no
-advisory is suppressed. Do not use `npm ci --ignore-scripts`: the security tests
-will reject an unpatched installation. The patch rejects nesting at 128 levels,
-retains ordinary glob behavior, and fails installation on unexpected upstream
-source/version changes. Original MIT licensing is retained under web/security.
-Remove the patch only after verifying a safe upstream release.
-
-## Lean personal feed
-
-The feed now separates **match** (title, exact skill aliases, target experience
-and location) from **opportunity priority** (match, smooth age decay and source
-quality). Ranking is calculated once per catalog/profile/tracking change;
-feedback is bounded and close scores interleave companies and role families.
-Duplicate cards group conservatively without merging database or private
-application records. Career tools collapse and resume/settings load on demand.
-See [the lean-engine audit and algorithm notes](docs/LEAN-ENGINE.md) for weights,
-changed modules, security decisions, fixtures and verification limits.
-
-## Internships, fresher roles and custom domains
-
-**Internships** is a primary section for technical internships/apprenticeships;
-full-time experience preferences do not suppress it. **Fresher Roles** separately
-shows full-time jobs accepting zero experience or explicit graduate/trainee roles
-without a stated minimum. Jobs requiring 1–3 years stay in the broader job feed.
-Internships show the completed scan time and current-date listing count; refreshing
-the page reloads stored data and does not initiate a four-hour employer scan.
-
-A custom hostname can be enabled later using the optional GitHub Actions variable
-`JOBRADAR_CUSTOM_DOMAIN`. No hostname is attached until you supply one and configure
-its zone. See [custom-domain setup and private-data migration](docs/CUSTOM-DOMAIN.md).
-
-### D1 write usage
-
-Ingestion reads existing employer/job records first. Unchanged jobs produce no writes; changes update only affected columns, avoiding unnecessary AUTOINCREMENT and index writes. Real company check timestamps, eligibility changes, reactivation, retirement, new jobs and alerts are still saved. `last_seen_at` on unchanged jobs remains the last persisted sighting; the completed scan manifest establishes source coverage. Each ingestion response reports `d1_rows_written`, and scan logs sum those counters. This measures ingestion only, not account-wide usage or notification/maintenance writes. The 150-minute scan cadence is unchanged.
-
-### Stable large-catalog browsing
-
-Job results render in pages of 30, with previous/next and a page selector so every match remains reachable. Save/stage/note updates preserve the selected page; changing search filters resets it. Refresh keeps the existing complete catalog visible until the replacement is fully loaded. Ranking order advances on catalog refresh rather than reordering each minute. Empty searches do not allocate a lexical index. Catalog search builds and queries its index in a background Web Worker, with bounded description transport, preserved requirement evidence, cancellation and stale-response protection; requirement patterns and parsed clauses are reused. Notes persist after 350 ms idle and flush on blur, page exit and unmount. The UI interaction suite checks bounded rendering with 10,000 jobs, page retention, filter resets, count changes, focus and note persistence.
-
-### Catalog loading and interaction harness
-
-The browser requests live jobs in validated keyset pages of up to 500 (the API's
-compatibility default remains 100). Full requirement parsing runs in a Web Worker
-in batches of 128; a yielding fallback keeps older browsers usable. Worker
-failures, cancellation and search deadlines are bounded. Refresh preserves the
-current results until replacement analysis is complete. Company cards and tables
-share 30-company pagination so hidden mobile markup does not mount all 700 sources.
-
-The web harness mounts the full dashboard with 7,000 jobs and 700 companies,
-checks navigation, bounded rendering, retained pages and refresh controls, and
-prints navigation timings. A real worker test parses 2,000 full descriptions while
-checking that the main event loop continues running. Worker failure/abort and
-search stalls are injected. Timings describe the test environment; DOM and request
-bounds are the release assertions, not a guarantee about every device or network.
-
-### Experience evidence and recommendation feedback
-
-Both the collector and browser use shared experience regex rules and review
-fixtures. Experience headings, decimal years, month ranges and mixed month/year
-ranges retain their employer wording. Preferred experience is separate from
-required constraints; company history and degree duration are excluded. Conditional
-education/experience alternatives and contradictory bounds need review. The
-strictest stated requirement wins; an incomplete JD excerpt cannot relax a
-stricter scan result. Fresh/active/city/role and 0–3-year alert gates remain in place,
-including the existing explicit 1+/2+ minimum policy. Recommendations never replace
-an empty verified feed with unverified leads.
-
-Each card exposes experience evidence and a private recommendation-feedback menu.
-Good fit, saved/applied choices and role/skill feedback help rank future matches.
-Ignored overrides a saved inference. Experience reports hide that job from verified
-recommendations and place it in Needs Review, without teaching the model to reject
-an entire role family. Feedback can be cleared in All Jobs. The model needs at
-least 12 distinct examples including four positives and four negatives; URL
-trackers do not create extra examples, recent choices have a 90-day half-life,
-and the learned adjustment stays within ±5 points. Rejections, passive views,
-notes and experience/location reports do not count as preference training.
-Everything remains private to the current browser/workspace and is included in
-tracking exports; learning never changes employer requirements or alert eligibility.
-
-### Posting proof and private application recovery
-
-Recommendations respect chosen role families, experience bounds, target cities and
-current employer posting evidence. Future/invalid timestamps and negative relative
-ages never certify freshness. Date-only evidence expires at the India day boundary;
-relative ages advance from their observation time. The portal rechecks freshness
-on focus and every minute, and keeps stale records available for review.
-
-Live catalogue requests have a 10-second request budget and a 45-second overall
-live budget before switching to the labelled saved catalogue. Refresh failure does
-not clear the displayed catalogue or private application history.
-
-Application changes merge the latest workspace state before saving. Stage changes
-keep a timestamped history, another tab's records are retained, and a previous good
-tracking copy can recover a corrupted primary copy. A private-backup restore merges
-tracking by its update time instead of erasing newer applications. Storage failures
-show an explicit warning; export tracking before leaving if that warning appears.
-History remains local to this browser: export a private backup before clearing
-browser data or moving devices. Recovery copies cannot survive browser-data removal.
-
-### Bounded company discovery
-
-A separate daily workflow finds candidate company boards from Freehire. It makes
-at most four search requests. It does not use production credentials, change the
-registry, publish jobs, or send alerts. It requires a target city in the location
-text and removes known board identities. Candidates remain disabled until an
-operator verifies the official employer link and the actual feed. Deferred
-candidates remain in the report. See
-[the decision log](docs/decisions/2026-10-19-discovery-and-language.md).
-
-Run an offline review with existing public API responses:
-
-```bash
-python -m scripts.discover_companies --input java.json devops.json --output artifacts/company-discovery/candidates.json
-```
-
-The edited portal messages use short sentences and direct instructions based on
-ASD-STE100 principles. The sentence checks do not certify the full vocabulary.
-Employer descriptions are displayed as readable text. Their original content
-remains available for requirement extraction and stored application records.
+| JobRadar validation | Required `python` and `web` checks for each PR and `main` push |
+| JobRadar free-tier scan | Check every 30 minutes; a gate permits a full scan after 150 minutes from the prior scan start |
+| JobRadar scan watchdog | Secondary hourly recovery; Cloudflare checks independently every five minutes |
+| JobRadar operational health | Hourly read-only website, source, freshness and backup evidence; retain JSON for seven days |
+| Backup JobRadar database | Daily SQL snapshot, disposable restore verification and 90-day artifact retention |
+| Deploy independent JobRadar | Validated code release plus daily public snapshot refresh |
+| Clean disposable JobRadar storage | Retire disposable caches/scan artifacts, preserving SQL backups |
+| JobRadar Telegram daily update | Existing daily summary; eligible notifications are deduplicated during finalization |
+
+Redundant monthly keepalive, new-company discovery, old coverage-audit and
+one-off Node audit workflows were removed. Full dependency auditing is part of
+required CI. Registry repair and Telegram setup remain explicit operational tools.
+
+The **Protect main** ruleset is active: PRs, passing `python`/`web`, up-to-date
+branches and resolved conversations are required; force push and deletion are
+blocked. Zero approvals supports solo maintenance. No bypass actors are configured.
+
+Production uses GitHub/Cloudflare secret stores for `CLOUDFLARE_API_TOKEN`, account
+configuration, `JOBRADAR_INGEST_SECRET`, and Telegram delivery configuration. The
+independent dispatcher also needs a valid scoped `JOBRADAR_DISPATCH_TOKEN` with
+repository Actions access. Secret values never belong in issues, URLs or commits.
+
+Operational health fails if the completed scan is missing/at least five hours
+old, sources fail, database/ingestion is unavailable, quota is exhausted, or the
+latest successful backup is at least 36 hours old/missing/expired/empty. Enable
+GitHub Actions failure notifications in your account. Code cannot verify that
+email/Telegram incident notifications were received merely by enabling a workflow.
+
+## Release, recovery and limits
+
+Use the protected PR path and verify the deployed site after release. Never infer
+production success from CI alone. Database schema changes need a fresh backup
+and staging verification. Restoring SQL or rolling back code does not recover a
+cleared private browser workspace; use Settings exports for that data.
+
+- [Recovery and rollback](ops/RECOVERY.md): exact checks, backup validation and staging-first recovery.
+- [Maintenance scenarios](docs/MAINTENANCE.md): support horizon, failure models and pipeline ownership.
+- [Architecture](docs/ARCHITECTURE.md): collection, ingestion and data boundaries.
+- [Historical readiness evidence](docs/PRODUCTION-READINESS.md): dated audits; historical observations are not current health claims.
+
+Employer feeds can change, credentials can expire, and free-tier limits apply.
+Adidas's full official feed remains unresolved until complete-source semantics
+and a real source-health check succeed. Do not replace it with an invented empty
+success or close its issue on an HTTP sample alone. No new company expansion or
+recruiter-data import is part of this maintenance scope.

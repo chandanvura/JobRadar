@@ -9,7 +9,7 @@ test('nationwide and explicit India remote are discovery only; shortlist stays i
  const base={title:'Java Engineer',is_active:1,is_eligible:1,experience_min:1,experience_max:2,experience_label:'1–2',eligibility_reason:'Eligible'};
  for(const [city,normalized_location,allowed] of [['Bengaluru','Bengaluru',true],['Hyderabad','Hyderabad',true],['Remote (India)','Remote (India)',false],['Other India','Pune, India',false]]){
   const job={...base,city,normalized_location};
-  assert.equal(matchesCareerView(job,'All Jobs',0,3,true),true);
+  assert.equal(matchesCareerView(job,'All Jobs',0,3,true),allowed);
   assert.equal(matchesCareerView(job,'Recommended',0,3,true),allowed);
   assert.equal(Boolean(enforceShortlistLocation(job).is_eligible),allowed);
   assert.equal(matchesCareerView(job,'Applications',0,3,true),true);

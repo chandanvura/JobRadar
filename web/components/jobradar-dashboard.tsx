@@ -1,6 +1,6 @@
 "use client";
 import {sourceFreshness} from '@/lib/job-trust';
-import {discoveryLocations,locationMatches,enforceShortlistLocation} from "@/lib/location-policy";
+import {shortlistCities,locationMatches,enforceShortlistLocation} from "@/lib/location-policy";
 import {portalMessages} from "@/lib/portal-messages";
 import {employerText} from "@/lib/employer-text";
 import {experienceDecision,experienceExplanation} from "@/lib/job-experience";
@@ -307,9 +307,9 @@ const defaultPreferences: SearchPreferences = {
   skills: [],
   experienceMin: 0,
   experienceMax: 3,
-  locations: ["Bengaluru", "Hyderabad", "Remote (India)", "Other India"],
+  locations: ["Bengaluru", "Hyderabad"],
 };
-const TARGET_CITIES = discoveryLocations;
+const TARGET_CITIES = shortlistCities;
 const DEFAULT_JOB_TITLES = DEFAULT_SEARCH_TITLES;
 const OFFICIAL_ATS_DOMAINS = "site:myworkdayjobs.com OR site:greenhouse.io OR site:lever.co OR site:icims.com OR site:jobs.jobvite.com OR site:ashbyhq.com OR site:smartrecruiters.com";
 const AGGREGATOR_DOMAINS = [
@@ -1854,7 +1854,7 @@ const JobCard = memo(function JobCard({
             <summary className="cursor-pointer text-xs font-semibold">Track & give feedback</summary>
           {isInternship(job) && (
             <a
-              href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in (recruiter OR \"talent acquisition\" OR \"campus hiring\") \"${job.company}\"`)}`}
+              href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in (recruiter OR "talent acquisition" OR "campus hiring") "${job.company}"`)}`}
               target="_blank"
               rel="noreferrer"
               className="mt-2 flex h-10 items-center justify-center gap-2 rounded-xl border bg-card text-xs font-bold text-success"
@@ -2075,10 +2075,10 @@ function OutreachView({
   let domain = "";
   try {
     domain = company ? new URL(company.careers_url).hostname.replace(/^www\./, "") : "";
-  } catch {}
-  const recruiterQuery = `site:linkedin.com/in (recruiter OR \"talent acquisition\" OR \"campus hiring\") \"${company?.name || ""}\"`;
-  const referralQuery = `site:linkedin.com/in \"${company?.name || ""}\" (${role}) (${locationText})`;
-  const emailQuery = `${domain ? `site:${domain} ` : ""}(\"careers@\" OR \"jobs@\" OR \"talent@\" OR \"recruiting@\") \"${company?.name || ""}\"`;
+  } catch { /* Keep the existing local state when optional data is unavailable. */ }
+  const recruiterQuery = `site:linkedin.com/in (recruiter OR "talent acquisition" OR "campus hiring") "${company?.name || ""}"`;
+  const referralQuery = `site:linkedin.com/in "${company?.name || ""}" (${role}) (${locationText})`;
+  const emailQuery = `${domain ? `site:${domain} ` : ""}("careers@" OR "jobs@" OR "talent@" OR "recruiting@") "${company?.name || ""}"`;
   const subject = `Interest in ${role} at ${company?.name || "your company"}`;
   const recruiterMessage = `Hi [Name], I’m interested in the ${role} opportunity at ${company?.name || "your company"}${selectedJob ? ` (${selectedJob.application_url})` : ""}. My background includes [2 relevant skills] and [one measurable result]. I have applied through the official careers page. If you handle this role, could you please share any guidance on the process? Thank you.`;
   const referralMessage = `Hi [Name], I’m exploring the ${role} role at ${company?.name || "your company"}${selectedJob ? ` (${selectedJob.application_url})` : ""}. I noticed your experience at the company and would value a quick perspective on the team. If my background in [relevant skills] appears suitable, would you be comfortable considering a referral? No worries if not—thank you for your time.`;

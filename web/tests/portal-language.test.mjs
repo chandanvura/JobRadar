@@ -15,3 +15,11 @@ test('employer HTML is readable text while the source remains unchanged',()=>{
  assert.equal(employerText('&#x110000; &#55296; text'),'text');
  assert.equal(employerText('&lt;script&gt;example&lt;/script&gt;'),'<script>example</script>');
 });
+
+test('employer text decodes entities once and handles quoted attributes without executing markup',()=>{
+ assert.equal(employerText('&amp;lt;script&amp;gt;'), '&lt;script&gt;');
+ assert.equal(employerText('&#38;lt;b&#38;gt;'), '&lt;b&gt;');
+ assert.equal(employerText('<p title="a > b">Java</p><script type="text/javascript">private()</script><style>body{}</style>'), 'Java');
+ assert.equal(employerText('<SCRIPT>private()<\/SCRIPT><p>0&ndash;2 years</p>'), '0–2 years');
+ assert.equal(employerText('<!-- hidden -->Cloud<br/>AWS'), 'Cloud\nAWS');
+});

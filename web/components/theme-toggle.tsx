@@ -12,7 +12,7 @@ export function ThemeToggle() {
     const next = !dark;
     document.documentElement.dataset.theme = next ? "dark" : "light";
     setDark(next);
-    try { localStorage.setItem("jobradar-theme", next ? "dark" : "light"); } catch {}
+    try { localStorage.setItem("jobradar-theme", next ? "dark" : "light"); } catch { /* Keep the existing local state when optional data is unavailable. */ }
   }
   return (
     <button type="button" onClick={toggle} aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}

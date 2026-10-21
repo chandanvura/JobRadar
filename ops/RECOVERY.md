@@ -16,15 +16,14 @@ scan is missing/at least five hours old, sources report failure, database or
 ingestion is unavailable, quota is exhausted, the latest successful backup is
 at least 36 hours old, or its artifact is absent/expired/empty. Missing evidence
 is a failure, not a healthy result. The JSON report is retained for seven days
-and the check writes a GitHub step summary. Monthly reports retain 90 days.
+and the check writes a GitHub step summary. SQL backups retain 90 days.
 
 Enable GitHub Actions failure notifications for your account. The workflow does
 not configure email, Telegram incident delivery, or an external uptime service.
 A failed GitHub schedule cannot report its own absence; the Cloudflare scheduler
 can restore allowlisted workflows disabled for inactivity, but only while its
 token and provider remain available. Manually disabled workflows stay disabled.
-Monthly recording uploads an artifact; it never pushes to protected `main` and
-is not a repository keepalive mechanism.
+No repository keepalive commits or redundant monthly workflow are used.
 
 ## Database backup and isolated restore
 

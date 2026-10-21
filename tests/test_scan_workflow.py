@@ -24,7 +24,7 @@ def test_backup_must_restore_before_upload_and_monitor_cannot_push_main():
     root = Path(__file__).resolve().parents[1]
     backup = (root / '.github/workflows/backup-d1.yml').read_text()
     assert backup.index('python ../scripts/verify_d1_backup.py') < backup.index('gzip -9') < backup.index('actions/upload-artifact')
-    for name in ['monthly-maintenance.yml', 'operational-health.yml']:
+    for name in ['operational-health.yml']:
         workflow = (root / '.github/workflows' / name).read_text()
         assert 'contents: read' in workflow
         assert 'actions: read' in workflow

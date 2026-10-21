@@ -57,6 +57,9 @@ export async function captureCatalog(origin, fetcher = fetch) {
 }
 
 export function serializeCatalog(catalog, budget=24_000_000){
+  // Also narrow a pre-migration/prior snapshot without changing its age.
+  const cities=['Bengaluru','Hyderabad'];
+  catalog={...catalog,jobs:catalog.jobs.filter(job=>cities.includes(job.city)),policy:{...catalog.policy,cities,discovery_locations:cities}};
   let contents=JSON.stringify(catalog);
   if(Buffer.byteLength(contents)<=budget)return contents;
   // Keep every listing and all filtering/application fields. Only the browsing

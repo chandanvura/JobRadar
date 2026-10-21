@@ -9,7 +9,7 @@
   "include": [
     "components/**/*.tsx",
     "lib/**/*.ts",
-    "app/**/*.tsx"
+    "main.tsx"
   ],
   "exclude": [
     "node_modules",
