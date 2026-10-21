@@ -85,3 +85,5 @@ Settings private export. If the primary write also fails, retain the stored
 records and show the unsaved-change warning. Never evict application history or
 other private records automatically to make room. This is local browser storage,
 not a server backup; clearing browser data still requires a prior private export.
+
+The hourly operational report also checks the latest completed Telegram daily workflow and a successful result within 36 hours. A failed latest attempt remains visible even if a recent earlier attempt passed. This checks workflow/API evidence, not whether someone read the message. See `READINESS-REVIEW.md` for the scoped security review and current production evidence.

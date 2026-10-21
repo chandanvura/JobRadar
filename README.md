@@ -185,3 +185,5 @@ success or close a source issue on an HTTP sample alone. No new company
 expansion or recruiter-data import is part of this maintenance scope.
 
 Application tracking keeps primary saves independent of recovery-copy failures: if the primary save fits, it is retained and a recovery warning directs you to the private export in Settings. A failed primary save stays visible; no application history is deleted to free space.
+
+For the nine-month operating target, see [the readiness review](docs/READINESS-REVIEW.md): security boundaries, exact production evidence and open acceptance criteria. Hourly operational reports include daily Telegram workflow failure/freshness checks without adding database reads or sending test messages.
