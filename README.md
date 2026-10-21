@@ -125,7 +125,7 @@ Each distributed worker refreshes its deterministic share of listing feeds, then
 - One company fails: verify the ATS identifier; other companies continue.
 - No matching jobs: inspect location, title, seniority, and experience rules.
 - A schedule starts late: the independent watchdog dispatches a recovery scan when GitHub runs it and the latest scan start is at least 150 minutes old. GitHub may delay both schedules; no GitHub Actions schedule is guaranteed to run at an exact minute.
-- An untouched public repository may have scheduled workflows disabled after 60 days of inactivity. Monthly maintenance records a real scan status and commits it to `ops/last-monthly-check.json` as a best-effort activity signal. Check Actions if GitHub disables scheduling or changes its inactivity policy.
+- An untouched public repository may have scheduled workflows disabled after 60 days of inactivity. Monthly maintenance uploads a read-only operational report; it does not push to protected `main` or keep the repository active. The independent Cloudflare dispatcher can restore allowlisted workflows disabled for inactivity when its token is valid. Check Actions if that dispatcher is unavailable.
 
 ### Independent Cloudflare recovery schedule
 
@@ -157,7 +157,7 @@ snapshot is explicitly marked partial. A full snapshot requires D1 to be
 available. No payment plan or paid dependency was added.
 
 The Cloudflare recovery Worker samples the portal HTML and independent backup
-API every 15 minutes and emits structured `availability` logs. With a valid
+API every five minutes and emits structured `availability` logs. With a valid
 `JOBRADAR_DISPATCH_TOKEN`, it restores known operational workflows disabled
 for inactivity, while leaving manually disabled workflows alone. Quota-aware
 health returns HTTP 503 with a reset time and `Retry-After`; schedulers stop
@@ -167,12 +167,49 @@ The **99.9% target is not a measured or guaranteed SLA**. Over 30 days its error
 budget is 43 minutes 12 seconds. Portal availability and fresh-job coverage
 are separate: the saved catalog can remain usable while ingestion is blocked.
 Free Workers/D1 quotas, employer-feed changes, provider outages and credential
-expiry still apply. Fifteen-minute probes can miss short outages; their logs
+expiry still apply. Five-minute probes can miss short outages; their logs
 are evidence of samples, not a full-month uptime percentage. Recovery token
 expiry must extend beyond the intended unattended period.
 
+### Operational safeguards
+
+| Safeguard | Behavior and limit |
+|---|---|
+| Hourly operational check | At minute 23, check portal/static-backup HTTP status and content type, public pipeline health, completed-scan freshness and backup artifact availability. Missing evidence fails visibly. |
+| Failure thresholds | Fail for a missing/completed scan at least 5 hours old, failed sources, unavailable database/ingestion, exhausted quota, backup at least 36 hours old, or missing/expired/empty backup artifact. |
+| SQL restore verification | Daily backup must restore into disposable in-memory SQLite, pass schema/integrity/foreign-key checks and query row counts before compression/upload. Input is bounded to 250 MB. This does not prove a production D1 restore. |
+| Recovery storm protection | Both schedulers wait 30 minutes after a completed workflow, including failure/cancellation, while preserving active-run and quota guards. |
+| Evidence retention | Hourly JSON reports: 7 days. Monthly reports and SQL backups: 90 days. Reports are artifacts, never automatic commits to `main`. |
+| Dependency maintenance | Monthly Dependabot PRs for Actions, Python and npm; no automatic merge. Existing CI and branch rules apply. |
+
+The **Protect main** ruleset requires PRs, successful `python` and `web` GitHub
+Actions checks, up-to-date branches and resolved conversations. It blocks force
+pushes/deletion, requires zero approvals for solo maintenance, and has no bypass
+actors. Routine maintenance must not work around those protections.
+
+Enable GitHub Actions failure notifications in your account. Operational check
+failures produce a step summary and JSON artifact; this does not configure or
+verify email/Telegram incident delivery. GitHub checks cannot detect their own
+scheduler disappearing. Cloudflare recovery logs are separate evidence, and a
+provider-independent uptime service is still needed for independent outage alerts.
+
+SQL artifacts do **not** back up browser-private applications, notes or resumes.
+Export private backups from Settings before clearing browser storage and verify
+imports in another browser profile. No unattended server-side recovery for that
+private history is claimed.
+
+Run the offline reliability harness with `bash scripts/verify-harness.sh all`.
+The October 21 hardening passed **832 Python tests, 224 web tests**, compiled
+Worker/local D1 integration, production build, lint, UI types, Python security
+review, Python dependency audit and production npm audit. Read-only production
+HTML/static-backup probes and pipeline health passed at implementation time;
+future uptime, all live employer feeds, notification receipt and production D1
+restore remain unverified. These safeguards take effect only after the PR is
+merged; scheduler Worker changes also require an approved deployment.
+
 See [the production-readiness audit](docs/PRODUCTION-READINESS.md) and
-[recovery instructions](ops/RECOVERY.md) for evidence and remaining limitations.
+[recovery instructions](ops/RECOVERY.md) for incident diagnosis, isolated restore,
+release/rollback steps and remaining limitations.
 
 Collector health checks require `curl` on PATH. GitHub's Ubuntu runners include it; local collector/watchdog runs must install it too. Health uses the same bounded curl transport as deployment verification and accepts explicit HTTP 503 quota responses.
 

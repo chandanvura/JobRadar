@@ -53,6 +53,7 @@ jobs:
           mkdir -p backups
           timeout 8m npx wrangler d1 export jobradar-db --remote --skip-confirmation --output=backups/jobradar.sql
           test "$(wc -c < backups/jobradar.sql)" -gt 1024
+          python ../scripts/verify_d1_backup.py backups/jobradar.sql > backups/restore-verification.json
           gzip -9 backups/jobradar.sql
           gzip -t backups/jobradar.sql.gz
           (cd backups && sha256sum jobradar.sql.gz > SHA256SUMS)

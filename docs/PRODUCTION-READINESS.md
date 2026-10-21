@@ -162,3 +162,29 @@ Future scheduled capture/resumption, continuous 99.9% uptime, all 670 employer f
 - Installation automatically applies the patch using pinned SHA-256 original/patched source fingerprints. Repeated installation is idempotent; unexpected upstream versions or source bytes fail closed. Every installed real braces directory is checked; symlinks are not followed. MIT license retained.
 - Eleven regression tests run in the shared web harness, including refusal of unexpected versions and tampered source. A clean npm ci must apply the patch; installations with ignored lifecycle scripts must not be released.
 - The registry advisory GHSA-vfj7-8cjw-p6xm remains visible: upstream reports no patched version. This mitigates the reproduced recursion vulnerability locally without claiming a clean full npm audit or suppressing alerts. Production dependency audit remains a separate required gate.
+
+## October 21, 2026 — unattended operation hardening
+
+This change addresses specific gaps in the current source; it does not certify
+months of uptime or every employer feed.
+
+- Monthly recording no longer commits directly to protected `main`. It uploads
+  a read-only evidence report. The independent scheduler remains responsible for
+  restoring allowlisted workflows disabled for inactivity.
+- Hourly operational checks inspect public availability, completed-scan freshness,
+  source failures, quota/configuration state and backup artifact age/availability.
+  Failures are Actions failures plus retained JSON evidence, not automatic proof
+  of delivered incident notifications.
+- Daily SQL backup uploads now require a disposable SQLite restore, schema and
+  integrity checks, foreign-key validation and readable row counts. This is not
+  a production D1 restore exercise and does not back up browser-private history.
+- Both recovery schedulers cool down for 30 minutes after any completed run,
+  including failures/cancellations. Existing active-run and quota guards remain.
+- Monthly Dependabot proposals cover Actions, Python and npm; no automatic merges
+  or security-alert suppression is configured.
+
+See `ops/RECOVERY.md` for failure thresholds, artifact retention, restore steps,
+release/rollback procedure and notification/credential limitations. Activation
+requires merging this change; Worker scheduler changes require an approved
+Cloudflare deployment. No production migration, scan, restore or deployment is
+part of this implementation.

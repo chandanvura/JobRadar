@@ -18,3 +18,16 @@ def test_scan_workflow_registry_gate_runs_against_real_csv():
     from scraper.main import load_companies
     enabled = sum(company.enabled for company in load_companies())
     assert f"{enabled} enabled" in result.stdout
+
+
+def test_backup_must_restore_before_upload_and_monitor_cannot_push_main():
+    root = Path(__file__).resolve().parents[1]
+    backup = (root / '.github/workflows/backup-d1.yml').read_text()
+    assert backup.index('python ../scripts/verify_d1_backup.py') < backup.index('gzip -9') < backup.index('actions/upload-artifact')
+    for name in ['monthly-maintenance.yml', 'operational-health.yml']:
+        workflow = (root / '.github/workflows' / name).read_text()
+        assert 'contents: read' in workflow
+        assert 'actions: read' in workflow
+        assert 'git push' not in workflow
+        assert 'python -m scraper.ops_check' in workflow
+        assert 'if: always()' in workflow
