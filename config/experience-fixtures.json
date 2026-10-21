@@ -365,5 +365,48 @@
     "min": 5,
     "max": null,
     "status": "stated"
+  },
+  {
+    "name": "Salesforce application-window boilerplate is not experience",
+    "text": "To get the best candidate experience, please consider applying for a maximum of 3 roles within 12 months to ensure you are not duplicating efforts. Preferred Qualifications: 5–7 years of Salesforce/software engineering experience.",
+    "min": null,
+    "max": null,
+    "status": "unknown",
+    "preferred": 1
+  },
+  {
+    "name": "LSEG training period and preferred distribution do not lower senior experience",
+    "text": "Qualifications: 5 to 7+ years of professional experience with Linux, preferably RHEL or RHEL derived distributions (CentOS, Rocky Linux, AlmaLinux) 5+ years of experience with Python scripting. Must be willing to work US Eastern hours for the first 6 months during initial training.",
+    "min": 5,
+    "max": null,
+    "status": "stated"
+  },
+  {
+    "name": "mandatory training duration alone is not experience",
+    "text": "Qualifications: Must be willing to work US Eastern hours for the first 6 months during initial training.",
+    "min": null,
+    "max": null,
+    "status": "unknown"
+  },
+  {
+    "name": "application window does not hide genuine junior requirement",
+    "text": "Please consider applying for a maximum of 3 roles within 12 months. Requirements: 1–3 years of Java experience.",
+    "min": 1,
+    "max": 3,
+    "status": "stated"
+  },
+  {
+    "name": "open-ended range preserves published lower bound",
+    "text": "Qualifications: 5 to 7+ years of professional experience with Linux.",
+    "min": 5,
+    "max": null,
+    "status": "stated"
+  },
+  {
+    "name": "reversed open-ended range still requires review",
+    "text": "Experience: 7 to 5+ years",
+    "min": null,
+    "max": null,
+    "status": "conflict"
   }
 ]

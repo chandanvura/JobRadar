@@ -38,6 +38,10 @@ export function normalizeExperience<T extends {description?:string|null;experien
  let normalized=job;
  if(analysis&&analysis.status!=='unknown') {
   const stated=analysis.status==='stated',policy=stated&&experienceWithinPolicy(analysis.min,analysis.max);
+  if(stated&&job.experience_min!==null&&job.experience_max!==null&&job.experience_min>job.experience_max){
+   const review={...job,experience_min:analysis.min,experience_max:analysis.max,experience_label:analysis.label,is_eligible:0,eligibility_reason:'Invalid scan experience — verify JD before shortlisting'};
+   if(requirements)requirementCache.set(review,requirements);return review;
+  }
   const scanStricter=stated&&job.experience_min!==null&&(job.experience_min>analysis.min!||(job.experience_max!==null&&analysis.max!==null&&job.experience_max>analysis.max));
   if(scanStricter){const review={...job,is_eligible:0,eligibility_reason:'Experience differs between scan and JD — verify'};if(requirements)requirementCache.set(review,requirements);return review;}
 

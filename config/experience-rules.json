@@ -20,7 +20,7 @@
   "patterns": [
     {
       "kind": "range",
-      "pattern": "\\b(\\d+(?:\\.\\d+)?)\\s*(years?|yrs?|yoe|months?|mos?)?\\s*(?:-|\u2013|\u2014|to)\\s*(\\d+(?:\\.\\d+)?)\\s*(years?|yrs?|yoe|months?|mos?)\\b"
+      "pattern": "\\b(\\d+(?:\\.\\d+)?)\\s*(years?|yrs?|yoe|months?|mos?)?\\s*(?:-|\u2013|\u2014|to)\\s*(\\d+(?:\\.\\d+)?)\\s*\\+?\\s*(years?|yrs?|yoe|months?|mos?)\\b"
     },
     {
       "kind": "upper",
@@ -47,7 +47,8 @@
       "pattern": "\\b(\\d+(?:\\.\\d+)?)\\s*(years?|yrs?|yoe|months?|mos?)\\b"
     }
   ],
-  "fragment_split": "(?:,\\s*|\\s+(?:and|but)\\s+)(?=(?:(?:preferably|preferred|minimum(?: of)?|at least|maximum(?: of)?|up to)\\s+)?(?:\\d|zero\\b|one\\b|two\\b|three\\b|four\\b|five\\b|six\\b|seven\\b|eight\\b|nine\\b|ten\\b|eleven\\b|twelve\\b))",
+  "fragment_split": "(?:,\\s*(?=preferably\\b))|(?:,\\s*|\\s+(?:and|but)\\s+)(?=(?:(?:preferably|preferred|minimum(?: of)?|at least|maximum(?: of)?|up to)\\s+)?(?:\\d|zero\\b|one\\b|two\\b|three\\b|four\\b|five\\b|six\\b|seven\\b|eight\\b|nine\\b|ten\\b|eleven\\b|twelve\\b))",
   "junior_excluded": "\\b(?:no freshers?|(?:freshers?|fresh graduates?|new graduates?|entry.?level|recent graduates?)\\s+(?:are\\s+|is\\s+)?(?:not\\s+(?:eligible|accepted|suitable)|(?:need|should)\\s+not\\s+apply)|(?:not (?:open|suitable) (?:to|for))\\s+(?:freshers?|graduates?))\\b",
-  "overall_scope": "\\b(?:overall|total|professional|work)\\s+experience\\b"
+  "overall_scope": "\\b(?:overall|total|professional|work)\\s+experience\\b",
+  "duration_prefix": "\\b(?:within|for\\s+(?:the\\s+)?(?:first|next|initial)|(?:training|probation|notice)(?:\\s+period)?(?:\\s+of)?)\\s*$"
 }
