@@ -19,17 +19,16 @@ CROSS_DOMAIN_ENGINEERING_TITLES = frozenset({
     "performance engineer", "database engineer", "qa engineer",
 })
 NON_SOFTWARE_DOMAIN = re.compile(
-    r'\\b(?:retail store|sales performance|merchandising|customer contacts|'
+    r'\b(?:retail store|sales performance|merchandising|customer contacts|'
     r'non[- ]technical operations|manufacturing quality|mechanical parts|'
-    r'factory inspection|physical product inspection)\\b', re.I
+    r'factory inspection|physical product inspection)\b', re.I
 )
 SOFTWARE_DOMAIN = re.compile(
-    r'\\b(?:software|coding|programming|automation|automated tests?|'
+    r'\b(?:software|coding|programming|automation|automated tests?|'
     r'selenium|playwright|sql|postgres(?:ql)?|mysql|oracle db|'
     r'database infrastructure|performance testing|load testing|'
-    r'latency|backend|frontend|devops|kubernetes|python|java)\\b', re.I
+    r'latency|backend|frontend|devops|kubernetes|python|java)\b', re.I
 )
-
 
 
 def normalize_title(title):
