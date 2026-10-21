@@ -4,7 +4,8 @@
 
 [Open JobRadar](https://jobradar.chandanvura.workers.dev) ·
 [CI and operational pipelines](https://github.com/chandanvura/JobRadar/actions) ·
-[Security policy](SECURITY.md) · [Recovery runbook](ops/RECOVERY.md)
+[Security policy](SECURITY.md) · [Recovery runbook](ops/RECOVERY.md) ·
+[Contributing](CONTRIBUTING.md) · [MIT license](LICENSE)
 
 JobRadar collects jobs from the existing employer registry, checks the original
 job description, and separates verified matches from listings that need review.
@@ -200,3 +201,12 @@ Performance decision: retain Python collectors and the TypeScript Worker. Normal
 Feature development is closed as of 21 October 2026. Keep the current Python/TypeScript stack and existing companies; limit changes to verified security, data-integrity and existing-functionality repairs. Eaton/Maersk recovery is verified and [#80](https://github.com/chandanvura/JobRadar/issues/80) is closed. The latest completed scan has 740/743 successful sources; AXA, Lenovo and Citigroup remain visible in [#87](https://github.com/chandanvura/JobRadar/issues/87). Existing scans, read-only checks, backups and alerts continue. See [closure evidence and operating limits](docs/READINESS-REVIEW.md#feature-development-closure--21-october-2026).
 
 The Lenovo last-page singular-label repair is verified locally against 61 listings and 23 relevant details. Production recovery remains pending; [the reproduced failure and validation](docs/READINESS-REVIEW.md#issue-87-reproduced-lenovo-last-page-failure) distinguish adapter evidence from completed production scans.
+
+## Open-source participation
+
+Original JobRadar code is MIT-licensed; bundled third-party notices remain in place.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing a maintenance repair.
+[The v0.1.0 baseline notes](docs/releases/v0.1.0.md) describe included safeguards,
+validation and known exceptions. Release notes are separate from production
+health evidence. External adoption has not been verified; no user, download or
+downstream-usage metrics are claimed.
