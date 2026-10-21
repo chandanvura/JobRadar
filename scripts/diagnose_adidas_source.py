@@ -40,6 +40,35 @@ def main():
             except httpx.RequestError as exc:
                 info["error_type"]=type(exc).__name__
             print(json.dumps(info,sort_keys=True))
+    # Match the legacy adapter's strict prerequisites without ingesting records.
+    # Reading bounded HTML/XML samples avoids a 100-page live production scan.
+    from bs4 import BeautifulSoup
+    with httpx.Client(timeout=httpx.Timeout(12,connect=6),follow_redirects=False) as client:
+        url="https://careers.adidas-group.com/"
+        try:
+            with client.stream("GET",url) as response:
+                page=b""
+                for chunk in response.iter_bytes():
+                    page+=chunk[:100_000-len(page)]
+                    if len(page)>=100_000:break
+                soup=BeautifulSoup(page,"html.parser")
+                hrefs={str(item.get("href","")) for item in soup.select("[href]")}
+                print("Legacy adapter XML link published in sampled homepage:",
+                      any("/jobs/feed.xml" in href for href in hrefs))
+        except httpx.RequestError as exc:
+            print("Homepage link check error:",type(exc).__name__)
+        try:
+            params=dict(brand="",team="",type="",keywords="",location="[]",sort="title",locale="en",offset=0)
+            ajax=client.get("https://careers.adidas-group.com/jobs",params=params,
+                            headers={"Accept":"application/json","X-Requested-With":"XMLHttpRequest"})
+            payload=ajax.json() if "json" in ajax.headers.get("content-type","").lower() else None
+            print("Legacy listing AJAX",
+                  json.dumps({"status":ajax.status_code,"content_type":ajax.headers.get("content-type",""),
+                              "keys":list(payload)[:12] if isinstance(payload,dict) else [],
+                              "count_type":type(payload.get("count")).__name__ if isinstance(payload,dict) else None,
+                              "jobs_type":type(payload.get("jobs")).__name__ if isinstance(payload,dict) else None}))
+        except (httpx.RequestError,ValueError) as exc:
+            print("Legacy AJAX check error:",type(exc).__name__)
     print("No source was activated. No D1 operations or production ingestion.")
 
 if __name__=="__main__":
