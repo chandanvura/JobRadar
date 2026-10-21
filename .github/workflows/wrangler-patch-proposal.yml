@@ -1,0 +1,43 @@
+name: Propose patched Wrangler update
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/wrangler-patch-proposal.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'fix/node-dev-audit-evidence'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/node-dev-audit-evidence
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Upgrade Wrangler within semver and install locked dependencies
+        working-directory: web
+        run: |
+          npm install --save-dev --save-exact --ignore-scripts --no-audit --no-fund wrangler@4.151.3
+          npm ci --no-audit --no-fund
+      - name: Build, tests, integration, lint, types and production audit
+        working-directory: web
+        run: |
+          npm test
+          npm run test:api
+          npm run lint
+          npm run typecheck:ui
+          npm audit --omit=dev --audit-level=high
+      - name: Commit package and lockfile only after passing gates
+        run: |
+          if git diff --quiet -- web/package.json web/package-lock.json; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/package.json web/package-lock.json
+          git commit -m "fix(devtools): update Wrangler to audited compatible release"
+          git push origin HEAD:fix/node-dev-audit-evidence
