@@ -162,3 +162,30 @@ the repaired read-only adapter collected 61 listings and 23 relevant full detail
 with no coverage warning. This is local adapter evidence, not a production scan
 or deployed recovery. AXA still returns HTTP 403; keep #87 open until remaining
 exceptions have source-specific completed production evidence.
+
+## Experience regression review — 21 October 2026
+
+Read-only inspection of the public dashboard's 100-job sample reproduced actual
+experience mismatches, including recent listings:
+
+- Salesforce job 371456 (Senior Technical Consultant) and job 366850 (MTS Backend):
+  the application-frequency notice, “within 12 months”, became one year of required
+  experience. Application windows cannot establish candidate experience. The former
+  has only a preferred 5–7-year requirement in the inspected description; the latter
+  has no extracted required years. Both remain reviewable rather than verified.
+- LSEG job 371174 (Senior Linux DevOps Engineer): “for the first 6 months” described
+  initial training hours. Its actual “5 to 7+ years” Linux requirement was hidden
+  by a later “preferably RHEL” qualifier. Separate that qualifier, exclude forward
+  duration windows and preserve the published five-year lower bound. It fails the
+  existing 0–3 years policy.
+- IQVIA job 365668: stored `5–3` conflicts with the JD's `1.5–3`. Display the JD range
+  with an explicit invalid-scan warning and zero eligibility pending verification.
+
+Python and browser parsers share the same duration/fragment/range rules and
+fixtures. Reversed open-ended ranges remain conflicts. Genuine JPMorgan 1+ and
+Rubrik 0.5–1-year requirements remained unchanged in the local sample check.
+No posting-date, location, role, freshness, private-history or feedback-policy
+exceptions were introduced. No production rows were rewritten or scans triggered.
+The repair requires the protected release path before browser behavior changes;
+future ordinary collection re-evaluates stored eligibility. These are tested local
+results, not evidence that the live site already serves this repair.

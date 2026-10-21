@@ -8,6 +8,7 @@ RULES = json.loads((Path(__file__).parents[1] / 'config/experience-rules.json').
 PATTERNS = [(row['kind'], re.compile(row['pattern'], re.I)) for row in RULES['patterns']]
 WORDS = re.compile(r'\b(' + '|'.join(RULES['words']) + r')\b', re.I)
 OPTIONAL = re.compile(RULES['optional'], re.I)
+DURATION_PREFIX = re.compile(RULES['duration_prefix'], re.I)
 REQUIRED = re.compile(SECTIONS['required'], re.I)
 PREFERRED = re.compile(SECTIONS['preferred'], re.I)
 JUNIOR = re.compile(RULES['junior'], re.I)
@@ -32,6 +33,8 @@ def analyze_experience(description):
                     start, end = match.span()
                     if any(start < right and end > left for left, right in spans):
                         continue
+                    if DURATION_PREFIX.search(text[max(0, start - 80):start]):
+                        continue
                     after = text[end:end + 60]
                     if re.match(r"\s*(?:long\s+)?(?:degree|course|contract|tenure|warranty|bond|bachelor|master|phd|ago|old)\b", after, re.I):
                         continue
@@ -44,10 +47,12 @@ def analyze_experience(description):
                     if kind == 'range':
                         lo = float(groups[0]) * factor(groups[1] or groups[3])
                         hi = float(groups[2]) * factor(groups[3])
+                        if '+' in match.group(0) and hi >= lo:
+                            hi = None
                     else:
                         value = float(groups[0]) * factor(groups[1])
                         lo, hi = (0, value) if kind == 'upper' else (value, None) if kind == 'lower' else (value, value)
-                    rows.append(dict(min=round(lo, 6), max=None if hi is None else round(hi, 6), kind=kind, evidence=fragment.strip(), section=section))
+                    rows.append(dict(min=round(lo, 6), max=None if hi is None else round(hi, 6), kind='lower' if kind == 'range' and hi is None else kind, evidence=fragment.strip(), section=section))
                     spans.append((start, end))
             if len(rows) > 1 and re.search(r'\bor\b', text, re.I) and not optional:
                 conditional = True

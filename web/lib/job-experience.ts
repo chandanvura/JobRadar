@@ -10,6 +10,7 @@ const optionalPattern=new RegExp(rules.optional,'i'),requiredPattern=new RegExp(
 const factor=(unit:string|undefined)=>/^mo/i.test(unit||'')?1/12:1;
 const rounded=(value:number)=>Math.round(value*1e6)/1e6;
 const juniorExcludedPattern=new RegExp(rules.junior_excluded,'i');
+const durationPrefixPattern=new RegExp(rules.duration_prefix,'i');
 export function analyzeExperience(description:string,clauses=candidateClauses(description)):ExperienceAnalysis {
  const required:ExperienceEvidence[]=[],preferred:ExperienceEvidence[]=[];let conditional=false;
  for(const {text:original,section} of clauses)for(const fragment of original.split(fragmentPattern)) {
@@ -20,12 +21,13 @@ export function analyzeExperience(description:string,clauses=candidateClauses(de
   for(const {kind,regex} of patterns)for(const match of text.matchAll(regex)) {
    const start=match.index!,end=start+match[0].length;
    if(spans.some(([left,right])=>start<right&&end>left))continue;
+   if(durationPrefixPattern.test(text.slice(Math.max(0,start-80),start)))continue;
    if(/^\s*(?:long\s+)?(?:degree|course|contract|tenure|warranty|bond|bachelor|master|phd|ago|old)\b/i.test(text.slice(end,end+60)))continue;
    if(!requiredPattern.test(section)&&!optional&&! /\b(?:experience|experienced|overall|candidate|minimum|maximum|requires?|needs?|freshers?)\b/i.test(text)&&! /^[\d\s.\-–—+]+(?:years?|yrs?|yoe|months?|mos?)\.?$/i.test(text.trim())&&kind==='exact')continue;
    let min:number,max:number|null;
-   if(kind==='range'){min=Number(match[1])*factor(match[2]||match[4]);max=Number(match[3])*factor(match[4]);}
+   if(kind==='range'){min=Number(match[1])*factor(match[2]||match[4]);max=Number(match[3])*factor(match[4]);if(match[0].includes('+')&&max>=min)max=null;}
    else {const value=Number(match[1])*factor(match[2]);min=kind==='upper'?0:value;max=kind==='lower'?null:value;}
-   rows.push({min:rounded(min),max:max===null?null:rounded(max),kind,evidence:fragment.trim(),section});spans.push([start,end]);
+   rows.push({min:rounded(min),max:max===null?null:rounded(max),kind:kind==='range'&&max===null?'lower':kind,evidence:fragment.trim(),section});spans.push([start,end]);
   }
   if(rows.length>1&&/\bor\b/i.test(text)&&!optional)conditional=true;
   if(!rows.length&&juniorPattern.test(text)&&!juniorExcludedPattern.test(text))rows.push({min:0,max:null,kind:'junior',evidence:fragment.trim(),section});

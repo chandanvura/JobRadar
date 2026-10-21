@@ -215,3 +215,8 @@ Public clones contain committed source and Git history. Deployment secret-store
 values and browser-private history are not part of the repository. See the
 [public-clone boundary](SECURITY.md#public-clone-boundary) for the dated scan scope,
 ignored local files and credential exposure response.
+
+Experience extraction distinguishes application/training windows from work
+experience and keeps technology preferences separate from required year ranges.
+Invalid historical ranges display JD evidence with a review warning, without
+granting eligibility. See the [dated regression evidence](docs/READINESS-REVIEW.md#experience-regression-review--21-october-2026).

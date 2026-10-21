@@ -22,6 +22,13 @@ test('old numeric scan values cannot approve missing, unsupported or negated JD 
  }
 });
 const job=(changes={})=>({title:'Java Developer',is_active:1,is_eligible:1,experience_min:null,experience_max:null,experience_label:'Unknown',eligibility_reason:'Experience not stated — verify',...changes});
+test('invalid historical scan range displays JD evidence without granting eligibility',()=>{
+ const result=normalizeExperience(job({experience_min:5,experience_max:3,experience_label:'5–3',description:'Required qualifications: 1.5–3 years of experience in consulting.'}));
+ assert.deepEqual([result.experience_min,result.experience_max,result.experience_label],[1.5,3,'1.5–3']);
+ assert.equal(result.is_eligible,0);
+ assert.match(result.eligibility_reason,/Invalid scan experience/);
+ assert.equal(matchesCareerView(result,'Recommended',0,3,true),false);
+});
 test('JD extraction repairs labels without fabricating scan approval or weakening stricter scan evidence',()=>{
  const result=normalizeExperience(job({is_eligible:0,description:'Experience: 1–2 years'}));
  assert.equal(result.experience_min,1);assert.equal(result.is_eligible,0);assert.match(result.eligibility_reason,/awaiting scan verification/);
