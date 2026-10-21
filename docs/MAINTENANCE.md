@@ -33,6 +33,7 @@ References checked October 21, 2026:
 | Data is damaged | Daily SQL export requires disposable SQLite restore verification; artifacts retained 90 days | Verify a staging D1 restore before production recovery |
 | Browser data is lost | Tracking recovery copy protects some corruption; Settings exports support recovery | No backup can recover a cleared browser without a prior private export |
 | A provider-wide outage occurs | Static assets can survive D1 failure within Cloudflare | This is not a separate-host failover; no guaranteed uptime SLA |
+| Telegram times out or returns malformed data | Sanitized delivery failure; individual alert failures are audited while later alerts continue; workflow reports failure | A timed-out request may already have delivered. No immediate send replay; a later retry can duplicate an alert |
 | Token expires or account access changes | Operational checks fail visibly where observable | Owner must replace credentials; source code cannot rotate unknown account credentials |
 
 Do not use an LLM's forecast to select future dependency versions or promise

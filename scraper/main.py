@@ -1,4 +1,5 @@
 import asyncio,csv,json,os,sys,math
+from contextlib import asynccontextmanager
 from datetime import datetime,timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
@@ -36,7 +37,20 @@ def telegram_error(response,action):
 
 def telegram_raise_for_status(response,action):
     if response.is_error:
-        raise telegram_error(response,action)
+        raise telegram_error(response,action) from None
+    payload=response.json()
+    if not isinstance(payload,dict) or payload.get("ok") is not True:
+        raise TelegramDeliveryError(f"Telegram {action} returned an invalid success response") from None
+
+@asynccontextmanager
+async def telegram_client():
+    """Keep request URLs and credential-bearing transport errors out of logs."""
+    try:
+        async with httpx.AsyncClient(timeout=20) as connection:
+            yield connection
+    except (httpx.RequestError,ValueError,TypeError) as error:
+        # A timeout may follow delivery: do not immediately replay sendMessage.
+        raise TelegramDeliveryError(f"Telegram request could not be verified ({type(error).__name__})") from None
 
 def now(): return datetime.now(timezone.utc).isoformat()
 def load_companies():
@@ -150,7 +164,7 @@ async def ensure_telegram_ready():
     if not token or not chat:
         raise TelegramDeliveryError("Telegram credentials are not configured")
     url=f"https://api.telegram.org/bot{token}"
-    async with httpx.AsyncClient(timeout=20) as x:
+    async with telegram_client() as x:
         identity=await x.get(url+"/getMe")
         telegram_raise_for_status(identity,"bot authentication")
         bot_id=str((identity.json().get("result") or {}).get("id", ""))
@@ -183,7 +197,7 @@ async def notify(job,chat=None):
     posted=job.posted_label or job.posted_at or "Posting time unavailable"
     kind="INTERNSHIP" if job.employment_type=="Internship" else "JOB"
     message=f"🚨 NEW {kind}\n\n{job.title}\n{job.company}\n\n📍 {job.normalized_location}\n💼 {job.experience_label}\n🕒 {posted}\n⭐ Priority: {job.relevance_score}/100\n\nSkills: {' • '.join(job.skills) or 'Optional / not specified'}\n\nAPPLY NOW:\n{job.application_url}\n\nCAREER PAGE:\n{job.career_page_url}"
-    async with httpx.AsyncClient(timeout=20) as x:
+    async with telegram_client() as x:
         url=f"https://api.telegram.org/bot{token}"
         response=await x.post(url+"/sendMessage",json={"chat_id":chat,"text":message,"disable_web_page_preview":True})
         telegram_raise_for_status(response,"message delivery")

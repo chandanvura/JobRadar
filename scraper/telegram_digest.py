@@ -3,9 +3,7 @@
 import asyncio
 import os
 
-import httpx
-
-from .main import TelegramDeliveryError, ensure_telegram_ready, telegram_raise_for_status
+from .main import TelegramDeliveryError, ensure_telegram_ready, telegram_raise_for_status, telegram_client
 
 
 HEALTH_URL = "https://jobradar.chandanvura.workers.dev/api/health"
@@ -34,7 +32,7 @@ def format_digest(health):
 async def send_digest():
     chat = await ensure_telegram_ready()
     token = os.getenv("TELEGRAM_BOT_TOKEN")
-    async with httpx.AsyncClient(timeout=20) as client:
+    async with telegram_client() as client:
         response = await client.get(HEALTH_URL)
         if response.status_code not in (200, 503):
             raise TelegramDeliveryError(f"JobRadar health returned HTTP {response.status_code}")
