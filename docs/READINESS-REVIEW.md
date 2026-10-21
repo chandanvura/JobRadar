@@ -150,3 +150,15 @@ deploy, change protections or perform destructive/production data operations.
 The remaining provider exceptions and the nine-month observation period are
 operational limits, not unfinished feature development or grounds to claim all
 feeds are healthy. There is no guarantee of zero outages or zero owner intervention.
+
+### Issue #87: reproduced Lenovo last-page failure
+
+A bounded read-only inspection on 21 October reproduced Lenovo's failure at
+offset 60: its final page publishes `61-61 of 61 job` (singular), while the
+Avature parser accepted only plural labels. Accept singular/plural job/result
+labels without changing advertised range, count, unique-ID or snapshot checks.
+The regression failed before the repair. All 974 Python tests and Bandit pass;
+the repaired read-only adapter collected 61 listings and 23 relevant full details
+with no coverage warning. This is local adapter evidence, not a production scan
+or deployed recovery. AXA still returns HTTP 403; keep #87 open until remaining
+exceptions have source-specific completed production evidence.
