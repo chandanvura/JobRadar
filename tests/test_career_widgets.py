@@ -1,3 +1,4 @@
+from urllib.parse import urlsplit
 import json
 import pytest
 from scraper.career_widgets import flight_records, kula_records, juspay_records
@@ -84,8 +85,8 @@ def test_widget_collection_excludes_private_jobs_and_keeps_unknown_dates(monkeyp
     html = flight_page('1:' + json.dumps({'jobs': rows}) + '\n')
     async def request(client, method, url, **kwargs):
         req = httpx.Request(method, url)
-        if 'kula.ai' in url: return httpx.Response(200, text=html, request=req)
-        if 'jobs.pyjamahr.com' in url:
+        if urlsplit(url).hostname in {'careers.kula.ai', 'jobs.kula.ai'}: return httpx.Response(200, text=html, request=req)
+        if urlsplit(url).hostname == 'jobs.pyjamahr.com':
             config = {'props': {'pageProps': {'companyDetails': {'uuid': '123', 'slug': 'example'}}}}
             return httpx.Response(200, text='<script id="__NEXT_DATA__">'+json.dumps(config)+'</script>', request=req)
         return httpx.Response(200, json={'count': 2, 'next': None, 'results': [
