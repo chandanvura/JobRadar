@@ -15,6 +15,16 @@ def test_avature_validates_page_range_and_published_date():
     assert rows['2']['url'] == 'https://careers.example/en_US/careers/JobDetail/Role/2'
 
 
+def test_avature_lenovo_single_record_last_page():
+    # Lenovo renders the number of jobs on this page, not the total, in singular.
+    text = page([61], total=61).replace('1-1 of 61 jobs', '61-61\n of 61\n job')
+    rows, start, end, total, more = listing_page(text, 'https://careers.example/jobs', 'careers.example')
+    assert (start, end, total, more) == (61, 61, 61, None)
+    assert set(rows) == {'61'}
+    with pytest.raises(ValueError, match='reported page range'):
+        listing_page(text.replace('61-61', '60-61'), 'https://careers.example/jobs', 'careers.example')
+
+
 def test_avature_rejects_wrong_host_duplicates_and_capped_counts():
     with pytest.raises(ValueError, match='employer host'):
         listing_page(page([1]).replace('/en_US/careers/JobDetail/Role/1', 'https://wrong.example/JobDetail/1'), 'https://careers.example/', 'careers.example')
@@ -53,7 +63,8 @@ def test_avature_split_panels_require_responsibilities_and_requirements():
     assert detail_section(BeautifulSoup(html.replace('What you offer', 'Preview'), 'html.parser')) == ''
 
 
-def test_avature_collects_all_advertised_offsets_and_full_details(monkeypatch):
+@pytest.mark.parametrize('singular_last_page', [False, True])
+def test_avature_collects_all_advertised_offsets_and_full_details(monkeypatch, singular_last_page):
     import asyncio
     import httpx
     from scraper import adapters
@@ -64,6 +75,8 @@ def test_avature_collects_all_advertised_offsets_and_full_details(monkeypatch):
         calls.append(url)
         if 'jobOffset=1' in url:
             text = page([2]).replace('1-1 of 2 jobs', '2-2 of 2 jobs')
+            if singular_last_page:
+                text = text.replace('of 2 jobs', 'of 2 job')
         else:
             text = page([1]) + '<a class="paginationNextLink" href="/jobs?jobRecordsPerPage=1&amp;jobOffset=1">Next</a>'
         return httpx.Response(200, request=httpx.Request('GET', url), text=text)

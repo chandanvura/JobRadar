@@ -11,7 +11,7 @@ from .models import JobBatch
 def listing_page(text, base, host):
     soup = BeautifulSoup(text, 'html.parser')
     summary = re.sub(r'\s+', ' ', soup.get_text(' ', strip=True))
-    match = re.search(r'(\d+)\s*-\s*(\d+)\s+of\s+([\d,]+)(\+?)\s+(?:results|jobs)', summary, re.I)
+    match = re.search(r'(\d+)\s*-\s*(\d+)\s+of\s+([\d,]+)(\+?)\s+(?:results?|jobs?)\b', summary, re.I)
     if not match: raise ValueError('Avature public listing has no verifiable result count')
     start, end, total = (int(match[i].replace(',', '')) for i in (1, 2, 3))
     if match[4] or total > 2000: raise ValueError('Avature listing exceeds the bounded complete scan')
