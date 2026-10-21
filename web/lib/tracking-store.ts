@@ -17,9 +17,16 @@ export function mergeTracking(...sets:Records[]):Records {
 }
 export function persistTracking(rows:Records):boolean {
  try{
-  const prior=readPrivate(trackingStorageKey);
-  if(prior&&parse(prior)!==null)localStorage.setItem(privateKey(recoveryStorageKey),prior);
-  localStorage.setItem(privateKey(trackingStorageKey),JSON.stringify(rows));
+  const serialized=JSON.stringify(rows),prior=readPrivate(trackingStorageKey);
+  let recoveryFailed=false;
+  if(prior&&parse(prior)!==null){
+   try{localStorage.setItem(privateKey(recoveryStorageKey),prior);}
+   catch{recoveryFailed=true;}
+  }
+  // A full recovery copy must not prevent a primary replacement that still fits.
+  // Keep the existing recovery record intact; never delete history to free space.
+  localStorage.setItem(privateKey(trackingStorageKey),serialized);
+  if(recoveryFailed)window.dispatchEvent(new Event('jobradar-tracking-recovery-error'));
   return true;
  }catch{window.dispatchEvent(new Event('jobradar-storage-error'));return false;}
 }

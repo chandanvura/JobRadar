@@ -75,3 +75,13 @@ or initial HTTP sample passes. See `ops/RECOVERY.md` for rollback and data recov
 Dependency PRs group minor/patch changes by ecosystem each month, with one open
 version-update PR per ecosystem. Major versions require a planned compatibility
 review; security alerts remain enabled. Node typings follow the Node 24 runtime.
+
+## Browser tracking under storage pressure
+
+A recovery-copy write can exhaust browser storage even when replacing the primary
+tracking record would still fit. Attempt the primary save independently. On
+success, warn if the recovery copy could not refresh and offer the existing
+Settings private export. If the primary write also fails, retain the stored
+records and show the unsaved-change warning. Never evict application history or
+other private records automatically to make room. This is local browser storage,
+not a server backup; clearing browser data still requires a prior private export.

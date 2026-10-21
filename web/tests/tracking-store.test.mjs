@@ -34,3 +34,21 @@ test('history beyond 5,000 records is not silently truncated during import',()=>
  const rows=Object.fromEntries(Array.from({length:5001},(_,id)=>[trackingIdentity(job(id)),{saved:true,status:'Applied',job:job(id)}]));
  assert.equal(Object.keys(safeTracking(rows)).length,5001);
 });
+test('recovery quota failure does not block a primary replacement that still fits',()=>{
+ const {memory,events}=setup();
+ saveTrackingPatch({},job(1),{status:'Applied'},'2026-10-19T01:00:00Z');
+ const key=trackingIdentity(job(1)),prior=memory.get(trackingStorageKey);
+ memory.set(recoveryStorageKey,'{}');
+ const next={...readTracking(),[key]:{...readTracking()[key],status:'Interview'}};
+ const nextJson=JSON.stringify(next);
+ const capacity=Math.max(prior.length,nextJson.length)+10;
+ localStorage.setItem=(name,value)=>{
+  const used=[...memory].reduce((n,[k,v])=>n+(k===name?0:v.length),0)+value.length;
+  if(used>capacity)throw Error('QuotaExceededError');
+  memory.set(name,value);
+ };
+ assert.equal(persistTracking(next),true);
+ assert.equal(readTracking()[key].status,'Interview');
+ assert.equal(memory.get(recoveryStorageKey),'{}');
+ assert.deepEqual(events,['jobradar-tracking-recovery-error']);
+});

@@ -526,6 +526,11 @@ function DashboardContent() {
         title: "Browser storage is unavailable or full",
         text: portalMessages.storageFull,
       });
+    const recoveryError = () => setNotice({
+      tone: "error",
+      title: "Application changes saved; recovery copy could not refresh",
+      text: "The recovery copy could not be updated. Download a private backup from Settings before clearing any browser data.",
+    });
     const resume = (event: Event) => {
       const job = (event as CustomEvent<ApiJob>).detail;
       writePrivate(
@@ -541,9 +546,11 @@ function DashboardContent() {
       history.pushState(null, "", "#resume-studio");
     };
     window.addEventListener("jobradar-storage-error", storageError);
+    window.addEventListener("jobradar-tracking-recovery-error", recoveryError);
     window.addEventListener("jobradar-resume", resume);
     return () => {
       window.removeEventListener("jobradar-storage-error", storageError);
+      window.removeEventListener("jobradar-tracking-recovery-error", recoveryError);
       window.removeEventListener("jobradar-resume", resume);
     };
   }, []);

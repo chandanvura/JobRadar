@@ -183,3 +183,5 @@ with a published target-city location were returned. This dated observation is
 not an uptime guarantee. Never replace a failed feed with an invented empty
 success or close a source issue on an HTTP sample alone. No new company
 expansion or recruiter-data import is part of this maintenance scope.
+
+Application tracking keeps primary saves independent of recovery-copy failures: if the primary save fits, it is retained and a recovery warning directs you to the private export in Settings. A failed primary save stays visible; no application history is deleted to free space.
