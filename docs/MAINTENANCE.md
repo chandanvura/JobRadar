@@ -87,3 +87,33 @@ other private records automatically to make room. This is local browser storage,
 not a server backup; clearing browser data still requires a prior private export.
 
 The hourly operational report also checks the latest completed Telegram daily workflow and a successful result within 36 hours. A failed latest attempt remains visible even if a recent earlier attempt passed. This checks workflow/API evidence, not whether someone read the message. See `READINESS-REVIEW.md` for the scoped security review and current production evidence.
+
+## Language and performance decision
+
+Keep Python collectors and the TypeScript Worker. The 21 October run
+`39589334236` completed in about 783 seconds; discovery shards ranged from
+172 to 706 seconds. Booking.com occupied about 634 seconds of the slowest shard.
+These are elapsed observations, not evidence of Python CPU saturation. A Go
+rewrite has no demonstrated benefit for this workload and would need to preserve
+all employer-specific completeness and job-policy contracts.
+
+Normal scans now emit compact `source_timing` records with fetch, enrichment and
+total elapsed seconds, including failed/limited sources. Timing starts after the
+source concurrency slot is acquired. Fetch time includes network waits, provider
+limiter waits, retries, parsing and snapshot verification; it is not a pure HTTP
+latency measurement. Enrichment measures the synchronous matching/normalization
+phase. No request URLs, descriptions, headers or credentials are added to metrics.
+
+Each shard also emits `worker_timing` and retains it as optional artifact metadata:
+discovery wall seconds and process CPU seconds, measured from worker entry through
+artifact preparation. Setup/download/upload/finalization are outside that window.
+CPU covers all worker threads; do not attribute it to one employer, add overlapping
+source times to estimate a critical path, or treat it as a production profiler.
+
+Use several normal scans to identify persistent slow sources. If CPU consumption
+is substantial, profile the parsing/matching hotspots before selecting a targeted
+optimization. If elapsed time is mostly waiting, investigate provider latency,
+request volume and verified request patterns, then evaluate shard balance. Keep
+existing rate limits, source ownership, snapshot checks and retry bounds until
+measurements justify a reviewed change. No benchmark or new scan is dispatched
+just to populate these metrics; they do not add D1 reads or writes.

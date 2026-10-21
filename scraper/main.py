@@ -1,5 +1,6 @@
 import asyncio,csv,json,os,sys,math
 from contextlib import asynccontextmanager
+from time import perf_counter
 from datetime import datetime,timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
@@ -116,14 +117,17 @@ async def scrape(company,sem,custom_sem):
     async with sem:
         context=custom_sem if company.ats_provider=="custom" else _NoopAsyncContext()
         async with context:
+            started=perf_counter(); fetched=None; enriched=None; outcome="failed"
             try:
                 print(f"START {company.name} ({company.ats_provider})",flush=True)
                 # Bound the complete source operation, including retries and limiter waits.
                 # A slow employer must not prevent every other source from being ingested.
                 async with asyncio.timeout(float(os.getenv("JOBRADAR_SOURCE_TIMEOUT","900"))):
                     raw,discovered=await fetch_company_jobs(company)
+                fetched=perf_counter()
                 print(f"DONE {company.name}: {discovered} listings",flush=True)
                 jobs=[enrich(j,company.priority) for j in raw]
+                enriched=perf_counter(); outcome="success"
                 candidates=[j for j in jobs if j.city in TARGET_CITIES and j.role_category!="Other"]
                 eligible=[j for j in candidates if j.is_eligible]
                 warning="Limited coverage: no structured public job feed" if discovered==0 and company.ats_provider=="custom" else "No current openings returned" if discovered==0 else "No roles with a published target-city location returned" if not candidates else None
@@ -138,8 +142,15 @@ async def scrape(company,sem,custom_sem):
                 limited=(company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError,ValueError))) or isinstance(exc,json.JSONDecodeError)
                 warning=("Limited coverage: official career page blocks or does not expose machine-readable access"
                          if limited else f"{type(exc).__name__}: {str(exc)[:160]}")
+                outcome="limited" if limited else "failed"
                 status={"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":0 if limited else 1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":warning}
                 return [],status,None if limited else f"{type(exc).__name__}: {exc}",0
+            finally:
+                finished=perf_counter()
+                print(json.dumps({"event":"source_timing","company":company.name,"provider":company.ats_provider,
+                                  "outcome":outcome,"fetch_wall_seconds":round((fetched if fetched is not None else finished)-started,3),
+                                  "enrich_wall_seconds":round((enriched if enriched is not None else finished)-fetched,3) if fetched is not None else 0,
+                                  "total_wall_seconds":round(finished-started,3)},separators=(",",":")),flush=True)
 
 def private_start_chat_id(payload):
     """Return the most recent private chat that explicitly sent /start."""

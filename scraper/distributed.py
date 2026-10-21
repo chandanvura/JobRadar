@@ -3,6 +3,7 @@
 import argparse,asyncio,dataclasses,hashlib,json,os,sys
 from datetime import datetime,timezone
 from pathlib import Path
+from time import perf_counter,process_time
 
 from .adapters import ADAPTERS
 from .main import TELEGRAM_RETRY_IDS,QuotaDeferred,TelegramDeliveryError,ensure_telegram_ready,ingest_scan,load_companies,notify,now,record_notification,run_health_status,scrape,source_job_key
@@ -24,7 +25,7 @@ def _atomic_json(path,payload):
 
 async def run_worker(index,count,output):
     if count<1 or index<0 or index>=count: raise ValueError("Invalid shard index/count")
-    started=now()
+    started=now(); wall_started=perf_counter(); cpu_started=process_time()
     enabled=[c for c in load_companies() if c.enabled and c.ats_provider in ADAPTERS]
     owned=[c for c in enabled if source_shard(c,count)==index]
     sem=asyncio.Semaphore(int(os.getenv("JOBRADAR_SOURCE_CONCURRENCY","12")))
@@ -35,8 +36,9 @@ async def run_worker(index,count,output):
     jobs=[]
     for job in candidates:
         item=job.as_dict(); item["description"]=item.get("description","")[:12000]; jobs.append(item)
+    timing={"event":"worker_timing","shard_index":index,"discovery_wall_seconds":round(perf_counter()-wall_started,3),"process_cpu_seconds":round(process_time()-cpu_started,3)}
     artifact={
-        "version":ARTIFACT_VERSION,"shard_index":index,"shard_count":count,
+        "version":ARTIFACT_VERSION,"shard_index":index,"shard_count":count,"timing":timing,
         "started_at":started,"finished_at":now(),"sources":len(owned),
         "jobs_scanned":sum(discovered for *_,discovered in batches),
         "raw_jobs":len(all_jobs),"jobs":jobs,
@@ -44,6 +46,7 @@ async def run_worker(index,count,output):
         "failures":sum(error is not None for _,_,error,_ in batches),
     }
     _atomic_json(output,artifact)
+    print(json.dumps(timing,separators=(",",":")),flush=True)
     print(f"Shard {index+1}/{count}: {len(owned)} sources, {len(all_jobs)} raw jobs, {len(jobs)} candidates, {artifact['failures']} failures")
 
 def load_artifacts(paths):
