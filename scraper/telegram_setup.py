@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 def telegram_call(base, method, fields=None):
     parsed=urlparse(base)
-    if parsed.scheme!="https" or parsed.hostname!="api.telegram.org":
+    if parsed.scheme!="https" or parsed.hostname!="api.telegram.org" or parsed.username or parsed.password:
         raise RuntimeError("Telegram API base URL is not allowed")
     data=urllib.parse.urlencode(fields).encode() if fields is not None else None
     request=urllib.request.Request(f"{base}/{method}",data=data)
@@ -20,8 +20,10 @@ def telegram_call(base, method, fields=None):
             result=json.load(response)
     except urllib.error.HTTPError as exc:
         raise RuntimeError(f"Telegram {method} failed (HTTP {exc.code})") from None
-    if not result.get("ok"):
-        raise RuntimeError(f"Telegram {method} failed")
+    except (urllib.error.URLError, OSError, ValueError, TypeError) as exc:
+        raise RuntimeError(f"Telegram {method} could not be verified ({type(exc).__name__})") from None
+    if not isinstance(result, dict) or result.get("ok") is not True:
+        raise RuntimeError(f"Telegram {method} returned an invalid success response") from None
     return result
 
 

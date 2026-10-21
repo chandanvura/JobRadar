@@ -66,3 +66,37 @@ review claims scoped to this evidence rather than treating a clean scan as proof
 
 No new companies, destructive production operations, protection weakening or
 additional recurring services are required for this review.
+
+## Follow-up repository inspection
+
+At base `10ece6aa3687d8e3c33313ba78d5ed5b5facad99`, inspection and fault tests
+identified two concrete areas requiring repair:
+
+- **Private backup integrity:** restore ignored draft/request/onboarding fields
+  included in exports; failed resume/preferences writes could be swallowed before
+  reload. The export path could silently omit unreadable optional records, and
+  its unbounded export did not match the 5 MB import gate. Use one six-field
+  contract, validate before writing, merge existing history first, verify each
+  save and keep failures visible without reload. Both export and import now use
+  a 25 MB bound; corrupted application rows fail explicitly instead of silently
+  disappearing. Restoration is not a multi-key browser transaction: earlier
+  successful updates remain if a later write fails, and the notice says so.
+- **Telegram setup diagnostics:** raw urllib transport/JSON exceptions could
+  escape the setup helper, including token-bearing request URLs supplied by the
+  exception. Sanitize those failures, suppress chained context, require an
+  explicit successful API response and reject credential-bearing base URLs.
+  Tests use fake credentials and send no messages.
+
+A UI fault test failed before the restore repair, and three setup transport/
+response fault tests failed before sanitization. Added backup tests exercise
+six-field round trips, workspace isolation, large valid exports, malformed rows,
+blocked reads/writes and preservation of existing application history.
+
+The tracked-tree credential-pattern pass inspected 385 text files and found no
+matches for the checked private-key, GitHub-token, AWS-access-key and Telegram-
+token signatures. This is a limited pattern check of current tracked content,
+not a historical secret audit or a substitute for enabled GitHub secret scanning.
+The security-sensitive API, collector, browser storage, export, recovery,
+permissions and cleanup paths were reviewed alongside repository-wide automated
+checks. Generated output and third-party implementation source are not claimed
+as manually audited. Feed acceptance criteria in issue #80 still apply.

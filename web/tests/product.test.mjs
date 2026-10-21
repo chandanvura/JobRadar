@@ -20,8 +20,6 @@ test('search invites create a private workspace without sharing a profile id',as
  assert.match(source,/set\('newWorkspace','1'\)/);
  assert.doesNotMatch(source,/share=.*searchParams\.set\('profile'/);
  assert.match(source,/Every person who opens it receives a new private workspace/);
- assert.ok(source.includes('jobradar-resume-draft-v1'));
- assert.ok(source.includes('jobradar-tailor-request-v1'));
 });
 test('backup import rejects executable application links and malformed records',()=>{
  const job={title:'Engineer',company:'Test',normalized_location:'Bengaluru',skills:'[]',role_category:'Software Engineering',ats_provider:'test',external_job_id:'1',first_seen_at:'2026-09-13',application_url:'javascript:alert(1)',career_page_url:'https://example.com'};

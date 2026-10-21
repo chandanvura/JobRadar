@@ -12,7 +12,7 @@ export const profileId = () => {
 };
 export const privateKey = (key: string) => profileId() === 'default' ? key : `${key}:${profileId()}`;
 export function readPrivate(key: string) { try { return localStorage.getItem(privateKey(key)); } catch { return null; } }
-export function writePrivate(key: string, value: string) { try { localStorage.setItem(privateKey(key), value); } catch { window.dispatchEvent(new Event('jobradar-storage-error')); } }
+export function writePrivate(key: string, value: string) { try { localStorage.setItem(privateKey(key), value); return true; } catch { window.dispatchEvent(new Event('jobradar-storage-error')); return false; } }
 export function removePrivate(key: string) { try { localStorage.removeItem(privateKey(key)); } catch { window.dispatchEvent(new Event('jobradar-storage-error')); } }
 export const defaultSearch = {titles: [] as string[], skills: [] as string[], experienceMin: 0, experienceMax: 3, locations: ['Bengaluru','Hyderabad']};
 export const trackingIdentity = (job:{company:unknown;ats_provider:unknown;external_job_id:unknown}) =>
