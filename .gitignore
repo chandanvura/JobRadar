@@ -11,3 +11,21 @@ web/next-env.d.ts
 web/.wrangler/
 web/wrangler.migrations.json
 web/public/backup/
+
+# Local credentials and private exports must never enter a public clone.
+.env*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.db
+*.db-*
+backups/
+*.sql.gz
+jobradar-private-backup*.json

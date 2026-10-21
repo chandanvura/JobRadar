@@ -32,3 +32,31 @@ There is no guaranteed response SLA for this solo-maintained project.
 SQL backup artifacts contain database data. Restrict artifact access and avoid
 publishing them. Public static snapshots contain only the public job catalogue;
 they must never contain private browser exports or credentials.
+
+## Public-clone boundary
+
+This is a public repository: anyone can clone committed files and reachable Git
+history. A license does not control visibility. GitHub/Cloudflare secret-store
+values and private browser storage are not included in a clone. Keep deployment
+credentials in those secret stores; use placeholders in `.env.example`. Never
+put a real secret in a frontend bundle, public snapshot, issue, log or release asset.
+
+Ignore rules exclude local environment variants, private-key files, local
+databases, generated backup directories and private browser-export filenames.
+They prevent accidental staging of untracked files; they do not remove existing
+commits or block `git add -f`. Review `git diff --cached` before publishing. Preserve
+tracked schema migrations and third-party license notices.
+
+On 21 October 2026, GitHub's secret-scanning interface showed zero open and zero
+closed alerts. A local pattern scan inspected 1,434 reachable history blobs
+(26,352,436 bytes) at application/documentation base `24b64625f56ed9f783c3459463ce49afd9233681`.
+Matches were reviewed as example placeholders and test credential URLs. This
+is bounded pattern evidence, not a guarantee that every credential format or
+external log/artifact/account has been audited. No real credential was identified
+in that review. GitHub security policy, private reporting, Dependabot, code scanning
+and secret scanning were visibly enabled.
+
+If a real credential is ever exposed, revoke/rotate it first through the provider.
+Deleting a file in a later commit does not revoke the credential or erase copies.
+Do not post the value in an issue or attempt destructive history rewriting without
+an owner-approved incident plan.
