@@ -60,6 +60,10 @@ There is no new cloud account, paid service or private-data migration.
 | A refresh races or a tab becomes stale | Cancel obsolete loads, avoid mixed live/backup catalogues, retain private tracking and its recovery copy |
 | A dependency becomes vulnerable | Dependency alerts and tested PRs; no unrestricted force upgrade or automatic production merge |
 
+Maersk category pages with repeated valid IDs are discarded and allow one
+whole-source restart. Missing/malformed IDs fail immediately; persistent
+duplicates remain visible failures. No incomplete attempt is accepted.
+
 Static fallback protects browsing during a D1 outage, not a Cloudflare-wide
 outage. It can be stale. SQL snapshots do not back up private browser history.
 No one-year zero-maintenance or continuous-uptime guarantee is claimed.

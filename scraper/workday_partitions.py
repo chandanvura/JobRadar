@@ -24,8 +24,13 @@ async def category_postings(client,api,initial,request):
                         or len(batch)!=min(20,count-offset)):
                     raise SnapshotChanged('Workday category count or page changed')
                 paths=[item.get('externalPath','') for item in batch]
-                if any(not path.startswith('/job/') for path in paths) or len(set(paths))!=len(paths):
-                    raise ValueError('Workday category page has missing or duplicate IDs')
+                if any(not isinstance(path,str) or not path.startswith('/job/') for path in paths):
+                    raise ValueError('Workday category page has missing or malformed IDs')
+                if len(set(paths))!=len(paths):
+                    # No records from this attempt may be accepted. A valid-shaped
+                    # repeated page can be transient, like cross-page overlap;
+                    # the caller allows at most one whole-source restart.
+                    raise SnapshotChanged(f'Workday category page repeated IDs: category={group["id"]}, offset={offset}, rows={len(paths)}, unique={len(set(paths))}')
                 if first is None:first=paths
                 rows.extend(batch)
             if count:
