@@ -31,3 +31,28 @@ def test_backup_must_restore_before_upload_and_monitor_cannot_push_main():
         assert 'git push' not in workflow
         assert 'python -m scraper.ops_check' in workflow
         assert 'if: always()' in workflow
+
+
+def test_test_running_workflow_jobs_install_pytest_from_their_manifests():
+    """Catch runtime/dev dependency drift in every job that invokes pytest."""
+    import re
+    root = Path(__file__).resolve().parents[1]
+    def dependencies(path):
+        names = set()
+        for raw in path.read_text().splitlines():
+            line = raw.strip()
+            if line.startswith('-r '):
+                names.update(dependencies(path.parent / line[3:]))
+            elif line and not line.startswith('#'):
+                names.add(re.split(r'[=<>!~\[; ]', line)[0].lower())
+        return names
+    checked = []
+    for workflow in (root / '.github/workflows').glob('*.yml'):
+        for job in re.split(r'(?m)^  [\w-]+:\s*$', workflow.read_text())[1:]:
+            if 'python -m pytest' not in job:
+                continue
+            manifests = re.findall(r'pip install -r ([\w./-]+)', job)
+            installed = set().union(*(dependencies(root / manifest) for manifest in manifests))
+            assert 'pytest' in installed, f'{workflow.name}: test job does not install pytest'
+            checked.append(workflow.name)
+    assert 'scrape.yml' in checked and 'deploy-cloudflare.yml' in checked
