@@ -39,7 +39,7 @@ def public_available():
     return True
 
 
-def assess(health, backup_runs, artifacts, now=None, available=True):
+def assess(health, backup_runs, artifacts, now=None, available=True, notification_runs=None):
     now = now or datetime.datetime.now(UTC)
     problems = []
     if not available:
@@ -63,7 +63,18 @@ def assess(health, backup_runs, artifacts, now=None, available=True):
         and a.get("size_in_bytes", 0) > 0 for a in artifacts
     ):
         problems.append("backup_artifact_missing_or_expired")
+    notification_age = None
+    if notification_runs is not None:
+        completed = [r for r in notification_runs if r.get("status") == "completed"]
+        latest = completed[0] if completed else None
+        if latest and latest.get("conclusion") != "success":
+            problems.append("notification_workflow_failed")
+        delivered = next((r for r in completed if r.get("conclusion") == "success"), None)
+        notification_age = age_hours((delivered or {}).get("updated_at"), now)
+        if notification_age is None or notification_age >= 36:
+            problems.append("notification_verification_missing_or_stale")
     return {"checked_at": now.isoformat(), "ok": not problems, "problems": problems,
+            "notification_workflow_age_hours": notification_age,
             "completed_scan_age_hours": age, "backup_age_hours": backup_age}
 
 
@@ -76,7 +87,8 @@ def main():
         runs = request_json(api + "/actions/workflows/backup-d1.yml/runs?per_page=30", token)["workflow_runs"]
         backup = next((r for r in runs if r.get("conclusion") == "success"), None)
         artifacts = request_json(api + f"/actions/runs/{backup['id']}/artifacts?per_page=100", token)["artifacts"] if backup else []
-        report = assess(health, runs, artifacts, available=public_available())
+        notifications = request_json(api + "/actions/workflows/telegram-digest.yml/runs?per_page=30", token)["workflow_runs"]
+        report = assess(health, runs, artifacts, available=public_available(), notification_runs=notifications)
     except (RuntimeError, ValueError, OSError, KeyError, TypeError, subprocess.SubprocessError):
         report = {"ok": False, "problems": ["operational_evidence_unavailable"]}
     Path("ops-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

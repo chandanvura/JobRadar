@@ -74,3 +74,49 @@ def test_public_probe_is_bounded_and_checks_both_content_types(monkeypatch):
     assert len(calls) == 2
     monkeypatch.setattr(ops_check.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess([], 0, "200 text/html"))
     assert not ops_check.public_available()
+
+
+def test_notification_failures_are_visible_even_after_a_recent_success():
+    sent = {"status": "completed", "conclusion": "success", "updated_at": "2026-10-21T11:00:00Z"}
+    assert assess(HEALTH, RUNS, ARTIFACTS, NOW, notification_runs=[sent])["ok"]
+    failed = {**sent, "conclusion": "failure"}
+    report = assess(HEALTH, RUNS, ARTIFACTS, NOW, notification_runs=[failed, sent])
+    assert report["problems"] == ["notification_workflow_failed"]
+    assert report["notification_workflow_age_hours"] == 1
+    # An active attempt does not invalidate the last confirmed workflow result.
+    assert assess(HEALTH, RUNS, ARTIFACTS, NOW, notification_runs=[{**failed, "status": "in_progress"}, sent])["ok"]
+
+
+@pytest.mark.parametrize("runs", [[], [{"status": "completed", "conclusion": "success", "updated_at": "invalid"}],
+                                  [{"status": "completed", "conclusion": "success", "updated_at": "2026-10-20T00:00:00Z"}]])
+def test_missing_or_stale_notification_evidence_is_not_healthy(runs):
+    report = assess(HEALTH, RUNS, ARTIFACTS, NOW, notification_runs=runs)
+    assert "notification_verification_missing_or_stale" in report["problems"]
+
+
+def test_operational_report_queries_notification_evidence_without_production_writes(monkeypatch, tmp_path):
+    import json
+    from scraper import ops_check
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("GITHUB_TOKEN", "fixture-token-never-real")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "owner/repo")
+    monkeypatch.setattr(ops_check, "read_health", lambda: HEALTH)
+    monkeypatch.setattr(ops_check, "public_available", lambda: True)
+    calls = []
+    now = datetime.now(timezone.utc).isoformat()
+    monkeypatch.setattr(ops_check, "assess", lambda health, runs, artifacts, **kwargs: {
+        "ok": True, "problems": [], "notification_runs": kwargs["notification_runs"]})
+    def request(url, token):
+        calls.append(url)
+        assert token == "fixture-token-never-real"
+        if "/backup-d1.yml/" in url:
+            return {"workflow_runs": [{"id": 7, "conclusion": "success"}]}
+        if "/artifacts?" in url:
+            return {"artifacts": ARTIFACTS}
+        assert "/telegram-digest.yml/runs?" in url
+        return {"workflow_runs": [{"status": "completed", "conclusion": "success", "updated_at": now}]}
+    monkeypatch.setattr(ops_check, "request_json", request)
+    ops_check.main()
+    report = json.loads((tmp_path / "ops-report.json").read_text())
+    assert len(calls) == 3 and report["notification_runs"][0]["conclusion"] == "success"
+    assert "fixture-token-never-real" not in (tmp_path / "ops-report.json").read_text()
