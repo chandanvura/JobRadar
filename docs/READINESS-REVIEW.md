@@ -49,12 +49,12 @@ review claims scoped to this evidence rather than treating a clean scan as proof
   passed production verification. Public health reports fresh ingestion/database
   configuration while returning 503 honestly for the two source failures.
 
-## Open acceptance criteria
+## Maintenance acceptance criteria
 
-1. **Feed recovery:** issue #80 remains open until a naturally scheduled scan of
-   the repaired revision verifies Eaton and Maersk, complete counts and unique
-   records. Do not delete failing sources, weaken completeness checks, relabel
-   them empty, or dispatch scans just to manufacture closure.
+1. **Feed recovery:** #80 is closed with the completed production evidence below.
+   Current AXA/Lenovo/Citigroup exceptions remain visible in #87. Do not delete
+   failing sources, weaken completeness checks, relabel them empty, or dispatch
+   scans just to manufacture closure.
 2. **Observation period:** hourly operational reports and daily scan/notification/
    restore-verified backup evidence must accumulate through normal operation.
    One day's checks cannot prove nine months of reliability. Missed/stale evidence
@@ -110,3 +110,43 @@ now installs `requirements-dev.txt`; discovery/finalization retain runtime-only
 dependencies. A regression check inspects every workflow job that invokes pytest
 and resolves its installed manifests recursively. The check failed before the
 repair. This is separate from the employer snapshot failures in issue #80.
+
+## Feature-development closure — 21 October 2026
+
+Application-code baseline: `7b7bb0b7fd12e47147976e349266ce19bfc1d985`.
+Required python/web validation and CodeQL passed on this main revision. The
+released backup/setup safeguards were verified by deployment run
+https://github.com/chandanvura/JobRadar/actions/runs/39588958645 . The later timing
+change affects collectors only and takes effect in normal subsequent scans.
+
+Production scan https://github.com/chandanvura/JobRadar/actions/runs/39589334236
+completed finalization. Job 119186299856 reported Eaton: 173 listings; job
+119186299565 reported Maersk: 1,249 listings. Neither source emitted a warning.
+The existing unique-ID/count/detail/final-snapshot guards remained active;
+Maersk used complete category/global reconciliation. Issue #80 was closed based
+on this evidence. Public health reports 740/743 successful sources, fresh data,
+configured ingestion and database access. It correctly returns degraded health
+for AXA, Lenovo and Citigroup; issue #87 carries the exact failure evidence.
+
+AXA returned HTTP 403 to a follow-up read, so its current search client could not
+be verified. Lenovo's first follow-up read returned 403; a later genuine listing
+returned 61 jobs and the unchanged parser correctly accepted its 10-record first
+page, count/range and next offset. That does not prove full-source recovery or a
+reproducible parser defect. Citigroup's overlapping pages were rejected by the
+existing bounded snapshot guards. No unsupported parser rewrite, access bypass,
+source deletion or extra retry was used to hide these exceptions.
+
+Run 39605710108 completed only the freshness gate; discovery/finalization were
+skipped and provide no newer collection evidence. An Actions success is not
+equivalent to a fresh complete scan.
+
+The repository now enters maintenance-only mode: no new companies, features,
+framework/language migrations, cosmetic refactors or speculative tuning. Keep
+existing scans, fallback catalogs, backup verification, dependency/security
+alerts and read-only operational checks. Only reproduced security, data-loss or
+existing-functionality failures justify narrowly scoped maintenance fixes.
+Automated maintenance may prepare isolated draft repairs; it must not merge,
+deploy, change protections or perform destructive/production data operations.
+The remaining provider exceptions and the nine-month observation period are
+operational limits, not unfinished feature development or grounds to claim all
+feeds are healthy. There is no guarantee of zero outages or zero owner intervention.
