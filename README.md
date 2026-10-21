@@ -60,6 +60,11 @@ There is no new cloud account, paid service or private-data migration.
 | A refresh races or a tab becomes stale | Cancel obsolete loads, avoid mixed live/backup catalogues, retain private tracking and its recovery copy |
 | A dependency becomes vulnerable | Dependency alerts and tested PRs; no unrestricted force upgrade or automatic production merge |
 
+Telegram transport errors and malformed responses are handled as delivery
+failures without exposing request URLs. Individual failures do not skip later
+alerts. A timed-out send may already have arrived; a later retry can duplicate
+an alert, so exactly-once delivery is not promised.
+
 Maersk category pages with repeated valid IDs are discarded and allow one
 whole-source restart. Missing/malformed IDs fail immediately; persistent
 duplicates remain visible failures. No incomplete attempt is accepted.
