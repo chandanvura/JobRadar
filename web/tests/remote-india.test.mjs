@@ -8,14 +8,9 @@ test('new search defaults stay in Bengaluru and Hyderabad; saved city preference
   assert.deepEqual(cleanSearch({locations:['Hyderabad']}).locations,['Hyderabad']);
   assert.deepEqual(cleanSearch({locations:['Remote (India)','Remote - USA']}).locations,['Bengaluru','Hyderabad']);
 });
-test('manual India remote discovery queries require both India and remote terms',()=>{
+test('manual search tools reject locations outside the two target cities',()=>{
   for(const searches of [atsSearches,groupedAtsSearches]){
-    const result=searches('Java Developer','Remote (India)','day');
-    assert.ok(result.length>0);
-    for(const entry of result){
-      const q=new URL(entry.url).searchParams.get('q');
-      assert.ok(q.includes('"India" "Remote"'));
-      assert.ok(!q.includes('Hyderabad'));
-    }
+    for(const city of ['Remote (India)','Other India','Pune']) assert.deepEqual(searches('Java Developer',city,'day'),[]);
+    for(const city of ['Bengaluru','Hyderabad']) assert.equal(searches('Java Developer',city,'day').length,7);
   }
 });

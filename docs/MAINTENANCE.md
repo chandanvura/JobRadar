@@ -70,3 +70,7 @@ Record exact source SHA and required checks before merging. Verify the deployed
 revision and public browser behavior afterward. Never equate green CI with all
 employer feeds passing, and never close a feed issue solely because a mock test
 or initial HTTP sample passes. See `ops/RECOVERY.md` for rollback and data recovery.
+
+Dependency PRs group minor/patch changes by ecosystem each month, with one open
+version-update PR per ecosystem. Major versions require a planned compatibility
+review; security alerts remain enabled. Node typings follow the Node 24 runtime.

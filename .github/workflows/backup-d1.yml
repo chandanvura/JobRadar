@@ -58,7 +58,7 @@ jobs:
           gzip -t backups/jobradar.sql.gz
           (cd backups && sha256sum jobradar.sql.gz > SHA256SUMS)
           echo "Backup compressed bytes: $(wc -c < backups/jobradar.sql.gz)"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: jobradar-d1-${{ github.run_id }}
           path: web/backups/
