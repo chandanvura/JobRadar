@@ -19,7 +19,8 @@ def main():
     print("UTC",datetime.now(timezone.utc).isoformat())
     with httpx.Client(timeout=httpx.Timeout(12,connect=6),follow_redirects=False) as client:
         for url in ENDPOINTS:
-            assert urlparse(url).hostname in ALLOWED_HOSTS
+            if urlparse(url).hostname not in ALLOWED_HOSTS:
+                raise ValueError('Only verified employer hosts may be probed')
             info={"url":url}
             try:
                 with client.stream("GET",url,headers={"User-Agent":"JobRadar/1.2 (+source diagnostics)","Accept":"application/json,text/html,application/xml"}) as response:
