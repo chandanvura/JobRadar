@@ -312,36 +312,74 @@ def workday_config(c):
     if not parsed.hostname or not tenant or not site: raise ValueError("Workday requires a board URL and tenant|site identifier")
     return f"https://{parsed.hostname}",tenant,site
 
+def _workday_facet_nodes(nodes, max_depth=10):
+    """Walk employer-published nested Workday facets without guessing location IDs."""
+    seen=set()
+    def visit(value, depth):
+        if depth>max_depth or not isinstance(value,(dict,list,tuple)):
+            return
+        identity=id(value)
+        if identity in seen:
+            return
+        seen.add(identity)
+        if isinstance(value,(list,tuple)):
+            for child in value:
+                yield from visit(child,depth+1)
+            return
+        if "facetParameter" in value:
+            yield value
+        for key in ("values","facetValues","children"):
+            if key in value:
+                yield from visit(value[key],depth+1)
+    yield from visit(nodes,0)
+
+
+def _workday_facet_values(node):
+    """Return direct employer-published values; nested facets are visited separately."""
+    for key in ("values","facetValues"):
+        values=node.get(key)
+        if isinstance(values,(list,tuple)):
+            for value in values:
+                if isinstance(value,dict):
+                    yield value
+
+
 def workday_country_facets(nodes,country):
     """Prefer an exact employer-published country facet over location suffixes."""
     countries={}; locations=[]
-    def visit(entries):
-        for node in entries:
-            parameter=node.get("facetParameter","")
-            if re.sub(r"[^a-z]","",parameter.lower()).endswith("country"):
-                ids=[value["id"] for value in node.get("values",[])
-                     if value.get("descriptor","").casefold()==country.casefold() and value.get("id")]
-                if ids: countries[parameter]=ids
-            if parameter=="locations":
-                locations.extend(value["id"] for value in node.get("values",[])
-                                 if value.get("id") and re.search(r",\s*"+re.escape(country)+r"$",value.get("descriptor",""),re.I))
-            visit(node.get("values",[]))
-    visit(nodes)
+    if not isinstance(country,str) or not country.strip():
+        return {}
+    for node in _workday_facet_nodes(nodes):
+        parameter=str(node.get("facetParameter") or "")
+        if re.sub(r"[^a-z]","",parameter.lower()).endswith("country"):
+            ids=countries.setdefault(parameter,[])
+            for value in _workday_facet_values(node):
+                if str(value.get("descriptor") or "").casefold()==country.casefold() and value.get("id"):
+                    if value["id"] not in ids:
+                        ids.append(value["id"])
+            if not ids:
+                countries.pop(parameter,None)
+        if parameter=="locations":
+            for value in _workday_facet_values(node):
+                if value.get("id") and re.search(r",\s*"+re.escape(country)+r"$",str(value.get("descriptor") or ""),re.I):
+                    if value["id"] not in locations:
+                        locations.append(value["id"])
     return countries or ({"locations":locations} if locations else {})
+
 
 def workday_city_facets(nodes):
     """Use only employer-published location IDs; never search guessed city strings."""
-    country=workday_country_facets(nodes,'India')
-    if country:return country
+    country=workday_country_facets(nodes,"India")
+    if country:
+        return country
     found=[]
-    def visit(entries):
-        for node in entries:
-            if node.get("facetParameter")=="locations":
-                found.extend(value["id"] for value in node.get("values",[]) if value.get("id")
-                             and india_discovery_location(value.get("descriptor", "")))
-            visit(node.get("values", []))
-    visit(nodes)
-    return {"locations":list(dict.fromkeys(found))} if found else {}
+    for node in _workday_facet_nodes(nodes):
+        if node.get("facetParameter")=="locations":
+            for value in _workday_facet_values(node):
+                if value.get("id") and india_discovery_location(str(value.get("descriptor") or "")):
+                    if value["id"] not in found:
+                        found.append(value["id"])
+    return {"locations":found} if found else {}
 
 
 WORKDAY_DETAIL_LIMIT = 200
