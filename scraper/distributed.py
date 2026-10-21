@@ -62,7 +62,71 @@ def load_artifacts(paths):
 def merge_artifacts(artifacts,expected_sources=None):
     companies=[company for artifact in artifacts for company in artifact["companies"]]
     company_keys=[(company["ats_provider"],company["ats_identifier"]) for company in companies]
-    if len(company_keys)!=len(set(co…1161 tokens truncated…len(limited)} limited; {len(failed)} failed. End-to-end duration: {elapsed:.1f}s.")
+    if len(company_keys)!=len(set(company_keys)): raise ValueError("Duplicate company ownership across shards")
+    if expected_sources is not None and len(companies)!=expected_sources:
+        raise ValueError(f"Incomplete distributed scan: expected {expected_sources} sources, received {len(companies)}")
+    jobs={}
+    for artifact in artifacts:
+        for job in artifact["jobs"]: jobs[(job["company"],job["ats_provider"],job["external_job_id"])]=job
+    return {
+        "started_at":min(item["started_at"] for item in artifacts),
+        "finished_at":max(item["finished_at"] for item in artifacts),
+        "companies":companies,"jobs":list(jobs.values()),
+        "jobs_scanned":sum(int(item["jobs_scanned"]) for item in artifacts),
+        "raw_jobs":sum(int(item["raw_jobs"]) for item in artifacts),
+        "failures":sum(int(item["failures"]) for item in artifacts),
+    }
+
+def job_from_dict(value):
+    fields={field.name for field in dataclasses.fields(Job)}
+    return Job(**{key:item for key,item in value.items() if key in fields})
+
+async def finalize(paths):
+    enabled=[c for c in load_companies() if c.enabled and c.ats_provider in ADAPTERS]
+    merged=merge_artifacts(load_artifacts(paths),len(enabled))
+    statuses=merged["companies"]; payload_jobs=merged["jobs"]
+    eligible=[job_from_dict(item) for item in payload_jobs if item.get("is_eligible")]
+    failures=merged["failures"]
+    empty=sum(1 for status in statuses if not status.get("error_count") and status.get("jobs_found",0)==0 and not str(status.get("warning","")).startswith("Limited coverage"))
+    run={"started_at":merged["started_at"],"finished_at":merged["finished_at"],"companies_checked":len(enabled),"companies_successful":len(enabled)-failures,"companies_failed":failures,"companies_empty":empty,"jobs_scanned":merged["jobs_scanned"],"candidate_jobs":len(payload_jobs),"matching_jobs":len(eligible),"notifications_sent":0,"status":run_health_status(failures)}
+    endpoint,secret=os.getenv("JOBRADAR_API_URL"),os.getenv("JOBRADAR_INGEST_SECRET")
+    if not endpoint or not secret: raise RuntimeError("JOBRADAR_API_URL/INGEST_SECRET missing")
+    headers={"Authorization":f"Bearer {secret}"}; bypass=os.getenv("JOBRADAR_SITE_BYPASS_TOKEN")
+    if bypass: headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
+    try:
+        result=await ingest_scan(endpoint,headers,payload_jobs,statuses,run)
+    except QuotaDeferred:
+        message = "DEFERRED: D1 daily quota reached; no completed scan or notifications recorded. Shard artifacts retained for 7 days; next healthy scan recollects current jobs."
+        print(message)
+        summary = os.getenv("GITHUB_STEP_SUMMARY")
+        if summary:
+            with open(summary, "a", encoding="utf-8") as output:
+                output.write(message + "\n")
+        return
+    alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
+    alert_jobs=[job for job in eligible if (source_job_key(job) in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
+    telegram_chat=None
+    if alert_jobs:
+        try:
+            telegram_chat=await ensure_telegram_ready()
+            print("Telegram health check: bot authentication and chat validation passed.")
+        except TelegramDeliveryError as exc:
+            telegram_failures+=1; print(f"ERROR {exc}",file=sys.stderr)
+            for job in alert_jobs: await record_notification(endpoint,headers,job,"failed",str(exc))
+    else:
+        print("No alert candidates; Telegram delivery is not required for this scan.")
+    for job in alert_jobs if telegram_chat else []:
+        try:
+            await notify(job,telegram_chat); sent+=1
+            await record_notification(endpoint,headers,job,"sent")
+        except TelegramDeliveryError as exc:
+            telegram_failures+=1; print(f"ERROR Telegram {job.external_job_id}: {exc}",file=sys.stderr)
+            await record_notification(endpoint,headers,job,"failed",str(exc))
+    limited=[s["name"] for s in statuses if str(s.get("warning","")).startswith("Limited coverage")]
+    failed=[s["name"] for s in statuses if s.get("error_count")]
+    elapsed=(datetime.now(timezone.utc)-datetime.fromisoformat(merged["started_at"])).total_seconds()
+    print(f"Distributed scan: {merged['raw_jobs']} raw; {len(payload_jobs)} candidates; {len(eligible)} eligible; {len(result.get('new_job_keys',[]))} new; {sent} alerts.")
+    print(f"Source diagnostics: {empty} empty; {len(limited)} limited; {len(failed)} failed. End-to-end duration: {elapsed:.1f}s.")
     if failed: print("Failed sources: "+", ".join(failed))
     if telegram_failures:
         print("ERROR Telegram failures remain queued for retry.",file=sys.stderr)
