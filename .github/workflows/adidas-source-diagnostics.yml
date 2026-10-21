@@ -20,6 +20,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install HTTPX
-        run: python -m pip install "httpx==0.28.1"
+        run: python -m pip install "httpx==0.28.1" "beautifulsoup4==4.13.5"
       - name: Probe official Adidas endpoints (bounded and read-only)
         run: python scripts/diagnose_adidas_source.py
