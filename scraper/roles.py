@@ -12,6 +12,25 @@ NON_TECHNICAL = re.compile(r'\b(?:non technical|nontechnical|human resources|tal
 AMBIGUOUS_TITLE = re.compile(r'\b(?:developer|programmer|engineer|analyst|consultant|associate|graduate|trainee|intern|apprentice)\b', re.I)
 TECHNICAL_EVIDENCE = re.compile(r'\b(?:software development|software engineering|programming|coding|computer science|rest api|kubernetes|docker|ci\s*[/ -]?\s*cd|linux|sql|python|java|javascript|typescript|aws|azure|gcp|terraform|firmware|embedded software)\b', re.I)
 
+# These short titles occur in both software and non-software job families.
+# Refuse a confirmed non-software context unless the actual requirements also
+# contain an engineering signal. Do not infer technical eligibility from YOE.
+CROSS_DOMAIN_ENGINEERING_TITLES = frozenset({
+    "performance engineer", "database engineer", "qa engineer",
+})
+NON_SOFTWARE_DOMAIN = re.compile(
+    r'\\b(?:retail store|sales performance|merchandising|customer contacts|'
+    r'non[- ]technical operations|manufacturing quality|mechanical parts|'
+    r'factory inspection|physical product inspection)\\b', re.I
+)
+SOFTWARE_DOMAIN = re.compile(
+    r'\\b(?:software|coding|programming|automation|automated tests?|'
+    r'selenium|playwright|sql|postgres(?:ql)?|mysql|oracle db|'
+    r'database infrastructure|performance testing|load testing|'
+    r'latency|backend|frontend|devops|kubernetes|python|java)\\b', re.I
+)
+
+
 
 def normalize_title(title):
     text = unicodedata.normalize('NFKC', title).casefold().replace('&', ' and ')
@@ -21,6 +40,10 @@ def normalize_title(title):
 def classify_role(title, description=''):
     clean = normalize_title(title)
     if NON_TECHNICAL.search(clean):
+        return clean, 'Other'
+    if (clean in CROSS_DOMAIN_ENGINEERING_TITLES
+            and NON_SOFTWARE_DOMAIN.search(description)
+            and not SOFTWARE_DOMAIN.search(description)):
         return clean, 'Other'
     for family, pattern in COMPILED_ROLES:
         if pattern.search(clean):
