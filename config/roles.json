@@ -6,7 +6,9 @@
       "patterns": [
         "\\bdev\\s*(?:sec\\s*)?ops\\b",
         "\\b(?:build (?:and )?release|release|deployment|configuration management) (?:engineer|developer|specialist)\\b",
-        "\\b(?:ci cd|build|release automation) (?:engineer|developer)\\b"
+        "\\b(?:ci cd|build|release automation) (?:engineer|developer)\\b",
+        "\\b(?:ci\\s*[/ -]?\\s*cd|build|release automation)\\b.{0,25}\\b(?:engineer|developer)\\b",
+        "\\b(?:kubernetes|terraform) (?:operations |infrastructure )?(?:engineer|developer|specialist)\\b"
       ],
       "titles": [
         "DevOps Engineer",
@@ -24,14 +26,25 @@
         "Build Engineer",
         "Build and Release Engineer I",
         "Release Automation Engineer",
-        "Deployment Engineer"
+        "Deployment Engineer",
+        "Kubernetes Engineer",
+        "Terraform Engineer",
+        "DevOps Specialist",
+        "Junior DevOps Specialist",
+        "Associate DevOps Specialist",
+        "DevOps Associate",
+        "Junior CI/CD Engineer",
+        "Associate CI/CD Engineer",
+        "CI/CD Engineer I"
       ]
     },
     {
       "family": "SRE",
       "patterns": [
         "\\b(?:site reliability|sre|production engineer|reliability software)\\b",
-        "\\b(?:production reliability|software reliability) engineer\\b"
+        "\\b(?:production reliability|software reliability) engineer\\b",
+        "\\b(?:database reliability|performance)\\b.{0,25}\\b(?:engineer|specialist)\\b",
+        "\\bproduction engineer\\s*(?:i|1)\\b"
       ],
       "titles": [
         "Site Reliability Engineer",
@@ -44,7 +57,17 @@
         "Junior SRE",
         "SRE I",
         "Production Reliability Engineer",
-        "Software Reliability Engineer"
+        "Software Reliability Engineer",
+        "Database Reliability Engineer",
+        "Junior Database Reliability Engineer",
+        "Associate Database Reliability Engineer",
+        "Performance Engineer",
+        "Junior Performance Engineer",
+        "Associate Performance Engineer",
+        "Performance Engineer I",
+        "Production Engineer I",
+        "Junior Production Engineer",
+        "Associate Production Engineer"
       ]
     },
     {
@@ -63,8 +86,9 @@
       "patterns": [
         "\\b(?:cloud|cloudops)\\b.{0,45}\\b(?:engineer(?:ing)?|developer|associate|specialist|consultant|analyst|intern|operations)\\b",
         "\\bcloudops\\b",
-        "\\b(?:aws|azure|gcp|google cloud) (?:software |support |operations |infrastructure |automation )?(?:engineer|developer|associate)\\b",
-        "\\bcloud (?:infrastructure|automation|systems?) (?:engineer|developer)\\b"
+        "\\b(?:aws|azure|gcp|google cloud) (?:software |support |operations |infrastructure |automation |platform )?(?:engineer|developer|associate)\\b",
+        "\\bcloud (?:infrastructure|automation|systems?) (?:engineer|developer)\\b",
+        "\\b(?:cloud platform|cloudops) (?:engineer|associate)\\b"
       ],
       "titles": [
         "Cloud Developer",
@@ -89,7 +113,15 @@
         "Cloud Operations Associate",
         "Cloud Operations Engineer I",
         "CloudOps Engineer",
-        "Cloud Systems Engineer"
+        "Cloud Systems Engineer",
+        "AWS Platform Engineer",
+        "Azure Platform Engineer",
+        "GCP Platform Engineer",
+        "Cloud Platform Engineer",
+        "Cloud Platform Associate",
+        "Junior CloudOps Engineer",
+        "Associate CloudOps Engineer",
+        "CloudOps Engineer I"
       ]
     },
     {
@@ -157,7 +189,16 @@
         "Junior Linux Engineer",
         "Linux Systems Engineer",
         "Systems Automation Engineer",
-        "Infrastructure Developer"
+        "Infrastructure Developer",
+        "Systems Administrator",
+        "Junior Systems Administrator",
+        "Associate Systems Administrator",
+        "Junior Systems Engineer",
+        "Associate Systems Engineer",
+        "Database Engineer",
+        "Junior Database Engineer",
+        "Associate Database Engineer",
+        "Database Engineer I"
       ]
     },
     {
@@ -234,7 +275,14 @@
         "Embedded Software Engineer",
         "Firmware Developer",
         "Design Verification Engineer",
-        "RTL Design Engineer"
+        "RTL Design Engineer",
+        "Firmware Engineer",
+        "Junior Firmware Engineer",
+        "Associate Firmware Engineer",
+        "Firmware Engineer I",
+        "Junior Embedded Software Engineer",
+        "Associate Embedded Software Engineer",
+        "Embedded Software Engineer I"
       ]
     },
     {
@@ -248,7 +296,19 @@
         "QA Automation Engineer",
         "Test Engineer",
         "Software Tester",
-        "Software Development Engineer in Test"
+        "Software Development Engineer in Test",
+        "Junior QA Engineer",
+        "Associate QA Engineer",
+        "QA Engineer I",
+        "QA Engineer 1",
+        "Junior SDET",
+        "Associate SDET",
+        "SDET I",
+        "SDET 1",
+        "Junior Test Engineer",
+        "Associate Test Engineer",
+        "Test Engineer I",
+        "QA Automation Engineer I"
       ]
     },
     {
@@ -321,7 +381,34 @@
         "Junior Software Developer",
         "Entry Level Software Engineer",
         "Graduate Software Development Engineer",
-        "Software Programmer"
+        "Software Programmer",
+        "Junior Frontend Developer",
+        "Associate Frontend Developer",
+        "Frontend Developer I",
+        "Junior Full Stack Developer",
+        "Associate Full Stack Developer",
+        "Full Stack Developer I",
+        "Junior Mobile Developer",
+        "Associate Mobile Developer",
+        "Mobile Developer I",
+        "Junior iOS Developer",
+        "Associate iOS Developer",
+        "Junior Android Developer",
+        "Associate Android Developer",
+        "Frontend Engineer",
+        "Junior Frontend Engineer",
+        "Associate Frontend Engineer",
+        "Frontend Engineer I",
+        "Full Stack Engineer",
+        "Junior Full Stack Engineer",
+        "Associate Full Stack Engineer",
+        "Full Stack Engineer I",
+        "Mobile Engineer",
+        "Junior Mobile Engineer",
+        "Associate Mobile Engineer",
+        "Mobile Engineer I",
+        "iOS Engineer",
+        "Android Engineer"
       ]
     }
   ],

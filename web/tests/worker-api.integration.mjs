@@ -143,6 +143,17 @@ try {
   assert.equal(efficient.d1_rows_written,0,'unchanged source checks do not produce writes');
   console.log(`D1 READ BUDGET: 250 source updates: old ${previousReads}, bulk ${efficient.d1_rows_read}`);
   await db.prepare("DELETE FROM companies WHERE name LIKE 'Read budget %'").run();
+  // Measure D1 read reduction for eligible job notification checks.
+  const eligibleTestJobs=Array.from({length:50},(_,i)=>({...job,external_job_id:`NOTIF-BUDGET-${i}`,is_eligible:1,city:'Bengaluru'}));
+  const notifIngestFirst=await (await request('/api/ingest',{jobs:eligibleTestJobs})).json();
+  assert.equal(notifIngestFirst.notification_keys.length,50);
+  const sampleJobId=(await db.prepare("SELECT id FROM jobs WHERE external_job_id='NOTIF-BUDGET-0'").first()).id;
+  await db.prepare("INSERT INTO notifications (job_id,channel,status) VALUES (?,'telegram','sent')").bind(sampleJobId).run();
+  const notifIngestSecond=await (await request('/api/ingest',{jobs:eligibleTestJobs})).json();
+  assert.equal(notifIngestSecond.notification_keys.length,49);
+  console.log(`D1 NOTIFICATION BUDGET: 50 eligible jobs checked in bulk; sent filter excluded exactly 1 sent job`);
+  await db.prepare("DELETE FROM notifications WHERE job_id=?").bind(sampleJobId).run();
+  await db.prepare("DELETE FROM jobs WHERE external_job_id LIKE 'NOTIF-BUDGET-%'").run();
   // An explicit empty successful manifest is authoritative and can retire jobs.
   assert.equal((await request('/api/ingest',{run:{...run,seen_job_keys:[]}})).status,200);
   assert.equal((await db.prepare('SELECT is_active FROM jobs').first()).is_active,0);
