@@ -190,3 +190,5 @@ For the nine-month operating target, see [the readiness review](docs/READINESS-R
 
 Private backup import/export now share a bounded six-field format, including resume drafts and tailoring requests. Imports validate before writes, merge application history and report partial storage failures without reloading; exports fail visibly when private records cannot be read. See the [inspection findings](docs/READINESS-REVIEW.md#follow-up-repository-inspection) for tested repairs and review limits.
 Telegram setup also sanitizes network and malformed-response failures so request URLs and token-bearing exception text do not reach setup logs.
+
+Scan validation installs the development requirements needed by pytest; discovery and finalization keep runtime-only dependencies. CI checks test-running workflow manifests to prevent this dependency split from stopping scheduled scans again.

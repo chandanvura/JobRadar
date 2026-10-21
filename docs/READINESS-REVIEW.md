@@ -100,3 +100,13 @@ The security-sensitive API, collector, browser storage, export, recovery,
 permissions and cleanup paths were reviewed alongside repository-wide automated
 checks. Generated output and third-party implementation source are not claimed
 as manually audited. Feed acceptance criteria in issue #80 still apply.
+
+### Scan validation dependency mismatch
+
+Run `39585587526` failed its validation job on 21 October before discovery:
+Python reported `No module named pytest`. The job installed the runtime-only
+manifest even though pytest had moved to development requirements. Validation
+now installs `requirements-dev.txt`; discovery/finalization retain runtime-only
+dependencies. A regression check inspects every workflow job that invokes pytest
+and resolves its installed manifests recursively. The check failed before the
+repair. This is separate from the employer snapshot failures in issue #80.
