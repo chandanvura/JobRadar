@@ -10,7 +10,7 @@ ROLE_PATTERNS = {role['family']: '|'.join(role['patterns']) for role in TAXONOMY
 COMPILED_ROLES = [(family, re.compile(pattern, re.I)) for family, pattern in ROLE_PATTERNS.items()]
 NON_TECHNICAL = re.compile(r'\b(?:non technical|nontechnical|human resources|talent acquisition|marketing|tax|civil|mechanical|chemical|electrical maintenance|sales associate|financial advisor)\b', re.I)
 AMBIGUOUS_TITLE = re.compile(r'\b(?:developer|programmer|engineer|analyst|consultant|associate|graduate|trainee|intern|apprentice)\b', re.I)
-TECHNICAL_EVIDENCE = re.compile(r'\b(?:software development|software engineering|programming|coding|computer science|rest api|kubernetes|linux|sql|python|java|javascript|typescript|aws|azure|terraform|firmware|embedded software)\b', re.I)
+TECHNICAL_EVIDENCE = re.compile(r'\b(?:software development|software engineering|programming|coding|computer science|rest api|kubernetes|docker|ci\s*[/ -]?\s*cd|linux|sql|python|java|javascript|typescript|aws|azure|gcp|terraform|firmware|embedded software)\b', re.I)
 
 
 def normalize_title(title):
