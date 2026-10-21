@@ -42,8 +42,11 @@ def minutes_since_scan(health, now=None):
     try:
         value=datetime.datetime.fromisoformat(finished.replace("Z","+00:00"))
         current=now or datetime.datetime.now(datetime.timezone.utc)
-        return (current-value).total_seconds()/60
-    except (TypeError,ValueError):
+        if value.tzinfo is None:
+            return None
+        age = (current-value).total_seconds()/60
+        return age if age >= 0 else None
+    except (AttributeError,TypeError,ValueError):
         return None
 
 
@@ -52,6 +55,16 @@ def should_dispatch(health, runs, now=None):
         return False
     age=minutes_since_scan(health,now)
     active=any(run.get("status") in ACTIVE_STATUSES for run in runs)
+    current=now or datetime.datetime.now(datetime.timezone.utc)
+    for run in runs:
+        if run.get("status") != "completed":
+            continue
+        try:
+            updated=datetime.datetime.fromisoformat(run["updated_at"].replace("Z","+00:00"))
+            if updated.tzinfo is not None and 0 <= (current-updated).total_seconds() < 1800:
+                return False
+        except (KeyError, TypeError, ValueError):
+            continue
     return (age is None or age>=150) and not active
 
 

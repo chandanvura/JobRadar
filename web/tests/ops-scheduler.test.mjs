@@ -16,7 +16,7 @@ test('completed gate-only workflows cannot trigger recovery every five minutes',
   const recent={...run('completed','success'),updated_at:'2026-10-19T18:25:00Z'};
   assert.equal(recoveryCoolingDown([recent],now-1),true);
   assert.equal(recoveryCoolingDown([recent],now),false);
-  assert.equal(recoveryCoolingDown([{...recent,conclusion:'failure'}],now-1),false);
+  assert.equal(recoveryCoolingDown([{...recent,conclusion:'failure'}],now-1),true);
   assert.equal(recoveryCoolingDown([{...recent,updated_at:'invalid'}],now),false);
   assert.equal(recoveryCoolingDown([{...recent,updated_at:'2027-01-01'}],now),false);
 });
@@ -116,3 +116,18 @@ test('inactive operational schedules recover while intentionally disabled workfl
   };
   try{assert.equal(await restoreInactiveSchedules({GITHUB_DISPATCH_TOKEN:'test-token'}),1);assert.equal(enabled.length,1);assert.match(enabled[0],/deploy-cloudflare.yml\/enable$/)}finally{globalThis.fetch=original}
 });
+
+for (const conclusion of ['failure','timed_out','cancelled']) {
+ test(`recent ${conclusion} prevents a recovery storm and expires after 30 minutes`,async()=>{
+  const original=globalThis.fetch;const now=Date.parse('2026-10-21T12:00:00Z');
+  const recent={...run('completed',conclusion),updated_at:'2026-10-21T11:45:00Z'};
+  globalThis.fetch=async url=>{
+   if(url.endsWith('/actions/workflows/scrape.yml'))return Response.json({state:'active'});
+   if(url.includes('/workflows/scrape.yml/runs?'))return Response.json({workflow_runs:[recent]});
+   assert.fail('cooldown must not query health or dispatch');
+  };
+  try{assert.equal(await checkAndRecover({GITHUB_DISPATCH_TOKEN:'test'},now),'cooldown');}
+  finally{globalThis.fetch=original;}
+  assert.equal(recoveryCoolingDown([recent],now+15*60_000),false);
+ });
+}

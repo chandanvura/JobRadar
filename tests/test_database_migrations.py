@@ -62,9 +62,26 @@ def test_public_pagination_merges_bounded_city_index_pages_without_sorting_full_
     sql=re.search(r'prepare\(`(SELECT \$\{PUBLIC_JOB_COLUMNS\} FROM jobs WHERE id IN [^`]+)`\)',source).group(1).replace('${PUBLIC_JOB_COLUMNS}','id').replace('${limit+1}','501')
     for i in range(1000):
         db.execute("INSERT INTO jobs(external_job_id,company,title,normalized_title,role_category,location,normalized_location,city,ats_provider,source,job_url,application_url,career_page_url,first_seen_at,last_seen_at,relevance_score,freshness_score,priority_score) VALUES (?,'Example','Engineer','engineer','Java / Backend','City','City',?,'workday','company_career','https://example.test','https://example.test','https://example.test','2026-09-30','2026-09-30',1,1,1)",(str(i),['Bengaluru','Hyderabad','Remote (India)','Other India'][i%4]))
-    expected=db.execute("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad','Remote (India)','Other India') AND id>100 ORDER BY id LIMIT 501").fetchall()
-    assert db.execute(sql,(100,9007199254740991)*4).fetchall()==expected
-    bounded=db.execute(sql,(100,300)*4).fetchall()
-    assert bounded==db.execute("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad','Remote (India)','Other India') AND id>100 AND id<=300 ORDER BY id LIMIT 501").fetchall()
-    plan=' '.join(row[3] for row in db.execute('EXPLAIN QUERY PLAN '+sql,(100,9007199254740991)*4))
-    assert plan.count('SEARCH jobs USING COVERING INDEX jobs_active_city_id_idx (is_active=? AND city=? AND id>? AND id<?)')==4,plan
+    expected=db.execute("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') AND id>100 ORDER BY id LIMIT 501").fetchall()
+    assert db.execute(sql,(100,9007199254740991)*2).fetchall()==expected
+    bounded=db.execute(sql,(100,300)*2).fetchall()
+    assert bounded==db.execute("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') AND id>100 AND id<=300 ORDER BY id LIMIT 501").fetchall()
+    plan=' '.join(row[3] for row in db.execute('EXPLAIN QUERY PLAN '+sql,(100,9007199254740991)*2))
+    assert plan.count('SEARCH jobs USING COVERING INDEX jobs_active_city_id_idx (is_active=? AND city=? AND id>? AND id<?)')==2,plan
+
+
+def test_bulk_company_inventory_uses_existing_name_and_source_indexes():
+    import re
+    import json
+    db=sqlite3.connect(':memory:')
+    for path in sorted((ROOT/'web'/'drizzle').glob('*.sql')):
+        apply_migration(db,path.name)
+    source=(ROOT/'web'/'worker'/'index.ts').read_text()
+    sql=re.search(r'prepare\("(SELECT \* FROM companies WHERE id IN [^"\n]+)"\)',source).group(1)
+    parameters=(json.dumps(['example']),json.dumps([{'provider':'workday','identifier':'example'}]))
+    plan=' '.join(row[3] for row in db.execute('EXPLAIN QUERY PLAN '+sql,parameters))
+    assert 'SEARCH c USING COVERING INDEX companies_name_key' in plan,plan
+    assert 'SEARCH c USING COVERING INDEX companies_ats_key' in plan,plan
+    db.execute("INSERT INTO companies(name,careers_url,ats_provider,ats_identifier) VALUES ('Example','https://example.test','workday','example')")
+    rows=db.execute(sql,parameters).fetchall()
+    assert len(rows)==1, 'a company matching both keys must only appear once'

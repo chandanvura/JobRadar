@@ -1,5 +1,4 @@
-import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
-import handler from "vinext/server/app-router-entry";
+import {boundedJson,BodyTooLarge} from "./request-json";
 import { safeUrl } from "./urls";
 import { jobDelta, JOB_INSERT_COLUMNS } from "./job-delta";
 import { publicRead } from "./public-backup";
@@ -8,12 +7,12 @@ import {d1Metrics} from "./d1-metrics";
 import { cachedCatalog } from "./catalog-cache";
 import { enforceShortlistLocation } from "../lib/location-policy";
 
-interface Env { JOBRADAR_DISABLE_PUBLIC_CATALOG_CACHE?:string; ASSETS: Fetcher; DB: D1Database; JOBRADAR_INGEST_SECRET?: string; IMAGES: { input(stream: ReadableStream): { transform(options: Record<string, unknown>): { output(options: { format: string; quality: number }): Promise<{ response(): Response }> } } } }
+interface Env { JOBRADAR_DISABLE_PUBLIC_CATALOG_CACHE?:string; ASSETS: Fetcher; DB: D1Database; JOBRADAR_INGEST_SECRET?: string; }
 interface ExecutionContext { waitUntil(promise: Promise<unknown>): void; passThroughOnException(): void }
 type RecordValue = Record<string, unknown>;
 
 const MAX_BODY_BYTES=6_000_000;
-const SECURITY_HEADERS={"X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY","Referrer-Policy":"strict-origin-when-cross-origin","Permissions-Policy":"camera=(), microphone=(), geolocation=()","Strict-Transport-Security":"max-age=31536000; includeSubDomains","Cross-Origin-Opener-Policy":"same-origin","Cross-Origin-Resource-Policy":"same-origin","X-Permitted-Cross-Domain-Policies":"none","Content-Security-Policy":"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"};
+const SECURITY_HEADERS={"X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY","Referrer-Policy":"strict-origin-when-cross-origin","Permissions-Policy":"camera=(), microphone=(), geolocation=()","Strict-Transport-Security":"max-age=31536000; includeSubDomains","Cross-Origin-Opener-Policy":"same-origin","Cross-Origin-Resource-Policy":"same-origin","X-Permitted-Cross-Domain-Policies":"none","Content-Security-Policy":"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"};
 const PUBLIC_JOB_COLUMNS="id,external_job_id,description,title,company,location,normalized_location,city,employment_type,experience_min,experience_max,experience_label,skills,ats_provider,application_url,career_page_url,posted_at,posted_label,posted_precision,reported_age_hours,first_seen_at,last_seen_at,relevance_score,role_category,hiring_signal,application_status,is_active,is_eligible,eligibility_reason";
 const json=(body:unknown,status=200,extra:Record<string,string>={})=>Response.json(body,{status,headers:{"Cache-Control":"no-store",...SECURITY_HEADERS,...extra}});
 const textValue=(value:unknown,fallback="")=>typeof value==="string"?value.trim():fallback;
@@ -40,23 +39,23 @@ const dedupeCompanies=(companies:RecordValue[])=>{
 
 async function dashboard(env:Env){
   const [jobResult,companyResult,runResult,notificationResult,idResult]=await Promise.all([
-    env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad','Remote (India)','Other India') ORDER BY CASE WHEN is_eligible=1 THEN 0 WHEN eligibility_reason IN ('Experience not stated — verify','Posting date not verified within 24 hours') THEN 1 ELSE 2 END,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 100`).all(),
+    env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') ORDER BY CASE WHEN is_eligible=1 THEN 0 WHEN eligibility_reason IN ('Experience not stated — verify','Posting date not verified within 24 hours') THEN 1 ELSE 2 END,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 100`).all(),
     env.DB.prepare("SELECT name,careers_url,ats_provider,last_checked_at,last_success_at,error_count,jobs_found,candidate_jobs,eligible_jobs,warning FROM companies WHERE enabled=1 ORDER BY priority DESC,name").all(),
     env.DB.prepare("SELECT * FROM scraper_runs ORDER BY id DESC LIMIT 24").all(),
     env.DB.prepare("SELECT n.id,n.channel,n.status,n.sent_at,NULL AS error,j.title,j.company FROM notifications n JOIN jobs j ON j.id=n.job_id ORDER BY n.id DESC LIMIT 50").all(),
-    env.DB.prepare("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad','Remote (India)','Other India') ORDER BY id LIMIT 100001").all(),
+    env.DB.prepare("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') ORDER BY id LIMIT 100001").all(),
   ]);
   const ids=idResult.results as {id:number}[];
   const catalog_ranges=ids.length<=100000?Array.from({length:Math.ceil(ids.length/500)},(_,i)=>({after:i?ids[i*500-1].id:0,through:ids[Math.min((i+1)*500,ids.length)-1].id})):undefined;
   const usage=d1Metrics("/api/dashboard",[jobResult,companyResult,runResult,notificationResult,idResult]);
   const runs=runResult.results;const latest=runs[0]||null;
-  return json({catalog_ranges,jobs:jobResult.results.map(enforceShortlistLocation),companies:dedupeCompanies(companyResult.results as RecordValue[]),latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],discovery_locations:["Bengaluru","Hyderabad","Remote (India)","Other India"],max_age_hours:24,max_experience_years:3,skills_required:false}},200,usage.headers);
+  return json({catalog_ranges,jobs:jobResult.results.map(enforceShortlistLocation),companies:dedupeCompanies(companyResult.results as RecordValue[]),latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],discovery_locations:["Bengaluru","Hyderabad"],max_age_hours:24,max_experience_years:3,skills_required:false}},200,usage.headers);
 }
 
 async function ingest(request:Request,env:Env){
   if(!authorized(request,env))return json({error:"Unauthorized"},401,{"WWW-Authenticate":"Bearer"});
   if(numberValue(request.headers.get("Content-Length"))>MAX_BODY_BYTES)return json({error:"Payload too large"},413);
-  let payload:{jobs?:RecordValue[];companies?:RecordValue[];run?:RecordValue};try{payload=await request.json() as typeof payload}catch{return json({error:"Invalid JSON"},400)}
+  let payload:{jobs?:RecordValue[];companies?:RecordValue[];run?:RecordValue};try{payload=await boundedJson(request,MAX_BODY_BYTES) as typeof payload}catch(error){return json({error:error instanceof BodyTooLarge?"Payload too large":"Invalid JSON"},error instanceof BodyTooLarge?413:400)}
   if(!payload || typeof payload!=="object" || Array.isArray(payload) || (payload.jobs!==undefined && !Array.isArray(payload.jobs)) || (payload.companies!==undefined && !Array.isArray(payload.companies)) || (payload.run!==undefined && (!payload.run || typeof payload.run!=="object" || Array.isArray(payload.run))))return json({error:"Invalid ingestion payload"},400);
   if((payload.jobs?.length||0)>2000 || (payload.companies?.length||0)>1000 || (Array.isArray(payload.run?.seen_job_keys) && payload.run.seen_job_keys.length>50000))return json({error:"Ingestion payload exceeds supported limits"},413);
   if(payload.jobs?.some(job=>!job || typeof job!=="object" || Array.isArray(job)) || payload.companies?.some(company=>!company || typeof company!=="object" || Array.isArray(company)))return json({error:"Invalid ingestion record"},400);
@@ -75,7 +74,7 @@ async function ingest(request:Request,env:Env){
   const newJobKeys=newJobs.map(j=>`${textValue(j.company)}\u001f${textValue(j.ats_provider)}\u001f${textValue(j.external_job_id)}`);
   const statements=[];
   // One bounded inventory lookup replaces one full-table OR scan per source.
-  const companyRead=companyUpdates.length?await env.DB.prepare("SELECT * FROM companies WHERE lower(name) IN (SELECT value FROM json_each(?)) OR (ats_provider || char(31) || ats_identifier) IN (SELECT value FROM json_each(?))").bind(JSON.stringify(companyUpdates.map(c=>textValue(c.name).toLocaleLowerCase())),JSON.stringify(companyUpdates.map(c=>`${textValue(c.ats_provider)}\u001f${textValue(c.ats_identifier)}`))).all():null;
+  const companyRead=companyUpdates.length?await env.DB.prepare("SELECT * FROM companies WHERE id IN (SELECT c.id FROM json_each(?) names JOIN companies c ON c.name=names.value COLLATE NOCASE UNION SELECT c.id FROM json_each(?) sources JOIN companies c ON c.ats_provider=json_extract(sources.value,'$.provider') AND c.ats_identifier=json_extract(sources.value,'$.identifier'))").bind(JSON.stringify(companyUpdates.map(c=>textValue(c.name).toLocaleLowerCase())),JSON.stringify(companyUpdates.map(c=>({provider:textValue(c.ats_provider),identifier:textValue(c.ats_identifier)})))).all():null;
   const byName=new Map<string,RecordValue[]>(),bySource=new Map<string,RecordValue[]>();
   for(const row of (companyRead?.results||[]) as RecordValue[]){
     const name=textValue(row.name).toLocaleLowerCase(),key=`${textValue(row.ats_provider)}\u001f${textValue(row.ats_identifier)}`;
@@ -83,7 +82,7 @@ async function ingest(request:Request,env:Env){
   }
   const companyExistence=companyUpdates.map(c=>({results:[...new Map([...(byName.get(textValue(c.name).toLocaleLowerCase())||[]),...(bySource.get(`${textValue(c.ats_provider)}\u001f${textValue(c.ats_identifier)}`)||[])].map(row=>[row.id,row])).values()]}));
   for(const [companyIndex,c] of companyUpdates.entries()){
-    const provider=textValue(c.ats_provider),identifier=textValue(c.ats_identifier),name=textValue(c.name),warning=textValue(c.warning);if(!provider||!identifier||!name)continue;
+    const provider=textValue(c.ats_provider),identifier=textValue(c.ats_identifier),name=textValue(c.name);if(!provider||!identifier||!name)continue;
     const values=[name,safeUrl(c.careers_url)||"https://invalid.local/",provider,identifier,numberValue(c.priority,3),nullableText(c.last_checked_at),nullableText(c.last_success_at),numberValue(c.error_count),numberValue(c.jobs_found),numberValue(c.candidate_jobs),numberValue(c.eligible_jobs),nullableText(c.warning)];
     const columns='name,careers_url,ats_provider,ats_identifier,priority,last_checked_at,last_success_at,error_count,jobs_found,candidate_jobs,eligible_jobs,warning'.split(',');
     const rows=companyExistence[companyIndex]?.results||[];
@@ -129,7 +128,7 @@ async function updateStatus(){
 }
 
 async function recordNotification(request:Request,env:Env){
-  if(!authorized(request,env))return json({error:"Unauthorized"},401);let body:{company?:string;ats_provider?:string;external_job_id?:string;status?:string;error?:string};try{body=await request.json() as typeof body}catch{return json({error:"Invalid JSON"},400)}
+  if(!authorized(request,env))return json({error:"Unauthorized"},401);let body:{company?:string;ats_provider?:string;external_job_id?:string;status?:string;error?:string};try{body=await boundedJson(request,16000) as typeof body}catch(error){return json({error:error instanceof BodyTooLarge?"Payload too large":"Invalid JSON"},error instanceof BodyTooLarge?413:400)}
   if(!body || typeof body!=="object" || Array.isArray(body))return json({error:"Invalid notification record"},400);
   const company=textValue(body.company),provider=textValue(body.ats_provider),external=textValue(body.external_job_id),status=textValue(body.status);if(!company||!provider||!external||!["sent","failed"].includes(status))return json({error:"Invalid notification record"},400);const job=await env.DB.prepare("SELECT id FROM jobs WHERE company=? COLLATE NOCASE AND ats_provider=? AND external_job_id=?").bind(company,provider,external).first<{id:number}>();if(!job)return json({error:"Job not found"},404);
   const recorded=await env.DB.prepare("INSERT INTO notifications (job_id,channel,status,error) VALUES (?,'telegram',?,?) ON CONFLICT(job_id,channel) DO UPDATE SET status=excluded.status,error=excluded.error,sent_at=CURRENT_TIMESTAMP WHERE notifications.status IS NOT excluded.status OR notifications.error IS NOT excluded.error").bind(job.id,status,nullableText(body.error)?.slice(0,300)||null).run();if(status==="sent" && recorded.meta.changes>0)await env.DB.prepare("UPDATE scraper_runs SET notifications_sent=notifications_sent+1 WHERE id=(SELECT MAX(id) FROM scraper_runs)").run();return json({ok:true});
@@ -158,13 +157,16 @@ const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<
   try{
     if(url.pathname==="/api/health"&&request.method==="GET")return await health(env);
     if(url.pathname==="/api/dashboard"&&request.method==="GET")return await catalogRead(()=>publicRead(request,env.ASSETS,()=>dashboard(env),SECURITY_HEADERS));
-    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw),limit=Number(url.searchParams.get("limit")||"100"),through=Number(url.searchParams.get("through")||String(Number.MAX_SAFE_INTEGER));if(!Number.isSafeInteger(through)||through<=after)return json({error:"Invalid range"},400);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);if(!Number.isSafeInteger(limit)||limit<1||limit>500)return json({error:"Invalid page size"},400);return await catalogRead(()=>publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE id IN (SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Bengaluru' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Hyderabad' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Remote (India)' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Other India' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1})) ORDER BY id LIMIT ${limit+1}`).bind(after,through,after,through,after,through,after,through).all();const jobs=result.results.slice(0,limit).map(enforceShortlistLocation);const usage=d1Metrics("/api/jobs",[result]);return json({jobs,next_cursor:result.results.length>limit?jobs[jobs.length-1].id:null},200,usage.headers)},SECURITY_HEADERS))}
+    if(url.pathname==="/api/jobs"&&request.method==="GET"){const raw=url.searchParams.get("after")||"0",after=Number(raw),limit=Number(url.searchParams.get("limit")||"100"),through=Number(url.searchParams.get("through")||String(Number.MAX_SAFE_INTEGER));if(!Number.isSafeInteger(through)||through<=after)return json({error:"Invalid range"},400);if(!Number.isSafeInteger(after)||after<0)return json({error:"Invalid cursor"},400);if(!Number.isSafeInteger(limit)||limit<1||limit>500)return json({error:"Invalid page size"},400);return await catalogRead(()=>publicRead(request,env.ASSETS,async()=>{const result=await env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE id IN (SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Bengaluru' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1}) UNION ALL SELECT id FROM (SELECT id FROM jobs WHERE is_active=1 AND city='Hyderabad' AND id>? AND id<=? ORDER BY id LIMIT ${limit+1})) ORDER BY id LIMIT ${limit+1}`).bind(after,through,after,through).all();const jobs=result.results.slice(0,limit).map(enforceShortlistLocation);const usage=d1Metrics("/api/jobs",[result]);return json({jobs,next_cursor:result.results.length>limit?jobs[jobs.length-1].id:null},200,usage.headers)},SECURITY_HEADERS))}
     if(url.pathname==="/api/ingest"&&request.method==="POST")return await ingest(request,env);
     if(url.pathname==="/api/notifications"&&request.method==="POST")return await recordNotification(request,env);
     const statusMatch=url.pathname.match(/^\/api\/jobs\/(\d+)\/status$/);if(statusMatch&&request.method==="PATCH")return updateStatus();
   }catch(error){console.error("JobRadar API error",{quota_exhausted:quotaExceeded(error),type:error instanceof Error?error.name:"unknown"});return apiFailure(error,url.pathname,SECURITY_HEADERS)}
   if(url.pathname.startsWith("/api/"))return json({error:"Not found"},404);
-  if(url.pathname==="/_vinext/image"){const allowedWidths=[...DEFAULT_DEVICE_SIZES,...DEFAULT_IMAGE_SIZES];return handleImageOptimization(request,{fetchAsset:(path)=>env.ASSETS.fetch(new Request(new URL(path,request.url))),transformImage:async(body,{width,format,quality})=>(await env.IMAGES.input(body).transform(width>0?{width}:{}).output({format,quality})).response()},allowedWidths)}
-  const response=await handler.fetch(request,env,ctx);const headers=new Headers(response.headers);for(const [key,value] of Object.entries(SECURITY_HEADERS))headers.set(key,value);return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
+  const response=await env.ASSETS.fetch(request);
+  const headers=new Headers(response.headers);
+  for(const [key,value] of Object.entries(SECURITY_HEADERS))headers.set(key,value);
+  if(headers.get('Content-Type')?.includes('text/html'))headers.set('Cache-Control','no-cache');
+  return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
 }};
 export default worker;

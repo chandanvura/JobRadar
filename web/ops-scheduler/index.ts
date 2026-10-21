@@ -12,12 +12,12 @@ export function needsScan(finished:string|null,runs:Run[],now=Date.now()){
   return !Number.isFinite(age)||age>=150*60_000;
 }
 
-// A successful gate-only run can mean quota is unavailable. Do not launch
-// another workflow on every five-minute probe while health remains old.
+// Completed failures and gate-only successes both need a recovery cooldown.
+// Do not launch another workflow on every five-minute probe during an outage.
 export function recoveryCoolingDown(runs:Run[],now=Date.now()){
   return runs.some(run=>{
     const age=now-Date.parse(run.updated_at);
-    return run.status==='completed'&&run.conclusion==='success'&&Number.isFinite(age)&&age>=0&&age<30*60_000;
+    return run.status==='completed'&&Number.isFinite(age)&&age>=0&&age<30*60_000;
   });
 }
 
@@ -92,7 +92,7 @@ export async function checkAndRecover(env:Env,now=Date.now()){
 
 export async function restoreInactiveSchedules(env:Env){
   if(!env.GITHUB_DISPATCH_TOKEN)return 0;
-  const allowed=new Set(["deploy-cloudflare.yml","backup-d1.yml","watchdog.yml","monthly-maintenance.yml","telegram-digest.yml"]);
+  const allowed=new Set(["deploy-cloudflare.yml","backup-d1.yml","watchdog.yml","operational-health.yml","telegram-digest.yml"]);
   const result=await github("/actions/workflows?per_page=100",env.GITHUB_DISPATCH_TOKEN) as {workflows:{path:string;state:string}[]};
   let restored=0;
   for(const workflow of result.workflows){

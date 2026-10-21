@@ -26,6 +26,7 @@ if [[ "$suite" == python || "$suite" == all ]]; then
 fi
 if [[ "$suite" == web || "$suite" == all ]]; then
   cd "$root/web"
+  check 'Full dependency audit' npm audit --audit-level=high
   check 'Production dependency audit' npm audit --omit=dev --audit-level=high
   check 'Build and web regression tests' npm test
   check 'Compiled Worker and real local D1 integration' npm run test:api

@@ -137,3 +137,13 @@ test('confirmed quota failures use a short binding-isolated cooldown and recover
  now=Date.parse('2026-10-21T12:00:00Z');await read(req('/api/dashboard'),binding,quota,{});now+=60000;
  assert.deepEqual(await (await read(req('/api/dashboard'),binding,async()=>Response.json({recovered:true}),{})).json(),{recovered:true});
 });
+
+
+test('packaged prior snapshots expose only target cities and preserve original age',()=>{
+ const prior={...catalog,jobs:[{id:1,city:'Bengaluru'},{id:2,city:'Hyderabad'},{id:3,city:'Pune'},{id:4,city:'Chennai'}]};
+ const packaged=JSON.parse(serializeCatalog(prior));
+ assert.deepEqual(packaged.jobs.map(job=>job.id),[1,2]);
+ assert.equal(packaged.snapshot_at,prior.snapshot_at);
+ assert.deepEqual(packaged.policy.discovery_locations,['Bengaluru','Hyderabad']);
+ assert.equal(prior.jobs.length,4);
+});

@@ -1,3 +1,8 @@
+> Current frontend architecture (October 21, 2026): React/Vite static assets and a
+> separately compiled Cloudflare API Worker. Next/vinext, RSC and runtime image
+> optimization have been removed. Public browsing is Bengaluru/Hyderabad only;
+> broader source records are internal reconciliation data. See MAINTENANCE.md.
+
 # JobRadar distributed architecture
 
 ## Decision

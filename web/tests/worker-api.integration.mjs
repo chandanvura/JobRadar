@@ -1,4 +1,4 @@
-import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
+import {Miniflare} from 'miniflare';
 import {readFile,readdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
@@ -6,12 +6,14 @@ const saved={version:1,data_mode:'backup',snapshot_at:new Date().toISOString(),j
 const serverRoot=new URL('../dist/server/',import.meta.url);
 const modulePaths=['index.js',...(await readdir(serverRoot,{recursive:true})).filter(path=>path.endsWith('.js') && path!=='index.js')];
 const modules=modulePaths.map(path=>({type:'ESModule',path:fileURLToPath(new URL(path,serverRoot))}));
-const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"jobradar-api-audit",modules,modulesRoot:fileURLToPath(new URL('../dist/server/',import.meta.url)),scriptPath:fileURLToPath(new URL('../dist/server/index.js',import.meta.url)),compatibilityDate:'2026-09-26',compatibilityFlags:['nodejs_compat'],d1Databases:{DB:'audit-db'},bindings:{JOBRADAR_INGEST_SECRET:'local-audit-only',JOBRADAR_DISABLE_PUBLIC_CATALOG_CACHE:'1'},serviceBindings:{ASSETS:async()=>Response.json(saved)}}]}));
+const mf=new Miniflare({workers:[{name:"jobradar-api-audit",modules,modulesRoot:fileURLToPath(new URL('../dist/server/',import.meta.url)),scriptPath:fileURLToPath(new URL('../dist/server/index.js',import.meta.url)),compatibilityDate:'2026-07-30',compatibilityFlags:['nodejs_compat'],d1Databases:{DB:'audit-db'},bindings:{JOBRADAR_INGEST_SECRET:'local-audit-only',JOBRADAR_DISABLE_PUBLIC_CATALOG_CACHE:'1'},serviceBindings:{ASSETS:async request=>new URL(request.url).pathname==='/backup/catalog.json'?Response.json(saved):new Response(await readFile(new URL('../dist/client/index.html',import.meta.url)),{headers:{'Content-Type':'text/html'}})}}]});
 const request=(path,body,authorized=true)=>mf.dispatchFetch(`https://audit.example${path}`,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json',...(authorized?{Authorization:'Bearer local-audit-only'}:{})},body:JSON.stringify(body)});
 try {
   const homepage=await request('/');
   assert.equal(homepage.status,200,'Compiled homepage must render before API checks');
   assert.match(await homepage.text(),/JobRadar/);
+  assert.ok(!homepage.headers.get('Content-Security-Policy').split(';').find(x=>x.trim().startsWith('script-src')).includes('unsafe-inline'));
+  assert.equal(homepage.headers.get('X-Frame-Options'),'DENY');
   assert.equal((await request('/api/ingest',{},false)).status,401);
   assert.equal((await request('/api/ingest',null)).status,400);
   assert.equal((await request('/api/ingest',{jobs:[null]})).status,400);
@@ -110,16 +112,14 @@ try {
   assert.equal((await request('/api/ingest',{jobs:[remote,outside,national]})).status,200);
   for(const endpoint of ['/api/dashboard','/api/jobs?after=0']){
     const response=await (await request(endpoint)).json();
-    assert.ok(response.jobs.some(row=>row.external_job_id==='REMOTE-IN'));
-    assert.equal(response.jobs.find(row=>row.external_job_id==='REMOTE-IN').is_eligible,0);
-    assert.equal(response.jobs.find(row=>row.external_job_id==='INDIA-PUNE').is_eligible,0);
+    assert.ok(!response.jobs.some(row=>['REMOTE-IN','INDIA-PUNE'].includes(row.external_job_id)));
     if(endpoint==='/api/dashboard')assert.deepEqual(response.policy.cities,['Bengaluru','Hyderabad']);
     assert.ok(!response.jobs.some(row=>row.external_job_id==='REMOTE-US'));
-    if(endpoint==='/api/dashboard')assert.ok(response.policy.discovery_locations.includes('Remote (India)'));
+    if(endpoint==='/api/dashboard')assert.deepEqual(response.policy.discovery_locations,['Bengaluru','Hyderabad']);
   }
   await db.prepare("DELETE FROM jobs WHERE external_job_id IN ('REMOTE-IN','REMOTE-US','INDIA-PUNE')").run();
   for(let offset=0;offset<505;offset+=125){
-    const rows=Array.from({length:Math.min(125,505-offset)},(_,i)=>({...job,external_job_id:`PAGE-${offset+i}`,city:['Bengaluru','Hyderabad','Remote (India)'][i%3]}));
+    const rows=Array.from({length:Math.min(125,505-offset)},(_,i)=>({...job,external_job_id:`PAGE-${offset+i}`,city:['Bengaluru','Hyderabad'][i%2]}));
     assert.equal((await request('/api/ingest',{jobs:rows})).status,200);
   }
   assert.equal((await (await request('/api/jobs?after=0')).json()).jobs.length,100);
@@ -139,7 +139,7 @@ try {
   const previous=await db.batch(sources.map(c=>db.prepare("SELECT * FROM companies WHERE name=? COLLATE NOCASE OR (ats_provider=? AND ats_identifier=?)").bind(c.name,c.ats_provider,c.ats_identifier)));
   const previousReads=previous.reduce((sum,r)=>sum+(r.meta.rows_read||0),0);
   const efficient=await (await request('/api/ingest',{companies:sources})).json();
-  assert.ok(efficient.d1_rows_read<previousReads/5,`${efficient.d1_rows_read} bulk reads versus ${previousReads} former reads`);
+  assert.ok(efficient.d1_rows_read<=sources.length*12,`${efficient.d1_rows_read} reads exceeds the 12-per-source budget`);
   assert.equal(efficient.d1_rows_written,0,'unchanged source checks do not produce writes');
   console.log(`D1 READ BUDGET: 250 source updates: old ${previousReads}, bulk ${efficient.d1_rows_read}`);
   await db.prepare("DELETE FROM companies WHERE name LIKE 'Read budget %'").run();

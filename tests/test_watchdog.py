@@ -47,3 +47,18 @@ def test_only_scheduler_fix_push_can_retire_old_stalled_revision_with_queued_rep
     assert obsolete_scan_ids({**health,"quota_exhausted":True},[old,replacement],"push",now)==[]
     assert obsolete_scan_ids({"latest_run":{"finished_at":"2026-10-09T04:50:00Z"}},[old,replacement],"push",now)==[]
     assert obsolete_scan_ids(health,[{**old,"created_at":"2026-10-09T04:59:00Z"},replacement],"push",now)==[]
+
+
+def test_recent_failed_runs_back_off_before_recovery():
+    now=datetime(2026,10,21,12,tzinfo=timezone.utc)
+    for conclusion in ['success', 'failure', 'timed_out', 'cancelled']:
+        run={'status':'completed','conclusion':conclusion,'updated_at':'2026-10-21T11:45:00Z'}
+        assert not should_dispatch({'latest_run':None},[run],now)
+        assert should_dispatch({'latest_run':None},[run],now+timedelta(minutes=15))
+
+
+def test_scan_time_without_timezone_or_in_future_does_not_crash_gate():
+    from scraper.watchdog import minutes_since_scan
+    now=datetime(2026,10,21,12,tzinfo=timezone.utc)
+    for timestamp in ['2026-10-21T11:00:00', '2026-10-22T12:00:00Z', 123]:
+        assert minutes_since_scan({'latest_run':{'started_at':timestamp}},now) is None

@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import {cleanSearch} from '../lib/private-profile.ts';
 import {atsSearches,groupedAtsSearches} from '../lib/job-search-strategy.ts';
 
-test('new search defaults include explicit India remote; saved city preferences are preserved',()=>{
-  assert.ok(cleanSearch({}).locations.includes('Remote (India)'));
+test('new search defaults stay in Bengaluru and Hyderabad; saved city preferences are preserved',()=>{
+  assert.deepEqual(cleanSearch({}).locations,['Bengaluru','Hyderabad']);
   assert.deepEqual(cleanSearch({locations:['Hyderabad']}).locations,['Hyderabad']);
-  assert.deepEqual(cleanSearch({locations:['Remote (India)','Remote - USA']}).locations,['Remote (India)']);
+  assert.deepEqual(cleanSearch({locations:['Remote (India)','Remote - USA']}).locations,['Bengaluru','Hyderabad']);
 });
 test('manual India remote discovery queries require both India and remote terms',()=>{
   for(const searches of [atsSearches,groupedAtsSearches]){
