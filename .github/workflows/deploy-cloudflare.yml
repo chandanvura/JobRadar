@@ -50,13 +50,8 @@ jobs:
           fi
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
-      - name: Audit and validate production build inputs
-        run: |
-          npm audit --omit=dev --audit-level=high
-          npm test
-          npm run test:api
-          npm run lint
-          npm run typecheck:ui
+      - name: Run the shared web release checks
+        run: bash ../scripts/verify-harness.sh web
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
@@ -64,8 +59,7 @@ jobs:
         working-directory: .
         run: |
           pip install -r requirements-dev.txt
-          python -m pytest -q
-          python -m bandit -q -r scraper scripts
+          bash scripts/verify-harness.sh python
       - name: Ensure a workers.dev hostname exists
         run: |
           current_subdomain="$(curl --silent --show-error \
@@ -81,13 +75,10 @@ jobs:
           echo "JOBRADAR_BACKUP_ORIGIN=https://jobradar.$current_subdomain.workers.dev" >> "$GITHUB_ENV"
       - name: Capture independent public catalog backup
         run: node scripts/capture-public-backup.mjs
-      - name: Create or resolve production database
+      - name: Require the existing production database
         run: |
-          database_id="$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "jobradar-db") | .uuid' | head -n 1)"
-          if [ -z "$database_id" ]; then
-            npx wrangler d1 create jobradar-db --location apac
-            database_id="$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "jobradar-db") | .uuid' | head -n 1)"
-          fi
+          npx wrangler d1 list --json > d1-inventory.json
+          database_id="$(node scripts/resolve-production-database.mjs < d1-inventory.json)"
           test -n "$database_id"
           echo "CLOUDFLARE_D1_DATABASE_ID=$database_id" >> "$GITHUB_ENV"
       - name: Apply versioned database migrations

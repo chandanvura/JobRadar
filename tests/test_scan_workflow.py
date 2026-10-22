@@ -33,6 +33,13 @@ def test_backup_must_restore_before_upload_and_monitor_cannot_push_main():
         assert 'if: always()' in workflow
 
 
+def test_release_requires_an_existing_database_without_automatic_replacement():
+    root = Path(__file__).resolve().parents[1]
+    workflow = (root / '.github/workflows/deploy-cloudflare.yml').read_text()
+    assert 'wrangler d1 create' not in workflow
+    assert workflow.index('resolve-production-database.mjs') < workflow.index('Apply versioned database migrations')
+
+
 def test_test_running_workflow_jobs_install_pytest_from_their_manifests():
     """Catch runtime/dev dependency drift in every job that invokes pytest."""
     import re
@@ -49,10 +56,25 @@ def test_test_running_workflow_jobs_install_pytest_from_their_manifests():
     checked = []
     for workflow in (root / '.github/workflows').glob('*.yml'):
         for job in re.split(r'(?m)^  [\w-]+:\s*$', workflow.read_text())[1:]:
-            if 'python -m pytest' not in job:
+            if 'python -m pytest' not in job and 'scripts/verify-harness.sh python' not in job:
                 continue
             manifests = re.findall(r'pip install -r ([\w./-]+)', job)
             installed = set().union(*(dependencies(root / manifest) for manifest in manifests))
             assert 'pytest' in installed, f'{workflow.name}: test job does not install pytest'
             checked.append(workflow.name)
     assert 'scrape.yml' in checked and 'deploy-cloudflare.yml' in checked
+
+
+def test_release_and_ci_share_all_validation_gates():
+    root = Path(__file__).resolve().parents[1]
+    release = (root / '.github/workflows/deploy-cloudflare.yml').read_text()
+    ci = (root / '.github/workflows/ci.yml').read_text()
+    for workflow in (release, ci):
+        assert 'scripts/verify-harness.sh web' in workflow
+        assert 'scripts/verify-harness.sh python' in workflow
+    assert release.index('scripts/verify-harness.sh python') < release.index('Apply versioned database migrations')
+    harness = (root / 'scripts/verify-harness.sh').read_text()
+    for gate in ['npm audit --audit-level=high', 'npm audit --omit=dev', 'npm test',
+                 'npm run test:api', 'npm run lint', 'npm run typecheck:ui',
+                 '-m pytest', '-m bandit', '-m pip_audit']:
+        assert gate in harness

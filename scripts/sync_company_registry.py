@@ -6,7 +6,7 @@ from datetime import datetime,timezone
 from pathlib import Path
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
-from scraper.main import load_companies, scrape
+from scraper.main import job_payload, load_companies, scrape
 from scraper.normalization import TARGET_CITIES
 
 
@@ -104,9 +104,7 @@ async def refresh_repairs(companies, updates):
         checked.append(status)
         for job in rows:
             if job.city not in TARGET_CITIES or job.role_category == "Other": continue
-            item = job.as_dict()
-            item["description"] = item.get("description", "")[:12000]
-            jobs.append(item)
+            jobs.append(job_payload(job))
         print(f"Verified repaired feed: {status['name']}: {count} listings")
     return jobs, checked
 

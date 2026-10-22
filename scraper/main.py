@@ -249,9 +249,30 @@ async def post_with_retry(url,headers,payload,attempts=3):
             if attempt+1<attempts: await asyncio.sleep(2**attempt)
     raise last or RuntimeError("Request failed")
 
-def ingest_chunks(items,size=125):
-    """Keep requests well below edge limits without dropping any candidate jobs."""
-    return [items[index:index+size] for index in range(0,len(items),size)]
+def job_payload(job):
+    """Retain the same JD window used by matching and Worker storage."""
+    item = job.as_dict()
+    item["description"] = item.get("description", "")[:20000]
+    return item
+
+
+def ingest_chunks(items, size=125, max_bytes=5_000_000):
+    """Bound UTF-8 JSON requests as well as row count without dropping jobs."""
+    if size < 1 or max_bytes < 100:
+        raise ValueError("Invalid ingestion batch limits")
+    batches, batch, batch_bytes = [], [], 100
+    for item in items:
+        encoded_bytes = len(json.dumps(item, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode("utf-8")) + 1
+        if encoded_bytes + 100 > max_bytes:
+            raise ValueError("Job exceeds ingestion request limit")
+        if batch and (len(batch) >= size or batch_bytes + encoded_bytes > max_bytes):
+            batches.append(batch)
+            batch, batch_bytes = [], 100
+        batch.append(item)
+        batch_bytes += encoded_bytes
+    if batch:
+        batches.append(batch)
+    return batches
 
 async def ingest_scan(endpoint,headers,jobs,companies,run):
     """Upload one logical scan in bounded requests and finalize it exactly once."""
@@ -314,7 +335,7 @@ async def main():
     if bypass:headers["OAI-Sites-Authorization"]=f"Bearer {bypass}"
     payload_jobs=[]
     for job in candidates:
-        item=job.as_dict(); item["description"]=item.get("description","")[:12000]; payload_jobs.append(item)
+        payload_jobs.append(job_payload(job))
     result=await ingest_scan(endpoint,headers,payload_jobs,statuses,run)
     alert_keys=set(result.get("notification_keys",[])); sent=0; telegram_failures=0
     alert_jobs=[job for job in eligible if (source_job_key(job) in alert_keys or job.external_job_id in TELEGRAM_RETRY_IDS) and job.relevance_score>=65]
