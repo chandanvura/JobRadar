@@ -48,6 +48,9 @@ def listing_records(payload, offset, expected=None):
 
 class AdidasCareerAdapter:
     async def fetch_jobs(self, company):
+        from .adidas_search import SEARCH, fetch_jobs
+        if company.careers_url == SEARCH:
+            return await fetch_jobs(company)
         from .adapters import clean, client, location_text, make_job, request
         if company.ats_identifier != FEED or urlsplit(company.careers_url).hostname != 'careers.adidas-group.com':
             raise ValueError('adidas source differs from its verified official board')

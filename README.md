@@ -232,3 +232,9 @@ Wrangler tracks completed migrations; SQL, authentication, quota, timeout and
 unknown errors stop immediately. Persistent internal errors still block release;
 the existing quota-only schema verification is unchanged. This recovery handles
 temporary service errors, not employer outages or a guarantee of unattended uptime.
+
+Adidas recovery uses its published India job search when released, retaining
+complete listing/detail reconciliation and employer requisition IDs. Posting
+dates remain day precision. The [recovery evidence](docs/READINESS-REVIEW.md#adidas-published-search-recovery--23-october-2026)
+distinguishes the tested read-only adapter from production feed recovery, which
+still requires a naturally completed scan. Remaining exceptions stay in #87.
