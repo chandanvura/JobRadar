@@ -196,6 +196,11 @@ Scan validation installs the development requirements needed by pytest; discover
 
 Performance decision: retain Python collectors and the TypeScript Worker. Normal scans emit source fetch/enrichment timings and shard CPU/wall timings so future optimizations follow measured bottlenecks. See [performance measurement and interpretation](docs/MAINTENANCE.md#language-and-performance-decision); these metrics preserve existing request limits and job policies.
 
+The completed one-time Telegram destination-setup pipeline is retired. The nine
+remaining workflow files cover required CI, deployment, scans, recovery, health,
+backups, disposable-storage cleanup, registry updates and daily notifications.
+See [pipeline responsibilities](docs/MAINTENANCE.md#pipeline-responsibilities).
+
 ### Maintenance-only release
 
 Feature development is closed as of 21 October 2026. Keep the current Python/TypeScript stack and existing companies; limit changes to verified security, data-integrity and existing-functionality repairs. Eaton/Maersk recovery is verified and [#80](https://github.com/chandanvura/JobRadar/issues/80) is closed. The latest completed scan has 740/743 successful sources; AXA, Lenovo and Citigroup remain visible in [#87](https://github.com/chandanvura/JobRadar/issues/87). Existing scans, read-only checks, backups and alerts continue. See [closure evidence and operating limits](docs/READINESS-REVIEW.md#feature-development-closure--21-october-2026).

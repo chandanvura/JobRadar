@@ -47,7 +47,7 @@ def main():
     bot_id=telegram_call(base,"getMe")["result"]["id"]
     chats=private_start_chats(telegram_call(base,"getUpdates",{"limit":100,"timeout":0}),bot_id)
     if not chats:
-        raise RuntimeError("No recent private /start found. Send /start to your JobRadar bot, then rerun this workflow.")
+        raise RuntimeError("No recent private /start found. Send /start to your JobRadar bot, then rerun this setup helper.")
     for chat in chats:
         telegram_call(base,"sendMessage",{"chat_id":chat,"text":(
             f"Your JobRadar Telegram chat ID is: {chat}\n\n"
