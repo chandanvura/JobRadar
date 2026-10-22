@@ -58,8 +58,12 @@ failure behavior.
   deploy, public API/assets verification and recovery Worker update.
 - `cleanup-storage.yml`: disposable-cache/artifact retention; never SQL/private
   backups. `telegram-digest.yml` remains the existing alert delivery schedule.
-- `sync-company-registry.yml` and `telegram-setup.yml`: explicit operational
-  tools. They do not add companies autonomously.
+- `sync-company-registry.yml`: publishes reviewed repairs to existing company
+  sources. It does not add companies autonomously.
+
+The one-time `telegram-setup.yml` workflow was retired after destination setup.
+The `scraper.telegram_setup` helper remains available for an explicit future
+destination change; daily delivery and scan alerts use their existing workflows.
 
 New-company discovery, historical coverage-audit and monthly keepalive workflows
 were retired. The registry is frozen for expansion; existing sources can be
