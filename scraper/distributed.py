@@ -6,7 +6,7 @@ from pathlib import Path
 from time import perf_counter,process_time
 
 from .adapters import ADAPTERS
-from .main import TELEGRAM_RETRY_IDS,QuotaDeferred,TelegramDeliveryError,ensure_telegram_ready,ingest_scan,load_companies,notify,now,record_notification,run_health_status,scrape,source_job_key
+from .main import TELEGRAM_RETRY_IDS,QuotaDeferred,TelegramDeliveryError,ensure_telegram_ready,ingest_scan,job_payload,load_companies,notify,now,record_notification,run_health_status,scrape,source_job_key
 from .normalization import TARGET_CITIES
 from .models import Job
 
@@ -35,7 +35,7 @@ async def run_worker(index,count,output):
     candidates=[job for job in all_jobs if job.city in TARGET_CITIES and job.role_category!="Other"]
     jobs=[]
     for job in candidates:
-        item=job.as_dict(); item["description"]=item.get("description","")[:12000]; jobs.append(item)
+        jobs.append(job_payload(job))
     timing={"event":"worker_timing","shard_index":index,"discovery_wall_seconds":round(perf_counter()-wall_started,3),"process_cpu_seconds":round(process_time()-cpu_started,3)}
     artifact={
         "version":ARTIFACT_VERSION,"shard_index":index,"shard_count":count,"timing":timing,

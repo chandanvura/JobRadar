@@ -10,6 +10,7 @@ from scraper.health import read_health
 from scraper.watchdog import request_json
 
 UTC = datetime.timezone.utc
+CHECK_NAMES = ('portal', 'database', 'freshness', 'feeds', 'backups', 'notifications')
 
 
 def age_hours(value, now):
@@ -73,9 +74,33 @@ def assess(health, backup_runs, artifacts, now=None, available=True, notificatio
         notification_age = age_hours((delivered or {}).get("updated_at"), now)
         if notification_age is None or notification_age >= 36:
             problems.append("notification_verification_missing_or_stale")
-    return {"checked_at": now.isoformat(), "ok": not problems, "problems": problems,
+    checks = {
+        'portal': available,
+        'database': not any(p in problems for p in ('database_or_ingestion_unavailable', 'database_quota_exhausted')),
+        'freshness': 'completed_scan_missing_or_stale' not in problems,
+        'feeds': 'source_failures_or_incomplete_scan' not in problems,
+        'backups': not any(p in problems for p in ('verified_backup_missing_or_stale', 'backup_artifact_missing_or_expired')),
+        'notifications': None if notification_runs is None else not any(p in problems for p in
+                          ('notification_workflow_failed', 'notification_verification_missing_or_stale')),
+    }
+    state = 'healthy' if not problems else ('degraded' if problems == ['source_failures_or_incomplete_scan'] else 'failed')
+    return {"checked_at": now.isoformat(), "ok": not problems, "state": state, "checks": checks, "problems": problems,
+            "sources": {key: run.get(key) for key in ('companies_checked', 'companies_successful', 'companies_failed')},
             "notification_workflow_age_hours": notification_age,
             "completed_scan_age_hours": age, "backup_age_hours": backup_age}
+
+
+def summary(report):
+    state = report.get('state', 'healthy' if report['ok'] else 'failed').upper()
+    lines = [f'JobRadar operational check: {state}', '', '| Check | Result |', '| --- | --- |']
+    for name in CHECK_NAMES:
+        result = report.get('checks', {}).get(name)
+        lines.append(f'| {name} | {"PASS" if result is True else "FAIL" if result is False else "UNKNOWN"} |')
+    sources = report.get('sources', {})
+    if sources.get('companies_checked') is not None:
+        lines.extend(['', f"Sources: {sources.get('companies_successful')}/{sources['companies_checked']} successful; {sources.get('companies_failed')} failed."])
+    lines.extend(['', *('- ' + problem for problem in report['problems'])])
+    return '\n'.join(lines) + '\n'
 
 
 def main():
@@ -90,14 +115,14 @@ def main():
         notifications = request_json(api + "/actions/workflows/telegram-digest.yml/runs?per_page=30", token)["workflow_runs"]
         report = assess(health, runs, artifacts, available=public_available(), notification_runs=notifications)
     except (RuntimeError, ValueError, OSError, KeyError, TypeError, subprocess.SubprocessError):
-        report = {"ok": False, "problems": ["operational_evidence_unavailable"]}
+        report = {"ok": False, "state": "failed", "checks": dict.fromkeys(CHECK_NAMES),
+                  "problems": ["operational_evidence_unavailable"]}
     Path("ops-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    summary = "JobRadar operational check: " + ("PASS" if report["ok"] else "FAIL") + "\n"
-    summary += "\n".join("- " + problem for problem in report["problems"]) + "\n"
+    message = summary(report)
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as output:
-            output.write(summary)
-    print(summary)
+            output.write(message)
+    print(message)
     if not report["ok"]:
         raise SystemExit(1)
 

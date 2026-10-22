@@ -33,6 +33,13 @@ def test_backup_must_restore_before_upload_and_monitor_cannot_push_main():
         assert 'if: always()' in workflow
 
 
+def test_release_requires_an_existing_database_without_automatic_replacement():
+    root = Path(__file__).resolve().parents[1]
+    workflow = (root / '.github/workflows/deploy-cloudflare.yml').read_text()
+    assert 'wrangler d1 create' not in workflow
+    assert workflow.index('resolve-production-database.mjs') < workflow.index('Apply versioned database migrations')
+
+
 def test_test_running_workflow_jobs_install_pytest_from_their_manifests():
     """Catch runtime/dev dependency drift in every job that invokes pytest."""
     import re

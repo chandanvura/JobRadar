@@ -6,7 +6,7 @@ from scraper.models import Job
 from bs4 import BeautifulSoup
 from scraper.adapters import fetch_detail, discover_ats, job_like_url, jobvite_config, likely_target, location_text, parse_jobvite_xml, parse_posting, request_bucket, workday_config
 from scraper.models import Company
-from scraper.main import fetch_company_jobs, ingest_chunks, ingest_scan, private_start_chat_id, run_health_status, source_job_key, telegram_chat_id, telegram_error
+from scraper.main import fetch_company_jobs, job_payload, ingest_chunks, ingest_scan, private_start_chat_id, run_health_status, source_job_key, telegram_chat_id, telegram_error
 from scraper.distributed import load_artifacts, merge_artifacts, source_shard
 from scraper.normalization import classify_employment_type, classify_title, enrich, extract_experience, normalize_location
 
@@ -459,3 +459,25 @@ def test_skill_aliases_and_plural_graduate_requirements():
 def test_nontechnical_apprenticeships_are_not_software_roles():
     assert classify_title("Talent Acquisition Coordinator Trainee_Non-Technical Graduate Apprentice - India UHR")[1] == "Other"
     assert classify_title("Graduate Software Engineer Apprentice")[1] == "Software Engineering"
+
+
+def test_payload_preserves_late_experience_evidence_within_matching_window():
+    evidence = "Requires 1-2 years of professional experience with AWS."
+    description = "Job responsibilities. " * 650 + evidence
+    assert 12000 < description.index(evidence) < 20000
+    assert evidence in job_payload(sample(description=description))["description"]
+
+
+def test_ingestion_batches_bound_unicode_bytes_without_losing_jobs():
+    import json
+    jobs = [{"id": i, "description": "界" * 20000} for i in range(125)]
+    batches = ingest_chunks(jobs)
+    assert len(batches) > 1
+    assert [job for batch in batches for job in batch] == jobs
+    assert all(len(json.dumps({"jobs": batch, "companies": []}, ensure_ascii=False, separators=(",", ":")).encode("utf-8")) < 5_000_000 for batch in batches)
+
+
+def test_ingestion_rejects_single_oversized_record():
+    import pytest
+    with pytest.raises(ValueError, match="exceeds ingestion"):
+        ingest_chunks([{"description": "界" * 20000}], max_bytes=1000)

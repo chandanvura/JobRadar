@@ -121,3 +121,27 @@ request volume and verified request patterns, then evaluate shard balance. Keep
 existing rate limits, source ownership, snapshot checks and retry bounds until
 measurements justify a reviewed change. No benchmark or new scan is dispatched
 just to populate these metrics; they do not add D1 reads or writes.
+
+## Production safeguards
+
+Release requires exactly one existing `jobradar-db` with a valid UUID in the
+configured Cloudflare account. Missing or ambiguous inventory stops before
+migration; deployment never creates an empty replacement. Verify account/token
+scope first. Database bootstrap or restoration is an explicit owner operation:
+follow [recovery](../ops/RECOVERY.md), verify the backup and application history,
+and review the binding before releasing. Do not bypass this guard to get a green run.
+
+Operational reports distinguish portal availability, database/ingestion, completed
+scan freshness, feeds, verified backups and notification workflow evidence. A feed-only
+failure is labelled `degraded` but still fails the workflow. Unknown evidence is
+not a pass; notification workflow success is not proof of recipient delivery.
+Provider exceptions remain open until a naturally completed collection verifies recovery.
+
+All collection paths retain up to 20,000 JD characters, matching the analysis
+and storage window. Ingestion batches retain the 125-job ceiling and also stay
+below 5 MB of encoded JSON; oversized individual records stop ingestion rather
+than being silently discarded. This does not widen eligibility or date rules.
+
+The dated October 1 monthly snapshot is archived in
+`docs/archive-2026-10-01-monthly-check.json`; it is not current health evidence.
+`drizzle-orm` is development-only schema tooling; runtime D1 queries remain unchanged.

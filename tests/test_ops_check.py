@@ -23,6 +23,26 @@ def test_invalid_and_future_timestamps_are_not_fresh(value):
 def test_monitor_reports_broken_sources_even_with_recent_completed_scan():
     report = assess({**HEALTH, "latest_run": {**HEALTH["latest_run"], "status": "degraded", "companies_failed": 1}}, RUNS, ARTIFACTS, NOW)
     assert report["problems"] == ["source_failures_or_incomplete_scan"]
+    assert report['state'] == 'degraded' and report['ok'] is False
+    assert report['checks']['portal'] is True and report['checks']['database'] is True
+    assert report['checks']['feeds'] is False and report['checks']['freshness'] is True
+
+
+def test_feed_degradation_summary_preserves_failure_and_distinguishes_unknown_evidence():
+    from scraper.ops_check import summary
+    health = {**HEALTH, 'latest_run': {**HEALTH['latest_run'], 'status': 'degraded',
+              'companies_checked': 743, 'companies_successful': 741, 'companies_failed': 2}}
+    report = assess(health, RUNS, ARTIFACTS, NOW)
+    text = summary(report)
+    assert '| feeds | FAIL |' in text and '| portal | PASS |' in text
+    assert '| notifications | UNKNOWN |' in text and '741/743' in text
+    assert 'source_failures_or_incomplete_scan' in text and report['ok'] is False
+
+
+def test_database_failure_is_not_reported_as_only_feed_degradation():
+    report = assess({**HEALTH, 'database': False}, RUNS, ARTIFACTS, NOW)
+    assert report['state'] == 'failed'
+    assert report['checks']['database'] is False and report['checks']['feeds'] is True
 
 
 def test_monitor_requires_recent_completed_scan_and_downloadable_backup():
