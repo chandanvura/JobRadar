@@ -220,3 +220,10 @@ Experience extraction distinguishes application/training windows from work
 experience and keeps technology preferences separate from required year ranges.
 Invalid historical ranges display JD evidence with a review warning, without
 granting eligibility. See the [dated regression evidence](docs/READINESS-REVIEW.md#experience-regression-review--21-october-2026).
+
+Deployment migrations retry the specific D1 internal-service error (code 7500
+with an internal-error reference) at most three times, after 5 and 15 seconds.
+Wrangler tracks completed migrations; SQL, authentication, quota, timeout and
+unknown errors stop immediately. Persistent internal errors still block release;
+the existing quota-only schema verification is unchanged. This recovery handles
+temporary service errors, not employer outages or a guarantee of unattended uptime.

@@ -93,8 +93,8 @@ jobs:
       - name: Apply versioned database migrations
         run: |
           node scripts/prepare-cloudflare.mjs
-          if npx wrangler d1 migrations apply jobradar-db --remote --config wrangler.migrations.json > migration-result.log 2>&1; then
-            cat migration-result.log
+          if node scripts/apply-migrations.mjs; then
+            :
           else
             cat migration-result.log
             # Only allow the already-deployed schema during a D1 quota outage.
