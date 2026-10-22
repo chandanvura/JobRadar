@@ -50,13 +50,8 @@ jobs:
           fi
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
-      - name: Audit and validate production build inputs
-        run: |
-          npm audit --omit=dev --audit-level=high
-          npm test
-          npm run test:api
-          npm run lint
-          npm run typecheck:ui
+      - name: Run the shared web release checks
+        run: bash ../scripts/verify-harness.sh web
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
@@ -64,8 +59,7 @@ jobs:
         working-directory: .
         run: |
           pip install -r requirements-dev.txt
-          python -m pytest -q
-          python -m bandit -q -r scraper scripts
+          bash scripts/verify-harness.sh python
       - name: Ensure a workers.dev hostname exists
         run: |
           current_subdomain="$(curl --silent --show-error \

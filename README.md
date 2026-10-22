@@ -245,3 +245,9 @@ show separate availability, database, freshness, feed, backup and notification
 checks, while unresolved failures continue to fail Actions. JD ingestion retains
 the same 20,000-character evidence window used by matching and applies byte-bounded
 batches. See [production safeguards](docs/MAINTENANCE.md#production-safeguards).
+
+CI and deployment share the same verification harness, including full/production
+web dependency audits and Python dependency/security checks. Normal scan
+[39854451509](https://github.com/chandanvura/JobRadar/actions/runs/39854451509)
+verified Adidas recovery with 14 listings; Boehringer Ingelheim remains an
+explicit provider-access exception. See the [priority decisions](docs/MAINTENANCE.md#priority-decisions--23-october-2026).

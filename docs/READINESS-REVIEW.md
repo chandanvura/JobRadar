@@ -210,3 +210,12 @@ outbound HTTP proxy; production transport code is unchanged. This is local
 read-only evidence, not a finalized production collection or deployed recovery.
 Boehringer Ingelheim's public search/feed still lacks accessible collection
 evidence; keep issue #87 open. No production scan or write was triggered.
+
+## Completed Adidas recovery — 23 October 2026
+
+Natural scan https://github.com/chandanvura/JobRadar/actions/runs/39854451509
+completed eight shards and finalization. Job 120089235574 reports Adidas: 14
+listings; finalizer 120092730783 lists only Boehringer Ingelheim as failed.
+Public health reports 742/743, fresh database/ingestion. This supersedes the
+earlier pending Adidas verification. Boehringer's registered feed returned HTTP
+403 in the same shard; its exception remains unresolved.

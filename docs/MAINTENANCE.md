@@ -1,4 +1,4 @@
-# Operating horizon: October 2026–October 2027
+# Maintenance operating plan
 
 ## Architecture decision
 
@@ -145,3 +145,28 @@ than being silently discarded. This does not widen eligibility or date rules.
 The dated October 1 monthly snapshot is archived in
 `docs/archive-2026-10-01-monthly-check.json`; it is not current health evidence.
 `drizzle-orm` is development-only schema tooling; runtime D1 queries remain unchanged.
+
+## Priority decisions — 23 October 2026
+
+CI and deployment use the same existing verification harness. Deployment now also
+runs the full dependency audit and Python runtime dependency audit, avoiding a
+weaker release path than pull-request validation. Required python/web names and
+all release checks remain in place.
+
+Keep daily deployment for now: it also captures and publishes the independent
+public catalog. Removing that schedule without another verified publication path
+would leave fallback data older. A new snapshot service is not justified by the
+current evidence. No additional workflow, service or company is introduced.
+
+Keep the dashboard and adapter registry intact during this repair. Extract modules
+only when a functional change requires it and existing tests protect the boundary.
+Research helpers are not automatically dead code: tests and dated runbooks still
+reference several of them. No blanket branch, adapter or helper deletion is safe.
+
+Natural scan 39854451509 completed all eight discovery shards and finalization.
+Adidas returned 14 listings (job 120089235574); only Boehringer Ingelheim failed
+(finalizer 120092730783), with HTTP 403 from its registered googlefeed.xml.
+Live health subsequently reported 742/743 sources successful, fresh data and
+working database/ingestion. This verifies Adidas recovery in that run only.
+Boehringer requires an accessible employer-published contract or provider recovery;
+do not bypass screening, invent endpoints or mark the feed empty/healthy.
