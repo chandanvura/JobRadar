@@ -1,3 +1,6 @@
+export function cityAliasClause(city: string) {
+  return city === 'Bengaluru' ? '("Bengaluru" OR "Bangalore")' : city === 'Hyderabad' ? '"Hyderabad"' : '';
+}
 export const ATS_SOURCES = [
   {name: 'Greenhouse', domain: 'boards.greenhouse.io OR site:job-boards.greenhouse.io'},
   {name: 'Lever', domain: 'jobs.lever.co'},
@@ -11,7 +14,7 @@ export const SEARCH_ROLES = ['Software Engineer','Java Developer','Backend Engin
 const literal = (value: string) => `"${value.replace(/["\\\r\n]/g, ' ').trim().slice(0, 100)}"`;
 export function atsSearches(role: string, city: string, period: string) {
   if (!role.trim() || !['Bengaluru','Hyderabad'].includes(city) || !['day','week'].includes(period)) return [];
-  const location = city === 'Bengaluru' ? '("Bengaluru" OR "Bangalore")' : '"Hyderabad"';
+  const location = cityAliasClause(city);
   return ATS_SOURCES.map(source => ({name:source.name, url:`https://www.google.com/search?${new URLSearchParams({q:`(site:${source.domain}) ${literal(role)} ${location}`,tbs:period==='day'?'qdr:d':'qdr:w'})}`}));
 }
 export function hiringSignalSearches(role: string, city: string) {
@@ -38,6 +41,6 @@ export function groupedAtsSearches(role: string, city: string, period: string) {
   const family = /sre|site reliability|production engineer/i.test(role) ? 'sre' : /devops|cloud|platform/i.test(role) ? 'devops' : /java|backend|software|sde/i.test(role) ? 'backend' : null;
   if (!family || /intern|graduate/i.test(role)) return atsSearches(role, city, period);
   const titles = [...new Set([role, ...ROLE_GROUPS[family]])].slice(0, 4).map(literal).join(' OR ');
-  const location = city === 'Bengaluru' ? '("Bengaluru" OR "Bangalore")' : '"Hyderabad"';
+  const location = cityAliasClause(city);
   return ATS_SOURCES.map(source => ({name:source.name, url:`https://www.google.com/search?${new URLSearchParams({q:`(site:${source.domain}) (${titles}) ${location}`,tbs:period==='day'?'qdr:d':'qdr:w'})}`}));
 }

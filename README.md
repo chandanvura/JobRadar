@@ -255,3 +255,6 @@ explicit provider-access exception. See the [priority decisions](docs/MAINTENANC
 A rendering failure now offers a retry screen without clearing saved browser
 data or exposing raw error text. For recovery, use Settings → Download private
 backup; the separate tracking export contains application tracking only.
+
+The [website handoff review](docs/UX-HANDOFF-REVIEW.md) records reproduced loading,
+seniority and wording fixes, existing capabilities and remaining UX review scope.

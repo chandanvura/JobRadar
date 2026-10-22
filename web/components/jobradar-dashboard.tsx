@@ -16,7 +16,7 @@ import { JobPagination } from "./job-pagination";
 import { prepareCatalog } from "@/lib/prepare-catalog";
 import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
-import { hiringManagerDraft } from "@/lib/job-search-strategy";
+import { cityAliasClause, hiringManagerDraft } from "@/lib/job-search-strategy";
 import { ThemeToggle } from "./theme-toggle";
 import { lazy, memo, Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, startTransition } from "react";
 import {
@@ -436,6 +436,7 @@ function DashboardContent() {
       if (previousFocus?.isConnected) previousFocus.focus();
     };
   }, [mobile]);
+  useEffect(() => { document.title = `${active} · JobRadar`; }, [active]);
   const load = useCallback(async (silent = false) => {
     const generation = ++loadGeneration.current;
     activeLoad.current?.abort();
@@ -444,14 +445,9 @@ function DashboardContent() {
     setCatalogLoading(true);
     if (!silent) setLoading(true);
     try {
-      const payload = await loadPublicCatalog<Payload>(async (initial) => {
-        await prepareCatalog(initial.jobs, controller.signal);
-        if (generation === loadGeneration.current) {
-          setRankingNow(Date.now());
-          setData(current => current || initial);
-          if (!silent) setLoading(false);
-        }
-      }, fetch, controller.signal);
+      // Publish only a complete live catalog or the validated fallback. The first
+      // dashboard page is a transport preview, not a final count or shortlist.
+      const payload = await loadPublicCatalog<Payload>(() => {}, fetch, controller.signal);
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
       await prepareCatalog(payload.jobs, controller.signal);
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
@@ -1045,9 +1041,11 @@ function DashboardContent() {
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    <Metric value={viewStats.ultra} label="Verified < 3h" />
+                    {loading && !data ? <p role="status" className="animate-pulse col-span-2">Loading complete job counts…</p> : <>
+                    {viewStats.ultra > 0 && <Metric value={viewStats.ultra} label="Verified < 3h" />}
                     <Metric value={viewStats.bengaluru} label="Bengaluru" />
                     <Metric value={viewStats.hyderabad} label="Hyderabad" />
+                    </>}
                   </div>
                 </div>
               </section>
@@ -1503,7 +1501,6 @@ function SystemCard({
     age = exactAge(run?.finished_at),
     stale = !loading && (age === null || age >= 5),
     failed = data?.companies ? data.companies.filter(company=>company.error_count>0).length : Number(run?.companies_failed || 0),
-    empty = Number(run?.companies_empty || 0),
     backup = data?.data_mode === "backup",
     attention = backup || stale || failed > 0,
     label =
@@ -1526,7 +1523,7 @@ function SystemCard({
         <span
           className={`size-2 rounded-full ${loading && !run ? "animate-pulse bg-slate-400" : attention ? "bg-amber-500" : "bg-[#22a060]"}`}
         />
-        {label === "SCAN FAILED SOURCES" ? `${failed} sources need attention` : label === "SCAN HEALTHY" ? "Jobs updated" : label.toLowerCase()}
+        {label === "SCAN FAILED SOURCES" ? `${failed} ${failed === 1 ? "source needs" : "sources need"} attention` : label === "SCAN HEALTHY" ? "Jobs updated" : label.toLowerCase()}
       </summary>
       <p className="mt-2 text-xs text-muted-foreground">
         {loading && !run
@@ -1537,9 +1534,8 @@ function SystemCard({
       </p>
       {run && (
         <p className="mt-3 text-xs">
-          Last full scan: {run.companies_successful}/{run.companies_checked} sources ·{" "}
-          {empty} empty · {Number(run.companies_failed||0)} failed.
-          Current company checks: {failed} failed.
+          {run.companies_checked} job sources checked. {failed === 0 ? "No sources currently need attention." : `${failed} ${failed === 1 ? "needs" : "need"} attention.`}
+
         </p>
       )}
     </details>
@@ -1766,7 +1762,7 @@ const JobCard = memo(function JobCard({
                   <BriefcaseBusiness size={14} />
                   {job.experience_min!==null&&/^[\d.+–-]+$/.test(job.experience_label)?`${job.experience_label} years`:job.experience_label}
                 </span>
-                {requirements.workMode !== "Unknown" && <span>{requirements.workMode}</span>}
+                {requirements.workMode !== "Unknown" && <span>{requirements.workMode === "Conflicting" ? "Work arrangement unclear — verify JD" : requirements.workMode}</span>}
                 <span>{postingText(job)}</span>
               </div>
             </div>
@@ -1778,7 +1774,7 @@ const JobCard = memo(function JobCard({
             {freshness.warning && <p className="mt-1">{freshness.warning}</p>}
             <p className="mt-1">Check that the employer still accepts applications before applying.</p>
           </details>
-          {requirements.remoteEligibility.label && <details className="mt-2 text-xs text-muted-foreground"><summary className="cursor-pointer">{requirements.remoteEligibility.label}</summary>{requirements.remoteEligibility.evidence.map((text,index)=><blockquote className="mt-2 border-l-2 pl-2" key={index}>{text}</blockquote>)}<p className="mt-2">Remote availability does not change the Bengaluru and Hyderabad shortlist rule.</p></details>}
+          {requirements.workMode === "Remote" && requirements.remoteEligibility.label && <details className="mt-2 text-xs text-muted-foreground"><summary className="cursor-pointer">{requirements.remoteEligibility.label}</summary>{requirements.remoteEligibility.evidence.map((text,index)=><blockquote className="mt-2 border-l-2 pl-2" key={index}>{text}</blockquote>)}<p className="mt-2">Remote availability does not change the Bengaluru and Hyderabad shortlist rule.</p></details>}
           {Boolean(job.duplicate_sources?.length) && <details className="mt-2 text-xs"><summary className="cursor-pointer">{job.duplicate_sources!.length+1} source records for this opening</summary><p className="mt-2 text-muted-foreground">Grouped for browsing. Saved jobs and applications keep every original record and its history.</p><ul className="mt-2 space-y-2">{[job,...job.duplicate_sources!].map((item,index)=><li key={`${trackingKey(item)}-${index}`}><a href={item.application_url} target="_blank" rel="noreferrer" className="underline">{boardAttribution(item).employer} · {item.ats_provider} · {item.external_job_id}</a></li>)}</ul></details>}
           <details className="mt-3 rounded-xl border border-border p-3 text-xs">
             <summary className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</summary>
@@ -1828,7 +1824,6 @@ const JobCard = memo(function JobCard({
               </span>
             </div>
             <Progress value={match.score} className="mt-3 h-2" />
-            <p className="mt-2 text-[11px] text-muted-foreground">Based on your search preferences</p>
             {match.missingSkills.length > 0 && <p className="mt-2 text-[11px] text-muted-foreground">{match.missingRequiredSkills.length ? "Required skills missing from profile" : "Other JD skills to review"}: {(match.missingRequiredSkills.length ? match.missingRequiredSkills : match.missingSkills).slice(0, 3).join(", ")}</p>}
 
           </div>
@@ -1989,7 +1984,7 @@ function InternshipDiscovery({ preferences, lastScan, count, freshCount }: { pre
   const links = cities.flatMap((city) => [
     { name: `LinkedIn internships — ${city.name}`, url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(city.linkedin)}&f_TPR=r86400&f_JT=I&f_E=1%2C2&sortBy=DD` },
     { name: `Naukri internships — ${city.name}`, url: `https://www.naukri.com/internship-jobs-in-${city.naukri}?jobAge=1&k=${query}` },
-    { name: `Official ATS internships — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${preferred.map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}") (${OFFICIAL_ATS_DOMAINS})`)}` },
+    { name: `Official ATS internships — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${preferred.map(title=>`"${title}"`).join(" OR ")}) ${cityAliasClause(city.name)} (${OFFICIAL_ATS_DOMAINS})`)}` },
   ]);
   return (
     <section className="mb-5 rounded-3xl border border-info/40 bg-info-soft p-5">
@@ -2014,9 +2009,9 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
   const links = cities.flatMap((city) => [
     { name: `LinkedIn — ${city.name}`, url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(city.linkedin)}&f_TPR=r86400&f_JT=F&f_E=2&sortBy=DD` },
     { name: `Naukri — ${city.name}`, url: `https://www.naukri.com/jobs-in-${city.naukri}?jobAge=1&k=${query}` },
-    { name: `Indeed via Google — ${city.name}`, url: googleJobsUrl(`site:in.indeed.com/viewjob (${terms.slice(0, 8).map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}")`) },
-    { name: `Glassdoor via Google — ${city.name}`, url: googleJobsUrl(`site:glassdoor.co.in/job-listing (${terms.slice(0, 8).map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}")`) },
-    { name: `Google official ATS — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${terms.map(title=>`"${title}"`).join(" OR ")}) ("${city.name}" OR "${city.name === "Bengaluru" ? "Bangalore" : city.name}") (${OFFICIAL_ATS_DOMAINS})`)}` },
+    { name: `Indeed via Google — ${city.name}`, url: googleJobsUrl(`site:in.indeed.com/viewjob (${terms.slice(0, 8).map(title=>`"${title}"`).join(" OR ")}) ${cityAliasClause(city.name)}`) },
+    { name: `Glassdoor via Google — ${city.name}`, url: googleJobsUrl(`site:glassdoor.co.in/job-listing (${terms.slice(0, 8).map(title=>`"${title}"`).join(" OR ")}) ${cityAliasClause(city.name)}`) },
+    { name: `Google official ATS — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${terms.map(title=>`"${title}"`).join(" OR ")}) ${cityAliasClause(city.name)} (${OFFICIAL_ATS_DOMAINS})`)}` },
   ]);
   return (
     <div className="space-y-5">
@@ -2030,7 +2025,7 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
         JobRadar cannot copy these sites automatically without authorized access.
         Fallback searches cover LinkedIn, Naukri, Indeed, Glassdoor and official
         ATS discovery pages. Search date filters do not verify posting dates. Check the employer and posting date, then
-        apply through the official employer link. These searches do not write to D1.
+        apply through the official employer link.
       </div>
       <div className="grid gap-3 md:grid-cols-2">
         {links.map((link) => (

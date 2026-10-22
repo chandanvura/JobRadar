@@ -65,7 +65,7 @@ test('company coverage has safe career and contact fallback discovery',async()=>
  assert.match(source,/site:glassdoor\.co\.in\/job-listing/);
  assert.match(source,/site:naukri\.com\/job-listings/);
  assert.match(source,/tbs=qdr:d/);
- assert.match(source,/These searches do not write to D1/);
+ assert.doesNotMatch(source,/These searches do not write to D1/);
  assert.match(source,/recruiter OR talent acquisition OR engineering manager/);
  assert.match(source,/>Contacts<\/a>/);
 });
