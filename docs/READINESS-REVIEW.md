@@ -189,3 +189,24 @@ exceptions were introduced. No production rows were rewritten or scans triggered
 The repair requires the protected release path before browser behavior changes;
 future ordinary collection re-evaluates stored eligibility. These are tested local
 results, not evidence that the live site already serves this repair.
+
+## Adidas published-search recovery — 23 October 2026
+
+The registered careers XML publication is unavailable. Adidas's public
+`https://jobs.adidas-group.com/` links its live `/search/` page; that page publishes
+the `locationsearch` form field. The India search returned 14 listings. A bounded
+read-only adapter check collected all 14 full descriptions and 14 distinct
+employer requisition numbers, then rechecked the first-page records/count after
+detail collection. Public dates remain day precision; no posting hour is inferred.
+The employer requisition number (for example 550170), rather than the separate
+SAP URL ID, preserves the prior external-ID contract.
+
+The source repair retains advertised ranges/counts, duplicate detection, exact
+employer URLs, India filtering, complete full descriptions and final snapshot
+verification. Missing, foreign, duplicate or changed records fail the source.
+The new-source regression fails against the previous adapter. All 998 Python
+tests and Bandit pass locally. The live check used this environment's standard
+outbound HTTP proxy; production transport code is unchanged. This is local
+read-only evidence, not a finalized production collection or deployed recovery.
+Boehringer Ingelheim's public search/feed still lacks accessible collection
+evidence; keep issue #87 open. No production scan or write was triggered.
