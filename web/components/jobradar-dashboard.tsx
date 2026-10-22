@@ -2505,12 +2505,12 @@ function SettingsView({
       <div className="rounded-2xl border bg-card p-6">
         <h3 className="font-black">Private application tracking</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {Object.keys(tracking).length} jobs tracked in this browser. Export a
-          backup before clearing browser data.
+          {Object.keys(tracking).length} jobs tracked in this browser. Use Settings → Download private backup
+          for a restorable copy of your history, preferences and resume. The export below contains tracking only.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Button onClick={exportTracking} variant="outline">
-            <Download size={16} /> Export JSON
+            <Download size={16} /> Export tracking only
           </Button>
           <Button
             onClick={clearTracking}

@@ -170,3 +170,15 @@ Live health subsequently reported 742/743 sources successful, fresh data and
 working database/ingestion. This verifies Adidas recovery in that run only.
 Boehringer requires an accessible employer-published contract or provider recovery;
 do not bypass screening, invent endpoints or mark the feed empty/healthy.
+
+## Website quality safeguards
+
+The React root catches rendering failures and offers an explicit retry without
+clearing private storage or automatically reloading. The fallback does not display
+raw exception text. Unsaved in-memory changes may be lost when a failed subtree
+is remounted; this is recovery UI, not transaction or network-error handling.
+
+Tracking-only JSON is labelled separately from the Settings private backup,
+which is the supported recovery export. Button/Badge use native elements; unused
+Slot composition and the unused tw-animate-css dependency are removed. Radix
+Progress, Tailwind spin/pulse utilities and all existing product features remain.
