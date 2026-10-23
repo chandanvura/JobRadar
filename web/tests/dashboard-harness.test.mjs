@@ -106,7 +106,7 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   assert.ok(document.body.textContent.includes('Job hidden from your shortlist'));
   await click('Undo hide');
   assert.equal(document.querySelectorAll('[aria-label="Job results"] article').length,beforeHide);
-  assert.ok(document.body.textContent.includes('Last refreshed:'));
+  assert.ok(document.body.textContent.includes('Your page loaded at:'));
   const feedback=document.querySelector('select[aria-label^="Recommendation feedback"]'),label=feedback.getAttribute('aria-label');
   await act(()=>{feedback.value='experience';feedback.dispatchEvent(new window.Event('change',{bubbles:true}));});
   assert.equal([...document.querySelectorAll('select')].some(node=>node.getAttribute('aria-label')===label),false);

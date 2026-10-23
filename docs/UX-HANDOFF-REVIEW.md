@@ -47,3 +47,17 @@ New regression assertions verify follow-up input saving, calendar control visibi
 ### Remaining environment limits
 
 The browser interface did not provide an effective viewport resize or device emulation control. Therefore this pass does **not** verify narrow-screen visual layout, touch keyboards, Android Chrome, iOS Safari, Firefox, print dialogs or imported-calendar notification delivery. Automated mobile navigation tests are functional DOM evidence, not rendered mobile screenshots. Exhaustive coverage across every device and populated user account cannot be claimed. A physical-device/cross-browser pass is still required for that broader acceptance claim.
+
+## Second-round brief — 23 October 2026
+
+Confirmed before editing: Dashboard accepted reviewable leads while Recommended was strict; experience policy rejection could coexist with an overlap sentence; unset skills were called missing; local timestamps omitted the zone; cards retained separate evidence/tracking disclosures. The Save button used a 40px target.
+
+The first isolated fix makes Dashboard use the same verified/fresh gates and personal role matcher as Recommended, with an All Jobs count/navigation control. All Jobs remains broad and Needs Review retains out-of-range/unknown senior evidence. Experience copy uses the JD verdict rather than a second positive overlap verdict; stored minima above the user's maximum never report overlap. Unset skills say Skills to check. Absolute timestamps use en-IN in Asia/Kolkata with IST; page load and completed job checks have distinct labels. Follow-up day comparisons also use IST.
+
+Desktop read-only review of deployed #98 used a 1363px viewport. Saved, Applications, Outreach, Companies and Job Boards had view-specific titles, no horizontal overflow and no external HTTP link missing new-tab/noreferrer attributes in the rendered DOM. Resume's initial lazy state was observed separately; its earlier populated/reload test remains the evidence for completed rendering. This does not audit every off-page employer URL or prove every employer still accepts applications. No message was sent and original workspace data stayed intact.
+
+Phone-width 360–414px rendering remains blocked by unavailable effective viewport/device controls. Physical devices, Safari/Firefox, all-view keyboard order, dark-mode contrast ratios and every-view back navigation are not newly verified. Previously observed light/dark switching is not equivalent to a contrast audit.
+
+### C: proposals only
+
+Existing newest/best-fit sorting and work-mode filtering should be retained; propose remembering sort and adding a dedicated skill filter only after acceptance of their defaults. Propose a reversible hidden-jobs list, a seven-day no-update marker, and in-app instructions for the existing Telegram setup. The funnel summary, CSV export and restore-validation tests already exist; retain them. Backup restore is validated in disposable browser/SQLite tests, not a production restore drill. Explain score components using actual configured weights; do not promise a fixed +10 without computing the job-specific delta. Email alerts require a separate explicit decision and are not started. None of these C proposals is implemented by this round.

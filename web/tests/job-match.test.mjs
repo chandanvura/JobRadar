@@ -32,3 +32,10 @@ test('a preferred technical family does not admit business or procurement merely
   assert.equal(recommendedPreferenceMatch(row,preferences),false);
  }
 });
+
+test('unverified high minimum cannot report overlap and unset profile skills are not called missing',async()=>{
+ const {experienceCompatible,skillReviewLabel}=await import('../lib/job-match.ts');
+ assert.equal(experienceCompatible({experience_min:5,experience_max:null,experience_label:'Unknown'},{experienceMin:0,experienceMax:3}),false);
+ assert.equal(skillReviewLabel({skills:[]},{missingRequiredSkills:['java'],missingSkills:['java']}),'Skills to check');
+ assert.equal(skillReviewLabel({skills:['Python']},{missingRequiredSkills:['java'],missingSkills:['java']}),'Required skills missing from profile');
+});

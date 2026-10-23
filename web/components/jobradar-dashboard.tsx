@@ -1,4 +1,6 @@
 "use client";
+import {formatIstTimestamp,istDateKey} from "@/lib/job-time";
+import {skillReviewLabel} from "@/lib/job-match";
 import {trackingCsv,followUpDue,followUpCalendar,displaySkill} from "@/lib/private-exports";
 import {sourceFreshness} from '@/lib/job-trust';
 import {shortlistCities,locationMatches,enforceShortlistLocation} from "@/lib/location-policy";
@@ -685,7 +687,7 @@ function DashboardContent() {
         if (age === null || age >= 3 || j.posted_precision === "day")
           return false;
       }
-      if (active === "Recommended" && !recommendedPreferenceMatch(j,preferences,match)) return false;
+      if (["Dashboard","Recommended"].includes(active) && !recommendedPreferenceMatch(j,preferences,match)) return false;
       if (
         active === "DevOps & Cloud" &&
         !/DevOps|Cloud|SRE|Platform|Infrastructure/.test(j.role_category)
@@ -1010,14 +1012,14 @@ function DashboardContent() {
           )}{" "}
           {catalogLoading && data && <p role="status" className="mb-3 text-sm text-muted-foreground">Updating jobs… You can keep browsing.</p>}
           {undoHidden && <div role="status" className="mb-3 rounded-xl border p-3">Job hidden from your shortlist. <button className="font-bold underline" onClick={()=>{saveTracking(undoHidden.job,{feedback:undoHidden.feedback});setUndoHidden(null);}}>Undo hide</button></div>}
-          {refreshedAt && <p className="mb-3 text-xs text-muted-foreground">Last refreshed: <time dateTime={refreshedAt}>{new Date(refreshedAt).toLocaleString()}</time></p>}
+          {refreshedAt && <p className="mb-3 text-xs text-muted-foreground">Your page loaded at: <time dateTime={refreshedAt}>{formatIstTimestamp(refreshedAt)}</time></p>}
           {["Saved","Applications"].includes(active) && <Button variant="outline" onClick={()=>downloadPrivate(trackingCsv(Object.values(tracking),active as 'Saved'|'Applications'),`jobradar-${active.toLowerCase()}.csv`,'text/csv;charset=utf-8')}>Export {active} to CSV</Button>}
           {notice && <Notice {...notice} close={() => setNotice(null)} />}{" "}
           {data?.data_mode === "backup" && (
             <div role="status" className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5 text-warning">
               <h2 className="font-bold">{portalMessages.backupTitle}</h2>
               <p className="mt-2 text-sm">{portalMessages.backupIntro}</p>
-              <p className="mt-2 text-sm">Saved: {data.snapshot_at ? new Date(data.snapshot_at).toLocaleString() : "Time unknown"}.</p>
+              <p className="mt-2 text-sm">Saved: {data.snapshot_at ? formatIstTimestamp(data.snapshot_at) : "Time unknown"}.</p>
               {data.coverage === "partial" && <p className="mt-2 text-sm">This saved list contains only some jobs.</p>}
               {data.description_mode === "excerpt" && <p className="mt-2 text-sm">Some descriptions contain only an extract. Open the employer website for the full description.</p>}
               <p className="mt-2 text-sm">{portalMessages.backupCheck}</p>
@@ -1181,17 +1183,17 @@ function DashboardContent() {
                 <section className="radar-coverage mb-5 rounded-2xl border border-border bg-card p-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <h3 className="text-sm font-semibold">Your {preferences.experienceMin}–{preferences.experienceMax} YOE search</h3>
-                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{filtered.length} matching listings from {data?.companies.length || 0} employer sources. Older postings and unknown experience stay visible for review. Freshness is a filter, not a reason to lose an active opening.</p>
+                      <h3 className="text-sm font-semibold">Your verified {preferences.experienceMin}–{preferences.experienceMax} YOE shortlist</h3>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{filtered.length} verified matches with current employer posting evidence and in-range experience. All Jobs and Needs Review retain older or uncertain listings.</p>
                       <p className="mt-1 text-xs leading-5 text-muted-foreground">{preferenceModel.trained ? `Personal ranking adapts to ${preferenceModel.samples} explicit choices in this browser. Recent choices count more. Skill feedback adjusts skill ranking; role feedback adjusts role ranking. Experience and location reports never weaken eligibility.` : "Save or apply to good matches, or use recommendation feedback on a card. Ranking learns from good fits and role/skill feedback; experience reports flag a job for review."} Your choices stay private in this browser.</p>
                     </div>
-                    <Button variant="outline" onClick={() => navigate("All Jobs")} className="rounded-xl">Browse full catalogue <ExternalLink size={14} /></Button>
+                    <Button variant="outline" onClick={() => navigate("All Jobs")} className="rounded-xl">See {Math.max(0,currentJobs.filter(job=>job.is_active&&!isInternship(job)).length-filtered.length)} more in All Jobs <ExternalLink size={14} /></Button>
                   </div>
                 </section>
               )}
               {active === "Recommended" && (
                 <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-4 text-sm text-info">
-                  This view only shows confirmed matches posted within 24 hours. <button className="font-bold underline" onClick={() => navigate("Dashboard")}>Browse all current experience-matched leads</button> to include older postings and requirements to verify.
+                  This view only shows confirmed matches posted within 24 hours. <button className="font-bold underline" onClick={() => navigate("All Jobs")}>Browse all current leads</button> to include older postings and requirements to verify.
                 </section>
               )}
               {active === "All Jobs" && (
@@ -1547,7 +1549,7 @@ function SystemCard({
         {loading && !run
           ? "Checking latest run…"
           : run?.finished_at
-            ? relative(run.finished_at)
+            ? `Jobs checked ${relative(run.finished_at)}`
             : "No completed scan"}
       </p>
       {run && (
@@ -1667,7 +1669,7 @@ function ApplicationSummary({
           ))}
         </select>
       </div>
-      <p className="mt-3 text-sm">{values.filter(row=>followUpDue(row,new Date().toLocaleDateString("en-CA"))).length} application follow-ups due. Dates appear in each application’s details; calendar reminders require importing the downloaded file.</p>
+      <p className="mt-3 text-sm">{values.filter(row=>followUpDue(row,istDateKey())).length} application follow-ups due. Dates appear in each application’s details; calendar reminders require importing the downloaded file.</p>
       <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4">
         {["Applied", "Interview", "Offer", "Rejected"].map((status) => (
           <button
@@ -1720,7 +1722,7 @@ const JobCard = memo(function JobCard({
             : age < 24
               ? "WITHIN 24H"
               : "OLDER";
-  const due = followUpDue(tracking,new Date(now).toLocaleDateString("en-CA"));
+  const due = followUpDue(tracking,istDateKey(now));
   const updateStatus = (status: string) =>
     saveTracking(job, {
       status,
@@ -1789,8 +1791,8 @@ const JobCard = memo(function JobCard({
           </div>
           <details className="mt-3 text-xs text-muted-foreground"><summary className="cursor-pointer font-semibold">Details</summary>
           <div className="mt-3"><h4 className="font-semibold">{freshness.label}</h4>
-            <p className="mt-2">Source check: {freshness.checked ? <time dateTime={freshness.checked}>{new Date(freshness.checked).toLocaleString()}</time> : 'Not available'}. Listing last seen: {freshness.seen ? <time dateTime={freshness.seen}>{new Date(freshness.seen).toLocaleString()}</time> : 'Not available'}. These are check times, not posting dates.</p>
-            {freshness.success && <p className="mt-1">Last successful source check: {new Date(freshness.success).toLocaleString()}.</p>}
+            <p className="mt-2">Source check: {freshness.checked ? <time dateTime={freshness.checked}>{formatIstTimestamp(freshness.checked)}</time> : 'Not available'}. Listing last seen: {freshness.seen ? <time dateTime={freshness.seen}>{formatIstTimestamp(freshness.seen)}</time> : 'Not available'}. These are check times, not posting dates.</p>
+            {freshness.success && <p className="mt-1">Last successful source check: {formatIstTimestamp(freshness.success)}.</p>}
             {freshness.warning && <p className="mt-1">{freshness.warning}</p>}
             <p className="mt-1">Check that the employer still accepts applications before applying.</p>
           </div>
@@ -1799,13 +1801,13 @@ const JobCard = memo(function JobCard({
           <div className="mt-3 rounded-xl border border-border p-3 text-xs">
             <h4 className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</h4>
             <p className="mt-2">{job.experience_label.startsWith("JD extract")?"Only a JD extract is available. Verify the full employer description before shortlisting.":experienceExplanation(requirements.experience)} Posting date, location and role checks also apply.</p>
-            <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===null?'Experience cannot be confirmed.':match.experienceMatch?'Requested experience overlaps your search.':'Requested experience is outside your search.'}</p>
+            <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===false?'Required experience is outside your search range.':'The JD verdict above determines whether experience is verified.'}</p>
             {requirements.experience.required.length?requirements.experience.required.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}<span className="mt-1 block text-muted-foreground">JD section: {item.section}</span></blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
             {requirements.experience.preferred.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}
             {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">{portalMessages.openExperience}</p>}
             {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">{portalMessages.conflictingExperience}</p>}
           </div>
-          <div className="mt-3 text-xs"><h4 className="cursor-pointer font-semibold">Why this match?</h4><p className="mt-2">{match.reasons.join(' · ')}.</p><p className="mt-2">Required skills missing from your profile: {match.missingRequiredSkills.map(displaySkill).join(', ') || 'None identified'}. Matching preferred skills: {match.matchedPreferredSkills.join(', ') || 'None identified'}. Optional skills do not reduce required-skill fit. Unclear requirements still need review.</p>{requirements.skillConflicts.length>0&&<p className="mt-2 text-warning">Conflicting skill requirements: {requirements.skillConflicts.join(', ')} — verify the JD.</p>}</div>
+          <div className="mt-3 text-xs"><h4 className="cursor-pointer font-semibold">Why this match?</h4><p className="mt-2">{match.reasons.join(' · ')}.</p><p className="mt-2">{skillReviewLabel(preferences,match)}: {match.missingRequiredSkills.map(displaySkill).join(', ') || 'None identified'}. Matching preferred skills: {match.matchedPreferredSkills.map(displaySkill).join(', ') || 'None identified'}. Optional skills do not reduce required-skill fit. Unclear requirements still need review.</p>{requirements.skillConflicts.length>0&&<p className="mt-2 text-warning">Conflicting skill requirements: {requirements.skillConflicts.join(', ')} — verify the JD.</p>}</div>
           <p className="mt-3">Fit components: role {Math.round(match.components.title)}/100 · skills {Math.round(match.components.skills)}/100 · experience {Math.round(match.components.experience)}/100 · location {Math.round(match.components.location)}/100. This is a preference score, not a hiring probability.</p>
           </details>
           <div className="mt-5 flex flex-wrap gap-2">
@@ -1846,7 +1848,7 @@ const JobCard = memo(function JobCard({
               </span>
             </div>
             <Progress value={match.score} className="mt-3 h-2" />
-            {match.missingSkills.length > 0 && <p className="mt-2 text-[11px] text-muted-foreground">{match.missingRequiredSkills.length ? "Required skills missing from profile" : "Other JD skills to review"}: {(match.missingRequiredSkills.length ? match.missingRequiredSkills : match.missingSkills).slice(0, 3).join(", ")}</p>}
+            {match.missingSkills.length > 0 && <p className="mt-2 text-[11px] text-muted-foreground">{skillReviewLabel(preferences,match)}: {(match.missingRequiredSkills.length ? match.missingRequiredSkills : match.missingSkills).slice(0, 3).map(displaySkill).join(", ")}</p>}
 
           </div>
           <div className="mt-6 grid grid-cols-[1fr_auto] gap-2">
@@ -1953,7 +1955,7 @@ const JobCard = memo(function JobCard({
               </p>
             </div>
           )}
-          {Boolean(tracking.history?.length)&&<section className="md:col-span-2"><h4 className="font-bold">Application history</h4><ol className="mt-2 space-y-1 text-sm">{tracking.history!.map((event,index)=><li key={index}>{event.status} · <time dateTime={event.at}>{new Date(event.at).toLocaleString()}</time></li>)}</ol></section>}
+          {Boolean(tracking.history?.length)&&<section className="md:col-span-2"><h4 className="font-bold">Application history</h4><ol className="mt-2 space-y-1 text-sm">{tracking.history!.map((event,index)=><li key={index}>{event.status} · <time dateTime={event.at}>{formatIstTimestamp(event.at)}</time></li>)}</ol></section>}
           <label className="text-sm font-bold">
             Referral status
             <select
@@ -2014,7 +2016,7 @@ function InternshipDiscovery({ preferences, lastScan, count, freshCount }: { pre
   return (
     <section className="mb-5 rounded-3xl border border-info/40 bg-info-soft p-5">
       <div className="flex items-start gap-3"><div className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-700 text-white"><GraduationCap size={20} /></div><div><h3 className="font-black text-info">Internship & apprenticeship discovery</h3><p className="mt-1 text-sm leading-6 text-info/75">Kept separate from full-time jobs. JobRadar indexes official employer sources and offers user-initiated LinkedIn, Naukri and official ATS searches; it never scrapes those job boards.</p></div></div>
-      <p className="mt-3 text-sm font-semibold">{count} matching listings · {freshCount} with a current employer date · last completed scan: {lastScan ? new Date(lastScan).toLocaleString("en-IN", {timeZone: "Asia/Kolkata"}) + " IST" : "not available"}.</p>
+      <p className="mt-3 text-sm font-semibold">{count} matching listings · {freshCount} with a current employer date · last completed scan: {lastScan ? formatIstTimestamp(lastScan) : "not available"}.</p>
       <p className="mt-2 text-xs text-info/70">Employer sources are checked approximately every 2½ hours. Refresh reloads the latest scan; it does not start a new scan. Older or unknown-date listings stay visible for review and are not presented as newly posted. Full-time experience preferences do not hide internships.</p>
       <div className="mt-4 grid gap-2 md:grid-cols-2">{links.map((link) => <a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-info/40 bg-card p-3 text-sm font-bold text-info hover:border-info/40">{link.name} <ExternalLink size={15} /></a>)}</div>
       <p className="mt-3 text-xs text-info/70">Use the Companies area to open a company-specific public recruiter search. Verify employment before sending a short, personalized referral request; JobRadar collects no personal data.</p>
