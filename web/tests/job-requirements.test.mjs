@@ -25,7 +25,7 @@ test('missing, negative and conflicting requirements stay uncertain',()=>{
 test('legacy title-inferred experience never enters verified views or gets numeric match credit',()=>{
  const j={title:'Associate Software Engineer',experience_min:0,experience_max:3,experience_label:'Entry-level title',is_eligible:1,is_active:1,eligibility_reason:'Eligible',employment_type:'Full-time'};
  assert.equal(matchesCareerView(j,'Recommended',0,3,true),false);
- assert.equal(matchesCareerView(j,'Dashboard',0,3,true),true);
+ assert.equal(matchesCareerView(j,'Dashboard',0,3,true),false);
  const fixed=normalizeExperience(j);assert.equal(fixed.experience_min,null);assert.equal(fixed.is_eligible,0);
 });
 test('shared board aliases group exact requisitions while preserving separate IDs and sources',()=>{

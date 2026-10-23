@@ -28,3 +28,10 @@ export function postingText(job:Posting,now=Date.now()) {
  }
  return 'Posting time unknown';
 }
+
+/** Presentation only: timestamps retain their original instant, displayed in IST. */
+export function formatIstTimestamp(value:string|number) {
+ const date=new Date(value);
+ return Number.isFinite(date.getTime())?date.toLocaleString('en-IN',{timeZone:'Asia/Kolkata',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true})+' IST':'Time unknown';
+}
+export function istDateKey(value=Date.now()) {return new Date(value).toLocaleDateString('en-CA',{timeZone:'Asia/Kolkata'});}

@@ -1,3 +1,4 @@
+import {experienceWithinPolicy} from './job-experience.ts';
 import {canonicalApplyUrl} from './job-feed.ts';
 import {learningLabel} from './recommendation-feedback.ts';
 import {requirementsFor, experienceUnverified} from './job-requirements.ts';
@@ -21,7 +22,7 @@ const parsedSkills = (value: string) => {try {const v: unknown = JSON.parse(valu
 const overlap = (a: string[], b: string[]) => a.filter(x => b.includes(x));
 export function roleFamily(title: string) { return classifyRoleTitle(title); }
 
-export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => experienceUnverified(job) || (job.experience_min === null && job.experience_max === null) ? null : (job.experience_min ?? 0) <= p.experienceMax && (job.experience_max ?? Infinity) >= p.experienceMin;
+export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => (job.experience_min!==null&&job.experience_min>p.experienceMax)||(job.experience_max!==null&&job.experience_max<p.experienceMin) ? false : experienceUnverified(job) || (job.experience_min === null && job.experience_max === null) ? null : (job.experience_min ?? 0) <= p.experienceMax && (job.experience_max ?? Infinity) >= p.experienceMin;
 // Relevance is independent of source, age and alert eligibility. Preferences are
 // a desired experience range, not a claim about the candidate's actual experience.
 export function createPersonalMatcher(p:MatchPreferences) {
@@ -61,7 +62,7 @@ function matchPrepared(job: MatchJob, p: MatchPreferences,preferredWords:string[
   const score = Math.round(clamp(titleFit * config.match.title + skillFit * config.match.skills + experienceFit * config.match.experience + locationFit * config.match.location));
   const reasons = [/\bsenior\b/i.test(job.title) && job.experience_min !== null && job.experience_min <= 3 ? 'seniority and experience conflict — verify' : !p.titles.length ? 'role preference not specified' : exactTitle ? 'preferred title' : family ? 'preferred role family' : titleHits.length ? 'title terms overlap' : 'title to review',
     !p.skills.length ? 'profile skills not specified' : jobSkills.length ? requiredSkills.length ? `${requiredSkills.length-missingRequiredSkills.length}/${requiredSkills.length} required skills match` : `${matchedSkills.length}/${jobSkills.length} extracted skills match` : 'job skills not specified',
-    exp === null ? 'experience to verify' : exp ? (job.experience_max !== null && job.experience_max > p.experienceMax ? 'experience partly overlaps — verify' : 'experience overlaps') : 'experience outside preference',
+    requirements.experience.status==='stated'&&!experienceWithinPolicy(requirements.experience.min,requirements.experience.max) ? 'experience outside portal policy — verify' : exp === null ? 'experience to verify' : exp ? (job.experience_max !== null && job.experience_max > p.experienceMax ? 'experience partly overlaps — verify' : 'experience overlaps') : 'experience outside preference',
     ...(p.locations?.length ? [locationFit === 100 ? 'preferred location' : 'location to verify'] : [])];
   return {score, reasons, components, matchedSkills, missingSkills, missingRequiredSkills, matchedPreferredSkills, roleFamilyMatch: !families.size || family, titleMatch: exactTitle || family || titleHits.length > 0, skillMatch: matchedSkills.length > 0, experienceMatch: exp};
 }
@@ -100,4 +101,8 @@ export function feedbackByFamily(history:LearningRecord[]) {
 
 export function recommendedPreferenceMatch(job:MatchJob,preferences:MatchPreferences,match=personalMatch(job,preferences)) {
  return match.roleFamilyMatch!==false&&match.score>=30&&(!preferences.titles.length||match.titleMatch);
+}
+
+export function skillReviewLabel(preferences:Pick<MatchPreferences,'skills'>,match:Pick<ReturnType<typeof personalMatch>,'missingRequiredSkills'|'missingSkills'>) {
+ return !preferences.skills.length?'Skills to check':match.missingRequiredSkills.length?'Required skills missing from profile':'Other JD skills to review';
 }

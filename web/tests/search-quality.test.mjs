@@ -4,7 +4,7 @@ import data from './fixtures/real-search-review.json' with {type:'json'};
 import {createJobSearchIndex} from '../lib/job-search.ts';
 import {matchesCareerView} from '../lib/job-view.ts';
 test('reviewed real-listing queries retain all annotated 0–3 YOE discovery candidates',()=>{
- const candidates=data.jobs.filter(j=>matchesCareerView(j,'Dashboard',0,3,false));
+ const candidates=data.jobs.filter(j=>matchesCareerView(j,'Latest Jobs',0,3,false));
  const index=createJobSearchIndex(candidates);
  for(const {query,relevance} of data.queries){
   const hits=[...index.search(query).keys()].slice(0,5);
