@@ -114,6 +114,13 @@ class TalentBrewCareerAdapter:
                 if not likely_target(item['title'], item['location']): return None
                 async with semaphore: response = await fetch_detail(x, item['url'])
                 if response.status_code in (404, 410): return None
+                # Closed TalentBrew links can redirect to the employer homepage
+                # while cached search pages still advertise them. Require an
+                # actual HTTP redirect; a blank 200 detail remains a failure.
+                if (response.history and urlparse(str(response.url)).hostname == host
+                        and urlparse(str(response.url)).path.rstrip('/') in ('', '/en')
+                        and not urlparse(str(response.url)).query):
+                    return None
                 def parse_detail(response):
                     response.raise_for_status(); soup = BeautifulSoup(response.text, 'html.parser')
                     details = list(jsonld_objects(soup))
