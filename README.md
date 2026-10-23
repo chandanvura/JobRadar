@@ -258,3 +258,5 @@ backup; the separate tracking export contains application tracking only.
 
 The [website handoff review](docs/UX-HANDOFF-REVIEW.md) records reproduced loading,
 seniority and wording fixes, existing capabilities and remaining UX review scope.
+
+Personal shortlists support hide/undo and private follow-up dates with calendar downloads. Saved jobs and applications can be exported as CSV; follow-up calendar files require manual import. These controls preserve original job records and application history.

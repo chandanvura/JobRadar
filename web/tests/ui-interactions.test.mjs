@@ -34,19 +34,20 @@ test('10,000 jobs stay bounded; saves preserve the page; filters reset it; every
   const render=()=>root.render(React.createElement(JobPagination,{jobs,resetKey:key,renderJob:job=>React.createElement('article',{key:job.id,'data-id':job.id},React.createElement('button',{onClick:()=>{saved=true;jobs=[...jobs];render();}},'Save'))}));
   try{
     await act(render);assert.equal(document.querySelectorAll('article').length,JOB_PAGE_SIZE);
-    await click(button('Show more jobs'));
+    await click(button('Next jobs'));
     assert.equal(document.querySelector('article').dataset.id,'30');assert.equal(document.querySelectorAll('article').length,30);
     assert.equal(document.activeElement.getAttribute('aria-live'),'polite');
     await click(document.querySelector('article button'));assert.equal(saved,true);
     assert.equal(document.querySelector('article').dataset.id,'30');
     // Clock/catalog reference changes must not collapse the current page.
     await act(()=>{jobs=jobs.map(job=>({...job}));render();});assert.equal(document.querySelector('article').dataset.id,'30');
-    const select=document.querySelector('select');
-    await act(()=>{select.value='333';select.dispatchEvent(new window.Event('change',{bubbles:true}));});
-    assert.equal(document.querySelector('article').dataset.id,'9990');assert.equal(document.querySelectorAll('article').length,10);assert.equal(button('Show more jobs').disabled,true);
+    const pageInput=document.querySelector('input[type=number]');
+    assert.equal(document.querySelectorAll('option').length,0);
+    await act(()=>{pageInput.focus();pageInput.value='334';pageInput.dispatchEvent(new window.FocusEvent('focusout',{bubbles:true}));});
+    assert.equal(document.querySelector('article').dataset.id,'9990');assert.equal(document.querySelectorAll('article').length,10);assert.equal(button('Next jobs').disabled,true);
     await click(button('Previous jobs'));assert.equal(document.querySelector('article').dataset.id,'9960');
     await act(()=>{key='hyderabad';render();});assert.equal(document.querySelector('article').dataset.id,'0');assert.equal(button('Previous jobs').disabled,true);
-    await click(button('Show more jobs'));
+    await click(button('Next jobs'));
     await act(()=>{jobs=jobs.slice(0,5);render();});assert.equal(document.querySelectorAll('article').length,5);assert.equal(document.querySelector('nav'),null);
     await act(()=>{jobs=[];render();});assert.equal(document.querySelectorAll('article').length,0);assert.match(document.querySelector('p').textContent,/Showing 0–0/);
   }finally{await act(()=>root.unmount());dom.window.close();}

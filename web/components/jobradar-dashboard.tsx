@@ -1,4 +1,5 @@
 "use client";
+import {trackingCsv,followUpDue,followUpCalendar,displaySkill} from "@/lib/private-exports";
 import {sourceFreshness} from '@/lib/job-trust';
 import {shortlistCities,locationMatches,enforceShortlistLocation} from "@/lib/location-policy";
 import {portalMessages} from "@/lib/portal-messages";
@@ -172,6 +173,7 @@ type Tracking = {
   notes?: string;
   referralStatus?: string;
   appliedAt?: string;
+  followUpOn?: string;
 };
 type NoticeState = {
   tone: "error" | "success" | "warning";
@@ -234,6 +236,9 @@ const jobViews = new Set([
   "Saved",
   "Applications",
 ]);
+function downloadPrivate(text:string,name:string,type:string) {
+ const url=URL.createObjectURL(new Blob([text],{type})),anchor=document.createElement('a');anchor.href=url;anchor.download=name;anchor.click();URL.revokeObjectURL(url);
+}
 const statuses = [
   "New",
   "Viewed",
@@ -402,6 +407,8 @@ function DashboardContent() {
   const navigationRef = useRef<HTMLElement>(null);
   const loadGeneration = useRef(0);
   const activeLoad = useRef<AbortController | null>(null);
+  const [refreshedAt,setRefreshedAt] = useState<string|null>(null);
+  const [undoHidden,setUndoHidden] = useState<{job:ApiJob;feedback:RecommendationFeedback}|null>(null);
   const [rankingNow, setRankingNow] = useState(() => Date.now());
   useEffect(()=>{const tick=()=>setRankingNow(Date.now());const timer=window.setInterval(tick,60000);window.addEventListener('focus',tick);return()=>{window.clearInterval(timer);window.removeEventListener('focus',tick);};},[]);
   useEffect(() => {
@@ -453,6 +460,7 @@ function DashboardContent() {
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
       setRankingNow(Date.now());
       setData(payload);
+      setRefreshedAt(new Date().toISOString());
       if (!silent) setNotice(null);
     } catch {
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
@@ -581,6 +589,10 @@ function DashboardContent() {
     (job: ApiJob) => tracking[trackingKey(job)] || defaultTracking.get(trackingKey(job))!,
     [tracking, defaultTracking],
   );
+  useEffect(()=>{
+    const hide=(event:Event)=>{const job=(event as CustomEvent<ApiJob>).detail;if(!job)return;setUndoHidden({job,feedback:jobTracking(job)?.feedback||''});saveTracking(job,{feedback:'other'});};
+    window.addEventListener('jobradar-hide',hide);return()=>window.removeEventListener('jobradar-hide',hide);
+  },[jobTracking,saveTracking]);
   const atsOptions = useMemo(
     () => [
       "All ATS",
@@ -606,7 +618,8 @@ function DashboardContent() {
     const reviewView = active === "Needs Review";
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j), match = ranking.get(trackingKey(j))!.match;
-      if (verifiedView(active) && hideRecommendation(track)) return false;
+      if (["Dashboard","Recommended","Ultra Fresh"].includes(active) && hideRecommendation(track)) return false;
+      if (["Dashboard","Recommended","Ultra Fresh"].includes(active) && !match.roleFamilyMatch) return false;
       const reportedExperience = active === "Needs Review" && track.feedback === "experience" && j.is_active && !isInternship(j);
       if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, currentPosting(j,rankingNow)) && !reportedExperience) return false;
       if (deferredQuery && !searchPending && !searchScores.has(j)) return false;
@@ -996,6 +1009,9 @@ function DashboardContent() {
             />
           )}{" "}
           {catalogLoading && data && <p role="status" className="mb-3 text-sm text-muted-foreground">Updating jobs… You can keep browsing.</p>}
+          {undoHidden && <div role="status" className="mb-3 rounded-xl border p-3">Job hidden from your shortlist. <button className="font-bold underline" onClick={()=>{saveTracking(undoHidden.job,{feedback:undoHidden.feedback});setUndoHidden(null);}}>Undo hide</button></div>}
+          {refreshedAt && <p className="mb-3 text-xs text-muted-foreground">Last refreshed: <time dateTime={refreshedAt}>{new Date(refreshedAt).toLocaleString()}</time></p>}
+          {["Saved","Applications"].includes(active) && <Button variant="outline" onClick={()=>downloadPrivate(trackingCsv(Object.values(tracking),active as 'Saved'|'Applications'),`jobradar-${active.toLowerCase()}.csv`,'text/csv;charset=utf-8')}>Export {active} to CSV</Button>}
           {notice && <Notice {...notice} close={() => setNotice(null)} />}{" "}
           {data?.data_mode === "backup" && (
             <div role="status" className="mb-5 rounded-2xl border border-warning/40 bg-warning-soft p-5 text-warning">
@@ -1016,6 +1032,7 @@ function DashboardContent() {
               close={() => setNotice(null)}
             />
           )}
+          {showJobs && !preferences.skills.length && <section className="mb-4 rounded-xl border bg-card p-4"><p>Add the skills you actually have so fit scores can compare them with each JD. A Java/DevOps title preference does not set profile skills.</p><Button onClick={()=>setEditingSearch(true)}>Set up my skills</Button></section>}
           {showJobs && (
             <>
               <section className="radar-hero mb-6 rounded-3xl bg-hero p-6 text-white md:p-8">
@@ -1244,7 +1261,7 @@ function DashboardContent() {
       <nav
         aria-label="Quick navigation"
         inert={mobile}
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-border bg-card/95 px-2 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-8px_24px_rgba(18,63,44,.08)] backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-card/95 px-2 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-8px_24px_rgba(18,63,44,.08)] backdrop-blur lg:hidden"
       >
         {([
           ["Dashboard", Radar],
@@ -1262,6 +1279,7 @@ function DashboardContent() {
             {label}
           </button>
         ))}
+        <button type="button" aria-label="More navigation" onClick={()=>setMobile(true)} className="flex flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold"><Menu size={18}/>More</button>
       </nav>
     </div>
   );
@@ -1649,6 +1667,7 @@ function ApplicationSummary({
           ))}
         </select>
       </div>
+      <p className="mt-3 text-sm">{values.filter(row=>followUpDue(row,new Date().toLocaleDateString("en-CA"))).length} application follow-ups due. Dates appear in each application’s details; calendar reminders require importing the downloaded file.</p>
       <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4">
         {["Applied", "Interview", "Offer", "Rejected"].map((status) => (
           <button
@@ -1693,7 +1712,7 @@ const JobCard = memo(function JobCard({
     fresh = postedToday(job)
       ? "POSTED TODAY"
       : age === null
-        ? "DATE UNKNOWN"
+        ? (job.posted_precision === "day" && /today/i.test(job.posted_label||"") && !currentPosting(job,now) ? "OLDER POSTING" : "DATE UNKNOWN")
         : age < 3
           ? "ULTRA FRESH"
           : age < 6
@@ -1701,6 +1720,7 @@ const JobCard = memo(function JobCard({
             : age < 24
               ? "WITHIN 24H"
               : "OLDER";
+  const due = followUpDue(tracking,new Date(now).toLocaleDateString("en-CA"));
   const updateStatus = (status: string) =>
     saveTracking(job, {
       status,
@@ -1721,7 +1741,7 @@ const JobCard = memo(function JobCard({
                   : "bg-warning-soft text-warning"
               }
             >
-              {job.is_eligible && !manualExperienceReview && !dateNeedsReview ? fresh : "REVIEW"}
+              {job.is_eligible && !manualExperienceReview && !dateNeedsReview ? fresh : (fresh === "OLDER POSTING" || fresh === "OLDER" ? "OLDER POSTING — REVIEW" : "REVIEW")}
             </Badge>
             <Badge variant="outline">{job.role_category}</Badge>
             {isInternship(job) && (
@@ -1760,32 +1780,34 @@ const JobCard = memo(function JobCard({
                 </span>
                 <span className="flex items-center gap-1">
                   <BriefcaseBusiness size={14} />
-                  {job.experience_min!==null&&/^[\d.+–-]+$/.test(job.experience_label)?`${job.experience_label} years`:job.experience_label}
+                  {job.experience_min===null ? "Experience requires review" : /^[\d.+–-]+$/.test(job.experience_label)?`${job.experience_label} years`:job.experience_label}
                 </span>
                 {requirements.workMode !== "Unknown" && <span>{requirements.workMode === "Conflicting" ? "Work arrangement unclear — verify JD" : requirements.workMode}</span>}
                 <span>{postingText(job)}</span>
               </div>
             </div>
           </div>
-          <details className="mt-3 text-xs text-muted-foreground">
-            <summary className="cursor-pointer">{freshness.label}</summary>
+          <details className="mt-3 text-xs text-muted-foreground"><summary className="cursor-pointer font-semibold">Details</summary>
+          <div className="mt-3"><h4 className="font-semibold">{freshness.label}</h4>
             <p className="mt-2">Source check: {freshness.checked ? <time dateTime={freshness.checked}>{new Date(freshness.checked).toLocaleString()}</time> : 'Not available'}. Listing last seen: {freshness.seen ? <time dateTime={freshness.seen}>{new Date(freshness.seen).toLocaleString()}</time> : 'Not available'}. These are check times, not posting dates.</p>
             {freshness.success && <p className="mt-1">Last successful source check: {new Date(freshness.success).toLocaleString()}.</p>}
             {freshness.warning && <p className="mt-1">{freshness.warning}</p>}
             <p className="mt-1">Check that the employer still accepts applications before applying.</p>
-          </details>
-          {requirements.workMode === "Remote" && requirements.remoteEligibility.label && <details className="mt-2 text-xs text-muted-foreground"><summary className="cursor-pointer">{requirements.remoteEligibility.label}</summary>{requirements.remoteEligibility.evidence.map((text,index)=><blockquote className="mt-2 border-l-2 pl-2" key={index}>{text}</blockquote>)}<p className="mt-2">Remote availability does not change the Bengaluru and Hyderabad shortlist rule.</p></details>}
-          {Boolean(job.duplicate_sources?.length) && <details className="mt-2 text-xs"><summary className="cursor-pointer">{job.duplicate_sources!.length+1} source records for this opening</summary><p className="mt-2 text-muted-foreground">Grouped for browsing. Saved jobs and applications keep every original record and its history.</p><ul className="mt-2 space-y-2">{[job,...job.duplicate_sources!].map((item,index)=><li key={`${trackingKey(item)}-${index}`}><a href={item.application_url} target="_blank" rel="noreferrer" className="underline">{boardAttribution(item).employer} · {item.ats_provider} · {item.external_job_id}</a></li>)}</ul></details>}
-          <details className="mt-3 rounded-xl border border-border p-3 text-xs">
-            <summary className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</summary>
+          </div>
+          {requirements.workMode === "Remote" && requirements.remoteEligibility.label && <div className="mt-2 text-xs text-muted-foreground"><h4 className="cursor-pointer">{requirements.remoteEligibility.label}</h4>{requirements.remoteEligibility.evidence.map((text,index)=><blockquote className="mt-2 border-l-2 pl-2" key={index}>{text}</blockquote>)}<p className="mt-2">Remote availability does not change the Bengaluru and Hyderabad shortlist rule.</p></div>}
+          {Boolean(job.duplicate_sources?.length) && <div className="mt-2 text-xs"><h4 className="cursor-pointer">{job.duplicate_sources!.length+1} source records for this opening</h4><p className="mt-2 text-muted-foreground">Grouped for browsing. Saved jobs and applications keep every original record and its history.</p><ul className="mt-2 space-y-2">{[job,...job.duplicate_sources!].map((item,index)=><li key={`${trackingKey(item)}-${index}`}><a href={item.application_url} target="_blank" rel="noreferrer" className="underline">{boardAttribution(item).employer} · {item.ats_provider} · {item.external_job_id}</a></li>)}</ul></div>}
+          <div className="mt-3 rounded-xl border border-border p-3 text-xs">
+            <h4 className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</h4>
             <p className="mt-2">{job.experience_label.startsWith("JD extract")?"Only a JD extract is available. Verify the full employer description before shortlisting.":experienceExplanation(requirements.experience)} Posting date, location and role checks also apply.</p>
             <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===null?'Experience cannot be confirmed.':match.experienceMatch?'Requested experience overlaps your search.':'Requested experience is outside your search.'}</p>
             {requirements.experience.required.length?requirements.experience.required.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}<span className="mt-1 block text-muted-foreground">JD section: {item.section}</span></blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
             {requirements.experience.preferred.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}
             {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">{portalMessages.openExperience}</p>}
             {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">{portalMessages.conflictingExperience}</p>}
+          </div>
+          <div className="mt-3 text-xs"><h4 className="cursor-pointer font-semibold">Why this match?</h4><p className="mt-2">{match.reasons.join(' · ')}.</p><p className="mt-2">Required skills missing from your profile: {match.missingRequiredSkills.map(displaySkill).join(', ') || 'None identified'}. Matching preferred skills: {match.matchedPreferredSkills.join(', ') || 'None identified'}. Optional skills do not reduce required-skill fit. Unclear requirements still need review.</p>{requirements.skillConflicts.length>0&&<p className="mt-2 text-warning">Conflicting skill requirements: {requirements.skillConflicts.join(', ')} — verify the JD.</p>}</div>
+          <p className="mt-3">Fit components: role {Math.round(match.components.title)}/100 · skills {Math.round(match.components.skills)}/100 · experience {Math.round(match.components.experience)}/100 · location {Math.round(match.components.location)}/100. This is a preference score, not a hiring probability.</p>
           </details>
-          <details className="mt-3 text-xs"><summary className="cursor-pointer font-semibold">Why this match?</summary><p className="mt-2">{match.reasons.join(' · ')}.</p><p className="mt-2">Required skills missing from your profile: {match.missingRequiredSkills.join(', ') || 'None identified'}. Matching preferred skills: {match.matchedPreferredSkills.join(', ') || 'None identified'}. Optional skills do not reduce required-skill fit. Unclear requirements still need review.</p>{requirements.skillConflicts.length>0&&<p className="mt-2 text-warning">Conflicting skill requirements: {requirements.skillConflicts.join(', ')} — verify the JD.</p>}</details>
           <div className="mt-5 flex flex-wrap gap-2">
             {skills.length ? (
               skills.slice(0, 6).map((s: string) => (
@@ -1793,7 +1815,7 @@ const JobCard = memo(function JobCard({
                   key={s}
                   className="rounded-lg bg-muted px-2.5 py-1.5 text-[11px] font-bold"
                 >
-                  {s}
+                  {displaySkill(s)}
                 </span>
               ))
             ) : (
@@ -1852,6 +1874,7 @@ const JobCard = memo(function JobCard({
               />
             </button>
           </div>
+          <button type="button" onClick={()=>window.dispatchEvent(new CustomEvent("jobradar-hide",{detail:job}))} className="mt-3 w-full rounded-xl border px-3 py-2 text-xs font-semibold">Not interested</button>
           <details className="mt-3 rounded-xl border bg-card p-3">
             <summary className="cursor-pointer text-xs font-semibold">Track & give feedback</summary>
           {isInternship(job) && (
@@ -1949,6 +1972,8 @@ const JobCard = memo(function JobCard({
             Private notes
             <PrivateNotes value={tracking.notes || ""} onSave={notes=>saveTracking(job,{notes})} />
           </label>
+          <label className="text-sm font-bold">Follow-up date<input type="date" aria-label={`Follow-up date for ${job.title}`} value={tracking.followUpOn||''} onChange={event=>saveTracking(job,{followUpOn:event.target.value})} className="mt-2 block rounded-lg border bg-card p-2"/></label>
+          {tracking.followUpOn && <div><p role={due?'status':undefined}>{due?'Follow-up due':'Follow-up planned'}: {tracking.followUpOn}. Shown in this browser; no message is sent.</p><Button variant="outline" onClick={()=>downloadPrivate(followUpCalendar({...tracking,job}),'jobradar-follow-up.ics','text/calendar')}>Download calendar reminder</Button></div>}
           {tracking.appliedAt && (
             <p className="text-xs text-muted-foreground md:col-span-2">
               Marked applied {relative(tracking.appliedAt)}. Stored only in this
@@ -2011,7 +2036,6 @@ function JobBoardsView({ preferences }: { preferences: SearchPreferences }) {
     { name: `Naukri — ${city.name}`, url: `https://www.naukri.com/jobs-in-${city.naukri}?jobAge=1&k=${query}` },
     { name: `Indeed via Google — ${city.name}`, url: googleJobsUrl(`site:in.indeed.com/viewjob (${terms.slice(0, 8).map(title=>`"${title}"`).join(" OR ")}) ${cityAliasClause(city.name)}`) },
     { name: `Glassdoor via Google — ${city.name}`, url: googleJobsUrl(`site:glassdoor.co.in/job-listing (${terms.slice(0, 8).map(title=>`"${title}"`).join(" OR ")}) ${cityAliasClause(city.name)}`) },
-    { name: `Google official ATS — ${city.name}`, url: `https://www.google.com/search?q=${encodeURIComponent(`(${terms.map(title=>`"${title}"`).join(" OR ")}) ${cityAliasClause(city.name)} (${OFFICIAL_ATS_DOMAINS})`)}` },
   ]);
   return (
     <div className="space-y-5">

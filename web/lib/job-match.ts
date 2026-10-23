@@ -63,7 +63,7 @@ function matchPrepared(job: MatchJob, p: MatchPreferences,preferredWords:string[
     !p.skills.length ? 'profile skills not specified' : jobSkills.length ? requiredSkills.length ? `${requiredSkills.length-missingRequiredSkills.length}/${requiredSkills.length} required skills match` : `${matchedSkills.length}/${jobSkills.length} extracted skills match` : 'job skills not specified',
     exp === null ? 'experience to verify' : exp ? (job.experience_max !== null && job.experience_max > p.experienceMax ? 'experience partly overlaps — verify' : 'experience overlaps') : 'experience outside preference',
     ...(p.locations?.length ? [locationFit === 100 ? 'preferred location' : 'location to verify'] : [])];
-  return {score, reasons, components, matchedSkills, missingSkills, missingRequiredSkills, matchedPreferredSkills, titleMatch: exactTitle || family || titleHits.length > 0, skillMatch: matchedSkills.length > 0, experienceMatch: exp};
+  return {score, reasons, components, matchedSkills, missingSkills, missingRequiredSkills, matchedPreferredSkills, roleFamilyMatch: !families.size || family, titleMatch: exactTitle || family || titleHits.length > 0, skillMatch: matchedSkills.length > 0, experienceMatch: exp};
 }
 export function freshnessScore(job: MatchJob, now = Date.now(), decayHours = config.decayHours) {
   const age = (value?: string | null) => {const n = value ? (now - Date.parse(value)) / 3600000 : NaN; return Number.isFinite(n) && n >= 0 ? n : null;};
@@ -99,5 +99,5 @@ export function feedbackByFamily(history:LearningRecord[]) {
 }
 
 export function recommendedPreferenceMatch(job:MatchJob,preferences:MatchPreferences,match=personalMatch(job,preferences)) {
- return match.score>=30&&(!preferences.titles.length||match.titleMatch);
+ return match.roleFamilyMatch!==false&&match.score>=30&&(!preferences.titles.length||match.titleMatch);
 }
