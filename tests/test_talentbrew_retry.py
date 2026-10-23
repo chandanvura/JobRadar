@@ -98,3 +98,27 @@ def test_missing_requirements_retry_once_without_accepting_incomplete_jobs(monke
             assert jobs[0].description == fresh_description
             assert jobs[0].posted_at is None
     assert calls == [{}, {}]
+
+
+@pytest.mark.parametrize('redirected', [True, False])
+def test_homepage_requires_an_actual_redirect_to_skip_closed_job(monkeypatch, redirected):
+    import httpx
+    from scraper import adapters
+    from scraper.models import Company
+    listing = ('<section id="search-results" data-organization-ids="123" data-total-results="1">'
+               '<ul id="search-results-list"><li><a data-job-id="1" href="/job/1"><h2>Software Engineer</h2></a>'
+               '<span class="location">Hyderabad</span></li></ul></section>')
+    async def request(client, method, url, **kwargs):
+        return httpx.Response(200, text=listing, request=httpx.Request(method, url))
+    async def detail(client, url):
+        history = [httpx.Response(302, headers={'location': '/en'}, request=httpx.Request('GET', url))] if redirected else []
+        return httpx.Response(200, text='<title>Working at Employer</title>', history=history,
+                              request=httpx.Request('GET', 'https://careers.example/en'))
+    monkeypatch.setattr(adapters, 'request', request)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
+    company = Company('Employer', 'https://careers.example/search', 'talentbrew', '123')
+    if redirected:
+        assert asyncio.run(TalentBrewCareerAdapter().fetch_jobs(company)) == ([], 1)
+    else:
+        with pytest.raises(ValueError, match='missing the full description'):
+            asyncio.run(TalentBrewCareerAdapter().fetch_jobs(company))

@@ -100,3 +100,13 @@ def test_complete_mode_collects_non_target_roles_and_checks_final_snapshot(monke
     jobs,count=asyncio.run(LegacyEightfoldCareerAdapter(complete=True).fetch_jobs(Company('Employer','https://jobs.example/careers?domain=employer.example','eightfold_legacy_complete','jobs.example|employer.example')))
     assert count==len(jobs)==1 and offsets==[0,0] and len(details)==2
     assert jobs[0].external_job_id=='1' and jobs[0].posted_at is None
+
+
+def test_valid_count_drift_retries_but_invalid_employer_does_not():
+    from scraper.snapshot import SnapshotChanged
+    with pytest.raises(SnapshotChanged):
+        search_page(payload([1], count=12), 'employer.example', 11)
+    for change in ({'domain': 'other'}, {'count': 2001}, {'query': {'location': ''}}):
+        with pytest.raises(ValueError) as error:
+            search_page(dict(payload([1]), **change), 'employer.example', 11)
+        assert not isinstance(error.value, SnapshotChanged)

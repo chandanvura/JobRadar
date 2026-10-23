@@ -20,9 +20,10 @@ def search_page(data, domain, count=None):
     rows = data.get('positions'); total = data.get('count')
     if (data.get('domain') != domain or not isinstance(rows, list)
             or not isinstance(total, int) or isinstance(total, bool) or not 0 <= total <= 2000
-            or (data.get('query') or {}).get('location') != 'India'
-            or count is not None and total != count):
+            or (data.get('query') or {}).get('location') != 'India'):
         raise ValueError('Legacy Eightfold public search count or employer filter changed')
+    if count is not None and total != count:
+        raise SnapshotChanged('Legacy Eightfold public search count or employer filter changed: count drift')
     ids = [str(row.get('id', '')) for row in rows]
     if len(set(ids)) != len(ids) or any(not key.isdigit() for key in ids):
         raise ValueError('Legacy Eightfold search repeated or omitted identifiers')
