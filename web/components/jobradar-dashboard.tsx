@@ -1749,11 +1749,7 @@ const JobCard = memo(function JobCard({
             {isInternship(job) && (
               <Badge className="bg-info-soft text-info">INTERNSHIP</Badge>
             )}
-            {(!job.is_eligible || manualExperienceReview || dateNeedsReview) && (
-              <span className="text-xs text-warning">
-                {manualExperienceReview ? 'Experience feedback — verify JD' : dateNeedsReview && job.is_eligible ? 'Posting date is outside the verified 24-hour window or needs verification' : job.eligibility_reason}
-              </span>
-            )}
+
             {!job.is_active && (
               <Badge variant="outline">
                 No longer in live feed — verify availability
@@ -1789,27 +1785,7 @@ const JobCard = memo(function JobCard({
               </div>
             </div>
           </div>
-          <details className="mt-3 text-xs text-muted-foreground"><summary className="cursor-pointer font-semibold">Details</summary>
-          <div className="mt-3"><h4 className="font-semibold">{freshness.label}</h4>
-            <p className="mt-2">Source check: {freshness.checked ? <time dateTime={freshness.checked}>{formatIstTimestamp(freshness.checked)}</time> : 'Not available'}. Listing last seen: {freshness.seen ? <time dateTime={freshness.seen}>{formatIstTimestamp(freshness.seen)}</time> : 'Not available'}. These are check times, not posting dates.</p>
-            {freshness.success && <p className="mt-1">Last successful source check: {formatIstTimestamp(freshness.success)}.</p>}
-            {freshness.warning && <p className="mt-1">{freshness.warning}</p>}
-            <p className="mt-1">Check that the employer still accepts applications before applying.</p>
-          </div>
-          {requirements.workMode === "Remote" && requirements.remoteEligibility.label && <div className="mt-2 text-xs text-muted-foreground"><h4 className="cursor-pointer">{requirements.remoteEligibility.label}</h4>{requirements.remoteEligibility.evidence.map((text,index)=><blockquote className="mt-2 border-l-2 pl-2" key={index}>{text}</blockquote>)}<p className="mt-2">Remote availability does not change the Bengaluru and Hyderabad shortlist rule.</p></div>}
-          {Boolean(job.duplicate_sources?.length) && <div className="mt-2 text-xs"><h4 className="cursor-pointer">{job.duplicate_sources!.length+1} source records for this opening</h4><p className="mt-2 text-muted-foreground">Grouped for browsing. Saved jobs and applications keep every original record and its history.</p><ul className="mt-2 space-y-2">{[job,...job.duplicate_sources!].map((item,index)=><li key={`${trackingKey(item)}-${index}`}><a href={item.application_url} target="_blank" rel="noreferrer" className="underline">{boardAttribution(item).employer} · {item.ats_provider} · {item.external_job_id}</a></li>)}</ul></div>}
-          <div className="mt-3 rounded-xl border border-border p-3 text-xs">
-            <h4 className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</h4>
-            <p className="mt-2">{job.experience_label.startsWith("JD extract")?"Only a JD extract is available. Verify the full employer description before shortlisting.":experienceExplanation(requirements.experience)} Posting date, location and role checks also apply.</p>
-            <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===false?'Required experience is outside your search range.':'The JD verdict above determines whether experience is verified.'}</p>
-            {requirements.experience.required.length?requirements.experience.required.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}<span className="mt-1 block text-muted-foreground">JD section: {item.section}</span></blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
-            {requirements.experience.preferred.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}
-            {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">{portalMessages.openExperience}</p>}
-            {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">{portalMessages.conflictingExperience}</p>}
-          </div>
-          <div className="mt-3 text-xs"><h4 className="cursor-pointer font-semibold">Why this match?</h4><p className="mt-2">{match.reasons.join(' · ')}.</p><p className="mt-2">{skillReviewLabel(preferences,match)}: {match.missingRequiredSkills.map(displaySkill).join(', ') || 'None identified'}. Matching preferred skills: {match.matchedPreferredSkills.map(displaySkill).join(', ') || 'None identified'}. Optional skills do not reduce required-skill fit. Unclear requirements still need review.</p>{requirements.skillConflicts.length>0&&<p className="mt-2 text-warning">Conflicting skill requirements: {requirements.skillConflicts.join(', ')} — verify the JD.</p>}</div>
-          <p className="mt-3">Fit components: role {Math.round(match.components.title)}/100 · skills {Math.round(match.components.skills)}/100 · experience {Math.round(match.components.experience)}/100 · location {Math.round(match.components.location)}/100. This is a preference score, not a hiring probability.</p>
-          </details>
+
           <div className="mt-5 flex flex-wrap gap-2">
             {skills.length ? (
               skills.slice(0, 6).map((s: string) => (
@@ -1825,15 +1801,7 @@ const JobCard = memo(function JobCard({
                 Skills optional / not specified
               </span>
             )}
-            {skills.length > 6 && (
-              <button
-                type="button"
-                onClick={() => setDetails(true)}
-                className="rounded-lg border px-2.5 py-1.5 text-[11px] font-bold text-muted-foreground"
-              >
-                +{skills.length - 6} more
-              </button>
-            )}
+
           </div>
         </div>
         <div className="radar-job-priority flex min-w-0 flex-col justify-between border-t bg-muted p-5 lg:w-80 lg:shrink-0 lg:border-l lg:border-t-0">
@@ -1848,7 +1816,7 @@ const JobCard = memo(function JobCard({
               </span>
             </div>
             <Progress value={match.score} className="mt-3 h-2" />
-            {match.missingSkills.length > 0 && <p className="mt-2 text-[11px] text-muted-foreground">{skillReviewLabel(preferences,match)}: {(match.missingRequiredSkills.length ? match.missingRequiredSkills : match.missingSkills).slice(0, 3).map(displaySkill).join(", ")}</p>}
+
 
           </div>
           <div className="mt-6 grid grid-cols-[1fr_auto] gap-2">
@@ -1868,7 +1836,7 @@ const JobCard = memo(function JobCard({
             <button
               aria-label={tracking.saved ? "Remove saved job" : "Save job"}
               onClick={() => saveTracking(job, { saved: !tracking.saved })}
-              className={`grid size-10 place-items-center rounded-xl border ${tracking.saved ? "bg-danger-soft text-danger" : ""}`}
+              className={`grid size-11 place-items-center rounded-xl border ${tracking.saved ? "bg-danger-soft text-danger" : ""}`}
             >
               <Bookmark
                 size={17}
@@ -1876,9 +1844,39 @@ const JobCard = memo(function JobCard({
               />
             </button>
           </div>
-          <button type="button" onClick={()=>window.dispatchEvent(new CustomEvent("jobradar-hide",{detail:job}))} className="mt-3 w-full rounded-xl border px-3 py-2 text-xs font-semibold">Not interested</button>
-          <details className="mt-3 rounded-xl border bg-card p-3">
-            <summary className="cursor-pointer text-xs font-semibold">Track & give feedback</summary>
+
+        </div>
+      </div>
+      <details open={details} onToggle={event=>setDetails(event.currentTarget.open)} className="border-t bg-muted p-4">
+        <summary className="min-h-11 cursor-pointer rounded-lg px-2 py-3 font-semibold focus-visible:outline-2 focus-visible:outline-ring">Details</summary>
+        <div className="grid gap-4 p-1 md:grid-cols-2">
+          <div className="md:col-span-2">            {(!job.is_eligible || manualExperienceReview || dateNeedsReview) && (
+              <span className="text-xs text-warning">
+                {manualExperienceReview ? 'Experience feedback — verify JD' : dateNeedsReview && job.is_eligible ? 'Posting date is outside the verified 24-hour window or needs verification' : job.eligibility_reason}
+              </span>
+            )}
+          <div className="mt-3"><h4 className="font-semibold">{freshness.label}</h4>
+            <p className="mt-2">Source check: {freshness.checked ? <time dateTime={freshness.checked}>{formatIstTimestamp(freshness.checked)}</time> : 'Not available'}. Listing last seen: {freshness.seen ? <time dateTime={freshness.seen}>{formatIstTimestamp(freshness.seen)}</time> : 'Not available'}. These are check times, not posting dates.</p>
+            {freshness.success && <p className="mt-1">Last successful source check: {formatIstTimestamp(freshness.success)}.</p>}
+            {freshness.warning && <p className="mt-1">{freshness.warning}</p>}
+            <p className="mt-1">Check that the employer still accepts applications before applying.</p>
+          </div>
+          {requirements.workMode === "Remote" && requirements.remoteEligibility.label && <div className="mt-2 text-xs text-muted-foreground"><h4 className="cursor-pointer">{requirements.remoteEligibility.label}</h4>{requirements.remoteEligibility.evidence.map((text,index)=><blockquote className="mt-2 border-l-2 pl-2" key={index}>{text}</blockquote>)}<p className="mt-2">Remote availability does not change the Bengaluru and Hyderabad shortlist rule.</p></div>}
+          {Boolean(job.duplicate_sources?.length) && <div className="mt-2 text-xs"><h4 className="cursor-pointer">{job.duplicate_sources!.length+1} source records for this opening</h4><p className="mt-2 text-muted-foreground">Grouped for browsing. Saved jobs and applications keep every original record and its history.</p><ul className="mt-2 space-y-2">{[job,...job.duplicate_sources!].map((item,index)=><li key={`${trackingKey(item)}-${index}`}><a href={item.application_url} target="_blank" rel="noreferrer" className="underline">{boardAttribution(item).employer} · {item.ats_provider} · {item.external_job_id}</a></li>)}</ul></div>}
+          <div className="mt-3 rounded-xl border border-border p-3 text-xs">
+            <h4 className="cursor-pointer font-semibold">{job.experience_label.startsWith("JD extract")?"Verify full JD before shortlisting":experienceDecision(requirements.experience)}</h4>
+            <p className="mt-2">{job.experience_label.startsWith("JD extract")?"Only a JD extract is available. Verify the full employer description before shortlisting.":experienceExplanation(requirements.experience)} Posting date, location and role checks also apply.</p>
+            <p className="mt-2">Your search range: {preferences.experienceMin}–{preferences.experienceMax} years. {match.experienceMatch===false?'Required experience is outside your search range.':'The JD verdict above determines whether experience is verified.'}</p>
+            {requirements.experience.required.length?requirements.experience.required.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Required / stated: </b>{item.evidence}<span className="mt-1 block text-muted-foreground">JD section: {item.section}</span></blockquote>):<p className="mt-2">{portalMessages.unknownExperience}</p>}
+            {requirements.experience.preferred.map((item,index)=><blockquote key={index} className="mt-2 border-l-2 pl-2"><b>Preferred only: </b>{item.evidence}</blockquote>)}
+            {job.experience_min!==null&&job.experience_min>0&&job.experience_max===null&&<p className="mt-2">{portalMessages.openExperience}</p>}
+            {['conditional','conflict'].includes(requirements.experience.status)&&<p className="mt-2 text-warning">{portalMessages.conflictingExperience}</p>}
+          </div>
+          <div className="mt-3 text-xs"><h4 className="cursor-pointer font-semibold">Why this match?</h4><p className="mt-2">{match.reasons.join(' · ')}.</p><p className="mt-2">{skillReviewLabel(preferences,match)}: {match.missingRequiredSkills.map(displaySkill).join(', ') || 'None identified'}. Matching preferred skills: {match.matchedPreferredSkills.map(displaySkill).join(', ') || 'None identified'}. Optional skills do not reduce required-skill fit. Unclear requirements still need review.</p>{requirements.skillConflicts.length>0&&<p className="mt-2 text-warning">Conflicting skill requirements: {requirements.skillConflicts.join(', ')} — verify the JD.</p>}</div>
+          <p className="mt-3">Fit components: role {Math.round(match.components.title)}/100 · skills {Math.round(match.components.skills)}/100 · experience {Math.round(match.components.experience)}/100 · location {Math.round(match.components.location)}/100. This is a preference score, not a hiring probability.</p>
+          </div>
+          <div className="md:col-span-2">          <button type="button" onClick={()=>window.dispatchEvent(new CustomEvent("jobradar-hide",{detail:job}))} className="mt-3 w-full rounded-xl border px-3 py-2 text-xs font-semibold">Not interested</button>
+<div className="rounded-xl border bg-card p-3">
           {isInternship(job) && (
             <a
               href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in (recruiter OR "talent acquisition" OR "campus hiring") "${job.company}"`)}`}
@@ -1917,20 +1915,8 @@ const JobCard = memo(function JobCard({
           >
             Tailor resume for this job
           </button>
-          <button
-            aria-expanded={details}
-            onClick={() => setDetails((x) => !x)}
-            className="mt-3 w-full rounded-xl py-2 text-xs font-bold text-muted-foreground hover:bg-muted"
-          >
-            {details
-              ? "Hide application details"
-              : "Add notes or referral status"}
-          </button>
-          </details>
-        </div>
-      </div>
-      {details && (
-        <div className="grid gap-4 border-t bg-muted p-5 md:grid-cols-2">
+
+</div></div>
           <div className="md:col-span-2 rounded-xl border bg-card p-4">
             <p className="mb-3 text-xs text-muted-foreground">First detected {relative(job.first_seen_at)} · Source: {job.ats_provider}. {match.reasons.join(" · ")}</p>
             {(attribution.careerUrl || job.career_page_url) !== job.application_url && <a href={attribution.careerUrl || job.career_page_url} target="_blank" rel="noreferrer" className="mb-3 inline-block text-xs font-semibold underline">Company careers <ExternalLink size={12} className="inline" /></a>}
@@ -1983,7 +1969,7 @@ const JobCard = memo(function JobCard({
             </p>
           )}
         </div>
-      )}
+      </details>
     </article>
   );
 });

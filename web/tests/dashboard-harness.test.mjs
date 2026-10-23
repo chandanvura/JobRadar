@@ -95,7 +95,11 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   assert.equal([...document.querySelectorAll('nav[aria-label="JobRadar views"] button')].some(node=>node.textContent.trim()==='Fresher Roles'),false);
   assert.equal(document.querySelectorAll('article details').length>0,true);
   assert.ok([...document.querySelectorAll('article h4')].some(node=>node.textContent==='Shortlist by experience'));
-  assert.equal([...document.querySelectorAll('article details')].find(node=>node.querySelector('summary')?.textContent==='Track & give feedback').open,false);
+  assert.equal(document.querySelector('article > details').open,false);
+  assert.equal(document.querySelectorAll('article > details > summary').length,document.querySelectorAll('article').length);
+  assert.ok(document.querySelector('[aria-label="Application stage for Java Engineer 0"]').closest('details'));
+  assert.ok([...document.querySelectorAll('article button')].find(button=>button.textContent==='Not interested').closest('details'));
+  assert.ok(document.querySelector('[aria-label="Save job"]').className.includes('size-11'));
   await click('More filters');
   const experience=document.querySelector('[aria-label="Experience view"]');
   await act(()=>{experience.value='fresher';experience.dispatchEvent(new window.Event('change',{bubbles:true}));});
@@ -135,7 +139,7 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   const arrangement=document.querySelector('[aria-label="Work arrangement filter"]');
   await act(()=>{arrangement.value='Remote';arrangement.dispatchEvent(new window.Event('change',{bubbles:true}));});
   await click('Applications');assert.equal(document.querySelectorAll('article').length,1);
-  await click('Add notes or referral status');
+  await act(()=>document.querySelector('article > details > summary').click());
   assert.ok(document.body.textContent.includes('Application history'));
   assert.ok(document.body.textContent.includes('Applied ·'));
   assert.ok(document.body.textContent.includes('Interview ·'));
