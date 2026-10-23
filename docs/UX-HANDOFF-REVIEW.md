@@ -66,3 +66,22 @@ Existing newest/best-fit sorting and work-mode filtering should be retained; pro
 A6 follow-up: card evidence, score components, eligibility explanation, feedback, hidden-job action, application stage, notes, JD and follow-up controls now sit under one primary Details disclosure. The collapsed card keeps identity, location, experience, posting age, six top skills, fit score, Apply and Save. Save is 44 × 44 CSS pixels and Details has a 44px minimum height. This addresses the specifically reproduced Save target; it does not certify all mobile targets. Existing tracking/history is preserved. Automated card tests verify one primary disclosure and that feedback/stage actions are contained within it.
 
 Desktop first-use/search follow-up on the deployed baseline: Use defaults dismissed onboarding in the disposable workspace. A nonsense query returned zero results with the explicit no-matches message; Clear restored results. Java returned 466 results in the observed snapshot. This is baseline browser evidence, not a deployed verification of the draft fixes. External-link DOM attribute checks cover currently rendered pages only; no board scraping or outreach occurred.
+
+
+## Device-independent responsive controls — 23 October 2026
+
+Source inspection reproduced a 38px mobile Refresh override and a 40px theme control, both below the requested 44px minimum. Refresh/theme/navigation controls now have 44px targets; buttons, disclosure summaries and form inputs have a shared 44px minimum block size. Long content may wrap instead of widening a page, form controls are bounded by their container, and mobile main content reserves the bottom navigation plus the safe-area inset. Existing viewport/media breakpoints are preserved; no user-agent or device-name detection is added.
+
+A CSS-pixel viewport matrix is the acceptance target, not a claim of completed rendering tests:
+
+| Viewport widths | Purpose | Evidence status |
+| --- | --- | --- |
+| 320, 360, 375, 390, 412, 414 | Narrow phone layouts and text reflow | Not rendered in the available browser environment |
+| 639, 640 | Small-layout breakpoint boundary | Source rules inspected; not rendered |
+| 768, 820 | Tablet portrait layouts | Not rendered |
+| 1023, 1024 | Mobile drawer / desktop sidebar boundary | Source rules inspected; automated drawer behavior tested; visual boundary not rendered |
+| 1363 | Available desktop browser | Prior deployed screen/layout checks; new responsive patch still requires release verification |
+
+Use these widths in portrait and landscape, light/dark, at 100% and 200% text/zoom where available. Check page-level overflow, visible Apply/Save, drawer keyboard behavior, 44px targets and bottom navigation clearance with a populated tracking workspace. Width values are representative coverage points rather than certified device mappings. CSS pixels are distinct from a phone's hardware pixel resolution.
+
+Reference: MDN viewport concepts https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/CSSOM_view/Viewport_concepts and responsive design https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design . Chrome's device-mode documentation explains that viewport simulation is distinct from an actual mobile device: https://developer.chrome.com/docs/devtools/device-mode . No physical Android/iOS, cross-browser or new mobile screenshot claim is made. The connected browser has no effective exposed resize/device-mode capability, and plugin discovery did not establish an immediately usable resize integration.

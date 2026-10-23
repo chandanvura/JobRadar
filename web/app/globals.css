@@ -282,10 +282,24 @@ html[data-theme="dark"] { --surface-shadow: 0 6px 24px -12px rgb(0 0 0 / .5); }
   .radar-topbar { gap: 12px; }
   .radar-topbar > div > p { display: none; }
   .radar-view-title { font-size: 18px; }
-  .radar-topbar > button:last-child { font-size: 0; width: 38px; padding: 0; }
+  .radar-topbar > button:last-child { font-size: 0; width: 44px; min-width: 44px; height: 44px; padding: 0; }
   .radar-topbar > button:last-child svg { width: 16px; }
   .radar-hero { padding: 24px; }
   .radar-hero h2 { font-size: 32px; }
   .radar-job-card > div > div:first-child { padding: 20px; }
   .radar-job-priority { min-width: 0; }
+}
+
+/* Input- and viewport-based controls: no device-name or user-agent branches. */
+.radar-shell :where(button, select, summary, input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"])) {
+  min-block-size: 44px;
+}
+.radar-content { min-inline-size: 0; }
+.radar-content :where(p, dd, a, blockquote) { overflow-wrap: anywhere; }
+.radar-content :where(input, select, textarea) { max-inline-size: 100%; }
+@media (max-width: 1023px) {
+  .radar-shell > main { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
+}
+@media (max-width: 639px) {
+  .radar-topbar > div:first-of-type { flex: 1; }
 }

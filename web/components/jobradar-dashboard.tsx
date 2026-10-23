@@ -924,7 +924,7 @@ function DashboardContent() {
           <button
             aria-label="Close navigation"
             onClick={() => setMobile(false)}
-            className="ml-auto lg:hidden"
+            className="ml-auto flex size-11 shrink-0 items-center justify-center lg:hidden"
           >
             <X />
           </button>
@@ -959,7 +959,7 @@ function DashboardContent() {
             aria-expanded={mobile}
             aria-controls="radar-navigation"
             onClick={() => setMobile(true)}
-            className="lg:hidden"
+            className="flex size-11 shrink-0 items-center justify-center lg:hidden"
           >
             <Menu />
           </button>
