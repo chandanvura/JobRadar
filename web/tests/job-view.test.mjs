@@ -43,3 +43,15 @@ test('an eligible scan record moves out of verified views when its posting proof
  assert.equal(matchesCareerView(job,'Needs Review',0,3,false),true);
  assert.equal(matchesCareerView(job,'Saved',0,3,false),true);
 });
+
+
+test('early-career shortlists reject senior titles despite low stored years, preserving general browsing and history',()=>{
+ for(const title of ['Senior Data Engineer','Sr. Engineer','Research Scientist III']) {
+  const row=job({title,is_eligible:1,experience_min:2,experience_max:3});
+  assert.equal(matchesCareerView(row,'Dashboard',0,3,true),false);
+  assert.equal(matchesCareerView(row,'Recommended',0,3,true),false);
+  assert.equal(matchesCareerView(row,'All Jobs',0,3,true),true);
+  assert.equal(matchesCareerView(row,'Saved',0,3,true),true);
+ }
+ assert.equal(matchesCareerView(job({title:'Java Engineer',is_eligible:1,experience_min:2,experience_max:null}),'Dashboard',0,3,true),true);
+});

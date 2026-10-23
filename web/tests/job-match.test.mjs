@@ -22,3 +22,13 @@ test('recommendations respect chosen role families even when other components pr
  assert.equal(recommendedPreferenceMatch({...job,title:'Java Backend Developer',role_category:'Java / Backend'},preferences),true);
  assert.equal(recommendedPreferenceMatch(job,{...preferences,titles:[]}),true);
 });
+
+test('a preferred technical family does not admit business or procurement merely for title overlap',async()=>{
+ const {personalMatch,recommendedPreferenceMatch}=await import('../lib/job-match.ts');
+ const preferences={titles:['Java Developer','DevOps Engineer'],skills:['Java','Docker'],experienceMin:0,experienceMax:3,locations:['Bengaluru']};
+ for(const [title,role_category] of [['Business Analyst','Business Analyst'],['Procurement Engineer','Other']]) {
+  const row={title,role_category,skills:'["Java","Docker"]',experience_min:1,experience_max:2,is_eligible:1,relevance_score:70,posted_at:null,posted_label:null,reported_age_hours:null,normalized_location:'Bengaluru'};
+  assert.equal(personalMatch(row,preferences).roleFamilyMatch,false);
+  assert.equal(recommendedPreferenceMatch(row,preferences),false);
+ }
+});

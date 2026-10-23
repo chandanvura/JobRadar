@@ -36,3 +36,11 @@ test('compact family searches stay bounded and preserve internship intent',async
  assert.ok(internship.includes('"Software Engineer Intern"'));
  assert.ok(!internship.includes('"SDE I"'));
 });
+
+
+test('city aliases preserve Bangalore and do not repeat Hyderabad',async()=>{
+ const {cityAliasClause}=await import('../lib/job-search-strategy.ts');
+ assert.equal(cityAliasClause('Hyderabad'),'"Hyderabad"');
+ assert.equal(cityAliasClause('Bengaluru'),'("Bengaluru" OR "Bangalore")');
+ assert.equal(cityAliasClause('unknown'),'');
+});

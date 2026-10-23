@@ -24,10 +24,8 @@ export function JobPagination<T>({jobs,resetKey,renderJob,renderPage,noun='jobs'
     {renderPage?renderPage(jobs.slice(start,end)):jobs.slice(start,end).map(job=>renderJob?.(job))}
     {pages>1 && <nav aria-label={`${label} pages`} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card p-4">
       <button type="button" disabled={page===0} onClick={()=>move(page-1)} className="rounded-lg border px-4 py-2 font-semibold disabled:opacity-50">Previous {noun}</button>
-      <label className="text-sm">Page <select aria-label={`${label} page`} value={page} onChange={event=>move(Number(event.target.value))} className="ml-2 rounded-lg border bg-card px-3 py-2">
-        {Array.from({length:pages},(_,index)=><option key={index} value={index}>{index+1}</option>)}
-      </select> of {pages}</label>
-      <button type="button" disabled={page===pages-1} onClick={()=>move(page+1)} className="rounded-lg border px-4 py-2 font-semibold disabled:opacity-50">Show more {noun}{end<jobs.length?` (${jobs.length-end} remaining)`:''}</button>
+      <label className="text-sm">Page <input type="number" aria-label={`${label} page`} min={1} max={pages} key={`${resetKey}:${page}`} defaultValue={page+1} onBlur={event=>{const next=Number(event.currentTarget.value);if(Number.isInteger(next)&&next>=1&&next<=pages)move(next-1);else event.currentTarget.value=String(page+1);}} onKeyDown={event=>{if(event.key==='Enter')event.currentTarget.blur();}} className="ml-2 w-20 rounded-lg border bg-card px-3 py-2"/> of {pages}</label>
+      <button type="button" disabled={page===pages-1} onClick={()=>move(page+1)} className="rounded-lg border px-4 py-2 font-semibold disabled:opacity-50">Next {noun}{end<jobs.length?` (${jobs.length-end} remaining)`:''}</button>
     </nav>}
   </section>;
 }

@@ -251,3 +251,12 @@ web dependency audits and Python dependency/security checks. Normal scan
 [39854451509](https://github.com/chandanvura/JobRadar/actions/runs/39854451509)
 verified Adidas recovery with 14 listings; Boehringer Ingelheim remains an
 explicit provider-access exception. See the [priority decisions](docs/MAINTENANCE.md#priority-decisions--23-october-2026).
+
+A rendering failure now offers a retry screen without clearing saved browser
+data or exposing raw error text. For recovery, use Settings → Download private
+backup; the separate tracking export contains application tracking only.
+
+The [website handoff review](docs/UX-HANDOFF-REVIEW.md) records reproduced loading,
+seniority and wording fixes, existing capabilities and remaining UX review scope.
+
+Personal shortlists support hide/undo and private follow-up dates with calendar downloads. Saved jobs and applications can be exported as CSV; follow-up calendar files require manual import. These controls preserve original job records and application history.
