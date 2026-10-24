@@ -1,4 +1,5 @@
 {
+  "max_minimum_experience_years": 3,
   "optional": "\\b(?:preferred|preferably|nice to have|good to have|a plus|desirable|bonus|optional|not (?:required|mandatory|necessary|essential))\\b",
   "junior": "\\b(?:freshers?|fresh graduates?|new graduates?|entry.?level|early career|campus hire|university graduate|recent graduates?|no (?:prior |professional |work )?experience (?:is )?required)\\b",
   "exclude": "\\b(?:degree|course|contract|tenure|warranty|bond|graduation|bachelor|master|phd)\\b",

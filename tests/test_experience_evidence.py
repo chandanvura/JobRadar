@@ -21,7 +21,7 @@ def test_jd_experience_drives_full_time_shortlisting(case):
     job=Job('1','Java Developer','Example','Bengaluru',case['text'],'test','company_career','https://example.com/1','https://example.com/1','https://example.com',posted_at=datetime.now(timezone.utc).isoformat(),posted_precision='timestamp')
     result=enrich(job)
     lo,hi=case['min'],case['max']
-    expected=case['status']=='stated' and lo is not None and lo>=0 and (lo<=2 if hi is None else lo<=hi<=3)
+    expected=case['status']=='stated' and lo is not None and lo>=0 and (lo<=3 and (hi is None or lo<=hi))
     assert result.is_eligible == expected
     assert (result.experience_min,result.experience_max)==(lo,hi)
 
@@ -32,3 +32,15 @@ def test_alternatives_and_conflicts_never_alert_even_for_junior_titles():
         result=enrich(job)
         assert not result.is_eligible
         assert 'experience — verify' in result.eligibility_reason.lower()
+
+@pytest.mark.parametrize('minimum', [0, 1, 1.5, 2, 3])
+@pytest.mark.parametrize('maximum', [5, 10, None])
+def test_minimum_based_policy_accepts_any_valid_upper_bound(minimum, maximum):
+    from scraper.experience import experience_within_policy
+    assert experience_within_policy(minimum, maximum)
+
+
+@pytest.mark.parametrize('minimum,maximum', [(None,None),(-1,3),(3,2),(3.5,5),(4,None)])
+def test_minimum_based_policy_rejects_missing_invalid_or_high_minimum(minimum, maximum):
+    from scraper.experience import experience_within_policy
+    assert not experience_within_policy(minimum, maximum)

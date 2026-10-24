@@ -16,7 +16,7 @@ unknown dates or experience are never invented to fill the page.
 ## Product rules
 
 - Verified recommendations require employer posting evidence within 24 hours,
-  explicit experience compatible with **0–3 years**, and a target city.
+  a stated minimum experience of **0–3 years (any upper limit)**, and a target city.
 - Show the JD evidence behind experience decisions and distinguish mandatory,
   preferred, conditional and conflicting requirements.
 - Keep unknown or conflicting requirements reviewable, without treating a junior

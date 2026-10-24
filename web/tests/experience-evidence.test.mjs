@@ -36,9 +36,9 @@ test('JD extraction repairs labels without fabricating scan approval or weakenin
  assert.equal(stricter.experience_min,5);assert.equal(stricter.is_eligible,0);assert.match(stricter.eligibility_reason,/differs/);
  for(const description of ["Qualifications: Bachelor's with 4 years experience or Master's with 2 years experience",'Experience: 3–1 years','Preferred Experience: 2 years'])assert.equal(normalizeExperience(job({description})).is_eligible,0);
 });
-test('verified recommendations reject unknown and open 3+ requirements; no fallback inserts review leads',()=>{
+test('verified recommendations reject unknown but include stated open 3+ requirements',()=>{
  assert.equal(matchesCareerView(job(),'Recommended',0,3,true),false);
- assert.equal(matchesCareerView(job({experience_min:3}),'Recommended',0,3,true),false);
+ assert.equal(matchesCareerView(job({experience_min:3}),'Recommended',0,3,true),true);
  assert.equal(experienceWithinPolicy(2,null),true);assert.equal(experienceWithinPolicy(1,3),true);
 });
 
@@ -49,4 +49,13 @@ test('full experience sentences survive long clauses and explanations separate r
  assert.equal(result.required[0].evidence,sentence);assert.ok(result.required[0].evidence.length>400);
  assert.match(experienceExplanation(result),/meets the portal experience rule/);
  assert.match(experienceExplanation(analyzeExperience('Preferred experience: 2 years')),/Only preferred/);
+});
+
+test('minimum-based policy admits broad ranges through three years and rejects invalid evidence',()=>{
+ for(const min of [0,1,1.5,2,3])for(const max of [5,10,null]) {
+  assert.equal(experienceWithinPolicy(min,max),true);
+  assert.equal(matchesCareerView(job({experience_min:min,experience_max:max}),'Recommended',0,3,true),true);
+ }
+ for(const [min,max] of [[null,null],[-1,3],[3,2],[3.5,5],[4,null]])assert.equal(experienceWithinPolicy(min,max),false);
+ assert.equal(matchesCareerView(job({experience_min:3,experience_max:5}),'Recommended',0,2,true),false);
 });

@@ -47,7 +47,7 @@ export function normalizeExperience<T extends {description?:string|null;experien
 
   normalized={...job,experience_min:analysis.min,experience_max:analysis.max,experience_label:analysis.label,
    is_eligible:policy?job.is_eligible:0,
-   eligibility_reason:!stated?analysis.label:!policy?'Experience exceeds 0–3 YOE policy':!job.is_eligible&&/Experience not stated|Entry-level title/.test(job.eligibility_reason)?'JD experience found — awaiting scan verification':job.eligibility_reason};
+   eligibility_reason:!stated?analysis.label:!policy?'Required minimum exceeds 3 years or experience range is invalid':!job.is_eligible&&/Experience not stated|Entry-level title/.test(job.eligibility_reason)?'JD experience found — awaiting scan verification':job.eligibility_reason};
  } else {
   const reason=analysis?.preferred.length?'Only preferred experience stated — verify':experienceUnverified(job)?'Entry-level title — experience unverified':'Experience not stated — verify';
   normalized={...job,experience_min:null,experience_max:null,experience_label:reason,is_eligible:0,eligibility_reason:reason};
