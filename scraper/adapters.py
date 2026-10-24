@@ -435,6 +435,10 @@ class WorkdayAdapter(JobSource):
                         raise SnapshotChanged(f"Workday complete pagination total changed: {expected} -> {total}")
                     if offset and len(batch)==min(20,max(0,expected-offset)) and len(set(paths))==len(paths) and all(path.startswith('/job/') for path in paths) and identifiers.intersection(paths):
                         raise SnapshotChanged('Workday complete pagination shifted across valid pages')
+                    if (len(batch)==min(20,max(0,expected-offset))
+                            and all(isinstance(path,str) and path.startswith('/job/') for path in paths)
+                            and len(set(paths))!=len(paths)):
+                        raise SnapshotChanged(f'Workday complete pagination repeated IDs within page: offset={offset}')
                     if ((offset and total not in (0,expected)) or (not offset and total!=expected)
                             or len(batch)!=min(20,max(0,expected-offset))
                             or any(not path.startswith("/job/") for path in paths)
