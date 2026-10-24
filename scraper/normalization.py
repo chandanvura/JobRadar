@@ -4,7 +4,7 @@ from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from .models import Job
 from .requirements import candidate_text
-from .experience import analyze_experience
+from .experience import analyze_experience, experience_within_policy, RULES
 from .posting import posting_current
 from .source_ownership import correct_board_owner
 from .roles import classify_role, NON_TECHNICAL
@@ -22,7 +22,8 @@ INTERNSHIP_ROLE_PATTERNS = {
 SKILL_RULES=json.loads((Path(__file__).parents[1]/'config/skills.json').read_text())
 SKILLS=list(SKILL_RULES)
 MAX_JOB_AGE_HOURS = 24
-MAX_EXPERIENCE_YEARS = 3
+# Kept for workflow compatibility; this caps the required minimum, not the ceiling.
+MAX_EXPERIENCE_YEARS = RULES["max_minimum_experience_years"]
 TARGET_CITIES = TARGET_LOCATIONS
 INDIA_TZ = timezone(timedelta(hours=5, minutes=30))
 LEADERSHIP_TITLE = re.compile(r"\b(?:architect|director|head|lead|manager|principal|staff|vice president|vp)\b", re.I)
@@ -81,9 +82,7 @@ def enrich(job: Job, company_priority: int=3):
     reported=job.reported_age_hours
     employer_says_today=bool(job.posted_label and re.search(r"\b(?:posted\s+)?today\b",job.posted_label,re.I))
     recent=posting_current(job)
-    bounded_experience=job.experience_min is not None and job.experience_max is not None and job.experience_min >= 0 and job.experience_max <= MAX_EXPERIENCE_YEARS
-    accepted_plus=job.experience_min is not None and job.experience_max is None and 0 <= job.experience_min <= 2
-    experience_ok=bounded_experience or accepted_plus
+    experience_ok=experience_within_policy(job.experience_min,job.experience_max)
     leadership_title=re.sub(r"\bmember of technical staff\b", "technical contributor", job.title, flags=re.I)
     leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
     explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|sdet|test engineer|support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer)\s*(?:i|1)\b",job.title,re.I))
@@ -97,7 +96,7 @@ def enrich(job: Job, company_priority: int=3):
     elif job.employment_type=="Internship": reason="Eligible"
     elif job.experience_label in ("Conditional experience — verify", "Conflicting experience — verify"): reason=job.experience_label
     elif job.experience_min is None and job.experience_max is None: reason="Entry-level title — experience unverified" if explicit_entry_title else "Experience not stated — verify"
-    elif not experience_ok: reason="Experience exceeds 0–3 YOE policy"
+    elif not experience_ok: reason="Required minimum exceeds 3 years or experience range is invalid"
     elif not recent: reason="Posting date not verified within 24 hours"
     else: reason="Eligible"
     job.is_eligible=reason=="Eligible"; job.eligibility_reason=reason

@@ -408,5 +408,54 @@
     "min": null,
     "max": null,
     "status": "conflict"
+  },
+  {
+    "name": "shortlist minimum 0 with upper 5",
+    "text": "Required experience: 0–5 years.",
+    "min": 0,
+    "max": 5,
+    "status": "stated"
+  },
+  {
+    "name": "shortlist minimum 1 with upper 5",
+    "text": "Required experience: 1–5 years.",
+    "min": 1,
+    "max": 5,
+    "status": "stated"
+  },
+  {
+    "name": "shortlist minimum 2 with upper 4",
+    "text": "Required experience: 2–4 years.",
+    "min": 2,
+    "max": 4,
+    "status": "stated"
+  },
+  {
+    "name": "shortlist minimum 2 with upper 5",
+    "text": "Required experience: 2–5 years.",
+    "min": 2,
+    "max": 5,
+    "status": "stated"
+  },
+  {
+    "name": "shortlist minimum 3 with upper 5",
+    "text": "Required experience: 3–5 years.",
+    "min": 3,
+    "max": 5,
+    "status": "stated"
+  },
+  {
+    "name": "shortlist minimum 3.5 with upper 5",
+    "text": "Required experience: 3.5–5 years.",
+    "min": 3.5,
+    "max": 5,
+    "status": "stated"
+  },
+  {
+    "name": "shortlist minimum 4 with upper 6",
+    "text": "Required experience: 4–6 years.",
+    "min": 4,
+    "max": 6,
+    "status": "stated"
   }
 ]

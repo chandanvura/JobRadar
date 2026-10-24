@@ -83,3 +83,9 @@ def analyze_experience(description):
     number = lambda value: f'{value:.6f}'.rstrip('0').rstrip('.') or '0'
     label = 'Fresher' if chosen['kind'] == 'junior' else number(lo) + '+' if hi is None else number(lo) if lo == hi else number(lo) + '–' + number(hi)
     return dict(result, min=lo, max=hi, label=label, status='stated')
+
+
+def experience_within_policy(minimum, maximum):
+    """A valid stated minimum up to three years qualifies, irrespective of ceiling."""
+    return (minimum is not None and 0 <= minimum <= RULES['max_minimum_experience_years']
+            and (maximum is None or maximum >= minimum))

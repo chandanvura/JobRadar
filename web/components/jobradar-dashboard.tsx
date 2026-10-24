@@ -2498,7 +2498,7 @@ function SettingsView({
         />
         <Info
           label="Experience"
-          value={`Explicit 0–${policy?.max_experience_years ?? 3} YOE, including 2+`}
+          value={`Stated minimum 0–${policy?.max_experience_years ?? 3} years; any upper limit`}
         />
         <Info
           label="Posting age"
@@ -2533,7 +2533,7 @@ function SettingsView({
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <CheckLine text="Employer relative dates remain labels, not invented timestamps" />
           <CheckLine text="Failed or limited sources do not deactivate existing jobs" />
-          <CheckLine text="Leadership titles are excluded; Senior titles still follow the 0–3 YOE rule" />
+          <CheckLine text="Leadership and senior titles stay out of the early-career shortlist" />
           <CheckLine text="Zero-result sources are reported without marking the full scan unhealthy" />
           <CheckLine text="Failed Telegram deliveries are retry candidates" />
           <CheckLine text="Saved and application stages are independent" />
