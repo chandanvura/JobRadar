@@ -54,6 +54,10 @@ def classify_role(title, description=''):
                              if section != 'unspecified' or re.search(r'\b(?:develop|build|design|implement|maintain|programming|coding|must|required|proficiency|experience with|experience using|using)\b', clause, re.I))
         evidence = {match.group(0).casefold() for match in TECHNICAL_EVIDENCE.finditer(qualified)}
         if len(evidence) >= 2:
+            # SQL/Python are also analytics tools. They do not make an analyst
+            # or analytics consultant a software engineer.
+            if re.search(r'\banalyst\b|\banalytics consultant\b', clean):
+                return clean, 'Data / Business Analysis'
             return clean, 'Software Engineering'
     return clean, 'Other'
 

@@ -22,7 +22,15 @@ const parsedSkills = (value: string) => {try {const v: unknown = JSON.parse(valu
 const overlap = (a: string[], b: string[]) => a.filter(x => b.includes(x));
 export function roleFamily(title: string) { return classifyRoleTitle(title); }
 
-export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => (job.experience_min!==null&&job.experience_min>p.experienceMax)||(job.experience_max!==null&&job.experience_max<p.experienceMin) ? false : experienceUnverified(job) || (job.experience_min === null && job.experience_max === null) ? null : (job.experience_min ?? 0) <= p.experienceMax && (job.experience_max ?? Infinity) >= p.experienceMin;
+export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => {
+ if(job.experience_min!==null&&job.experience_max!==null&&job.experience_min>job.experience_max)return null;
+ if((job.experience_min!==null&&job.experience_min>p.experienceMax)||(job.experience_max!==null&&job.experience_max<p.experienceMin))return false;
+ if(experienceUnverified(job)||(job.experience_min===null&&job.experience_max===null))return null;
+ const analysis=job.description?.trim()?requirementsFor(job).experience:null;
+ if(analysis&&analysis.status!=='stated')return null;
+ if(analysis&&((analysis.min!==null&&analysis.min>p.experienceMax)||(analysis.max!==null&&analysis.max<p.experienceMin)))return false;
+ return (job.experience_min??0)<=p.experienceMax&&(job.experience_max??Infinity)>=p.experienceMin;
+};
 // Relevance is independent of source, age and alert eligibility. Preferences are
 // a desired experience range, not a claim about the candidate's actual experience.
 export function createPersonalMatcher(p:MatchPreferences) {
@@ -36,7 +44,9 @@ function matchPrepared(job: MatchJob, p: MatchPreferences,preferredWords:string[
   const titleWords = words(job.title);
   const titleHits = overlap(preferredWords, titleWords);
   const exactTitle = titles.has(job.title.toLowerCase());
-  const family = families.has(job.role_category);
+  // A recognized current title takes precedence over a stale scan category.
+  const classified=roleFamily(job.title);
+  const family = families.has(classified==='Other'?job.role_category:classified);
   const titleFit = !p.titles.length ? 75 : exactTitle ? 100 : Math.max(family ? 85 : 0, preferredWords.length ? titleHits.length / preferredWords.length * 100 : 0);
   const requirements=requirementsFor(job);
   const structured=[...requirements.requiredSkills,...requirements.preferredSkills,...requirements.mentionedSkills];

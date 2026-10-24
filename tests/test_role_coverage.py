@@ -9,6 +9,12 @@ from scraper.models import Company, Job
 from scraper.normalization import classify_title, enrich
 
 TAXONOMY=json.loads((Path(__file__).parents[1]/'config/roles.json').read_text())
+
+@pytest.mark.parametrize('title', ['Salesforce Effectiveness Analyst with Japanese Language', 'Risk Analytics Consultant', 'Senior Analyst - MES PAS X'])
+def test_analytics_tools_do_not_prove_software_engineering(title):
+    description='Required Qualifications: Experience using SQL and Python for analytics.'
+    assert classify_title(title, description)[1]=='Data / Business Analysis'
+
 @pytest.mark.parametrize('title,family',[(title,role['family']) for role in TAXONOMY['roles'] for title in role['titles']])
 def test_published_role_vocabulary_is_collected_and_classified(title,family):
     assert adapters.likely_role(title)

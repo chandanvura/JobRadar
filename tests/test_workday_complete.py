@@ -92,3 +92,16 @@ def test_complete_count_stops_before_provider_wraps_out_of_range_page(monkeypatc
     jobs,count=asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
     assert count==20 and jobs==[]
     assert offsets==[0,0]
+
+
+def test_repeated_ids_on_final_workday_page_are_restartable(monkeypatch):
+    from scraper.snapshot import SnapshotChanged
+    async def request(client,method,url,**kwargs):
+        offset=kwargs['json']['offset']
+        ids=list(range(offset,min(offset+20,78)))
+        if offset==60:ids[-1]=ids[0]
+        rows=[{'externalPath':f'/job/Hyderabad/R{i}','title':'Sales'} for i in ids]
+        return httpx.Response(200,request=httpx.Request(method,url),json={'total':78 if offset==0 else 0,'jobPostings':rows})
+    monkeypatch.setattr(adapters,'request',request)
+    with pytest.raises(SnapshotChanged,match='within page: offset=60'):
+        asyncio.run(adapters.WorkdayAdapter(complete=True).fetch_jobs(employer()))
