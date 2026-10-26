@@ -2,7 +2,7 @@ export type Resume={name:string;contact:string;summary:string;experience:string;
 export const resumeFields=['name','contact','summary','experience','projects','education','skills','jd'] as const;
 export const blankResume:Resume={name:'',contact:'',summary:'',experience:'',projects:'',education:'',skills:'',jd:''};
 export function cleanResume(value:unknown):Resume{const v=value&&typeof value==='object'?value as Record<string,unknown>:{};return Object.fromEntries(resumeFields.map(k=>[k,typeof v[k]==='string'?v[k].slice(0,20000):''])) as Resume}
-export const keywordList=['Java','Python','JavaScript','TypeScript','Go','Spring','Spring Boot','React','SQL','PostgreSQL','MySQL','Redis','MongoDB','AWS','Azure','GCP','Docker','Kubernetes','Terraform','Ansible','Jenkins','Linux','Git','CI/CD','REST','Microservices','Prometheus','Grafana','Kafka','Helm','ArgoCD','Bash','Networking','Observability','Incident response','Testing'];
+export const keywordList=['Java','Python','JavaScript','TypeScript','Go','Spring','Spring Boot','React','SQL','PostgreSQL','MySQL','Redis','MongoDB','AWS','Azure','GCP','Docker','Kubernetes','Terraform','Ansible','Jenkins','Linux','Git','CI/CD','REST','Microservices','Prometheus','Grafana','ELK','Elasticsearch','Loki','Monitoring','SRE','Kafka','Helm','ArgoCD','Bash','Networking','Observability','Incident response','Testing'];
 export const matches=(text:string,word:string)=>new RegExp('(^|[^a-z0-9])'+word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?=$|[^a-z0-9])','i').test(text);
 export function hasResume(r:Resume){return Boolean(r.name.trim()&&(r.experience.trim()||r.projects.trim()||r.education.trim()))}
 export function tailorResume(base:Resume,jd:string){

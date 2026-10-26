@@ -33,12 +33,12 @@ export function hiringManagerDraft(company: string, role: string, applicationUrl
 // Compact, bounded role-family searches replace title × city × source expansion.
 const ROLE_GROUPS: Record<string, string[]> = {
   backend: ['Software Engineer', 'Backend Engineer', 'Java Developer', 'SDE I'],
-  devops: ['DevOps Engineer', 'Cloud Engineer', 'Platform Engineer'],
-  sre: ['Site Reliability Engineer', 'SRE', 'Production Engineer'],
+  devops: ['DevOps Engineer', 'Cloud Engineer', 'Platform Engineer', 'Ansible Automation Engineer'],
+  sre: ['Site Reliability Engineer', 'SRE', 'Production Engineer', 'Observability Engineer'],
 };
 export function groupedAtsSearches(role: string, city: string, period: string) {
   if (!role.trim() || !['Bengaluru','Hyderabad'].includes(city) || !['day','week'].includes(period)) return [];
-  const family = /sre|site reliability|production engineer/i.test(role) ? 'sre' : /devops|cloud|platform/i.test(role) ? 'devops' : /java|backend|software|sde/i.test(role) ? 'backend' : null;
+  const family = /sre|site reliability|production engineer|observability|monitoring/i.test(role) ? 'sre' : /devops|cloud|platform|ansible/i.test(role) ? 'devops' : /java|backend|software|sde/i.test(role) ? 'backend' : null;
   if (!family || /intern|graduate/i.test(role)) return atsSearches(role, city, period);
   const titles = [...new Set([role, ...ROLE_GROUPS[family]])].slice(0, 4).map(literal).join(' OR ');
   const location = cityAliasClause(city);

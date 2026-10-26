@@ -48,6 +48,13 @@ def test_title_classification():
     assert classify_title("QA Associate")[1] == "Quality Engineering"
     assert classify_title("SDET I")[1] == "Quality Engineering"
     assert classify_title("Application Support Associate")[1] == "Technical Support"
+    assert classify_title("Site Reliability Engineer")[1] == "SRE"
+    assert classify_title("Junior SRE")[1] == "SRE"
+    assert classify_title("Observability Engineer")[1] == "SRE"
+    assert classify_title("Monitoring Engineer")[1] == "SRE"
+    assert classify_title("Monitoring and Observability Engineer")[1] == "SRE"
+    assert classify_title("Ansible Engineer")[1] == "DevOps"
+    assert classify_title("Ansible Automation Engineer")[1] == "DevOps"
 
 def test_explicit_entry_title_can_fill_missing_experience_without_opening_generic_roles():
     entry=enrich(sample(title="Associate Software Engineer",location="Hyderabad",description="Build reliable services"))
@@ -481,3 +488,44 @@ def test_ingestion_rejects_single_oversized_record():
     import pytest
     with pytest.raises(ValueError, match="exceeds ingestion"):
         ingest_chunks([{"description": "界" * 20000}], max_bytes=1000)
+
+
+def test_sre_observability_and_ansible_skill_detection():
+    job = enrich(sample(
+        title="Associate SRE",
+        description="Fresh graduates with 0-2 years experience. Work with Prometheus, Grafana, Loki, ELK stack (Elasticsearch, Logstash, Kibana), Ansible, and Datadog for system monitoring and observability."
+    ))
+    assert job.is_eligible
+    assert job.role_category == "SRE"
+    expected = {
+        "Prometheus", "Grafana", "Loki", "ELK", "Elasticsearch",
+        "Logstash", "Kibana", "Ansible", "Datadog", "Monitoring", "Observability", "SRE"
+    }
+    assert expected.issubset(set(job.skills))
+
+
+def test_technical_evidence_disambiguates_monitoring_observability_and_ansible():
+    assert classify_title("Associate", "Required: Experience with Prometheus and Grafana for monitoring.")[1] == "Software Engineering"
+    assert classify_title("Engineer II", "Proficiency using Ansible and Linux for infrastructure automation.")[1] == "Software Engineering"
+    assert classify_title("Trainee", "Must have experience with ELK and Loki log observability.")[1] == "Software Engineering"
+
+
+def test_cross_domain_monitoring_and_performance_guards():
+    title = "Performance Engineer"
+    non_sw_desc = "Responsibilities include retail store sales performance and non-technical operations monitoring."
+    assert classify_title(title, non_sw_desc)[1] == "Other"
+
+    sw_desc = "Responsibilities include database infrastructure latency and performance testing using Grafana and Prometheus monitoring."
+    assert classify_title(title, sw_desc)[1] == "SRE"
+
+
+def test_sre_and_ansible_internships_and_entry_classification():
+    assert classify_title("Observability Intern")[1] == "SRE"
+    assert classify_employment_type("Observability Intern") == "Internship"
+    assert classify_title("Ansible Intern")[1] == "DevOps"
+    assert classify_employment_type("Ansible Intern") == "Internship"
+
+    entry = enrich(sample(title="Junior Observability Engineer", location="Bengaluru", description="Requires 0-2 years experience. Linux and Prometheus."))
+    assert entry.is_eligible
+    assert entry.role_category == "SRE"
+

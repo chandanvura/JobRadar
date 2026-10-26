@@ -11,9 +11,9 @@ from .roles import classify_role, NON_TECHNICAL
 from .locations import TARGET_LOCATIONS, SHORTLIST_LOCATIONS, REMOTE_INDIA, OTHER_INDIA, explicit_remote_india, india_discovery_location
 
 INTERNSHIP_ROLE_PATTERNS = {
-    "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b|\bci\s*[/ -]?\s*cd\b|\bkubernetes\b|\bterraform\b",
+    "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b|\bci\s*[/ -]?\s*cd\b|\bkubernetes\b|\bterraform\b|\bansible\b",
     "Cloud": r"\bcloud\b|\baws\b|\bazure\b|\bgcp\b",
-    "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b|\breliability\b",
+    "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b|\breliability\b|\bobservability\b|\bmonitoring\b",
     "Platform": r"\bplatform\b",
     "Infrastructure / Operations": r"\binfrastructure\b|\blinux\b|\b(?:it|cloud|platform|systems?|network|production) operations\b|\boperations (?:engineering|engineer|infrastructure)\b|\bsysadmin\b|\bdatabase\b",
     "Java / Backend": r"\bjava\b|\bback[ -]?end\b|\bspring\b",
@@ -85,7 +85,7 @@ def enrich(job: Job, company_priority: int=3):
     experience_ok=experience_within_policy(job.experience_min,job.experience_max)
     leadership_title=re.sub(r"\bmember of technical staff\b", "technical contributor", job.title, flags=re.I)
     leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
-    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|sdet|test engineer|support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer)\s*(?:i|1)\b",job.title,re.I))
+    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|sdet|test engineer|support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer|observability engineer|monitoring engineer|ansible engineer)\s*(?:i|1)\b",job.title,re.I))
     if job.experience_min is None and explicit_entry_title and job.experience_label=="Unknown":
         job.experience_label="Entry-level title — experience unverified"
         experience_ok=False
