@@ -263,6 +263,12 @@ const sortOptions = [
   "Recently discovered",
   "Company A–Z",
 ];
+const sortStorageKey = "jobradar-sort-preference-v1";
+const initialSort = () => {
+  if (typeof window === "undefined") return "Best match";
+  const stored = readPrivate(sortStorageKey);
+  return stored && sortOptions.includes(stored) ? stored : "Best match";
+};
 const slug = (value: string) =>
   value
     .toLowerCase()
@@ -388,7 +394,7 @@ function DashboardContent() {
     [role, setRole] = useState("All roles"),
     [ats, setAts] = useState("All ATS"),
     [query, setQuery] = useState(""),
-    [sort, setSort] = useState("Best match"),
+    [sort, setSortState] = useState<string>(initialSort),
     [matchMode, setMatchMode] = useState("Recommended"),
     [applicationStage, setApplicationStage] = useState("All stages"),
     [mobile, setMobile] = useState(false),
@@ -405,6 +411,12 @@ function DashboardContent() {
     [showMoreFilters, setShowMoreFilters] = useState(false),
     [showOperations, setShowOperations] = useState(false),
     [showTools, setShowTools] = useState(false);
+  const setSort = (next: string) => {
+    setSortState(next);
+    if (sortOptions.includes(next)) {
+      writePrivate(sortStorageKey, next);
+    }
+  };
   const deferredQuery = useDeferredValue(query.trim());
   const navigationRef = useRef<HTMLElement>(null);
   const loadGeneration = useRef(0);
