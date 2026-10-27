@@ -1,7 +1,7 @@
 {
-  "max_minimum_experience_years": 3,
+  "max_minimum_experience_years": 2,
   "optional": "\\b(?:preferred|preferably|nice to have|good to have|a plus|desirable|bonus|optional|not (?:required|mandatory|necessary|essential))\\b",
-  "junior": "\\b(?:freshers?|fresh graduates?|new graduates?|entry.?level|early career|campus hire|university graduate|recent graduates?|no (?:prior |professional |work )?experience (?:is )?required)\\b",
+  "junior": "\\b(?:freshers?|fresh graduates?|new graduates?|entry.?level|early career|campus hire|university graduate|recent graduates?|no (?:prior |professional |work )?experience (?:is )?required|(?:apprentices?|interns?|apprenticeships?|internships?)\\s*(?:are\\s+)?(?:welcome|accepted|considered|eligible|encouraged to apply)|(?:welcome|open to)\\s+(?:apprentices?|interns?|apprenticeships?|internships?)|(?:apprentice|apprenticeship|intern|internship)\\s+(?:friendly|track|opportunity|welcome)|(?:internship|apprenticeship)(?:\\s+(?:or|and|/))?\\s*(?:internship|apprenticeship)?\\s*(?:experience\\s+)?(?:is\\s+)?welcome)\\b",
   "exclude": "\\b(?:degree|course|contract|tenure|warranty|bond|graduation|bachelor|master|phd)\\b",
   "words": {
     "zero": 0,

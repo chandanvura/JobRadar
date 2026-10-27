@@ -127,7 +127,7 @@ def test_phase2_entry_engineering_tracks_eligibility():
     ]:
         job = enrich(sample(title=title, location="Bengaluru", description=description))
         assert not job.is_eligible
-        assert job.eligibility_reason == "Required minimum exceeds 3 years or experience range is invalid"
+        assert job.eligibility_reason == "Required minimum exceeds 2 years or experience range is invalid"
 
 def test_phase2_locations_shortlist_vs_discovery():
     for city in ["Bengaluru", "Hyderabad"]:
@@ -147,9 +147,21 @@ def test_phase2_locations_shortlist_vs_discovery():
         assert job.city == expected_city
 
 def test_experience_above_policy_is_excluded():
-    assert enrich(sample(description="Candidate needs 3+ years experience")).is_eligible
+    assert not enrich(sample(description="Candidate needs 3+ years experience")).is_eligible
     assert enrich(sample(description="Candidate needs 2-4 years experience")).is_eligible
     assert not enrich(sample(description="Candidate needs 4 years of experience")).is_eligible
+
+def test_apprenticeship_and_internship_welcome_statements():
+    for desc in [
+        "Qualifications: Apprenticeship, internship are welcome.",
+        "Requirements: Apprentices and interns are welcome to apply.",
+        "Candidate requirements: We welcome apprentices and interns.",
+        "Requirements: Internship and apprenticeship experience welcome.",
+    ]:
+        job = enrich(sample(title="Software Engineer", description=desc))
+        assert job.is_eligible
+        assert job.experience_min == 0.0
+        assert job.experience_label == "Fresher"
 
 def test_leadership_titles_are_excluded_even_with_low_year_phrase():
     for title in ("Director, Software Engineering","Staff Platform Engineer","Principal DevOps Engineer","Cloud Engineering Manager","Lead Software Engineer"):
@@ -162,7 +174,7 @@ def test_senior_alone_is_not_leadership_exclusion_and_evaluates_experience():
     assert senior_eligible.eligibility_reason == "Eligible"
     senior_ineligible = enrich(sample(title="Senior Software Engineer", location="Bengaluru", description="Requirements: 5+ years experience in Python."))
     assert not senior_ineligible.is_eligible
-    assert "Required minimum exceeds 3" in senior_ineligible.eligibility_reason
+    assert "Required minimum exceeds 2" in senior_ineligible.eligibility_reason
 
 def test_real_world_experience_phrases():
     assert extract_experience("Minimum experience of 2 years")[:2] == (2.0,None)

@@ -319,7 +319,7 @@ const defaultPreferences: SearchPreferences = {
   titles: [],
   skills: [],
   experienceMin: 0,
-  experienceMax: 3,
+  experienceMax: 2,
   locations: ["Bengaluru", "Hyderabad"],
 };
 const TARGET_CITIES = shortlistCities;
@@ -1183,7 +1183,7 @@ function DashboardContent() {
               )}
               {active === "Fresher Roles" && (
                 <section className="mb-5 rounded-2xl border border-info/40 bg-info-soft p-5 text-sm text-info">
-                  Full-time roles explicitly accepting zero experience, or graduate/trainee titles when no minimum is stated. Internships and apprenticeships have their own section. Entry-level title labels are inferred from the title; verify the employer requirements. Roles requiring 1–3 years remain in All Jobs.
+                  Full-time roles explicitly accepting zero experience, or graduate/trainee titles when no minimum is stated. Internships and apprenticeships have their own section. Entry-level title labels are inferred from the title; verify the employer requirements. Roles requiring 1–2 years remain in All Jobs.
                 </section>
               )}
               {active === "Latest Jobs" && (
@@ -1342,7 +1342,7 @@ function SearchPreferencesPanel({
     setTitles("");
     setSkills("");
     setExperienceMin(0);
-    setExperienceMax(3);
+    setExperienceMax(2);
     setLocations(TARGET_CITIES);
   };
   return (
@@ -1395,7 +1395,7 @@ function SearchPreferencesPanel({
       </div>
       <details className="mt-4 rounded-xl border bg-card p-3">
         <summary className="cursor-pointer text-sm font-semibold">Choose related job titles</summary>
-        <p className="mt-2 text-xs text-muted-foreground">Add up to 30 titles for software, Java, DevOps, SRE, cloud, platform and infrastructure discovery. A title does not prove 0–3 years: the JD, location and posting-date checks still apply.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Add up to 30 titles for software, Java, DevOps, SRE, cloud, platform and infrastructure discovery. A title does not prove 0–2 years: the JD, location and posting-date checks still apply.</p>
         <Input aria-label="Filter suggested job titles" placeholder="Find titles, e.g. Spring Boot or Cloud" value={suggestionQuery} onChange={event=>setSuggestionQuery(event.target.value)} className="mt-3" />
         <div className="mt-3 max-h-80 space-y-4 overflow-y-auto">{ROLE_TITLE_GROUPS.map(group=>{
           const options=group.titles.filter(title=>title.toLowerCase().includes(suggestionQuery.toLowerCase().trim()));

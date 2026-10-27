@@ -38,7 +38,7 @@ def test_missing_experience_never_auto_eligible(title):
 def test_explicit_over_three_years_stays_ineligible(description):
     job=enrich(candidate("Associate Software Engineer",description))
     assert not job.is_eligible
-    assert job.eligibility_reason=="Required minimum exceeds 3 years or experience range is invalid"
+    assert job.eligibility_reason=="Required minimum exceeds 2 years or experience range is invalid"
 
 
 def test_stale_and_outside_shortlist_remain_ineligible():

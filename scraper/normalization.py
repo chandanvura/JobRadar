@@ -51,7 +51,7 @@ def classify_employment_type(title: str, description: str=""):
     """Keep internships out of full-time views without guessing from generic graduate wording."""
     corpus=f"{title}\n{description}"
     if re.search(r"\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b",title,re.I): return "Internship"
-    if re.search(r"\b(?:this is an?|join us as an?|seeking an?|hiring an?)\s+(?:[a-z]+\s+){0,3}(?:intern|internship|apprentice)\b",corpus,re.I): return "Internship"
+    if re.search(r"\b(?:this is an?|join us as an?|seeking an?|hiring an?)\s+(?:[a-z]+\s+){0,3}(?:intern|internship|apprentice|apprenticeship)\b",corpus,re.I): return "Internship"
     return "Full-time"
 
 def extract_experience(text: str):
@@ -96,7 +96,7 @@ def enrich(job: Job, company_priority: int=3):
     elif job.employment_type=="Internship": reason="Eligible"
     elif job.experience_label in ("Conditional experience — verify", "Conflicting experience — verify"): reason=job.experience_label
     elif job.experience_min is None and job.experience_max is None: reason="Entry-level title — experience unverified" if explicit_entry_title else "Experience not stated — verify"
-    elif not experience_ok: reason="Required minimum exceeds 3 years or experience range is invalid"
+    elif not experience_ok: reason="Required minimum exceeds 2 years or experience range is invalid"
     elif not recent: reason="Posting date not verified within 24 hours"
     else: reason="Eligible"
     job.is_eligible=reason=="Eligible"; job.eligibility_reason=reason
