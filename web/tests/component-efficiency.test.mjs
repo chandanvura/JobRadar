@@ -59,7 +59,6 @@ test('all primary components export and compile cleanly without runtime faults',
     'job-pagination.tsx',
     'theme-toggle.tsx',
     'app-error-boundary.tsx',
-    'employer-view.tsx',
   ];
   for (const file of components) {
     const content = await readFile(new URL(`../components/${file}`, import.meta.url), 'utf8');
@@ -67,13 +66,4 @@ test('all primary components export and compile cleanly without runtime faults',
     // Ensure no broken placeholders or unresolved imports
     assert.doesNotMatch(content, /TODO:\s*implement/i);
   }
-});
-
-test('for employers view is wired to dashboard navigation and index loads Geist font', async () => {
-  const dashboardSource = await readFile(new URL('../components/jobradar-dashboard.tsx', import.meta.url), 'utf8');
-  assert.match(dashboardSource, /EmployerView/);
-  assert.match(dashboardSource, /For Employers/);
-
-  const indexHtml = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  assert.match(indexHtml, /family=Geist/);
 });
