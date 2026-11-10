@@ -2,10 +2,15 @@ import {createJobSearchIndex,type SearchableJob} from './job-search.ts';
 export type SearchMessage={type:'index';jobs:SearchableJob[]}|{type:'query';id:number;query:string};
 export function createSearchProcessor(){
   let jobs:SearchableJob[]=[],index:ReturnType<typeof createJobSearchIndex<SearchableJob>>|null=null;
+  let ids=new Map<SearchableJob,number>();
   return (message:SearchMessage)=>{
-    if(message.type==='index'){jobs=message.jobs;index=createJobSearchIndex(jobs);return null;}
+    if(message.type==='index'){
+      jobs=message.jobs;
+      index=createJobSearchIndex(jobs);
+      ids=new Map(jobs.map((job,id)=>[job,id]));
+      return null;
+    }
     if(!index)throw Error('Search catalog is not initialized');
-    const ids=new Map(jobs.map((job,id)=>[job,id]));
     return {id:message.id,results:[...index.search(message.query)].map(([job,score])=>[ids.get(job)!,score])};
   };
 }
