@@ -62,6 +62,13 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   assert.equal(JSON.parse(localStorage.getItem('jobradar-search-preferences-v1')).locations.includes('Bengaluru'),false);
   await click('Edit search');await click('Reset defaults');await click('Save & search jobs');
   assert.equal(fetchCalls,loadedCalls);
+  const moreFiltersButton=[...document.querySelectorAll('button')].find(node=>node.textContent.includes('More filters'));
+  assert.ok(moreFiltersButton);await act(()=>moreFiltersButton.click());
+  const sortSelect=document.querySelector('select[aria-label="Sort jobs"]');
+  assert.ok(sortSelect);assert.equal(sortSelect.value,'Best match');
+  await act(()=>{sortSelect.value='Newest posting';sortSelect.dispatchEvent(new window.Event('change',{bubbles:true}));});
+  assert.equal(localStorage.getItem('jobradar-sort-preference-v1'),'Newest posting');
+  await act(()=>moreFiltersButton.click());
   console.log(`HARNESS PERF: 7,000-job preference edit, save and reset ${Math.round(performance.now()-editStarted)} ms; no catalog refetch`);
   // Mobile navigation logic must isolate the drawer and restore keyboard focus.
   const openNavigation=document.querySelector('[aria-label="Open navigation"]');openNavigation.focus();
@@ -157,6 +164,9 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   assert.equal(Object.values(JSON.parse(localStorage.getItem('jobradar-tracking-v2')))[0].followUpOn,'2026-10-23');
   assert.ok(document.body.textContent.includes('No longer in live feed'));
   await click('Dashboard');assert.equal(document.querySelector('h1').textContent,'Dashboard');
+  const remountMoreFilters=[...document.querySelectorAll('button')].find(node=>node.textContent.includes('More filters'));
+  assert.ok(remountMoreFilters);await act(()=>remountMoreFilters.click());
+  assert.equal(document.querySelector('select[aria-label="Sort jobs"]').value,'Newest posting');
   console.log(`HARNESS PERF: full dashboard navigation ${durations.join(', ')} ms; bounded 30 job cards / 30 company rows`);
   // Same opening from two sources stays inspectable without rewriting private history.
   const storedHistory=localStorage.getItem('jobradar-tracking-v2');

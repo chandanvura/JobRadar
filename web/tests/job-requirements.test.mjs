@@ -22,11 +22,13 @@ test('missing, negative and conflicting requirements stay uncertain',()=>{
  assert.deepEqual(r.skillConflicts,['Java']);assert.equal(r.requiredSkills.length,0);
  assert.equal(r.workMode,'Conflicting');
 });
-test('legacy title-inferred experience never enters verified views or gets numeric match credit',()=>{
- const j={title:'Associate Software Engineer',experience_min:0,experience_max:3,experience_label:'Entry-level title',is_eligible:1,is_active:1,eligibility_reason:'Eligible',employment_type:'Full-time'};
- assert.equal(matchesCareerView(j,'Recommended',0,3,true),false);
- assert.equal(matchesCareerView(j,'Dashboard',0,3,true),false);
- const fixed=normalizeExperience(j);assert.equal(fixed.experience_min,null);assert.equal(fixed.is_eligible,0);
+test('title-inferred entry-level experience enters verified views and retains eligibility',()=>{
+ const j={title:'Associate Software Engineer',experience_min:0,experience_max:2,experience_label:'Entry-level title',is_eligible:1,is_active:1,eligibility_reason:'Eligible',employment_type:'Full-time'};
+ assert.equal(matchesCareerView(j,'Recommended',0,2,true),true);
+ assert.equal(matchesCareerView(j,'Dashboard',0,2,true),true);
+ const fixed=normalizeExperience(j);assert.equal(fixed.experience_min,0);assert.equal(fixed.is_eligible,1);
+ const unverified={title:'Associate Software Engineer',experience_min:null,experience_max:null,experience_label:'Entry-level title — experience unverified',is_eligible:0,is_active:1,eligibility_reason:'Entry-level title — experience unverified',employment_type:'Full-time'};
+ assert.equal(matchesCareerView(unverified,'Recommended',0,2,true),false);
 });
 test('shared board aliases group exact requisitions while preserving separate IDs and sources',()=>{
  const base={title:'Cloud Developer',normalized_location:'Bengaluru',ats_provider:'workday',external_job_id:'1211072',application_url:'https://hpe.wd5.myworkdayjobs.com/Jobsathpe/job/Bengaluru/Cloud-Developer_1211072-2',is_active:1,is_eligible:0,role_category:'Cloud'};

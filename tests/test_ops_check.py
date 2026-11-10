@@ -140,3 +140,30 @@ def test_operational_report_queries_notification_evidence_without_production_wri
     report = json.loads((tmp_path / "ops-report.json").read_text())
     assert len(calls) == 3 and report["notification_runs"][0]["conclusion"] == "success"
     assert "fixture-token-never-real" not in (tmp_path / "ops-report.json").read_text()
+
+
+def test_degraded_sources_do_not_fail_execution(monkeypatch, tmp_path):
+    import json
+    from scraper import ops_check
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("GITHUB_TOKEN", "fixture-token-never-real")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "owner/repo")
+    now_iso = datetime.now(timezone.utc).isoformat()
+    degraded_health = {
+        **HEALTH,
+        "latest_run": {**HEALTH["latest_run"], "finished_at": now_iso, "status": "degraded", "companies_failed": 1},
+    }
+    monkeypatch.setattr(ops_check, "read_health", lambda: degraded_health)
+    monkeypatch.setattr(ops_check, "public_available", lambda: True)
+    def request(url, token):
+        if "/backup-d1.yml/" in url:
+            return {"workflow_runs": [{"id": 7, "conclusion": "success", "updated_at": now_iso}]}
+        if "/artifacts?" in url:
+            return {"artifacts": ARTIFACTS}
+        return {"workflow_runs": [{"status": "completed", "conclusion": "success", "updated_at": now_iso}]}
+    monkeypatch.setattr(ops_check, "request_json", request)
+    # Exits cleanly (no SystemExit) so transient feed drops do not trigger workflow failure notifications
+    ops_check.main()
+    report = json.loads((tmp_path / "ops-report.json").read_text())
+    assert report["state"] == "degraded"
+    assert report["ok"] is False

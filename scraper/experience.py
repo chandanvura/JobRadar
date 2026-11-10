@@ -86,6 +86,6 @@ def analyze_experience(description):
 
 
 def experience_within_policy(minimum, maximum):
-    """A valid stated minimum up to three years qualifies, irrespective of ceiling."""
+    """A valid stated minimum up to two years qualifies, irrespective of ceiling."""
     return (minimum is not None and 0 <= minimum <= RULES['max_minimum_experience_years']
             and (maximum is None or maximum >= minimum))

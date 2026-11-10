@@ -30,7 +30,7 @@ export function extractRequirements(description:string,location='',clauses=candi
  }
  return {experience:analyzeExperience(description,clauses),requiredSkills:requiredSkills.filter(x=>!conflicts.includes(x.value)),preferredSkills:preferredSkills.filter(x=>!conflicts.includes(x.value)),mentionedSkills,skillConflicts:conflicts,education,batches,workMode:modes.size===1?[...modes][0]:modes.size>1?'Conflicting':'Unknown',workModeEvidence:modeEvidence.slice(0,3),remoteEligibility:remoteEligibility(location,clauses),reviewNeeded:true};
 }
-export function experienceUnverified(job:{experience_label?:string}) {return /^(?:Entry-level title|Conditional experience|Conflicting experience|JD extract)/i.test(job.experience_label||'');}
+export function experienceUnverified(job:{experience_label?:string}) {return /^(?:Entry-level title — experience unverified|Conditional experience|Conflicting experience|JD extract)/i.test(job.experience_label||'');}
 export function normalizeExperience<T extends {description?:string|null;experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string;description_truncated?:boolean}>(job:T):T {
  if(job.description_truncated)return {...job,experience_min:null,experience_max:null,is_eligible:0,experience_label:"JD extract — verify full requirements",eligibility_reason:"JD extract — verify full requirements"};
  const requirements=typeof job.description==='string'&&job.description.trim()?requirementsFor(job):null;
@@ -47,10 +47,14 @@ export function normalizeExperience<T extends {description?:string|null;experien
 
   normalized={...job,experience_min:analysis.min,experience_max:analysis.max,experience_label:analysis.label,
    is_eligible:policy?job.is_eligible:0,
-   eligibility_reason:!stated?analysis.label:!policy?'Required minimum exceeds 3 years or experience range is invalid':!job.is_eligible&&/Experience not stated|Entry-level title/.test(job.eligibility_reason)?'JD experience found — awaiting scan verification':job.eligibility_reason};
+   eligibility_reason:!stated?analysis.label:!policy?'Required minimum exceeds 2 years or experience range is invalid':!job.is_eligible&&/Experience not stated|Entry-level title/.test(job.eligibility_reason)?'JD experience found — awaiting scan verification':job.eligibility_reason};
  } else {
-  const reason=analysis?.preferred.length?'Only preferred experience stated — verify':experienceUnverified(job)?'Entry-level title — experience unverified':'Experience not stated — verify';
-  normalized={...job,experience_min:null,experience_max:null,experience_label:reason,is_eligible:0,eligibility_reason:reason};
+  if (job.is_eligible && job.experience_label === 'Entry-level title') {
+   normalized = {...job, experience_min: job.experience_min ?? 0, experience_max: job.experience_max ?? 2, experience_label: 'Entry-level title', is_eligible: 1, eligibility_reason: job.eligibility_reason};
+  } else {
+   const reason=analysis?.preferred.length?'Only preferred experience stated — verify':experienceUnverified(job)?'Entry-level title — experience unverified':'Experience not stated — verify';
+   normalized={...job,experience_min:null,experience_max:null,experience_label:reason,is_eligible:0,eligibility_reason:reason};
+  }
  }
  if(requirements&&normalized!==job)requirementCache.set(normalized,requirements);
  return normalized;

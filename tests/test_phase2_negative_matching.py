@@ -25,10 +25,17 @@ def test_non_software_context_does_not_become_eligible_from_broad_title(title, r
 
 
 @pytest.mark.parametrize("title", [
-    "Performance Engineer", "Database Engineer", "QA Engineer", "Cloud Platform Engineer I",
+    "Performance Engineer", "Database Engineer", "QA Engineer", "Cloud Platform Engineer",
 ])
 def test_missing_experience_never_auto_eligible(title):
     assert not enrich(candidate(title,"Work with internal teams and provide support.")).is_eligible
+
+
+def test_level_one_title_with_missing_experience_defaults_to_entry_level_eligible():
+    job = enrich(candidate("Cloud Platform Engineer I", "Work with internal teams and provide support."))
+    assert job.is_eligible
+    assert job.experience_min == 0.0 and job.experience_max == 2.0
+    assert job.experience_label == "Entry-level title"
 
 
 @pytest.mark.parametrize("description", [
@@ -38,7 +45,7 @@ def test_missing_experience_never_auto_eligible(title):
 def test_explicit_over_three_years_stays_ineligible(description):
     job=enrich(candidate("Associate Software Engineer",description))
     assert not job.is_eligible
-    assert job.eligibility_reason=="Required minimum exceeds 3 years or experience range is invalid"
+    assert job.eligibility_reason=="Required minimum exceeds 2 years or experience range is invalid"
 
 
 def test_stale_and_outside_shortlist_remain_ineligible():
