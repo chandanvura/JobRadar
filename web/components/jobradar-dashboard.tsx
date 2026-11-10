@@ -21,7 +21,7 @@ import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { cityAliasClause, hiringManagerDraft } from "@/lib/job-search-strategy";
 import { ThemeToggle } from "./theme-toggle";
-import { lazy, memo, Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, startTransition } from "react";
+import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, startTransition } from "react";
 import {
   AlertTriangle,
   Bell,
@@ -60,8 +60,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { postingAge, currentPosting, postingText } from "@/lib/job-time";
-const ProfilePanel = lazy(() => import("./profile-panel").then(module => ({default: module.ProfilePanel})));
-const ResumeWorkspace = lazy(() => import("./resume-workspace").then(module => ({default: module.ResumeWorkspace})));
+import { ProfilePanel } from "./profile-panel";
+import { ResumeWorkspace } from "./resume-workspace";
 import {
   cleanSearch,
   profileId,
@@ -1223,9 +1223,9 @@ function DashboardContent() {
               )}
             </>
           )}
-          {active === "Settings" && <Suspense fallback={<Loading />}><ProfilePanel /></Suspense>}
+          {active === "Settings" && <ProfilePanel />}
           {active === "Resume Studio" ? (
-            <Suspense fallback={<Loading />}><ResumeWorkspace /></Suspense>
+            <ResumeWorkspace />
           ) : loading && !data ? (
             <Loading />
           ) : showJobs ? (
@@ -2510,7 +2510,7 @@ function SettingsView({
         />
         <Info
           label="Experience"
-          value={`Stated minimum 0–${policy?.max_experience_years ?? 3} years; any upper limit`}
+          value={`Stated minimum 0–${policy?.max_experience_years ?? 2} years; any upper limit`}
         />
         <Info
           label="Posting age"

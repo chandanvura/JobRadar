@@ -49,7 +49,7 @@ async function dashboard(env:Env){
   const catalog_ranges=ids.length<=100000?Array.from({length:Math.ceil(ids.length/500)},(_,i)=>({after:i?ids[i*500-1].id:0,through:ids[Math.min((i+1)*500,ids.length)-1].id})):undefined;
   const usage=d1Metrics("/api/dashboard",[jobResult,companyResult,runResult,notificationResult,idResult]);
   const runs=runResult.results;const latest=runs[0]||null;
-  return json({catalog_ranges,jobs:jobResult.results.map(enforceShortlistLocation),companies:dedupeCompanies(companyResult.results as RecordValue[]),latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],discovery_locations:["Bengaluru","Hyderabad"],max_age_hours:24,max_experience_years:3,skills_required:false}},200,usage.headers);
+  return json({catalog_ranges,jobs:jobResult.results.map(enforceShortlistLocation),companies:dedupeCompanies(companyResult.results as RecordValue[]),latest_run:latest,runs,notifications:notificationResult.results,configured:Boolean(env.JOBRADAR_INGEST_SECRET),server_time:new Date().toISOString(),policy:{cities:["Bengaluru","Hyderabad"],discovery_locations:["Bengaluru","Hyderabad"],max_age_hours:24,max_experience_years:2,skills_required:false}},200,usage.headers);
 }
 
 async function ingest(request:Request,env:Env){
