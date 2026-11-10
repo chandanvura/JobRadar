@@ -58,8 +58,8 @@ def test_title_classification():
 
 def test_explicit_entry_title_can_fill_missing_experience_without_opening_generic_roles():
     entry=enrich(sample(title="Associate Software Engineer",location="Hyderabad",description="Build reliable services"))
-    assert not entry.is_eligible and entry.experience_label == "Entry-level title — experience unverified"
-    assert entry.experience_min is None and entry.experience_max is None
+    assert entry.is_eligible and entry.experience_label == "Entry-level title"
+    assert entry.experience_min == 0.0 and entry.experience_max == 2.0
     generic=enrich(sample(title="Software Engineer",location="Bengaluru",description="Build reliable services"))
     assert not generic.is_eligible and generic.eligibility_reason == "Experience not stated — verify"
     outside=enrich(sample(title="Associate Software Engineer",location="Pune",description="Build reliable services"))
@@ -112,12 +112,13 @@ def test_phase2_entry_engineering_tracks_eligibility():
         assert job.is_eligible, f"Expected {title} to be eligible, got {job.eligibility_reason}"
         assert job.role_category != "Other", f"Expected valid category for {title}, got {job.role_category}"
 
-    # Verify unstated experience on explicit level-1 titles gets unverified status
+    # Verify unstated experience on explicit level-1 titles gets entry-level eligible status
     for title in ["DevOps Engineer I", "Cloud Engineer 1", "SRE I", "Platform Engineer I", "Systems Engineer I", "Backend Engineer I", "Frontend Engineer 1"]:
         job = enrich(sample(title=title, location="Hyderabad", description="Build scalable cloud services."))
-        assert not job.is_eligible
-        assert job.experience_label == "Entry-level title — experience unverified"
-        assert job.eligibility_reason == "Entry-level title — experience unverified"
+        assert job.is_eligible
+        assert job.experience_min == 0.0 and job.experience_max == 2.0
+        assert job.experience_label == "Entry-level title"
+        assert job.eligibility_reason == "Eligible"
 
     # Verify unambiguous 4+ YOE is rejected
     for title, description in [

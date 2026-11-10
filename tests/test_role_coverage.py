@@ -93,7 +93,7 @@ def test_workday_skips_only_definitely_old_details_and_keeps_unknown_dates(monke
     assert set(requested)=={'R0','R1','R2','R5'}
 
 
-@pytest.mark.parametrize('title', ['Spring Boot Developer', 'CI/CD Engineer', 'AWS Engineer', 'SRE I', 'Infra Engineer', 'Developer Productivity Engineer'])
+@pytest.mark.parametrize('title', ['Spring Boot Developer', 'CI/CD Engineer', 'AWS Engineer', 'SRE Engineer', 'Infra Engineer', 'Developer Productivity Engineer'])
 def test_expanded_titles_never_substitute_for_experience_date_or_location_proof(title):
     assert enrich(make_job(title, 'Required experience: 0-2 years. Java and Linux.')).is_eligible
     assert not enrich(make_job(title, 'Required experience: 5-7 years. Java and Linux.')).is_eligible
@@ -104,3 +104,10 @@ def test_expanded_titles_never_substitute_for_experience_date_or_location_proof(
     foreign=make_job(title, 'Required experience: 0-2 years. Java and Linux.')
     foreign.location='Remote - USA'
     assert not enrich(foreign).is_eligible
+
+
+def test_level_one_sre_defaults_to_entry_level_when_experience_unstated():
+    job = enrich(make_job('SRE I', 'Build reliable systems with Java and Linux.'))
+    assert job.is_eligible
+    assert job.experience_min == 0.0 and job.experience_max == 2.0
+    assert job.experience_label == "Entry-level title"

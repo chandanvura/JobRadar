@@ -87,15 +87,17 @@ def enrich(job: Job, company_priority: int=3):
     leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
     explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|sdet|test engineer|support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer|observability engineer|monitoring engineer|ansible engineer)\s*(?:i|1)\b",job.title,re.I))
     if job.experience_min is None and explicit_entry_title and job.experience_label=="Unknown":
-        job.experience_label="Entry-level title — experience unverified"
-        experience_ok=False
+        job.experience_min=0.0
+        job.experience_max=2.0
+        job.experience_label="Entry-level title"
+        experience_ok=True
     if job.city not in SHORTLIST_LOCATIONS: reason="Outside shortlist cities — Bengaluru and Hyderabad only"
     elif leadership: reason="Leadership-level title"
     elif job.role_category=="Other": reason="Role outside target list"
     elif job.employment_type=="Internship" and not recent: reason="Posting date not verified within 24 hours"
     elif job.employment_type=="Internship": reason="Eligible"
     elif job.experience_label in ("Conditional experience — verify", "Conflicting experience — verify"): reason=job.experience_label
-    elif job.experience_min is None and job.experience_max is None: reason="Entry-level title — experience unverified" if explicit_entry_title else "Experience not stated — verify"
+    elif job.experience_min is None and job.experience_max is None: reason="Experience not stated — verify"
     elif not experience_ok: reason="Required minimum exceeds 2 years or experience range is invalid"
     elif not recent: reason="Posting date not verified within 24 hours"
     else: reason="Eligible"
