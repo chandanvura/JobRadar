@@ -60,8 +60,6 @@ test('all primary components export and compile cleanly without runtime faults',
     'theme-toggle.tsx',
     'app-error-boundary.tsx',
     'tagline-reveal.tsx',
-    'employer-posting-modal.tsx',
-    'employer-pricing.tsx',
   ];
   for (const file of components) {
     const content = await readFile(new URL(`../components/${file}`, import.meta.url), 'utf8');
@@ -69,15 +67,6 @@ test('all primary components export and compile cleanly without runtime faults',
     // Ensure no broken placeholders or unresolved imports
     assert.doesNotMatch(content, /TODO:\s*implement/i);
   }
-});
-
-test('dual-audience employer saas platform components and states are present', async () => {
-  const dashboardSource = await readFile(new URL('../components/jobradar-dashboard.tsx', import.meta.url), 'utf8');
-  assert.match(dashboardSource, /audienceMode/);
-  assert.match(dashboardSource, /EmployerPostingModal/);
-  assert.match(dashboardSource, /EmployerPricing/);
-  assert.match(dashboardSource, /For Employers & Companies/);
-  assert.match(dashboardSource, /Post a verified opening/);
 });
 
 test('visual system adheres to Geist typography and strict dark surfaces', async () => {
