@@ -62,7 +62,6 @@ import { Input } from "@/components/ui/input";
 import { postingAge, currentPosting, postingText } from "@/lib/job-time";
 import { ProfilePanel } from "./profile-panel";
 import { ResumeWorkspace } from "./resume-workspace";
-import { EmployerView } from "./employer-view";
 import {
   cleanSearch,
   profileId,
@@ -211,7 +210,6 @@ const nav = [
   ["Scraper Health", ShieldCheck],
   ["Notifications", Bell],
   ["Resume Studio", Code2],
-  ["For Employers", Building2],
   ["Settings", Settings],
 ] as const;
 const primaryNav = new Set([
@@ -223,7 +221,7 @@ const primaryNav = new Set([
   "Saved",
   "Applications",
 ]);
-const toolsNav = new Set(["For Employers", "Outreach", "Companies", "Job Boards", "Resume Studio"]);
+const toolsNav = new Set(["Outreach", "Companies", "Job Boards", "Resume Studio"]);
 const operationsNav = new Set(["Scraper Health", "Notifications", "Settings"]);
 const jobViews = new Set([
   "Fresher Roles",
@@ -994,23 +992,6 @@ function DashboardContent() {
               }
             />
           </div>
-          {active === "For Employers" ? (
-            <Button
-              size="sm"
-              onClick={() => navigate("Dashboard")}
-              className="rounded-xl font-bold"
-            >
-              <Radar size={15} /> Candidate search
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              onClick={() => navigate("For Employers")}
-              className="rounded-xl bg-primary text-primary-foreground font-bold shadow-xs hover:bg-primary/90"
-            >
-              <Building2 size={15} /> For Employers
-            </Button>
-          )}
           <ThemeToggle />
           <Button
             variant="outline"
@@ -1271,8 +1252,6 @@ function DashboardContent() {
                 saveTracking={saveTracking}
               />
             </>
-          ) : active === "For Employers" ? (
-            <EmployerView onSwitchToCandidates={() => navigate("Dashboard")} />
           ) : active === "Job Boards" ? (
             <JobBoardsView preferences={preferences} />
           ) : active === "Outreach" ? (
