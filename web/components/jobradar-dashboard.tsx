@@ -62,7 +62,6 @@ import { Input } from "@/components/ui/input";
 import { postingAge, currentPosting, postingText } from "@/lib/job-time";
 import { ProfilePanel } from "./profile-panel";
 import { ResumeWorkspace } from "./resume-workspace";
-import { TaglineReveal } from "./tagline-reveal";
 import {
   cleanSearch,
   profileId,
@@ -930,7 +929,7 @@ function DashboardContent() {
           </div>
           <div>
             <p className="text-lg font-black tracking-[-.05em]">JobRadar</p>
-            <p className="text-xs font-semibold uppercase tracking-[.22em] text-muted-foreground">
+            <p className="text-[10px] font-bold uppercase tracking-[.22em] text-muted-foreground">
               Your next move starts here
             </p>
           </div>
@@ -1052,17 +1051,17 @@ function DashboardContent() {
             <>
               <section className="radar-hero mb-6 rounded-3xl bg-hero p-6 text-white md:p-8">
                 <div className="flex flex-col justify-between gap-6 xl:flex-row xl:items-center">
-                  <div className="max-w-[680px]">
-                    <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[.18em] text-white/80">
+                  <div>
+                    <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-white/80">
                       <Radar size={16} />
-                      Direct Official ATS Feeds
+                      Find your next opportunity
                     </div>
-                    <h2 className="radar-hero-heading text-3xl font-semibold tracking-[-.045em] md:text-5xl">
+                    <h2 className="text-3xl font-semibold tracking-[-.045em] md:text-5xl">
                       {loading && !data
                         ? "Checking live jobs…"
                         : `${filtered.length} ${active === "Internships" ? (filtered.length === 1 ? "internship" : "internships") : (filtered.length === 1 ? "job" : "jobs")} in this view`}
                     </h2>
-                    <p className="radar-hero-subheading mt-3 text-sm text-white/80">
+                    <p className="mt-2 text-sm text-white/80">
                       {preferences.locations.join(" + ")} ·{" "}
                       {preferences.experienceMin}–{preferences.experienceMax}{" "}
                       YOE ·{" "}
@@ -1071,18 +1070,6 @@ function DashboardContent() {
                         : "skills optional"}{" "}
                       · official links
                     </p>
-                    <div className="mt-4 flex flex-wrap items-center gap-3">
-                      <Button
-                        size="sm"
-                        onClick={() => setEditingSearch(true)}
-                        className="bg-white text-zinc-900 hover:bg-zinc-100 font-semibold rounded-xl px-4 py-2"
-                      >
-                        Adjust search preferences
-                      </Button>
-                      <span className="text-xs text-white/70">
-                        740+ sources · Verified ≤ 2 YOE · 100% private
-                      </span>
-                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {loading && !data ? <p role="status" className="animate-pulse col-span-2">Loading complete job counts…</p> : <>
@@ -1264,56 +1251,6 @@ function DashboardContent() {
                 getTracking={jobTracking}
                 saveTracking={saveTracking}
               />
-              <TaglineReveal />
-              {active === "Dashboard" && (
-                <section className="my-8 rounded-3xl border border-border bg-card p-6 md:p-8">
-                  <div className="mx-auto max-w-[680px]">
-                    <div className="caption-3 mb-2 uppercase tracking-[.2em] text-primary">
-                      Candidate Guidance
-                    </div>
-                    <h3 className="heading-5 mb-2 text-foreground">Frequently asked questions</h3>
-                    <p className="body-5 mb-6 text-muted-foreground">Direct answers to the most common questions about JobRadar.</p>
-                    <div className="space-y-3">
-                      <details className="group rounded-2xl border border-border bg-muted/40 p-4 transition-colors">
-                        <summary className="cursor-pointer font-semibold text-foreground flex items-center justify-between">
-                          Are these direct company listings or third-party recruiters?
-                          <ChevronDown size={18} className="transition-transform group-open:rotate-180 text-muted-foreground" />
-                        </summary>
-                        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                          Direct official company applicant tracking systems only (Greenhouse, Workday, Lever, Ashby, SmartRecruiters, Jobvite, iCIMS). We never include recruiter agencies, sponsored board syndications, or third-party scraping brokers.
-                        </p>
-                      </details>
-                      <details className="group rounded-2xl border border-border bg-muted/40 p-4 transition-colors">
-                        <summary className="cursor-pointer font-semibold text-foreground flex items-center justify-between">
-                          How does the zero to two years experience rule work?
-                          <ChevronDown size={18} className="transition-transform group-open:rotate-180 text-muted-foreground" />
-                        </summary>
-                        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                          Every job description is evaluated against strict boundary rules. Any role stating a minimum greater than two years of experience is barred. Entry-level indicators (Associate, Junior, SDE 1, Graduate, Trainee) and technical apprenticeships or internships are welcomed.
-                        </p>
-                      </details>
-                      <details className="group rounded-2xl border border-border bg-muted/40 p-4 transition-colors">
-                        <summary className="cursor-pointer font-semibold text-foreground flex items-center justify-between">
-                          Do I have to create an account or provide my phone or email?
-                          <ChevronDown size={18} className="transition-transform group-open:rotate-180 text-muted-foreground" />
-                        </summary>
-                        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                          Zero signup required. All your saved jobs, application stages, custom notes, and search preferences are stored directly in your browser's private local storage. No cookies, no telemetry profiling, and no server-side databases holding your profile.
-                        </p>
-                      </details>
-                      <details className="group rounded-2xl border border-border bg-muted/40 p-4 transition-colors">
-                        <summary className="cursor-pointer font-semibold text-foreground flex items-center justify-between">
-                          How frequently are new openings refreshed?
-                          <ChevronDown size={18} className="transition-transform group-open:rotate-180 text-muted-foreground" />
-                        </summary>
-                        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                          Discovery workers query 740+ employer career portals every 150 minutes across Bengaluru and Hyderabad, ensuring fresh listings appear in your feed within hours of being posted by the employer.
-                        </p>
-                      </details>
-                    </div>
-                  </div>
-                </section>
-              )}
             </>
           ) : active === "Job Boards" ? (
             <JobBoardsView preferences={preferences} />
@@ -1350,13 +1287,13 @@ function DashboardContent() {
             key={label}
             onClick={() => navigate(label)}
             aria-current={active === label ? "page" : undefined}
-            className={`flex flex-col items-center gap-1 rounded-xl py-2 text-xs font-semibold ${active === label ? "text-success" : "text-muted-foreground"}`}
+            className={`flex flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold ${active === label ? "text-success" : "text-muted-foreground"}`}
           >
             <Icon size={18} />
             {label}
           </button>
         ))}
-        <button type="button" aria-label="More navigation" onClick={()=>setMobile(true)} className="flex flex-col items-center gap-1 rounded-xl py-2 text-xs font-semibold"><Menu size={18}/>More</button>
+        <button type="button" aria-label="More navigation" onClick={()=>setMobile(true)} className="flex flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold"><Menu size={18}/>More</button>
       </nav>
     </div>
   );
