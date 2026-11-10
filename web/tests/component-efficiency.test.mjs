@@ -59,6 +59,7 @@ test('all primary components export and compile cleanly without runtime faults',
     'job-pagination.tsx',
     'theme-toggle.tsx',
     'app-error-boundary.tsx',
+    'tagline-reveal.tsx',
   ];
   for (const file of components) {
     const content = await readFile(new URL(`../components/${file}`, import.meta.url), 'utf8');
@@ -66,4 +67,16 @@ test('all primary components export and compile cleanly without runtime faults',
     // Ensure no broken placeholders or unresolved imports
     assert.doesNotMatch(content, /TODO:\s*implement/i);
   }
+});
+
+test('visual system adheres to Geist typography and strict dark surfaces', async () => {
+  const indexHtml = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(indexHtml, /family=Geist/, 'index.html must load Geist font');
+
+  const globalsCss = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8');
+  assert.match(globalsCss, /--font-sans:\s*"Geist"/, 'globals.css must configure Geist as primary sans');
+  assert.match(globalsCss, /--background:\s*#000000/, 'dark theme must use strict #000000 background');
+  assert.match(globalsCss, /--card:\s*#181818/, 'dark theme must use strict #181818 card surface');
+  assert.match(globalsCss, /@utility\s+heading-1/, 'globals.css must define named text styles');
+  assert.match(globalsCss, /\.radar-hero-heading/, 'globals.css must define hero heading gradient rule');
 });
