@@ -42,7 +42,7 @@ Infios,https://infios.wd502.myworkdayjobs.com/Infios,workday,infios|Infios,3,tru
 LPL Financial,https://lplfinancial.wd1.myworkdayjobs.com/India_Ext,workday,lplfinancial|India_Ext,4,true
 Epicor,https://epicorsoftware.wd5.myworkdayjobs.com/epicorjobs,workday,epicorsoftware|epicorjobs,4,true
 Diageo,https://diageo.wd3.myworkdayjobs.com/Diageo_Careers,workday,diageo|Diageo_Careers,3,true
-Franklin Templeton,https://franklintempleton.wd5.myworkdayjobs.com/Primary-External-1,workday,franklintempleton|Primary-External-1,4,true
+Franklin Templeton,https://careers.franklintempleton.com/us/en,phenom,FTGFTMUS,4,true
 Salesforce,https://salesforce.wd12.myworkdayjobs.com/External_Career_Site,workday,salesforce|External_Career_Site,5,true
 Sprinklr,https://sprinklr.wd1.myworkdayjobs.com/careers,workday,sprinklr|careers,4,true
 ModMed,https://modmed.wd501.myworkdayjobs.com/ModMed12,workday,modmed|ModMed12,3,true
@@ -54,7 +54,7 @@ AVEVA,https://aveva.wd3.myworkdayjobs.com/AVEVA_careers,workday,aveva|AVEVA_care
 Dell Technologies,https://enterpriseplatform.dell.com/hcmUI/CandidateExperience/en/sites/careers,oracle,enterpriseplatform.dell.com|careers,5,true
 HP,https://hp.wd5.myworkdayjobs.com/ExternalCareerSite,workday,hp|ExternalCareerSite,4,true
 HPE,https://hpe.wd5.myworkdayjobs.com/Jobsathpe,workday,hpe|Jobsathpe,5,true
-Qualcomm,https://qualcomm.wd12.myworkdayjobs.com/External,workday,qualcomm|External,5,true
+Qualcomm,https://careers.qualcomm.com/careers,eightfold,careers.qualcomm.com|qualcomm.com,5,true
 AMD,https://careers.amd.com/careers-home/jobs,jibe,amd|India,5,true
 Micron,https://micron.wd1.myworkdayjobs.com/External,workday,micron|External,5,true
 Kyndryl,https://kyndryl.wd5.myworkdayjobs.com/KyndrylProfessionalCareers,workday,kyndryl|KyndrylProfessionalCareers,4,true
@@ -75,11 +75,11 @@ Renesas Electronics,https://jobs.smartrecruiters.com/RenesasElectronics,smartrec
 Ramboll,https://jobs.smartrecruiters.com/Ramboll3,smartrecruiters,Ramboll3,3,true
 NielsenIQ,https://jobs.smartrecruiters.com/NielsenIQ,smartrecruiters,NielsenIQ,4,true
 Ubisoft,https://jobs.smartrecruiters.com/Ubisoft2,smartrecruiters,Ubisoft2,4,true
-Publicis Groupe,https://jobs.smartrecruiters.com/PublicisGroupe,smartrecruiters,PublicisGroupe,3,true
-Palo Alto Networks,https://jobs.smartrecruiters.com/PaloAltoNetworks2,smartrecruiters,PaloAltoNetworks2,5,true
-WNS,https://jobs.smartrecruiters.com/WNSGlobalServices,smartrecruiters,WNSGlobalServices,3,true
+Publicis Groupe,https://careers.publicisgroupe.com/jobs,jibe,publicisgroupe|India,3,true
+Palo Alto Networks,https://paloaltonetworks.wd5.myworkdayjobs.com/panwexternalcareers,workday,paloaltonetworks|panwexternalcareers|India,5,true
+WNS,https://careers.smartrecruiters.com/WNSGlobalServices144,smartrecruiters,WNSGlobalServices144,3,true
 Sutherland,https://jobs.smartrecruiters.com/Sutherland,smartrecruiters,Sutherland,3,true
-Nagarro,https://jobs.smartrecruiters.com/Nagarro,smartrecruiters,Nagarro,4,true
+Nagarro,https://jobs.smartrecruiters.com/Nagarro1,smartrecruiters,Nagarro1,4,true
 Devoteam,https://jobs.smartrecruiters.com/Devoteam,smartrecruiters,Devoteam,3,true
 Avery Dennison,https://jobs.smartrecruiters.com/AveryDennison,smartrecruiters,AveryDennison,3,true
 Hitachi Solutions,https://jobs.smartrecruiters.com/HitachiSolutions,smartrecruiters,HitachiSolutions,4,true
@@ -548,7 +548,7 @@ Dassault Systemes,https://www.3ds.com/careers,custom,dassault-systemes-india,4,t
 Bentley Systems,https://bentleysystems.wd5.myworkdayjobs.com/bentley,workday,bentleysystems|bentley,4,true
 Microchip Technology,https://microchiphr.wd5.myworkdayjobs.com/External,workday,microchiphr|External|India,4,true
 Western Digital,https://jobs.westerndigital.com/,smartrecruiters,WesternDigital,4,true
-Sophos,https://jobs.lever.co/sophos,lever,sophos,4,true
+Sophos,https://jobs.ashbyhq.com/sophos,ashby,sophos,4,true
 CyberArk,https://www.cyberark.com/careers/,custom,cyberark-india,4,true
 Mimecast,https://mimecast.wd5.myworkdayjobs.com/Mimecast-Careers,workday,mimecast|Mimecast-Careers|India,4,true
 Proofpoint,https://proofpoint.wd5.myworkdayjobs.com/proofpointcareers,workday,proofpoint|proofpointcareers,4,true
@@ -647,7 +647,7 @@ Kognitos,https://jobs.ashbyhq.com/Kognitos,ashby,Kognitos,4,true
 Axelera AI,https://jobs.ashbyhq.com/axelera,ashby,axelera,3,true
 realfast.ai,https://jobs.ashbyhq.com/realfast,ashby,realfast,3,true
 NICE,https://job-boards.greenhouse.io/nice,greenhouse,nice,5,true
-PubMatic,https://careers.smartrecruiters.com/PubMatic,smartrecruiters,PubMatic,5,true
+PubMatic,https://job-boards.greenhouse.io/pubmatic,greenhouse,pubmatic,5,true
 Kissflow,https://careers.kissflow.com/,kissflow,kissflow,4,true
 Cornerstone OnDemand,https://www.cornerstoneondemand.com/careers/,custom,cornerstone-ondemand,4,true
 SonicWall,https://job-boards.greenhouse.io/sonicwall,greenhouse,sonicwall,5,true
