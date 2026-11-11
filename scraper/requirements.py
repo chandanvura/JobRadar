@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 SECTIONS = json.loads((Path(__file__).parents[1] / 'config/requirement-sections.json').read_text())
-HEADER = re.compile(r'\b(' + SECTIONS['headers'] + r')\s*:?', re.I)
+HEADER = re.compile(r'(?:^|(?<=[:.!?\n]))[\t ]*(' + SECTIONS['headers'] + r')(?=(?:[\t ]+\w+){0,3}[\t ]*:|[\t ]*$)\s*:?', re.I | re.M)
 EXPERIENCE_HEADER = re.compile(SECTIONS['experience_heading'], re.I | re.M)
 COMPANY = re.compile(SECTIONS['company_clause'], re.I)
 

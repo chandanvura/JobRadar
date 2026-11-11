@@ -44,3 +44,13 @@ def test_minimum_based_policy_accepts_any_valid_upper_bound(minimum, maximum):
 def test_minimum_based_policy_rejects_missing_invalid_or_high_minimum(minimum, maximum):
     from scraper.experience import experience_within_policy
     assert not experience_within_policy(minimum, maximum)
+
+
+def test_prose_boilerplate_words_and_trailing_skill_parentheticals_do_not_hide_required_years():
+    prose_jd = "About Us:\nWe simplify employee experience across onboarding and benefits to support teams.\nQualifications\n- At least 7+ years of relevant work experience."
+    res1 = analyze_experience(prose_jd)
+    assert (res1['min'], res1['status']) == (7.0, 'stated')
+
+    paren_jd = "What You'll Do:\n4+ years in platform engineering operating cloud systems (AWS preferred)."
+    res2 = analyze_experience(paren_jd)
+    assert (res2['min'], res2['status']) == (4.0, 'stated')

@@ -1,7 +1,7 @@
 import {employerText} from './employer-text.ts';
 import sections from '../../config/requirement-sections.json' with {type:'json'};
 const experienceHeaderPattern=new RegExp(sections.experience_heading,'gim');
-const headersPattern=new RegExp('\\b('+sections.headers+')\\s*:?','gi');
+const headersPattern=new RegExp('(?:^|(?<=[:.!?\\n]))[\\t ]*('+sections.headers+')(?=(?:[\\t ]+\\w+){0,3}[\\t ]*:|[\\t ]*$)\\s*:?','gim');
 const boilerplatePattern=new RegExp(sections.boilerplate,'i');
 const companyPattern=new RegExp(sections.company_clause,'i');
 export function candidateClauses(description:string) {

@@ -85,7 +85,7 @@ def enrich(job: Job, company_priority: int=3):
     experience_ok=experience_within_policy(job.experience_min,job.experience_max)
     leadership_title=re.sub(r"\bmember of technical staff\b", "technical contributor", job.title, flags=re.I)
     leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
-    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|sdet|test engineer|support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer|observability engineer|monitoring engineer|ansible engineer)\s*(?:i|1)\b",job.title,re.I))
+    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher|new grad(?:uate)?|entry[- ]level|campus hire|university grad(?:uate)?)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|qa analyst|sdet|test engineer|support engineer|technical support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer|data engineer|ml engineer|machine learning engineer|security engineer|network engineer|observability engineer|monitoring engineer|ansible engineer)(?:[\s-]+(?:i|1)\b|1\b)",job.title,re.I))
     if job.experience_min is None and explicit_entry_title and job.experience_label=="Unknown":
         job.experience_min=0.0
         job.experience_max=2.0

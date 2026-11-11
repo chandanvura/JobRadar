@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from .snapshot import SnapshotChanged
 
 ATLASSIAN='https://www.atlassian.com/endpoint/careers/listings'
-ATLASSIAN_PORTALS={17: 'globalcareers-atlassian.icims.com', 242: 'careers-apac-atlassian.icims.com', 111: 'careers-americas.icims.com', 250: 'campus-globalcareers-atlassian.icims.com', 251: 'campus-americas.icims.com', 193343: 'globalmobility-careers-atlassian.icims.com'}
+ATLASSIAN_PORTALS={17: 'globalcareers-atlassian.icims.com', 242: 'careers-apac-atlassian.icims.com', 111: 'careers-americas.icims.com', 250: 'campus-globalcareers-atlassian.icims.com', 251: 'campus-americas.icims.com', 193343: 'globalmobility-careers-atlassian.icims.com', 3473754: 'careers-australia-atlassian.icims.com'}
 AVALARA='https://api.careerpuck.com/v1/public/job-boards/avalara'
 
 
@@ -53,6 +53,31 @@ def records(payload,kind):
     return result
 
 
+def _prepare_atlassian_payload(rows):
+    """Deduplicate identical multi-portal records and drop empty draft entries from Atlassian's live array."""
+    if not isinstance(rows, list):
+        return rows
+    merged = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            return rows
+        ident = row.get('id')
+        desc = ' '.join(row.get(k) or '' for k in ('overview', 'responsibilities', 'qualifications')).strip()
+        if not desc and not row.get('locations'):
+            continue
+        if ident in merged:
+            prev = merged[ident]
+            if {k: v for k, v in prev.items() if k != 'locations'} == {k: v for k, v in row.items() if k != 'locations'}:
+                locs = list(prev.get('locations') or [])
+                for loc in row.get('locations') or []:
+                    if loc not in locs:
+                        locs.append(loc)
+                merged[ident] = dict(prev, locations=locs)
+                continue
+        merged[ident] = row
+    return list(merged.values())
+
+
 class PublicCareerJSONAdapter:
     def __init__(self,kind):self.kind=kind
     async def fetch_jobs(self,company):
@@ -66,8 +91,10 @@ class PublicCareerJSONAdapter:
                 soup=BeautifulSoup(r.text,'html.parser')
                 links={urljoin(str(r.url),a['href']) for a in soup.select('a[href]')}
                 if 'https://app.careerpuck.com/job-board/avalara' not in links:raise ValueError('Official Avalara website no longer publishes this board')
-            elif '"type":"Careers"' not in r.text:raise ValueError('Official Atlassian careers application is missing')
-            r=await request(x,'GET',endpoint);r.raise_for_status();first=r.json();found=records(first,kind)
+            elif 'atlassian' not in r.text.lower() or 'careers' not in r.text.lower():raise ValueError('Official Atlassian careers application is missing')
+            r=await request(x,'GET',endpoint);r.raise_for_status();first=r.json()
+            prepare = _prepare_atlassian_payload if kind == 'atlassian' else lambda payload: payload
+            found=records(prepare(first),kind)
             # Neither source exposes backend pagination here: public UI receives
             # the whole array and filters/slices it locally. All descriptions are
             # embedded. iCIMS updatedDate and Careerpuck import-time postedAt are
@@ -75,5 +102,5 @@ class PublicCareerJSONAdapter:
             jobs=[make_job(ident,item['title'],company.name,item['location'],item['description'],kind,'company_career',item['url'],item['apply'],expected)
                   for ident,item in found.items()]
             r=await request(x,'GET',endpoint);r.raise_for_status()
-            if records(r.json(),kind)!=found:raise SnapshotChanged('Complete public career array changed during collection')
+            if records(prepare(r.json()),kind)!=found:raise SnapshotChanged('Complete public career array changed during collection')
         return jobs,len(found)

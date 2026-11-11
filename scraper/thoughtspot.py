@@ -6,12 +6,32 @@ The legacy French Workday link is not the current English careers feed.
 """
 import asyncio
 import json
+import re
 from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 from .snapshot import SnapshotChanged
 
 OFFICIAL = 'https://www.thoughtspot.com/careers'
 LISTING = 'https://www.thoughtspot.com/api/getCareersListing'
+_US_STATES = {
+    'alabama': 'al', 'alaska': 'ak', 'arizona': 'az', 'arkansas': 'ar', 'california': 'ca',
+    'colorado': 'co', 'connecticut': 'ct', 'delaware': 'de', 'district of columbia': 'dc',
+    'florida': 'fl', 'georgia': 'ga', 'hawaii': 'hi', 'idaho': 'id', 'illinois': 'il',
+    'indiana': 'in', 'iowa': 'ia', 'kansas': 'ks', 'kentucky': 'ky', 'louisiana': 'la',
+    'maine': 'me', 'maryland': 'md', 'massachusetts': 'ma', 'michigan': 'mi', 'minnesota': 'mn',
+    'mississippi': 'ms', 'missouri': 'mo', 'montana': 'mt', 'nebraska': 'ne', 'nevada': 'nv',
+    'new hampshire': 'nh', 'new jersey': 'nj', 'new mexico': 'nm', 'new york': 'ny',
+    'north carolina': 'nc', 'north dakota': 'nd', 'ohio': 'oh', 'oklahoma': 'ok', 'oregon': 'or',
+    'pennsylvania': 'pa', 'rhode island': 'ri', 'south carolina': 'sc', 'south dakota': 'sd',
+    'tennessee': 'tn', 'texas': 'tx', 'utah': 'ut', 'vermont': 'vt', 'virginia': 'va',
+    'washington': 'wa', 'west virginia': 'wv', 'wisconsin': 'wi', 'wyoming': 'wy',
+}
+_US_STATE_RE = re.compile(r'(?:\(|,\s*)(' + '|'.join(re.escape(k) for k in sorted(_US_STATES, key=len, reverse=True)) + r')(?=\s*,\s*US\b)', re.I)
+
+
+def _canonical_location(label):
+    text = re.sub(r'\s+', ' ', str(label or '').strip()).lower()
+    return _US_STATE_RE.sub(lambda m: ('(' if m.group(0).startswith('(') else ', ') + _US_STATES[m.group(1).lower()], text)
 
 
 def listing_records(payload):
@@ -58,7 +78,7 @@ def detail_record(text, row):
             or job.get('url') != row['url'] or job.get('unlistedFromSearch') is not False):
         raise ValueError('Rippling detail identity differs from the official current listing')
     locations = [v.get('name') for v in row['locations']]
-    if set(job.get('workLocations') or []) != set(locations):
+    if {_canonical_location(v) for v in (job.get('workLocations') or [])} != {_canonical_location(v) for v in locations}:
         raise SnapshotChanged('ThoughtSpot location changed between listing and detail')
     description = job.get('description')
     if not isinstance(description, dict) or not description.get('role'):

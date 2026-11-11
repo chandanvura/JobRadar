@@ -35,3 +35,14 @@ def test_full_careerpuck_array_and_decoded_requirements(failure):
         with pytest.raises(ValueError):records(p,'avalara')
     else:
         row=records(p,'avalara')['abc'];assert row['description']=='Python & SQL requirements' and 'Remote, India' in row['location']
+
+
+def test_atlassian_payload_preparation_merges_exact_duplicates_and_skips_empty_drafts():
+    from scraper.public_career_json import _prepare_atlassian_payload
+    row1 = atlassian()
+    row2 = dict(row1, locations=['Hyderabad - India'])
+    draft = dict(id=999, portalId=17, portalJobPost=dict(id=999, portalId=17, portalUrl='https://globalcareers-atlassian.icims.com/jobs/999/draft/job'), title='Draft', locations=[], overview='', responsibilities='', qualifications='')
+    prepared = _prepare_atlassian_payload([row1, row2, draft])
+    jobs = records(prepared, 'atlassian')
+    assert list(jobs) == ['123']
+    assert 'Hyderabad - India' in jobs['123']['location']

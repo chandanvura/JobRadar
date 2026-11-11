@@ -17,7 +17,8 @@ export function analyzeExperience(description:string,clauses=candidateClauses(de
   const text=fragment.replace(words,word=>String(rules.words[word.toLowerCase() as keyof typeof rules.words]));
   if(/\b(?:company|organisation|organization|team)\s+has\b|\bfounded\b/i.test(text))continue;
   if(excludedPattern.test(text)&&! /\bexperience\b/i.test(text)&&!juniorPattern.test(text))continue;
-  const optional=preferredPattern.test(section)||optionalPattern.test(text),rows:ExperienceEvidence[]=[],spans:[number,number][]=[];
+  const optionalText=text.replace(/\([^()]*\)/g,m=>optionalPattern.test(m)&&!/\d|\b(?:years?|yrs?|yoe|months?|mos?|experience)\b/i.test(m)?'':m);
+  const optional=preferredPattern.test(section)||optionalPattern.test(optionalText),rows:ExperienceEvidence[]=[],spans:[number,number][]=[];
   for(const {kind,regex} of patterns)for(const match of text.matchAll(regex)) {
    const start=match.index!,end=start+match[0].length;
    if(spans.some(([left,right])=>start<right&&end>left))continue;
