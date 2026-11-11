@@ -10,7 +10,7 @@ EarnIn,https://www.earnin.com/careers,greenhouse,earnin,4,true
 Crunchyroll,https://www.crunchyroll.com/about/jobs,greenhouse,crunchyroll,3,true
 Celonis,https://www.celonis.com/careers/jobs,greenhouse,celonis,3,true
 Pure Storage,https://www.purestorage.com/company/careers.html,greenhouse,purestorage,4,true
-Plivo,https://www.plivo.com/careers/,lever,plivo,3,true
+Plivo,https://www.plivo.com/jobs/,custom,plivo,3,true
 Hevo Data,https://hevodata.com/careers/,lever,hevodata,5,true
 Warner Music Group,https://www.wmg.com/careers,lever,wmg,4,true
 Zimperium,https://www.zimperium.com/careers,lever,zimperium,5,true
@@ -167,7 +167,7 @@ Warner Bros. Discovery,https://warnerbros.wd5.myworkdayjobs.com/global,workday,w
 RapidAI,https://jobs.lever.co/rapidai,lever,rapidai,4,true
 Aeva,https://jobs.lever.co/aeva,lever,aeva,4,true
 d-Matrix,https://jobs.ashbyhq.com/d-Matrix,ashby,d-Matrix,4,true
-Atlassian,https://www.atlassian.com/company/careers/all-jobs,custom,atlassian,5,true
+Atlassian,https://www.atlassian.com/company/careers/all-jobs,atlassian,atlassian,5,true
 Uber,https://iaziqy.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/UberCareers,oracle,iaziqy.fa.ocs.oraclecloud.com|UberCareers,5,true
 Airbnb,https://job-boards.greenhouse.io/airbnb,greenhouse,airbnb,4,true
 Meesho,https://jobs.lever.co/meesho,lever,meesho,5,true
@@ -210,7 +210,7 @@ Zscaler,https://job-boards.greenhouse.io/zscaler,greenhouse,zscaler,5,true
 CrowdStrike,https://crowdstrike.wd5.myworkdayjobs.com/crowdstrikecareers,workday,crowdstrike|crowdstrikecareers,5,true
 SentinelOne,https://job-boards.greenhouse.io/sentinellabs,greenhouse,sentinellabs,5,true
 Citrix,https://www.cloud.com/careers,custom,citrix,4,true
-Red Hat,https://www.redhat.com/en/jobs,custom,redhat,5,true
+Red Hat,https://redhat.wd5.myworkdayjobs.com/Jobs,workday,redhat|Jobs,5,true
 SUSE,https://suse.wd3.myworkdayjobs.com/Jobsatsuse,workday,suse|Jobsatsuse,4,true
 Canonical,https://job-boards.greenhouse.io/canonical,greenhouse,canonical,5,true
 Cloudera,https://cloudera.wd5.myworkdayjobs.com/External_Career,workday,cloudera|External_Career,5,true
@@ -229,7 +229,7 @@ Coforge,https://careers.coforge.com/,custom,coforge,4,true
 Sonata Software,https://www.sonata-software.com/careers,custom,sonata,4,true
 Happiest Minds,https://www.happiestminds.com/careers/,custom,happiestminds,4,true
 UST,https://www.ust.com/en/careers,custom,ust,4,true
-CGI,https://www.cgi.com/en/careers-search,custom,cgi,4,true
+CGI,https://cgi.njoyn.com/CORP/xweb/xweb.asp?page=joblisting&CLID=21001&CountryID=IN,cgi_njoyn,21001|IN,4,true
 Capgemini,https://careers.capgemini.com/,xml,https://careers.capgemini.com/googlefeed.xml,5,true
 Infosys,https://career.infosys.com/joblist,infosys,infosys-india,5,true
 TCS,https://www.tcs.com/careers/india,custom,tcs,5,true
@@ -322,7 +322,7 @@ Analog Devices,https://analogdevices.wd1.myworkdayjobs.com/External,workday,anal
 Marvell,https://marvell.wd1.myworkdayjobs.com/MarvellCareers,workday,marvell|MarvellCareers,4,true
 MediaTek,https://corp.mediatek.com/careers,custom,mediatek-india,4,true
 Arm,https://careers.arm.com/location/india-jobs/33099/1269750/2,talentbrew,33099,5,true
-NXP Semiconductors,https://nxp.wd3.myworkdayjobs.com/careers,workday,nxp|careers,4,true
+NXP Semiconductors,https://nxp.wd3.myworkdayjobs.com/careers,workday,nxp|careers,4,false
 Infineon Technologies,https://jobs.infineon.com/careers,infineon,infineon.com,4,true
 Seagate Technology,https://seagatecareers.com/,xml,https://seagatecareers.com/googlefeed.xml,4,true
 Keysight Technologies,https://jobs.keysight.com/external/jobs,jibe,keysight|India,4,true
@@ -364,7 +364,7 @@ Roche,https://roche.wd3.myworkdayjobs.com/roche-ext,workday,roche|roche-ext,4,tr
 AstraZeneca,https://astrazeneca.eightfold.ai/careers,eightfold,astrazeneca.eightfold.ai|astrazeneca.com,4,true
 GSK,https://jobs.gsk.com/gb/en/,phenom,GHVGPAGB,4,true
 Sanofi,https://jobs.sanofi.com/en/location/india-jobs/2649/1269750/2,talentbrew,2649,4,true
-Bayer,https://talent.bayer.com/careers?domain=bayer.com,eightfold_legacy_complete,talent.bayer.com|bayer.com,4,true
+Bayer,https://talent.bayer.com/careers?domain=bayer.com,eightfold_legacy,talent.bayer.com|bayer.com,4,true
 Merck Group,https://careers.emdgroup.com/us/en/,phenom,MQAEGZUS,4,true
 Eli Lilly,https://careers.lilly.com/us/en/,phenom,LILLUS,4,true
 Pfizer,https://pfizer.wd1.myworkdayjobs.com/PfizerCareers,workday,pfizer|PfizerCareers,4,true
@@ -736,7 +736,7 @@ Litmus,https://jobs.ashbyhq.com/litmus,ashby,litmus,4,true
 Mitsogo,https://job-boards.greenhouse.io/mitsogoinc,greenhouse,mitsogoinc,4,true
 Outmarket AI,https://jobs.ashbyhq.com/outmarket,ashby,outmarket,4,true
 TechnologyAdvice,https://job-boards.greenhouse.io/technologyadvice,greenhouse,technologyadvice,4,true
-Tempo,https://jobs.ashbyhq.com/tempo,ashby,tempo,4,true
+Tempo,https://jobs.ashbyhq.com/tempo-io,ashby,tempo-io,4,true
 Together AI,https://job-boards.greenhouse.io/togetherai,greenhouse,togetherai,4,true
 Toradex,https://job-boards.greenhouse.io/toradex,greenhouse,toradex,4,true
 WPP,https://job-boards.greenhouse.io/wpp,greenhouse,wpp,4,true

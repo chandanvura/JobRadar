@@ -12,7 +12,13 @@ from .locations import explicit_remote_india, india_discovery_location
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
 _DOMAIN_LIMITERS={}
-def clean(value): return re.sub(r"\s+"," ",html.unescape(re.sub(r"<[^>]+>"," ",value or ""))).strip()
+_BLOCK_HTML_TAGS=re.compile(r"<(?:br\b[^>]*|/?(?:p|div|li|ul|ol|tr|h[1-6]|section|article)\b[^>]*)>",re.I)
+def clean(value):
+    """Strip HTML to normalized plain text while keeping block and list boundaries separate."""
+    text=_BLOCK_HTML_TAGS.sub("\n",value or "")
+    text=html.unescape(re.sub(r"<[^>]+>"," ",text))
+    lines=[re.sub(r"[^\S\n]+"," ",line).strip() for line in text.splitlines()]
+    return "\n".join(line for line in lines if line)
 def client(timeout=20):
     return httpx.AsyncClient(timeout=httpx.Timeout(timeout,connect=min(timeout,8)),follow_redirects=True,headers=HEADERS,limits=httpx.Limits(max_connections=24,max_keepalive_connections=12),transport=httpx.AsyncHTTPTransport(retries=1))
 
@@ -916,3 +922,5 @@ from .kissflow import KissflowCareerAdapter
 ADAPTERS['kissflow'] = KissflowCareerAdapter()
 from .accenture import AccentureCareerAdapter
 ADAPTERS['accenture'] = AccentureCareerAdapter()
+from .cgi_njoyn import CGINjoynCareerAdapter
+ADAPTERS['cgi_njoyn'] = CGINjoynCareerAdapter()

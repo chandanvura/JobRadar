@@ -10,7 +10,7 @@ def job(title, description, company='Example', url='https://example.com/job/1'):
 
 
 def test_title_only_experience_defaults_to_entry_level_eligible():
-    for title in ['Associate Software Engineer', 'Junior Java Developer', 'Trainee Developer', 'Software Engineer I']:
+    for title in ['Associate Software Engineer', 'Junior Java Developer', 'Trainee Developer', 'Software Engineer I', 'SDE-I', 'New Grad Software Engineer', 'Data Engineer I']:
         result = enrich(job(title, 'Build APIs with Java and SQL.'))
         assert result.experience_min == 0.0 and result.experience_max == 2.0
         assert result.is_eligible

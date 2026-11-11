@@ -26,7 +26,8 @@ def analyze_experience(description):
                 continue
             if re.search(RULES['exclude'], text, re.I) and not re.search(r'\bexperience\b', text, re.I) and not JUNIOR.search(text):
                 continue
-            optional = bool(PREFERRED.search(section) or OPTIONAL.search(text))
+            optional_text = re.sub(r'\([^()]*\)', lambda m: '' if OPTIONAL.search(m.group(0)) and not re.search(r'\d|\b(?:years?|yrs?|yoe|months?|mos?|experience)\b', m.group(0), re.I) else m.group(0), text)
+            optional = bool(PREFERRED.search(section) or OPTIONAL.search(optional_text))
             rows, spans = [], []
             for kind, pattern in PATTERNS:
                 for match in pattern.finditer(text):
