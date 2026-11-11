@@ -105,9 +105,9 @@ Docker,https://jobs.ashbyhq.com/docker,ashby,docker,4,true
 GitLab,https://about.gitlab.com/jobs/,greenhouse,gitlab,4,true
 Vercel,https://vercel.com/careers,greenhouse,vercel,3,true
 Amazon,https://www.amazon.jobs/en/search,amazon,amazon-india,5,true
-Google,https://www.google.com/about/careers/applications/jobs/results/,custom,google,5,true
+Google,https://www.google.com/about/careers/applications/jobs/results/,google_careers,India,5,true
 Microsoft,https://apply.careers.microsoft.com/careers,eightfold,apply.careers.microsoft.com|microsoft.com,5,true
-Oracle,https://careers.oracle.com/jobs/,custom,oracle,5,true
+Oracle,https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/jobs,oracle,eeho.fa.us2.oraclecloud.com|CX_45001,5,true
 SAP,https://careers.sap.com/,xml,https://careers.sap.com/googlefeed.xml,5,true
 Cisco,https://cisco.wd5.myworkdayjobs.com/Cisco_Careers,workday,cisco|Cisco_Careers,5,true
 IBM,https://www.ibm.com/careers/search,custom,ibm,5,true
@@ -322,7 +322,7 @@ Analog Devices,https://analogdevices.wd1.myworkdayjobs.com/External,workday,anal
 Marvell,https://marvell.wd1.myworkdayjobs.com/MarvellCareers,workday,marvell|MarvellCareers,4,true
 MediaTek,https://corp.mediatek.com/careers,custom,mediatek-india,4,true
 Arm,https://careers.arm.com/location/india-jobs/33099/1269750/2,talentbrew,33099,5,true
-NXP Semiconductors,https://nxp.wd3.myworkdayjobs.com/careers,workday,nxp|careers,4,false
+NXP Semiconductors,https://www.nxp.com/company/about-nxp/careers:CAREERS,custom,nxp-india,4,true
 Infineon Technologies,https://jobs.infineon.com/careers,infineon,infineon.com,4,true
 Seagate Technology,https://seagatecareers.com/,xml,https://seagatecareers.com/googlefeed.xml,4,true
 Keysight Technologies,https://jobs.keysight.com/external/jobs,jibe,keysight|India,4,true
