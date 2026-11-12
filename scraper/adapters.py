@@ -931,3 +931,8 @@ from .cgi_njoyn import CGINjoynCareerAdapter
 ADAPTERS['cgi_njoyn'] = CGINjoynCareerAdapter()
 from .google_careers import GoogleCareersAdapter
 ADAPTERS['google_careers'] = GoogleCareersAdapter()
+from .deel import DeelAdapter
+ADAPTERS['deel'] = DeelAdapter()
+from .ibm import IBMCareersAdapter
+ADAPTERS['ibm'] = IBMCareersAdapter()
+ADAPTERS['ibm_careers'] = IBMCareersAdapter()

@@ -17,7 +17,7 @@ Zimperium,https://www.zimperium.com/careers,lever,zimperium,5,true
 JumpCloud,https://jumpcloud.com/careers,lever,jumpcloud,4,true
 Acceldata,https://www.acceldata.io/careers,lever,acceldata,5,true
 Kobie,https://kobie.com/careers/,lever,kobie,3,true
-Deel,https://www.deel.com/careers/,ashby,deel,3,true
+Deel,https://www.deel.com/careers/,deel,deel,3,true
 Sarvam AI,https://www.sarvam.ai/careers,ashby,sarvam,5,true
 Wisdom AI,https://www.wisdom.ai/careers,ashby,Wisdom-AI,4,true
 SPAN,https://www.span.io/careers,ashby,span,3,true
@@ -110,7 +110,7 @@ Microsoft,https://apply.careers.microsoft.com/careers,eightfold,apply.careers.mi
 Oracle,https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/jobs,oracle,eeho.fa.us2.oraclecloud.com|CX_45001,5,true
 SAP,https://careers.sap.com/,xml,https://careers.sap.com/googlefeed.xml,5,true
 Cisco,https://cisco.wd5.myworkdayjobs.com/Cisco_Careers,workday,cisco|Cisco_Careers,5,true
-IBM,https://www.ibm.com/careers/search,custom,ibm,5,true
+IBM,https://www.ibm.com/careers/search,ibm,ibm,5,true
 Accenture,https://www.accenture.com/in-en/careers/jobsearch,accenture,https://www.accenture.com/api/accenture/elastic/findjobs,5,true
 Deloitte,https://southasiacareers.deloitte.com/,xml,https://southasiacareers.deloitte.com/googlefeed.xml,4,true
 EY,https://careers.ey.com/,xml,https://careers.ey.com/googlefeed.xml,4,true
@@ -214,7 +214,7 @@ Red Hat,https://redhat.wd5.myworkdayjobs.com/Jobs,workday,redhat|Jobs,5,true
 SUSE,https://suse.wd3.myworkdayjobs.com/Jobsatsuse,workday,suse|Jobsatsuse,4,true
 Canonical,https://job-boards.greenhouse.io/canonical,greenhouse,canonical,5,true
 Cloudera,https://cloudera.wd5.myworkdayjobs.com/External_Career,workday,cloudera|External_Career,5,true
-Confluent,https://jobs.ashbyhq.com/confluent,ashby,confluent,5,true
+Confluent,https://www.ibm.com/careers/search,ibm,confluent,5,true
 HashiCorp,https://www.hashicorp.com/en/careers/open-positions,custom,hashicorp,5,true
 GitHub,https://www.github.careers/careers-home/jobs,jibe,githubinc,5,true
 DigitalOcean,https://job-boards.greenhouse.io/digitalocean98,greenhouse,digitalocean98,4,true
@@ -447,7 +447,7 @@ BT Group,https://jobs.bt.com/,xml,https://jobs.bt.com/googlefeed.xml,4,true
 Vodafone,https://careers.vodafone.com/,custom,vodafone-india,4,true
 Verizon,https://verizon.wd12.myworkdayjobs.com/verizon-careers,workday,verizon|verizon-careers|India,4,true
 AT&T,https://www.att.jobs/location/india-jobs/117/1269750/2,talentbrew,117,4,true
-T-Mobile,https://tmobile.wd1.myworkdayjobs.com/External,workday,tmobile|External,3,true
+T-Mobile,https://tmobile.wd1.myworkdayjobs.com/External,workday,tmobile|External|India,3,true
 Orange Business,https://orange.jobs/gb/en/,phenom,OYVOCZGB,4,true
 Colt Technology Services,https://www.colt.net/careers/,custom,colt-india,4,true
 Arcesium,https://www.arcesium.com/careers,greenhouse,arcesiumllc,5,true
