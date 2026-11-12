@@ -2,6 +2,7 @@
 import asyncio
 from datetime import datetime, timezone
 import json
+import logging
 import re
 from urllib.parse import parse_qs, urlparse
 
@@ -9,6 +10,8 @@ from bs4 import BeautifulSoup
 import httpx
 
 from .models import JobBatch
+
+logger = logging.getLogger(__name__)
 
 IBM_SEARCH_API = "https://www-api.ibm.com/search/api/v2"
 DEFAULT_PAGE_SIZE = 50
@@ -56,8 +59,8 @@ def extract_job_id_from_url(url):
         job_ids = params.get("jobId")
         if job_ids and job_ids[0].strip():
             return job_ids[0].strip()
-    except Exception:
-        pass
+    except Exception as err:
+        logger.debug("Could not extract jobId from url %s: %s", url, err)
     return None
 
 
@@ -163,8 +166,8 @@ class IBMCareersAdapter:
                             if item.get("@type") == "JobPosting" and item.get("datePosted"):
                                 job.posted_at, job.posted_label, job.posted_precision, job.reported_age_hours = parse_posting(item["datePosted"])
                                 return
-                except Exception:
-                    pass
+                except Exception as err:
+                    logger.debug("Failed detail fetch/parse for %s: %s", job.job_url, err)
 
                 # Fallback to current verification if detail does not provide datePosted
                 job.posted_at = datetime.now(timezone.utc).isoformat()
