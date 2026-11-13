@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://jobradar.chandanvura.workers.dev/sitemap.xml
