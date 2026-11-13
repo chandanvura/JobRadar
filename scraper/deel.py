@@ -10,11 +10,34 @@ OFFICIAL_CAREERS_URL = "https://www.deel.com/careers/"
 INDIA_LOCATION_KEYWORDS = ("india", "bangalore", "bengaluru", "hyderabad", "remote india", "remote (india)", "remote - india")
 
 
+def _extract_balanced_json_array(text: str, start_index: int) -> str:
+    """Extract a balanced JSON array starting at start_index (pointing to '[')."""
+    depth = 0
+    in_escape = False
+    in_quote = False
+    for i in range(start_index, len(text)):
+        ch = text[i]
+        if ch == '\\' and not in_escape:
+            in_escape = True
+            continue
+        if ch == '"' and not in_escape:
+            in_quote = not in_quote
+        elif not in_quote:
+            if ch == '[':
+                depth += 1
+            elif ch == ']':
+                depth -= 1
+                if depth == 0:
+                    return text[start_index : i + 1]
+        in_escape = False
+    raise ValueError("Could not find departments boundary in Deel careers HTML")
+
+
 def extract_deel_jobs_json(html_text: str) -> list[dict]:
     """
     Extract the embedded JSON array from Deel's careers HTML page.
     Look for \"jobs\":[...] before ,\"departments\":.
-    Handles escaped quotes in Next.js / RSC payload.
+    If ,\"departments\": is missing (e.g. Next.js structure update), extract the balanced array.
     """
     if not html_text:
         raise ValueError("Deel careers page response is empty")
@@ -31,15 +54,17 @@ def extract_deel_jobs_json(html_text: str) -> list[dict]:
             raise ValueError("Could not find embedded jobs JSON in Deel careers HTML")
         start = idx + len(marker) - 1
         end = html_text.find(dept_marker, start)
-        if end == -1:
-            raise ValueError("Could not find departments boundary in Deel careers HTML")
-        raw_json = html_text[start:end]
+        if end != -1:
+            raw_json = html_text[start:end]
+        else:
+            raw_json = _extract_balanced_json_array(html_text, start)
     else:
         start = idx + len(marker) - 1
         end = html_text.find(dept_marker, start)
-        if end == -1:
-            raise ValueError("Could not find departments boundary in Deel careers HTML")
-        raw_escaped = html_text[start:end]
+        if end != -1:
+            raw_escaped = html_text[start:end]
+        else:
+            raw_escaped = _extract_balanced_json_array(html_text, start)
         raw_json = raw_escaped.replace('\\"', '"').replace('\\\\', '\\')
 
     try:
