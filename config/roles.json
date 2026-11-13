@@ -8,7 +8,9 @@
         "\\b(?:build (?:and )?release|release|deployment|configuration management) (?:engineer|developer|specialist)\\b",
         "\\b(?:ci cd|build|release automation) (?:engineer|developer)\\b",
         "\\b(?:ci\\s*[/ -]?\\s*cd|build|release automation)\\b.{0,25}\\b(?:engineer|developer)\\b",
-        "\\b(?:kubernetes|terraform) (?:operations |infrastructure )?(?:engineer|developer|specialist)\\b"
+        "\\b(?:kubernetes|terraform|ansible) (?:operations |infrastructure |automation )?(?:engineer|developer|specialist)\\b",
+        "\\bansible (?:automation |infrastructure )?(?:engineer|developer|specialist)\\b",
+        "\\b(?:ansible|configuration management)\\b.{0,25}\\b(?:engineer|developer|specialist)\\b"
       ],
       "titles": [
         "DevOps Engineer",
@@ -29,6 +31,11 @@
         "Deployment Engineer",
         "Kubernetes Engineer",
         "Terraform Engineer",
+        "Ansible Engineer",
+        "Ansible Automation Engineer",
+        "Junior Ansible Engineer",
+        "Associate Ansible Engineer",
+        "DevOps and SRE Engineer",
         "DevOps Specialist",
         "Junior DevOps Specialist",
         "Associate DevOps Specialist",
@@ -44,6 +51,8 @@
         "\\b(?:site reliability|sre|production engineer|reliability software)\\b",
         "\\b(?:production reliability|software reliability) engineer\\b",
         "\\b(?:database reliability|performance)\\b.{0,25}\\b(?:engineer|specialist)\\b",
+        "\\b(?:monitoring|observability|telemetry)\\b.{0,30}\\b(?:engineer|specialist|developer)\\b",
+        "\\b(?:grafana|prometheus|elk|loki)\\b.{0,25}\\b(?:engineer|specialist)\\b",
         "\\bproduction engineer\\s*(?:i|1)\\b"
       ],
       "titles": [
@@ -56,6 +65,16 @@
         "Graduate Site Reliability Engineer",
         "Junior SRE",
         "SRE I",
+        "Site Reliability Specialist",
+        "Observability Engineer",
+        "Junior Observability Engineer",
+        "Associate Observability Engineer",
+        "Observability Engineer I",
+        "Monitoring Engineer",
+        "Junior Monitoring Engineer",
+        "Associate Monitoring Engineer",
+        "Monitoring and Observability Engineer",
+        "Telemetry Engineer",
         "Production Reliability Engineer",
         "Software Reliability Engineer",
         "Database Reliability Engineer",

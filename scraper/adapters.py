@@ -12,7 +12,13 @@ from .locations import explicit_remote_india, india_discovery_location
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
 _DOMAIN_LIMITERS={}
-def clean(value): return re.sub(r"\s+"," ",html.unescape(re.sub(r"<[^>]+>"," ",value or ""))).strip()
+_BLOCK_HTML_TAGS=re.compile(r"<(?:br\b[^>]*|/?(?:p|div|li|ul|ol|tr|h[1-6]|section|article)\b[^>]*)>",re.I)
+def clean(value):
+    """Strip HTML to normalized plain text while keeping block and list boundaries separate."""
+    text=_BLOCK_HTML_TAGS.sub("\n",value or "")
+    text=html.unescape(re.sub(r"<[^>]+>"," ",text))
+    lines=[re.sub(r"[^\S\n]+"," ",line).strip() for line in text.splitlines()]
+    return "\n".join(line for line in lines if line)
 def client(timeout=20):
     return httpx.AsyncClient(timeout=httpx.Timeout(timeout,connect=min(timeout,8)),follow_redirects=True,headers=HEADERS,limits=httpx.Limits(max_connections=24,max_keepalive_connections=12),transport=httpx.AsyncHTTPTransport(retries=1))
 
@@ -424,7 +430,11 @@ class WorkdayAdapter(JobSource):
                 if not self.complete:
                     paths=[item.get("externalPath", "") for item in batch]
                     duplicate_paths=duplicate_paths or len(set(paths))!=len(paths) or bool(identifiers.intersection(paths))
-                    identifiers.update(paths)
+                    for item,path in zip(batch,paths):
+                        if not path or path not in identifiers:
+                            postings.append(item)
+                        if path:
+                            identifiers.add(path)
                 if self.complete:
                     total=page.get("total")
                     if not isinstance(total,int) or isinstance(total,bool) or total<0 or total>bound:
@@ -445,8 +455,9 @@ class WorkdayAdapter(JobSource):
                             or len(set(paths))!=len(paths) or identifiers.intersection(paths)):
                         raise ValueError(f"Workday complete pagination changed, repeated or omitted records: offset={offset}, total={total}, expected={expected}, rows={len(batch)}, first_path={paths[0] if paths else None}")
                     identifiers.update(paths)
-                postings.extend(batch)
+                    postings.extend(batch)
                 if self.complete and len(postings)==expected:break
+                if not self.complete and isinstance(advertised,int) and offset+len(batch)>=advertised:break
                 if len(batch)<20: break
                 offset+=20
             if self.complete:
@@ -916,3 +927,12 @@ from .kissflow import KissflowCareerAdapter
 ADAPTERS['kissflow'] = KissflowCareerAdapter()
 from .accenture import AccentureCareerAdapter
 ADAPTERS['accenture'] = AccentureCareerAdapter()
+from .cgi_njoyn import CGINjoynCareerAdapter
+ADAPTERS['cgi_njoyn'] = CGINjoynCareerAdapter()
+from .google_careers import GoogleCareersAdapter
+ADAPTERS['google_careers'] = GoogleCareersAdapter()
+from .deel import DeelAdapter
+ADAPTERS['deel'] = DeelAdapter()
+from .ibm import IBMCareersAdapter
+ADAPTERS['ibm'] = IBMCareersAdapter()
+ADAPTERS['ibm_careers'] = IBMCareersAdapter()

@@ -78,3 +78,10 @@ def test_location_variants_merge_only_identical_job_identity():
     api = detail(records['one'])
     api['jobPost']['workLocations'].reverse()
     assert detail_record(html(api), records['one'])['uuid'] == 'one'
+
+
+def test_us_state_name_and_code_variants_reconcile_without_snapshot_abort():
+    row = dict(ROW, locations=[{'name': 'Remote (New York, US)'}])
+    api = detail(row)
+    api['jobPost']['workLocations'] = ['Remote (NY, US)']
+    assert detail_record(html(api), row)['uuid'] == 'one'

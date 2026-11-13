@@ -71,10 +71,13 @@ function createLexicalJobSearchIndex<T extends SearchableJob>(jobs:T[]) {
 const concepts: Array<[RegExp, string[]]> = [
   [/\bcloud developer\b/i, ['cloud engineer', 'cloud platform engineer']],
   [/\bcloud engineer\b/i, ['cloud developer', 'cloud infrastructure engineer']],
-  [/\bdevops engineer\b/i, ['devsecops engineer', 'build release engineer']],
+  [/\bdevops engineer\b/i, ['devsecops engineer', 'build release engineer', 'ansible automation engineer']],
   [/\breliability engineering\b/i, ['site reliability engineer']],
+  [/\bsite reliability engineer\b/i, ['sre', 'observability engineer', 'monitoring engineer']],
+  [/\bobservability engineer\b/i, ['monitoring engineer', 'site reliability engineer']],
+  [/\bmonitoring engineer\b/i, ['observability engineer', 'site reliability engineer']],
   [/\bcontainer orchestration\b/i, ['kubernetes']],
-  [/\binfrastructure as code\b/i, ['terraform', 'cloudformation']],
+  [/\binfrastructure as code\b/i, ['terraform', 'ansible', 'cloudformation']],
   [/\bcontinuous delivery\b/i, ['ci cd', 'release engineer']],
   [/\bprogrammer analyst\b/i, ['software engineer', 'application developer']],
 ];

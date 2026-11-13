@@ -17,7 +17,8 @@ export function analyzeExperience(description:string,clauses=candidateClauses(de
   const text=fragment.replace(words,word=>String(rules.words[word.toLowerCase() as keyof typeof rules.words]));
   if(/\b(?:company|organisation|organization|team)\s+has\b|\bfounded\b/i.test(text))continue;
   if(excludedPattern.test(text)&&! /\bexperience\b/i.test(text)&&!juniorPattern.test(text))continue;
-  const optional=preferredPattern.test(section)||optionalPattern.test(text),rows:ExperienceEvidence[]=[],spans:[number,number][]=[];
+  const optionalText=text.replace(/\([^()]*\)/g,m=>optionalPattern.test(m)&&!/\d|\b(?:years?|yrs?|yoe|months?|mos?|experience)\b/i.test(m)?'':m);
+  const optional=preferredPattern.test(section)||optionalPattern.test(optionalText),rows:ExperienceEvidence[]=[],spans:[number,number][]=[];
   for(const {kind,regex} of patterns)for(const match of text.matchAll(regex)) {
    const start=match.index!,end=start+match[0].length;
    if(spans.some(([left,right])=>start<right&&end>left))continue;
@@ -58,5 +59,5 @@ export function experienceExplanation(analysis:ExperienceAnalysis) {
  if(analysis.status==='conditional')return 'The JD gives alternative experience requirements. Review which path applies before shortlisting.';
  if(analysis.status!=='stated')return analysis.preferred.length?'Only preferred experience is stated. It cannot prove the required experience.':'Required experience is not stated clearly. A junior title alone is not proof.';
  const range=analysis.max===null?`${analysis.min}+`:`${analysis.min}–${analysis.max}`;
- return experienceWithinPolicy(analysis.min,analysis.max)?`Required experience: ${range} years. It meets the portal experience rule.${analysis.max===null?' No upper limit is stated; verify before applying.':analysis.max>rules.max_minimum_experience_years?' The range extends above 3 years; verify before applying.':''}`:`Required experience: ${range} years. The required minimum exceeds 3 years or the range is invalid.`;
+ return experienceWithinPolicy(analysis.min,analysis.max)?`Required experience: ${range} years. It meets the portal experience rule.${analysis.max===null?' No upper limit is stated; verify before applying.':analysis.max>rules.max_minimum_experience_years?' The range extends above 2 years; verify before applying.':''}`:`Required experience: ${range} years. The required minimum exceeds 2 years or the range is invalid.`;
 }

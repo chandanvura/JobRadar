@@ -11,9 +11,9 @@ from .roles import classify_role, NON_TECHNICAL
 from .locations import TARGET_LOCATIONS, SHORTLIST_LOCATIONS, REMOTE_INDIA, OTHER_INDIA, explicit_remote_india, india_discovery_location
 
 INTERNSHIP_ROLE_PATTERNS = {
-    "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b|\bci\s*[/ -]?\s*cd\b|\bkubernetes\b|\bterraform\b",
+    "DevOps": r"\bdev\s*ops\b|\bdev\s*sec\s*ops\b|\brelease\b|\bdeployment\b|\bci\s*[/ -]?\s*cd\b|\bkubernetes\b|\bterraform\b|\bansible\b",
     "Cloud": r"\bcloud\b|\baws\b|\bazure\b|\bgcp\b",
-    "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b|\breliability\b",
+    "SRE": r"\bsite reliability\b|\bsre\b|\bproduction engineer\b|\breliability\b|\bobservability\b|\bmonitoring\b",
     "Platform": r"\bplatform\b",
     "Infrastructure / Operations": r"\binfrastructure\b|\blinux\b|\b(?:it|cloud|platform|systems?|network|production) operations\b|\boperations (?:engineering|engineer|infrastructure)\b|\bsysadmin\b|\bdatabase\b",
     "Java / Backend": r"\bjava\b|\bback[ -]?end\b|\bspring\b",
@@ -51,7 +51,7 @@ def classify_employment_type(title: str, description: str=""):
     """Keep internships out of full-time views without guessing from generic graduate wording."""
     corpus=f"{title}\n{description}"
     if re.search(r"\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b",title,re.I): return "Internship"
-    if re.search(r"\b(?:this is an?|join us as an?|seeking an?|hiring an?)\s+(?:[a-z]+\s+){0,3}(?:intern|internship|apprentice)\b",corpus,re.I): return "Internship"
+    if re.search(r"\b(?:this is an?|join us as an?|seeking an?|hiring an?)\s+(?:[a-z]+\s+){0,3}(?:intern|internship|apprentice|apprenticeship)\b",corpus,re.I): return "Internship"
     return "Full-time"
 
 def extract_experience(text: str):
@@ -85,18 +85,20 @@ def enrich(job: Job, company_priority: int=3):
     experience_ok=experience_within_policy(job.experience_min,job.experience_max)
     leadership_title=re.sub(r"\bmember of technical staff\b", "technical contributor", job.title, flags=re.I)
     leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
-    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|sdet|test engineer|support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer)\s*(?:i|1)\b",job.title,re.I))
+    explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher|new grad(?:uate)?|entry[- ]level|campus hire|university grad(?:uate)?)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|qa analyst|sdet|test engineer|support engineer|technical support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer|data engineer|ml engineer|machine learning engineer|security engineer|network engineer|observability engineer|monitoring engineer|ansible engineer)(?:[\s-]+(?:i|1)\b|1\b)",job.title,re.I))
     if job.experience_min is None and explicit_entry_title and job.experience_label=="Unknown":
-        job.experience_label="Entry-level title — experience unverified"
-        experience_ok=False
+        job.experience_min=0.0
+        job.experience_max=2.0
+        job.experience_label="Entry-level title"
+        experience_ok=True
     if job.city not in SHORTLIST_LOCATIONS: reason="Outside shortlist cities — Bengaluru and Hyderabad only"
     elif leadership: reason="Leadership-level title"
     elif job.role_category=="Other": reason="Role outside target list"
     elif job.employment_type=="Internship" and not recent: reason="Posting date not verified within 24 hours"
     elif job.employment_type=="Internship": reason="Eligible"
     elif job.experience_label in ("Conditional experience — verify", "Conflicting experience — verify"): reason=job.experience_label
-    elif job.experience_min is None and job.experience_max is None: reason="Entry-level title — experience unverified" if explicit_entry_title else "Experience not stated — verify"
-    elif not experience_ok: reason="Required minimum exceeds 3 years or experience range is invalid"
+    elif job.experience_min is None and job.experience_max is None: reason="Experience not stated — verify"
+    elif not experience_ok: reason="Required minimum exceeds 2 years or experience range is invalid"
     elif not recent: reason="Posting date not verified within 24 hours"
     else: reason="Eligible"
     job.is_eligible=reason=="Eligible"; job.eligibility_reason=reason

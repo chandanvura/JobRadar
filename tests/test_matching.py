@@ -48,11 +48,18 @@ def test_title_classification():
     assert classify_title("QA Associate")[1] == "Quality Engineering"
     assert classify_title("SDET I")[1] == "Quality Engineering"
     assert classify_title("Application Support Associate")[1] == "Technical Support"
+    assert classify_title("Site Reliability Engineer")[1] == "SRE"
+    assert classify_title("Junior SRE")[1] == "SRE"
+    assert classify_title("Observability Engineer")[1] == "SRE"
+    assert classify_title("Monitoring Engineer")[1] == "SRE"
+    assert classify_title("Monitoring and Observability Engineer")[1] == "SRE"
+    assert classify_title("Ansible Engineer")[1] == "DevOps"
+    assert classify_title("Ansible Automation Engineer")[1] == "DevOps"
 
 def test_explicit_entry_title_can_fill_missing_experience_without_opening_generic_roles():
     entry=enrich(sample(title="Associate Software Engineer",location="Hyderabad",description="Build reliable services"))
-    assert not entry.is_eligible and entry.experience_label == "Entry-level title — experience unverified"
-    assert entry.experience_min is None and entry.experience_max is None
+    assert entry.is_eligible and entry.experience_label == "Entry-level title"
+    assert entry.experience_min == 0.0 and entry.experience_max == 2.0
     generic=enrich(sample(title="Software Engineer",location="Bengaluru",description="Build reliable services"))
     assert not generic.is_eligible and generic.eligibility_reason == "Experience not stated — verify"
     outside=enrich(sample(title="Associate Software Engineer",location="Pune",description="Build reliable services"))
@@ -105,12 +112,13 @@ def test_phase2_entry_engineering_tracks_eligibility():
         assert job.is_eligible, f"Expected {title} to be eligible, got {job.eligibility_reason}"
         assert job.role_category != "Other", f"Expected valid category for {title}, got {job.role_category}"
 
-    # Verify unstated experience on explicit level-1 titles gets unverified status
+    # Verify unstated experience on explicit level-1 titles gets entry-level eligible status
     for title in ["DevOps Engineer I", "Cloud Engineer 1", "SRE I", "Platform Engineer I", "Systems Engineer I", "Backend Engineer I", "Frontend Engineer 1"]:
         job = enrich(sample(title=title, location="Hyderabad", description="Build scalable cloud services."))
-        assert not job.is_eligible
-        assert job.experience_label == "Entry-level title — experience unverified"
-        assert job.eligibility_reason == "Entry-level title — experience unverified"
+        assert job.is_eligible
+        assert job.experience_min == 0.0 and job.experience_max == 2.0
+        assert job.experience_label == "Entry-level title"
+        assert job.eligibility_reason == "Eligible"
 
     # Verify unambiguous 4+ YOE is rejected
     for title, description in [
@@ -120,7 +128,7 @@ def test_phase2_entry_engineering_tracks_eligibility():
     ]:
         job = enrich(sample(title=title, location="Bengaluru", description=description))
         assert not job.is_eligible
-        assert job.eligibility_reason == "Required minimum exceeds 3 years or experience range is invalid"
+        assert job.eligibility_reason == "Required minimum exceeds 2 years or experience range is invalid"
 
 def test_phase2_locations_shortlist_vs_discovery():
     for city in ["Bengaluru", "Hyderabad"]:
@@ -140,9 +148,21 @@ def test_phase2_locations_shortlist_vs_discovery():
         assert job.city == expected_city
 
 def test_experience_above_policy_is_excluded():
-    assert enrich(sample(description="Candidate needs 3+ years experience")).is_eligible
+    assert not enrich(sample(description="Candidate needs 3+ years experience")).is_eligible
     assert enrich(sample(description="Candidate needs 2-4 years experience")).is_eligible
     assert not enrich(sample(description="Candidate needs 4 years of experience")).is_eligible
+
+def test_apprenticeship_and_internship_welcome_statements():
+    for desc in [
+        "Qualifications: Apprenticeship, internship are welcome.",
+        "Requirements: Apprentices and interns are welcome to apply.",
+        "Candidate requirements: We welcome apprentices and interns.",
+        "Requirements: Internship and apprenticeship experience welcome.",
+    ]:
+        job = enrich(sample(title="Software Engineer", description=desc))
+        assert job.is_eligible
+        assert job.experience_min == 0.0
+        assert job.experience_label == "Fresher"
 
 def test_leadership_titles_are_excluded_even_with_low_year_phrase():
     for title in ("Director, Software Engineering","Staff Platform Engineer","Principal DevOps Engineer","Cloud Engineering Manager","Lead Software Engineer"):
@@ -155,7 +175,7 @@ def test_senior_alone_is_not_leadership_exclusion_and_evaluates_experience():
     assert senior_eligible.eligibility_reason == "Eligible"
     senior_ineligible = enrich(sample(title="Senior Software Engineer", location="Bengaluru", description="Requirements: 5+ years experience in Python."))
     assert not senior_ineligible.is_eligible
-    assert "Required minimum exceeds 3" in senior_ineligible.eligibility_reason
+    assert "Required minimum exceeds 2" in senior_ineligible.eligibility_reason
 
 def test_real_world_experience_phrases():
     assert extract_experience("Minimum experience of 2 years")[:2] == (2.0,None)
@@ -481,3 +501,44 @@ def test_ingestion_rejects_single_oversized_record():
     import pytest
     with pytest.raises(ValueError, match="exceeds ingestion"):
         ingest_chunks([{"description": "界" * 20000}], max_bytes=1000)
+
+
+def test_sre_observability_and_ansible_skill_detection():
+    job = enrich(sample(
+        title="Associate SRE",
+        description="Fresh graduates with 0-2 years experience. Work with Prometheus, Grafana, Loki, ELK stack (Elasticsearch, Logstash, Kibana), Ansible, and Datadog for system monitoring and observability."
+    ))
+    assert job.is_eligible
+    assert job.role_category == "SRE"
+    expected = {
+        "Prometheus", "Grafana", "Loki", "ELK", "Elasticsearch",
+        "Logstash", "Kibana", "Ansible", "Datadog", "Monitoring", "Observability", "SRE"
+    }
+    assert expected.issubset(set(job.skills))
+
+
+def test_technical_evidence_disambiguates_monitoring_observability_and_ansible():
+    assert classify_title("Associate", "Required: Experience with Prometheus and Grafana for monitoring.")[1] == "Software Engineering"
+    assert classify_title("Engineer II", "Proficiency using Ansible and Linux for infrastructure automation.")[1] == "Software Engineering"
+    assert classify_title("Trainee", "Must have experience with ELK and Loki log observability.")[1] == "Software Engineering"
+
+
+def test_cross_domain_monitoring_and_performance_guards():
+    title = "Performance Engineer"
+    non_sw_desc = "Responsibilities include retail store sales performance and non-technical operations monitoring."
+    assert classify_title(title, non_sw_desc)[1] == "Other"
+
+    sw_desc = "Responsibilities include database infrastructure latency and performance testing using Grafana and Prometheus monitoring."
+    assert classify_title(title, sw_desc)[1] == "SRE"
+
+
+def test_sre_and_ansible_internships_and_entry_classification():
+    assert classify_title("Observability Intern")[1] == "SRE"
+    assert classify_employment_type("Observability Intern") == "Internship"
+    assert classify_title("Ansible Intern")[1] == "DevOps"
+    assert classify_employment_type("Ansible Intern") == "Internship"
+
+    entry = enrich(sample(title="Junior Observability Engineer", location="Bengaluru", description="Requires 0-2 years experience. Linux and Prometheus."))
+    assert entry.is_eligible
+    assert entry.role_category == "SRE"
+

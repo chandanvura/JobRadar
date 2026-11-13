@@ -457,5 +457,19 @@
     "min": 4,
     "max": 6,
     "status": "stated"
+  },
+  {
+    "name": "apprenticeship and internship welcome",
+    "text": "Requirements: Apprenticeship, internship are welcome.",
+    "min": 0,
+    "max": null,
+    "status": "stated"
+  },
+  {
+    "name": "apprentices and interns welcome to apply",
+    "text": "Candidate requirements: Apprentices and interns are welcome to apply.",
+    "min": 0,
+    "max": null,
+    "status": "stated"
   }
 ]

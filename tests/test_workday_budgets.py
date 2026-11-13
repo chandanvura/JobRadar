@@ -49,3 +49,19 @@ def test_source_cancellation_leaves_no_detail_requests_running(monkeypatch):
         with pytest.raises(asyncio.CancelledError):await task
         assert cancelled.is_set()
     asyncio.run(scenario())
+
+
+def test_workday_stops_at_exact_multiple_of_20_without_repeating_page(monkeypatch):
+    offsets=[]
+    rows=[{'externalPath':f'/job/Bengaluru/R{i}','title':'Java Engineer','locationsText':'Bengaluru','postedOn':'Posted Today'} for i in range(20)]
+    async def request(client,method,url,**kwargs):
+        offsets.append(kwargs.get('json',{}).get('offset'))
+        return httpx.Response(200,request=httpx.Request(method,url),json={'total':20,'jobPostings':rows,'facets':[]})
+    async def detail(client,url):
+        rid=url.rsplit('/',1)[-1]
+        return httpx.Response(200,request=httpx.Request('GET',url),json={'jobPostingInfo':{'title':'Java Engineer','jobReqId':rid,'jobDescription':'Required experience: 1-2 years.','location':'Bengaluru'}})
+    monkeypatch.setattr(adapters,'request',request);monkeypatch.setattr(adapters,'fetch_detail',detail)
+    jobs,count=asyncio.run(adapters.WorkdayAdapter().fetch_jobs(Company('Example','https://example.wd1.myworkdayjobs.com/Jobs','workday','example|Jobs')))
+    assert offsets==[0]
+    assert count==20 and len(jobs)==20
+    assert jobs.coverage_warning is None

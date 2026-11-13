@@ -71,7 +71,7 @@ class LegacyEightfoldCareerAdapter:
             first, count = search_page(await search(0), domain)
             if len(first) != min(10, count):
                 raise ValueError('Legacy Eightfold search returned an incomplete first page')
-            semaphore = asyncio.Semaphore(4)
+            semaphore = asyncio.Semaphore(2)
             async def next_page(offset):
                 async with semaphore:
                     rows, total = search_page(await search(offset), domain, count)

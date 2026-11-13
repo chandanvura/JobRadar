@@ -10,7 +10,13 @@ ROLE_PATTERNS = {role['family']: '|'.join(role['patterns']) for role in TAXONOMY
 COMPILED_ROLES = [(family, re.compile(pattern, re.I)) for family, pattern in ROLE_PATTERNS.items()]
 NON_TECHNICAL = re.compile(r'\b(?:non technical|nontechnical|human resources|talent acquisition|marketing|tax|civil|mechanical|chemical|electrical maintenance|sales associate|financial advisor)\b', re.I)
 AMBIGUOUS_TITLE = re.compile(r'\b(?:developer|programmer|engineer|analyst|consultant|associate|graduate|trainee|intern|apprentice)\b', re.I)
-TECHNICAL_EVIDENCE = re.compile(r'\b(?:software development|software engineering|programming|coding|computer science|rest api|kubernetes|docker|ci\s*[/ -]?\s*cd|linux|sql|python|java|javascript|typescript|aws|azure|gcp|terraform|firmware|embedded software)\b', re.I)
+TECHNICAL_EVIDENCE = re.compile(
+    r'\b(?:software development|software engineering|programming|coding|computer science|rest api|'
+    r'kubernetes|docker|ci\s*[/ -]?\s*cd|linux|sql|python|java|javascript|typescript|aws|azure|gcp|'
+    r'terraform|ansible|prometheus|grafana|elk|elasticsearch|logstash|kibana|loki|'
+    r'monitoring|observability|telemetry|datadog|site reliability|sre|firmware|embedded software)\b',
+    re.I
+)
 
 # These short titles occur in both software and non-software job families.
 # Refuse a confirmed non-software context unless the actual requirements also
@@ -27,7 +33,10 @@ SOFTWARE_DOMAIN = re.compile(
     r'\b(?:software|coding|programming|automation|automated tests?|'
     r'selenium|playwright|sql|postgres(?:ql)?|mysql|oracle db|'
     r'database infrastructure|performance testing|load testing|'
-    r'latency|backend|frontend|devops|kubernetes|python|java)\b', re.I
+    r'latency|backend|frontend|devops|kubernetes|python|java|'
+    r'sre|site reliability|ansible|prometheus|grafana|elk|elasticsearch|loki|'
+    r'observability|telemetry|(?:system|infrastructure|application|server|network|cloud)\s+monitoring)\b',
+    re.I
 )
 
 
@@ -66,5 +75,5 @@ def likely_technical_title(title):
     clean = normalize_title(str(title))
     return not NON_TECHNICAL.search(clean) and bool(
         AMBIGUOUS_TITLE.search(clean) or any(pattern.search(clean) for _, pattern in COMPILED_ROLES)
-        or re.search(r'\b(?:devops|devsecops|sre|sde|swe|sdet|qa|cloudops|get)\b', clean)
+        or re.search(r'\b(?:devops|devsecops|sre|sde|swe|sdet|qa|cloudops|get|observability|ansible)\b', clean)
     )

@@ -9,12 +9,12 @@ def job(title, description, company='Example', url='https://example.com/job/1'):
     return Job('1', title, company, 'Bengaluru', description, 'workday', 'company_career', url, url, 'https://example.com/jobs', datetime.now(timezone.utc).isoformat())
 
 
-def test_title_only_experience_is_not_a_confirmed_range():
-    for title in ['Associate Software Engineer', 'Junior Java Developer', 'Trainee Developer', 'Software Engineer I']:
+def test_title_only_experience_defaults_to_entry_level_eligible():
+    for title in ['Associate Software Engineer', 'Junior Java Developer', 'Trainee Developer', 'Software Engineer I', 'SDE-I', 'New Grad Software Engineer', 'Data Engineer I']:
         result = enrich(job(title, 'Build APIs with Java and SQL.'))
-        assert result.experience_min is None and result.experience_max is None
-        assert not result.is_eligible
-        assert result.experience_label == 'Entry-level title — experience unverified'
+        assert result.experience_min == 0.0 and result.experience_max == 2.0
+        assert result.is_eligible
+        assert result.experience_label == 'Entry-level title'
     assert enrich(job('Junior Java Developer', 'Requirements: 1–2 years of work experience with Java.')).is_eligible
 
 

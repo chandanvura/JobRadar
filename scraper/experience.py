@@ -26,7 +26,8 @@ def analyze_experience(description):
                 continue
             if re.search(RULES['exclude'], text, re.I) and not re.search(r'\bexperience\b', text, re.I) and not JUNIOR.search(text):
                 continue
-            optional = bool(PREFERRED.search(section) or OPTIONAL.search(text))
+            optional_text = re.sub(r'\([^()]*\)', lambda m: '' if OPTIONAL.search(m.group(0)) and not re.search(r'\d|\b(?:years?|yrs?|yoe|months?|mos?|experience)\b', m.group(0), re.I) else m.group(0), text)
+            optional = bool(PREFERRED.search(section) or OPTIONAL.search(optional_text))
             rows, spans = [], []
             for kind, pattern in PATTERNS:
                 for match in pattern.finditer(text):
@@ -86,6 +87,6 @@ def analyze_experience(description):
 
 
 def experience_within_policy(minimum, maximum):
-    """A valid stated minimum up to three years qualifies, irrespective of ceiling."""
+    """A valid stated minimum up to two years qualifies, irrespective of ceiling."""
     return (minimum is not None and 0 <= minimum <= RULES['max_minimum_experience_years']
             and (maximum is None or maximum >= minimum))

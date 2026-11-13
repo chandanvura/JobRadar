@@ -123,7 +123,7 @@ def main():
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as output:
             output.write(message)
     print(message)
-    if not report["ok"]:
+    if report.get("state") == "failed":
         raise SystemExit(1)
 
 
