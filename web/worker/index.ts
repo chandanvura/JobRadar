@@ -172,6 +172,14 @@ const worker={async fetch(request:Request,env:Env,ctx:ExecutionContext):Promise<
   }catch(error){console.error("JobRadar API error",{quota_exhausted:quotaExceeded(error),type:error instanceof Error?error.name:"unknown"});return apiFailure(error,url.pathname,SECURITY_HEADERS)}
   if(url.pathname.startsWith("/api/"))return json({error:"Not found"},404);
   const response=await env.ASSETS.fetch(request);
+  if(response.status===404){
+    const notFound=await env.ASSETS.fetch(new Request(new URL("/404.html",request.url),request));
+    const notFoundHeaders=new Headers(notFound.headers);
+    for(const [key,value] of Object.entries(SECURITY_HEADERS))notFoundHeaders.set(key,value);
+    notFoundHeaders.set("Content-Type","text/html; charset=UTF-8");
+    notFoundHeaders.set("Cache-Control","no-cache");
+    return new Response(notFound.body,{status:404,statusText:"Not Found",headers:notFoundHeaders});
+  }
   const headers=new Headers(response.headers);
   for(const [key,value] of Object.entries(SECURITY_HEADERS))headers.set(key,value);
   if(headers.get('Content-Type')?.includes('text/html'))headers.set('Cache-Control','no-cache');
