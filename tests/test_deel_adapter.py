@@ -122,7 +122,7 @@ def test_extract_deel_jobs_json_errors():
         extract_deel_jobs_json("<html><body>No jobs here</body></html>")
 
     with pytest.raises(ValueError, match="Could not find departments boundary"):
-        extract_deel_jobs_json('<html><body>\\"jobs\\":[1, 2, 3]</body></html>')
+        extract_deel_jobs_json('<html><body>\\"jobs\\":[1, 2, 3')
 
     with pytest.raises(ValueError, match="Failed to parse Deel embedded jobs JSON"):
         extract_deel_jobs_json('<html><body>\\"jobs\\":[{invalid],\\"departments\\":[]</body></html>')

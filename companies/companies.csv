@@ -447,7 +447,7 @@ BT Group,https://jobs.bt.com/,xml,https://jobs.bt.com/googlefeed.xml,4,true
 Vodafone,https://careers.vodafone.com/,custom,vodafone-india,4,true
 Verizon,https://verizon.wd12.myworkdayjobs.com/verizon-careers,workday,verizon|verizon-careers|India,4,true
 AT&T,https://www.att.jobs/location/india-jobs/117/1269750/2,talentbrew,117,4,true
-T-Mobile,https://tmobile.wd1.myworkdayjobs.com/External,workday,tmobile|External|India,3,true
+T-Mobile,https://tmobile.wd1.myworkdayjobs.com/External,workday,tmobile|External|India,3,false
 Orange Business,https://orange.jobs/gb/en/,phenom,OYVOCZGB,4,true
 Colt Technology Services,https://www.colt.net/careers/,custom,colt-india,4,true
 Arcesium,https://www.arcesium.com/careers,greenhouse,arcesiumllc,5,true
