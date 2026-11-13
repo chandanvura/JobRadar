@@ -19,7 +19,15 @@ const textValue=(value:unknown,fallback="")=>typeof value==="string"?value.trim(
 const numberValue=(value:unknown,fallback=0)=>Number.isFinite(Number(value))?Number(value):fallback;
 const nullableNumber=(value:unknown)=>value===null||value===undefined||value===""?null:numberValue(value);
 const nullableText=(value:unknown)=>typeof value==="string"&&value.trim()?value.trim():null;
-const authorized=(request:Request,env:Env)=>Boolean(env.JOBRADAR_INGEST_SECRET&&request.headers.get("Authorization")===`Bearer ${env.JOBRADAR_INGEST_SECRET}`);
+const authorized=(request:Request,env:Env)=>{
+  if(!env.JOBRADAR_INGEST_SECRET)return false;
+  const auth=request.headers.get("Authorization");
+  if(!auth)return false;
+  const encoder=new TextEncoder();
+  const a=encoder.encode(auth),b=encoder.encode(`Bearer ${env.JOBRADAR_INGEST_SECRET}`);
+  if(a.byteLength!==b.byteLength)return false;
+  return crypto.subtle.timingSafeEqual(a,b);
+};
 const companyQuality=(company:RecordValue)=>[
   numberValue(company.error_count)===0?1:0,
   numberValue(company.jobs_found),

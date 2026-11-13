@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {fileURLToPath} from 'node:url';
 import {publicRead} from '../worker/public-backup.ts';
 import {captureCatalog,serializeCatalog} from '../scripts/capture-public-backup.mjs';
 
