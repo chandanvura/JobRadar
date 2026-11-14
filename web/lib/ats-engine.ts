@@ -1546,7 +1546,15 @@ async function fetchKula(c: CompanyTarget, slug: string): Promise<RawAtsJob[]> {
 
 async function fetchPyjamaHr(c: CompanyTarget, identifier: string): Promise<RawAtsJob[]> {
   let companyUuid = /^\d{5,}$|^[0-9a-f-]{16,}$/i.test(identifier) ? identifier : '';
-  const boardUrl = c.careers_url.includes('pyjamahr.com')
+  let isPyjamaHost = false;
+  try {
+    const parsed = new URL(c.careers_url);
+    const host = parsed.hostname.toLowerCase();
+    isPyjamaHost = host === 'pyjamahr.com' || host.endsWith('.pyjamahr.com');
+  } catch {
+    isPyjamaHost = false;
+  }
+  const boardUrl = isPyjamaHost
     ? c.careers_url
     : `https://jobs.pyjamahr.com/${encodeURIComponent(identifier)}`;
 
