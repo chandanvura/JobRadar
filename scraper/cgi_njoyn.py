@@ -97,7 +97,7 @@ class CGINjoynCareerAdapter:
         if parsed.scheme != "https" or parsed.hostname != "cgi.njoyn.com":
             raise ValueError("CGI Njoyn careers_url does not match cgi.njoyn.com")
 
-        async with client(timeout=30) as x:
+        async with client(timeout=60) as x:
             discovered = {}
             page_no = 1
             total_pages = 1

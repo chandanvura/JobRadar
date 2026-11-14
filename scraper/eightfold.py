@@ -60,7 +60,7 @@ class EightfoldCareerAdapter:
                 count, records = search_records(response.json().get('data'), total)
                 total = count
                 if first is None: first = listing_signature(records)
-                if found.keys() & records.keys():
+                if (self.complete and (found.keys() & records.keys())) or (records and set(records.keys()).issubset(found.keys())):
                     raise SnapshotChanged('Eightfold public pagination repeated a job across pages')
                 if not records and offset < total:
                     raise ValueError('Eightfold public search ended before its reported count')
@@ -68,7 +68,7 @@ class EightfoldCareerAdapter:
                     raise ValueError('Eightfold public search exceeded its reported count')
                 found.update(records); offset += len(records)
                 if offset == total: break
-            semaphore = asyncio.Semaphore(6)
+            semaphore = asyncio.Semaphore(3)
             async def convert(item):
                 if self.complete and item.get('isPrivate'):
                     raise ValueError('Eightfold public complete listing contains a private job')
@@ -79,9 +79,16 @@ class EightfoldCareerAdapter:
                 from urllib.parse import urlencode
                 detail_url = base + '/api/pcsx/position_details?' + urlencode({'domain': domain, 'position_id': identifier, 'hl': 'en'})
                 async with semaphore:
-                    response = await request(x, 'GET', detail_url) if self.complete else await fetch_detail(x, detail_url)
+                    for attempt in range(3):
+                        response = await request(x, 'GET', detail_url) if self.complete else await fetch_detail(x, detail_url)
+                        if response.status_code == 429 and not self.complete:
+                            await asyncio.sleep(1.0 * (attempt + 1))
+                            continue
+                        break
                 if response.status_code in (404, 410):
                     raise SnapshotChanged('Eightfold listed detail disappeared during collection')
+                if response.status_code == 429:
+                    return None
                 response.raise_for_status(); job = response.json().get('data', {})
                 if str(job.get('id')) != identifier or job.get('isPrivate'):
                     raise ValueError('Eightfold public detail does not match its listing')
