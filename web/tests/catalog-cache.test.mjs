@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {cachedCatalog} from '../worker/catalog-cache.ts';
+import {cachedCatalog, purgeCatalogCache, CATALOG_CACHE_PREFIX} from '../worker/catalog-cache.ts';
 
 function fixture(){
   const memory=new Map(),pending=[];
-  return {memory,cache:{match:async key=>memory.get(key.url)?.clone(),put:async(key,value)=>{memory.set(key.url,value.clone());}},ctx:{waitUntil:p=>pending.push(p)},flush:async()=>Promise.all(pending)};
+  return {memory,cache:{match:async key=>memory.get(key.url)?.clone(),put:async(key,value)=>{memory.set(key.url,value.clone());},delete:async key=>memory.delete(key.url)},ctx:{waitUntil:p=>pending.push(p)},flush:async()=>Promise.all(pending)};
 }
 const req=(path,options)=>new Request(`https://example.test${path}`,options);
 test('repeat public reads use one live query; browser response stays no-store',async()=>{
@@ -65,4 +65,53 @@ test('edge hits report zero new database reads rather than replaying original qu
  await cachedCatalog(req('/api/dashboard'),read,f.cache,f.ctx);await f.flush();
  const hit=await cachedCatalog(req('/api/dashboard'),read,f.cache,f.ctx);
  assert.equal(hit.headers.get('X-JobRadar-D1-Rows-Read'),'0');assert.equal(hit.headers.get('Server-Timing'),'edge-cache;desc=hit');
+});
+
+test('purgeCatalogCache deletes cached dashboard and jobs entries', async () => {
+  assert.equal(CATALOG_CACHE_PREFIX, '/__catalog_cache_v4');
+  const f = fixture();
+  await cachedCatalog(req('/api/dashboard'), async () => Response.json({ live: true }), f.cache, f.ctx);
+  await cachedCatalog(req('/api/jobs?limit=100&after=0'), async () => Response.json({ jobs: [] }), f.cache, f.ctx);
+  await cachedCatalog(req('/api/jobs?limit=500&after=0'), async () => Response.json({ jobs: [] }), f.cache, f.ctx);
+  await f.flush();
+  assert.equal(f.memory.size, 3);
+
+  await purgeCatalogCache('https://example.test', f.cache);
+  assert.equal(f.memory.size, 0);
+
+  let reads = 0;
+  const read = async () => { reads++; return Response.json({ live: true }); };
+  const second = await cachedCatalog(req('/api/dashboard'), read, f.cache, f.ctx);
+  assert.equal(reads, 1);
+  assert.equal(second.headers.get('X-JobRadar-Catalog-Cache'), null);
+});
+
+test('client bypass headers (no-cache, no-store, max-age=0, Pragma) bypass edge cache and fetch live', async () => {
+  const f = fixture();
+  let reads = 0;
+  const read = async () => Response.json({ read: ++reads });
+
+  await cachedCatalog(req('/api/dashboard'), read, f.cache, f.ctx);
+  await f.flush();
+  assert.equal(reads, 1);
+
+  const hit = await cachedCatalog(req('/api/dashboard'), read, f.cache, f.ctx);
+  assert.equal(reads, 1);
+  assert.equal(hit.headers.get('X-JobRadar-Catalog-Cache'), 'hit');
+
+  const noCache = await cachedCatalog(req('/api/dashboard', { headers: { 'Cache-Control': 'no-cache' } }), read, f.cache, f.ctx);
+  assert.equal(reads, 2);
+  assert.equal(noCache.headers.get('X-JobRadar-Catalog-Cache'), null);
+
+  const noStore = await cachedCatalog(req('/api/dashboard', { headers: { 'Cache-Control': 'no-store' } }), read, f.cache, f.ctx);
+  assert.equal(reads, 3);
+  assert.equal(noStore.headers.get('X-JobRadar-Catalog-Cache'), null);
+
+  const maxAge = await cachedCatalog(req('/api/dashboard', { headers: { 'Cache-Control': 'max-age=0' } }), read, f.cache, f.ctx);
+  assert.equal(reads, 4);
+  assert.equal(maxAge.headers.get('X-JobRadar-Catalog-Cache'), null);
+
+  const pragma = await cachedCatalog(req('/api/dashboard', { headers: { 'Pragma': 'no-cache' } }), read, f.cache, f.ctx);
+  assert.equal(reads, 5);
+  assert.equal(pragma.headers.get('X-JobRadar-Catalog-Cache'), null);
 });

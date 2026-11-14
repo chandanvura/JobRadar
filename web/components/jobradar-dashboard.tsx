@@ -810,8 +810,8 @@ function DashboardContent() {
         !/\b(?:senior|staff|principal|lead|manager|experienced)\b/i.test(j.title) &&
         ["Experience not stated — verify", "Posting date not verified within 24 hours"].includes(j.eligibility_reason) &&
         matches.get(trackingKey(j))!.experienceMatch !== false &&
-        preferences.locations.some((city) => j.normalized_location.includes(city)) &&
-        (location === "All cities" || j.normalized_location.includes(location)) &&
+        preferences.locations.some((city) => locationMatches(j, city)) &&
+        (location === "All cities" || locationMatches(j, location)) &&
         (role === "All roles" || j.role_category === role) &&
         (ats === "All ATS" || j.ats_provider === ats) &&
         (workMode === "All arrangements" || requirementsFor(j).workMode === workMode) &&
@@ -880,8 +880,8 @@ function DashboardContent() {
   const viewStats = useMemo(() => {
     let bengaluru=0,hyderabad=0,ultra=0;
     for(const job of visibleJobs){
-      if(job.normalized_location.includes('Bengaluru'))bengaluru++;
-      if(job.normalized_location.includes('Hyderabad'))hyderabad++;
+      if(locationMatches(job, 'Bengaluru'))bengaluru++;
+      if(locationMatches(job, 'Hyderabad'))hyderabad++;
       const age=postingAge(job,rankingNow);
       if(job.is_eligible&&!hideRecommendation(jobTracking(job))&&currentPosting(job,rankingNow)&&age!==null&&age<3&&job.posted_precision!=='day')ultra++;
     }

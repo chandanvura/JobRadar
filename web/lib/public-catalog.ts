@@ -33,20 +33,47 @@ export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)
       const ranges=payload.catalog_ranges;
       if(!Array.isArray(ranges)||ranges.length>200||ranges.some((r,i)=>!r||!Number.isSafeInteger(r.after)||!Number.isSafeInteger(r.through)||r.after!==(i?ranges[i-1].through:0)||r.through<=r.after))throw Error('Invalid catalog ranges');
       let next=0;
-      const batches=new Array<{id:number}[]>(ranges.length);
+      const batches=new Array<T['jobs']>(ranges.length);
       await Promise.all(Array.from({length:Math.min(4,ranges.length)},async()=>{
         while(next<ranges.length){
           const index=next++,range=ranges[index];
-          const value=await read(`/api/jobs?limit=500&after=${range.after}&through=${range.through}`);
-          const page=value as {jobs:{id:number}[];next_cursor:number|null;data_mode?:string};
-          if(!page||page.data_mode==='backup'||!Array.isArray(page.jobs)||page.jobs.length>500||page.next_cursor!==null||page.jobs.some((job,i)=>!job||!Number.isSafeInteger(job.id)||job.id<=range.after||job.id>range.through||(i>0&&job.id<=page.jobs[i-1].id)))throw Error('Invalid catalog range page');
-          batches[index]=page.jobs;
+          let currentAfter=range.after;
+          const rangeJobs:T['jobs']=[];
+          while(true){
+            const value=await read(`/api/jobs?limit=500&after=${currentAfter}&through=${range.through}`);
+            const page=value as {jobs:T['jobs'];next_cursor:number|null;data_mode?:string};
+            if(!page||page.data_mode==='backup'||!Array.isArray(page.jobs)||page.jobs.length>500)throw Error('Invalid catalog range page');
+            if(page.jobs.some((job,i)=>!job||!Number.isSafeInteger(job.id)||job.id<=currentAfter||job.id>range.through||(i>0&&job.id<=page.jobs[i-1].id)))throw Error('Invalid catalog range page');
+            rangeJobs.push(...page.jobs);
+            if(page.next_cursor===null||page.jobs.length===0)break;
+            if(!Number.isSafeInteger(page.next_cursor)||page.next_cursor<=currentAfter||page.next_cursor>=range.through)throw Error('Invalid catalog range cursor');
+            currentAfter=page.next_cursor;
+          }
+          batches[index]=rangeJobs;
         }
       }));
       signal?.throwIfAborted();
-      // Initial rows are a quick preview. Completed ranges are authoritative,
-      // so rows retired during this refresh do not survive from that preview.
-      return {...payload,jobs:batches.flat()};
+      // Initial rows are a quick preview. Completed ranges are authoritative for their range windows,
+      // so rows retired during this refresh do not survive. Newly ingested jobs beyond the highest range
+      // window are preserved from the preview.
+      const seen=new Set<number>();
+      const combinedJobs:T['jobs']=[];
+      for(const batch of batches){
+        for(const job of batch){
+          if(!seen.has(job.id)){
+            seen.add(job.id);
+            combinedJobs.push(job);
+          }
+        }
+      }
+      const maxThrough=ranges.reduce((max,r)=>Math.max(max,r.through),0);
+      for(const job of payload.jobs){
+        if(job&&Number.isSafeInteger(job.id)&&job.id>maxThrough&&!seen.has(job.id)){
+          seen.add(job.id);
+          combinedJobs.push(job);
+        }
+      }
+      return {...payload,jobs:combinedJobs};
     }
     for(let pages=0;pages<200;pages++){
       const batch=await read(`/api/jobs?limit=500&after=${cursor}`);

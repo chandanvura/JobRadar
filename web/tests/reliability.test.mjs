@@ -123,3 +123,44 @@ test('slow network publishes the preview first, keeps the event loop responsive 
  assert.ok(performance.now()-started<2000,'slow-network completion exceeded the release regression budget');
  }finally{clearInterval(timer);}
 });
+
+test('range manifest hydration preserves newly ingested preview jobs beyond catalog_ranges boundary',async()=>{
+  const liveJobs=Array.from({length:100},(_,i)=>({id:i+1,title:`Live job ${i+1}`}));
+  const newlyIngestedJob={id:250,title:'Newly ingested job notified on Telegram'};
+  const catalog_ranges=[{after:0,through:200}];
+  const dashboardPayload={jobs:[newlyIngestedJob,...liveJobs.slice(0,99)],companies:[],catalog_ranges};
+
+  const result=await loadPublicCatalog(()=>{},async path=>{
+    if(path==='/api/dashboard')return Response.json(dashboardPayload);
+    const u=new URL(path,'https://test.invalid');
+    const after=Number(u.searchParams.get('after')),through=Number(u.searchParams.get('through'));
+    return Response.json({jobs:liveJobs.filter(j=>j.id>after&&j.id<=through),next_cursor:null});
+  });
+
+  assert.equal(result.data_mode,undefined);
+  assert.ok(result.jobs.some(j=>j.id===250),'Job 250 must be preserved from live dashboard preview');
+  assert.equal(result.jobs.length,101,'100 range jobs + 1 trailing newly ingested job');
+});
+
+test('range manifest paginates multiple pages when range contains >500 rows without falling back to backup',async()=>{
+  const range1Jobs=Array.from({length:505},(_,i)=>({id:i+1}));
+  const catalog_ranges=[{after:0,through:505}];
+  const dashboardPayload={jobs:range1Jobs.slice(0,100),companies:[],catalog_ranges};
+
+  let pageRequests=0;
+  const result=await loadPublicCatalog(()=>{},async path=>{
+    if(path==='/api/dashboard')return Response.json(dashboardPayload);
+    if(path==='/backup/catalog.json')assert.fail('Must not fall back to backup');
+    const u=new URL(path,'https://test.invalid');
+    const after=Number(u.searchParams.get('after')),through=Number(u.searchParams.get('through'));
+    pageRequests++;
+    if(after===0){
+      return Response.json({jobs:range1Jobs.slice(0,500),next_cursor:500});
+    }
+    return Response.json({jobs:range1Jobs.slice(500),next_cursor:null});
+  });
+
+  assert.equal(pageRequests,2,'Must paginate range with next_cursor');
+  assert.equal(result.data_mode,undefined);
+  assert.equal(result.jobs.length,505);
+});
