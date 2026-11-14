@@ -92,12 +92,20 @@
     {
       "family": "Security Engineering",
       "patterns": [
-        "\\b(?:cyber\\s*security|information security|application security|cloud security|security|soc|penetration testing|vulnerability) (?:engineer|developer|analyst|specialist|intern)\\b"
+        "\\b(?:cyber\\s*security|information security|application security|cloud security|security|soc|penetration testing|vulnerability) (?:engineer|developer|analyst|specialist|intern)\\b",
+        "\\b(?:appsec|infosec|product security|security operations|vulnerability assessment|incident response|threat intelligence) (?:engineer|analyst|specialist|intern)\\b"
       ],
       "titles": [
         "Security Engineer",
         "SOC Analyst",
-        "Cybersecurity Analyst"
+        "Cybersecurity Analyst",
+        "AppSec Engineer",
+        "Product Security Engineer",
+        "Infosec Engineer",
+        "Infosec Analyst",
+        "Security Operations Engineer",
+        "Incident Response Analyst",
+        "Vulnerability Assessment Analyst"
       ]
     },
     {
@@ -107,7 +115,9 @@
         "\\bcloudops\\b",
         "\\b(?:aws|azure|gcp|google cloud) (?:software |support |operations |infrastructure |automation |platform )?(?:engineer|developer|associate)\\b",
         "\\bcloud (?:infrastructure|automation|systems?) (?:engineer|developer)\\b",
-        "\\b(?:cloud platform|cloudops) (?:engineer|associate)\\b"
+        "\\b(?:cloud platform|cloudops) (?:engineer|associate)\\b",
+        "\\b(?:cloud |enterprise |infrastructure )?solutions? architect\\b",
+        "\\b(?:cloud|aws|azure|gcp) architect\\b"
       ],
       "titles": [
         "Cloud Developer",
@@ -140,7 +150,14 @@
         "Cloud Platform Associate",
         "Junior CloudOps Engineer",
         "Associate CloudOps Engineer",
-        "CloudOps Engineer I"
+        "CloudOps Engineer I",
+        "Solutions Architect",
+        "Associate Solutions Architect",
+        "Junior Solutions Architect",
+        "Solutions Architect I",
+        "Cloud Solutions Architect",
+        "Cloud Architect",
+        "Associate Cloud Architect"
       ]
     },
     {
@@ -187,7 +204,8 @@
         "\\b(?:dba|network operations|noc analyst|it administrator|sysadmin)\\b",
         "\\bnoc (?:engineer|analyst)\\b",
         "\\binfra (?:engineer|developer)\\b",
-        "\\b(?:linux|unix) systems? engineer\\b"
+        "\\b(?:linux|unix) systems? engineer\\b",
+        "\\b(?:production operations|it systems?|data center operations) (?:engineer|analyst|specialist)\\b"
       ],
       "titles": [
         "Systems Engineer",
@@ -217,7 +235,9 @@
         "Database Engineer",
         "Junior Database Engineer",
         "Associate Database Engineer",
-        "Database Engineer I"
+        "Database Engineer I",
+        "Production Operations Engineer",
+        "IT Systems Engineer"
       ]
     },
     {
@@ -264,13 +284,20 @@
       "family": "AI / Data Science",
       "patterns": [
         "\\b(?:ai|ml|ai ml|aiml|machine learning|deep learning|generative ai|genai|nlp|computer vision) (?:software |research )?(?:engineer|developer|scientist|researcher|intern)\\b",
-        "\\b(?:data|applied|research) scientist\\b"
+        "\\b(?:data|applied|research) scientist\\b",
+        "\\b(?:prompt|applied ai|genai|generative ai|llm) (?:engineer|developer|specialist)\\b",
+        "\\bdecision scientist\\b"
       ],
       "titles": [
         "Machine Learning Engineer",
         "Data Scientist",
         "AI Engineer",
-        "Applied Scientist"
+        "Applied Scientist",
+        "Prompt Engineer",
+        "Applied AI Engineer",
+        "LLM Engineer",
+        "Decision Scientist",
+        "Associate Decision Scientist"
       ]
     },
     {
@@ -288,7 +315,10 @@
     {
       "family": "Embedded / Hardware",
       "patterns": [
-        "\\b(?:embedded|firmware|hardware|vlsi|asic|rtl|fpga|silicon|physical design|digital design|design verification) (?:systems? |software |design |validation )?(?:engineer|developer|intern)\\b"
+        "\\b(?:embedded|firmware|hardware|vlsi|asic|rtl|fpga|silicon|physical design|digital design|design verification) (?:systems? |software |design |validation )?(?:engineer|developer|intern)\\b",
+        "\\b(?:physical |digital |analog |asic |soc |ic |silicon |layout |rtl |pcb |board )?design (?:systems? |software |verification )?(?:engineer|developer|intern)\\b",
+        "\\bdesign engineer\\s*(?:i{1,3}|[1-3])?\\b",
+        "\\b(?:dft|sta|synthesis|timing analysis|silicon validation|cad|eda) (?:engineer|developer|specialist)\\b"
       ],
       "titles": [
         "Embedded Software Engineer",
@@ -301,7 +331,31 @@
         "Firmware Engineer I",
         "Junior Embedded Software Engineer",
         "Associate Embedded Software Engineer",
-        "Embedded Software Engineer I"
+        "Embedded Software Engineer I",
+        "Design Engineer",
+        "Junior Design Engineer",
+        "Associate Design Engineer",
+        "Design Engineer I",
+        "Design Engineer II",
+        "Design Engineer 1",
+        "Graduate Design Engineer",
+        "ASIC Design Engineer",
+        "SoC Design Engineer",
+        "IC Design Engineer",
+        "Analog Design Engineer",
+        "Digital Design Engineer",
+        "Physical Design Engineer",
+        "Layout Design Engineer",
+        "DFT Engineer",
+        "STA Engineer",
+        "Static Timing Analysis Engineer",
+        "Synthesis Engineer",
+        "Silicon Validation Engineer",
+        "Post-Silicon Validation Engineer",
+        "PCB Design Engineer",
+        "Hardware Board Design Engineer",
+        "CAD Engineer",
+        "EDA Engineer"
       ]
     },
     {
@@ -347,7 +401,9 @@
     {
       "family": "Technical Consulting",
       "patterns": [
-        "\\b(?:technical|technology|it|implementation|integration|erp|sap|salesforce|servicenow|oracle|application|package|packaged application) (?:associate |software )?(?:consultant|developer|engineer|specialist|analyst)\\b"
+        "\\b(?:technical|technology|it|implementation|integration|erp|sap|salesforce|servicenow|oracle|application|package|packaged application) (?:associate |software )?(?:consultant|developer|engineer|specialist|analyst)\\b",
+        "\\b(?:solutions?|customer|partner solutions?|pre[ -]?sales|field application|corporate application) (?:consultant|developer|engineer|specialist|architect|associate)\\b",
+        "\\btechnical account manager\\b"
       ],
       "titles": [
         "Associate Technical Consultant",
@@ -356,7 +412,21 @@
         "ServiceNow Developer",
         "Integration Engineer",
         "Integration Developer",
-        "Application Developer"
+        "Application Developer",
+        "Solutions Engineer",
+        "Associate Solutions Engineer",
+        "Junior Solutions Engineer",
+        "Solutions Engineer I",
+        "Graduate Solutions Engineer",
+        "Customer Solutions Engineer",
+        "Solutions Consultant",
+        "Associate Solutions Consultant",
+        "Customer Engineer",
+        "Associate Customer Engineer",
+        "Field Application Engineer",
+        "Corporate Application Engineer",
+        "Technical Account Manager",
+        "Associate Technical Account Manager"
       ]
     },
     {
@@ -366,7 +436,10 @@
         "\\b(?:sde|swe|sw engineer|programmer analyst|member of technical staff|technical staff member)\\b",
         "\\b(?:graduate )?engineer trainee\\b",
         "^get(?:\\s|$)",
-        "\\btrainee (?:software |application )?developer\\b"
+        "\\btrainee (?:software |application )?developer\\b",
+        "\\b(?:forward deployed|product|partner) (?:software |systems? )?(?:engineer(?:ing)?|developer|programmer|intern)\\b",
+        "\\b(?:junior |associate |senior )?mts(?:\\s*(?:i{1,3}|[1-3]))?\\b",
+        "\\b(?:tech(?:nical)? lead|lead)\\b.{0,30}\\b(?:software|developer|engineer|android|ios|web|frontend|backend|full[ -]?stack)\\b"
       ],
       "titles": [
         "Software Engineer",
@@ -427,7 +500,18 @@
         "Associate Mobile Engineer",
         "Mobile Engineer I",
         "iOS Engineer",
-        "Android Engineer"
+        "Android Engineer",
+        "Forward Deployed Engineer",
+        "Associate Forward Deployed Engineer",
+        "Forward Deployed Software Engineer",
+        "Product Engineer",
+        "Associate Product Engineer",
+        "Product Software Engineer",
+        "Partner Engineer",
+        "MTS I",
+        "MTS 1",
+        "Associate MTS",
+        "Junior MTS"
       ]
     }
   ],

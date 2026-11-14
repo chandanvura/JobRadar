@@ -14,7 +14,8 @@ TECHNICAL_EVIDENCE = re.compile(
     r'\b(?:software development|software engineering|programming|coding|computer science|rest api|'
     r'kubernetes|docker|ci\s*[/ -]?\s*cd|linux|sql|python|java|javascript|typescript|aws|azure|gcp|'
     r'terraform|ansible|prometheus|grafana|elk|elasticsearch|logstash|kibana|loki|'
-    r'monitoring|observability|telemetry|datadog|site reliability|sre|firmware|embedded software)\b',
+    r'monitoring|observability|telemetry|datadog|site reliability|sre|firmware|embedded software|'
+    r'verilog|systemverilog|vhdl|rtl|asic|fpga|vlsi|physical design|semiconductor|circuit design)\b',
     re.I
 )
 
@@ -22,7 +23,7 @@ TECHNICAL_EVIDENCE = re.compile(
 # Refuse a confirmed non-software context unless the actual requirements also
 # contain an engineering signal. Do not infer technical eligibility from YOE.
 CROSS_DOMAIN_ENGINEERING_TITLES = frozenset({
-    "performance engineer", "database engineer", "qa engineer",
+    "performance engineer", "database engineer", "qa engineer", "design engineer", "product engineer",
 })
 NON_SOFTWARE_DOMAIN = re.compile(
     r'\b(?:retail store|sales performance|merchandising|customer contacts|'
@@ -35,7 +36,8 @@ SOFTWARE_DOMAIN = re.compile(
     r'database infrastructure|performance testing|load testing|'
     r'latency|backend|frontend|devops|kubernetes|python|java|'
     r'sre|site reliability|ansible|prometheus|grafana|elk|elasticsearch|loki|'
-    r'observability|telemetry|(?:system|infrastructure|application|server|network|cloud)\s+monitoring)\b',
+    r'observability|telemetry|(?:system|infrastructure|application|server|network|cloud)\s+monitoring|'
+    r'verilog|systemverilog|vhdl|asic|rtl|fpga|silicon|pcb|hardware|semiconductor|eda|cadence|synopsys)\b',
     re.I
 )
 
