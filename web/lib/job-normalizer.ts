@@ -175,7 +175,7 @@ export function normalizeRawJob(
   const hybridSuffix = /\bhybrid\b/i.test(location) ? ' · Hybrid' : '';
   const normalized_location = city ? `${city}${hybridSuffix}` : location;
 
-  const role_category = classifyRoleTitle(title);
+  const role_category = classifyRoleTitle(title, description);
   const employment_type =
     raw.employment_type ||
     (INTERN_TITLE.test(title) || INTERN_CORPUS.test(`${title}\n${description}`) ? 'Internship' : 'Full-time');

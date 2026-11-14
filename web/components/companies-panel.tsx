@@ -148,12 +148,14 @@ export function CompaniesPanel({
   fallbackLinks,
   relativeTime,
   onDataChanged,
+  onCompaniesUpdated,
 }: {
   companies: CompanyRecord[];
   query: string;
   fallbackLinks: (companyName: string) => { name: string; url: string }[];
   relativeTime: (iso: string | null) => string;
   onDataChanged: () => Promise<void> | void;
+  onCompaniesUpdated?: (updated: CompanyRecord[], newJobsCount: number) => void;
 }) {
   const [segment, setSegment] = useState<SegmentFilter>("all");
   const [busyKey, setBusyKey] = useState<string | null>(null);
@@ -243,36 +245,119 @@ export function CompaniesPanel({
     }
   };
 
+  const applyCompanyUpdates = (updated: CompanyRecord[], newJobsCount: number) => {
+    if (onCompaniesUpdated && updated.length > 0) {
+      onCompaniesUpdated(updated, newJobsCount);
+      return;
+    }
+    void onDataChanged();
+  };
+
+  type ScrapeStreamSummary = {
+    scanned: number;
+    remaining?: number;
+    upgraded: number;
+    total_discovered: number;
+    target_jobs: number;
+    eligible_jobs: number;
+    new_jobs: number;
+  };
+
+  const readNdjsonScrape = async (
+    res: Response,
+    onOutcome: (outcome: ScrapeOutcomeSummary, company?: CompanyRecord) => void,
+  ): Promise<{ outcomes: ScrapeOutcomeSummary[]; summary: ScrapeStreamSummary }> => {
+    const contentType = res.headers.get("content-type") || "";
+    if (!contentType.includes("x-ndjson") || !res.body) {
+      const body = (await res.json()) as {
+        error?: string;
+        outcomes?: ScrapeOutcomeSummary[];
+        companies?: CompanyRecord[];
+        summary?: ScrapeStreamSummary;
+      };
+      if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
+      const list = body.outcomes || [];
+      list.forEach((o, idx) => onOutcome(o, body.companies?.[idx]));
+      return {
+        outcomes: list,
+        summary: body.summary || {
+          scanned: list.length,
+          upgraded: 0,
+          total_discovered: 0,
+          target_jobs: 0,
+          eligible_jobs: 0,
+          new_jobs: 0,
+        },
+      };
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    const outcomes: ScrapeOutcomeSummary[] = [];
+    let summary: ScrapeStreamSummary = {
+      scanned: 0,
+      upgraded: 0,
+      total_discovered: 0,
+      target_jobs: 0,
+      eligible_jobs: 0,
+      new_jobs: 0,
+    };
+
+    const handleLine = (rawLine: string) => {
+      const line = rawLine.trim();
+      if (!line) return;
+      const evt = JSON.parse(line) as {
+        type?: string;
+        outcome?: ScrapeOutcomeSummary;
+        company?: CompanyRecord;
+        summary?: ScrapeStreamSummary;
+      };
+      if (evt.type === "outcome" && evt.outcome) {
+        outcomes.push(evt.outcome);
+        onOutcome(evt.outcome, evt.company);
+      } else if (evt.type === "summary" && evt.summary) {
+        summary = evt.summary;
+      }
+    };
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let nl = buffer.indexOf("\n");
+      while (nl !== -1) {
+        handleLine(buffer.slice(0, nl));
+        buffer = buffer.slice(nl + 1);
+        nl = buffer.indexOf("\n");
+      }
+    }
+    buffer += decoder.decode();
+    if (buffer.trim()) handleLine(buffer);
+    return { outcomes, summary };
+  };
+
   const runBatchScrape = async (mode: "unproductive" | "custom" | "priority") => {
     const key = `batch:${mode}`;
     setBusyKey(key);
     try {
       const res = await fetch("/api/companies/scrape", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode, limit: 10 }),
+        headers: { "Content-Type": "application/json", Accept: "application/x-ndjson" },
+        body: JSON.stringify({ mode, limit: 10, stream: true }),
       });
-      const body = (await res.json()) as {
-        error?: string;
-        outcomes?: ScrapeOutcomeSummary[];
-        summary?: {
-          scanned: number;
-          remaining?: number;
-          upgraded: number;
-          total_discovered: number;
-          target_jobs: number;
-          eligible_jobs: number;
-          new_jobs: number;
-        };
-      };
-      if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
-      await onDataChanged();
-      const s = body.summary!;
+      if (!res.ok) {
+        const errBody = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(errBody.error || `HTTP ${res.status}`);
+      }
+      const { outcomes, summary: s } = await readNdjsonScrape(res, (outcome, company) => {
+        if (company) applyCompanyUpdates([company], outcome.new_jobs);
+      });
       setStatusBanner({
         tone: s.total_discovered > 0 ? "success" : "warning",
         title: `Scanned ${s.scanned} sources`,
         detail: `${s.upgraded} ATS sources auto-upgraded · ${s.total_discovered} total jobs found · ${s.target_jobs} target Bengaluru/Hyderabad roles (${s.new_jobs} new added to catalog).`,
-        outcomes: body.outcomes || [],
+        outcomes,
       });
     } catch (err) {
       setStatusBanner({
@@ -313,36 +398,43 @@ export function CompaniesPanel({
       while (!controller.signal.aborted) {
         const res = await fetch("/api/companies/scrape", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Accept: "application/x-ndjson" },
           signal: controller.signal,
-          body: JSON.stringify({ mode, limit: 8, excludeNames: visited }),
+          body: JSON.stringify({ mode, limit: 8, excludeNames: visited, stream: true }),
         });
-        const body = (await res.json()) as {
-          error?: string;
-          outcomes?: ScrapeOutcomeSummary[];
-          summary?: {
-            scanned: number;
-            remaining: number;
-            upgraded: number;
-            total_discovered: number;
-            target_jobs: number;
-            new_jobs: number;
-          };
-        };
-        if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
-        const batchOutcomes = body.outcomes || [];
-        if (batchOutcomes.length === 0) break;
-
-        for (const o of batchOutcomes) visited.push(o.company);
-        recentOutcomes.unshift(...batchOutcomes.filter((o) => o.total_discovered > 0 || o.upgraded));
+        if (!res.ok) {
+          const errBody = (await res.json().catch(() => ({}))) as { error?: string };
+          throw new Error(errBody.error || `HTTP ${res.status}`);
+        }
         batches += 1;
-        scanned += body.summary?.scanned || batchOutcomes.length;
-        upgraded += body.summary?.upgraded || 0;
-        discovered += body.summary?.total_discovered || 0;
-        targetJobs += body.summary?.target_jobs || 0;
-        newJobs += body.summary?.new_jobs || 0;
-        const remaining = body.summary?.remaining ?? 0;
-
+        const { outcomes: batchOutcomes, summary } = await readNdjsonScrape(
+          res,
+          (outcome, company) => {
+            scanned += 1;
+            if (outcome.upgraded) upgraded += 1;
+            discovered += outcome.total_discovered;
+            targetJobs += outcome.target_city_jobs;
+            newJobs += outcome.new_jobs;
+            if (outcome.total_discovered > 0 || outcome.upgraded) {
+              recentOutcomes.unshift(outcome);
+              if (recentOutcomes.length > 24) recentOutcomes.length = 24;
+            }
+            if (company) applyCompanyUpdates([company], outcome.new_jobs);
+            setSweepProgress((prev) => ({
+              mode,
+              batches,
+              scanned,
+              remaining: Math.max(0, (prev?.remaining ?? companies.length) - 1),
+              upgraded,
+              discovered,
+              targetJobs,
+              newJobs,
+            }));
+          },
+        );
+        if (batchOutcomes.length === 0) break;
+        for (const o of batchOutcomes) visited.push(o.company);
+        const remaining = summary.remaining ?? 0;
         setSweepProgress({
           mode,
           batches,
@@ -353,7 +445,6 @@ export function CompaniesPanel({
           targetJobs,
           newJobs,
         });
-        await onDataChanged();
         if (remaining === 0) break;
       }
 
@@ -391,10 +482,15 @@ export function CompaniesPanel({
       const body = (await res.json()) as {
         error?: string;
         outcomes?: ScrapeOutcomeSummary[];
+        companies?: CompanyRecord[];
       };
       if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
-      await onDataChanged();
       const outcome = body.outcomes?.[0];
+      if (body.companies?.length) {
+        applyCompanyUpdates(body.companies, outcome?.new_jobs || 0);
+      } else {
+        await onDataChanged();
+      }
       if (outcome) {
         setStatusBanner({
           tone: outcome.error
@@ -434,10 +530,15 @@ export function CompaniesPanel({
       const body = (await res.json()) as {
         error?: string;
         outcome?: ScrapeOutcomeSummary;
+        company?: CompanyRecord | null;
       };
       if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
-      await onDataChanged();
       const o = body.outcome!;
+      if (body.company) {
+        applyCompanyUpdates([body.company], o.new_jobs);
+      } else {
+        await onDataChanged();
+      }
       setStatusBanner({
         tone: o.discovered_source || o.total_discovered > 0 ? "success" : "warning",
         title: o.discovered_source
@@ -485,8 +586,12 @@ export function CompaniesPanel({
         scrape?: ScrapeOutcomeSummary | null;
       };
       if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
-      await onDataChanged();
       const o = body.scrape;
+      if (body.company) {
+        applyCompanyUpdates([body.company], o?.new_jobs || 0);
+      } else {
+        await onDataChanged();
+      }
       setStatusBanner({
         tone: o && o.total_discovered > 0 ? "success" : "warning",
         title: `Added ${body.company?.name || newName}`,
@@ -573,11 +678,16 @@ export function CompaniesPanel({
       });
       const body = (await res.json()) as {
         error?: string;
+        company?: CompanyRecord;
         scrape?: ScrapeOutcomeSummary | null;
       };
       if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
-      await onDataChanged();
       const o = body.scrape;
+      if (body.company) {
+        applyCompanyUpdates([body.company], o?.new_jobs || 0);
+      } else {
+        await onDataChanged();
+      }
       setStatusBanner({
         tone: o?.error ? "error" : o && o.total_discovered > 0 ? "success" : "warning",
         title: `Updated ${editingCompany.name}`,

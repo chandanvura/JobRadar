@@ -109,6 +109,8 @@ type ApiJob = {
   is_eligible: number;
   eligibility_reason: string;
   duplicate_sources?: ApiJob[];
+  precomputed_requirements?: ReturnType<typeof requirementsFor>;
+  experience_normalized?: boolean;
 };
 type Company = {
   name: string;
@@ -499,13 +501,12 @@ function DashboardContent() {
       }
     };
     window.addEventListener("hashchange", syncHash);
-    const kickoff = window.setTimeout(() => void load(), 0),
-      timer = window.setInterval(() => {
-        if (document.visibilityState === "visible") void load(true);
-      }, 300000);
+    void load();
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") void load(true);
+    }, 300000);
     return () => {
       window.removeEventListener("hashchange", syncHash);
-      window.clearTimeout(kickoff);
       window.clearInterval(timer);
       activeLoad.current?.abort();
     };
@@ -591,14 +592,49 @@ function DashboardContent() {
     const sync=(event:StorageEvent)=>{if(event.key===null||(event.key===privateKey(trackingStorageKey)&&event.newValue===null)){setTracking({});return;}if(event.key===privateKey(trackingStorageKey)||event.key===privateKey(recoveryStorageKey))setTracking(current=>mergeTracking(current,readTracking()) as Record<string,Tracking>);};
     window.addEventListener('storage',sync);return()=>window.removeEventListener('storage',sync);
   },[]);
-  const currentJobs = useMemo(() => (data?.jobs || []).map(normalizeExperience).map(enforceShortlistLocation), [data?.jobs]);
+  const currentJobs = useMemo(
+    () =>
+      (data?.jobs || []).map((j) =>
+        j.experience_normalized ? j : enforceShortlistLocation(normalizeExperience(j)),
+      ),
+    [data?.jobs],
+  );
+  const patchCompanies = useCallback((updated: Company[], newJobsCount: number) => {
+    setData((prev) => {
+      if (!prev) return prev;
+      const byName = new Map(prev.companies.map((c) => [c.name.toLowerCase(), c]));
+      for (const nextCompany of updated) {
+        byName.set(nextCompany.name.toLowerCase(), nextCompany);
+      }
+      return { ...prev, companies: [...byName.values()] };
+    });
+    if (newJobsCount > 0) {
+      void load(true);
+    }
+  }, [load]);
+  const currentKeyMap = useMemo(
+    () => new Map(currentJobs.map((j) => [trackingKey(j), j])),
+    [currentJobs],
+  );
+  const missingTrackedSignature = useMemo(
+    () =>
+      Object.entries(tracking)
+        .filter(([, t]) => !currentKeyMap.has(trackingKey(t.job)))
+        .map(([k]) => k)
+        .sort()
+        .join("\u0001"),
+    [currentKeyMap, tracking],
+  );
   const mergedJobs = useMemo(() => {
-    const map = new Map(currentJobs.map((j) => [trackingKey(j), j]));
-    const missing = Object.values(tracking).filter(t => !map.has(trackingKey(t.job)));
-    if (!missing.length) return currentJobs;
-    missing.forEach(t => map.set(trackingKey(t.job), {...t.job,is_active:0}));
-    return [...map.values()];
-  }, [currentJobs, tracking]);
+    if (!missingTrackedSignature) return currentJobs;
+    const extra: ApiJob[] = [];
+    for (const k of missingTrackedSignature.split("\u0001")) {
+      const entry = tracking[k];
+      if (entry) extra.push({ ...entry.job, is_active: 0 });
+    }
+    return extra.length ? [...currentJobs, ...extra] : currentJobs;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentJobs, missingTrackedSignature]);
   const defaultTracking = useMemo(() => new Map(mergedJobs.map(job => [trackingKey(job), {
     saved: false, status: "New", updated_at: "", job,
   }])), [mergedJobs]);
@@ -617,18 +653,52 @@ function DashboardContent() {
     ],
     [currentJobs],
   );
-  // Keep order stable while browsing; the five-minute catalog refresh advances ranking time.
+  // Keep order stable while browsing; only recompute preference boost when feedback actually changes.
   const matches = useMemo(() => {const match=createPersonalMatcher(preferences);return new Map(mergedJobs.map(job => [trackingKey(job),match(job)]));}, [mergedJobs,preferences]);
-  const preferenceModel = useMemo(() => fitPreferenceModel(Object.values(tracking), preferences), [tracking, preferences]);
-  const ranking = useMemo(() => {
+  const feedbackSignature = useMemo(
+    () =>
+      Object.entries(tracking)
+        .filter(([, t]) => Boolean(t.feedback))
+        .map(([k, t]) => `${k}:${t.feedback}:${t.preference_at || ""}`)
+        .sort()
+        .join("\u0001"),
+    [tracking],
+  );
+  const feedbackEntries = useMemo(
+    () => Object.values(tracking).filter((t) => Boolean(t.feedback)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [feedbackSignature],
+  );
+  const preferenceModel = useMemo(() => fitPreferenceModel(feedbackEntries, preferences), [feedbackEntries, preferences]);
+  const basePriority = useMemo(() => {
     const now = rankingNow;
-    const feedback = feedbackByFamily(Object.values(tracking));
-    return new Map(mergedJobs.map(job => {
-      const match = matches.get(trackingKey(job))!;
-      const opportunity = opportunityPriority(job, preferences, now, match);
-      return [trackingKey(job), {match, priority: opportunity.score + (preferenceModel.trained ? preferenceModel.boost(job,match.components) : (feedback.get(job.role_category) || 0))}];
-    }));
-  }, [mergedJobs, preferences, tracking, rankingNow, preferenceModel, matches]);
+    return new Map(
+      mergedJobs.map((job) => {
+        const match = matches.get(trackingKey(job))!;
+        const opportunity = opportunityPriority(job, preferences, now, match);
+        return [trackingKey(job), { match, opportunityScore: opportunity.score }];
+      }),
+    );
+  }, [mergedJobs, preferences, rankingNow, matches]);
+  const ranking = useMemo(() => {
+    const feedback = feedbackByFamily(feedbackEntries);
+    return new Map(
+      mergedJobs.map((job) => {
+        const base = basePriority.get(trackingKey(job))!;
+        return [
+          trackingKey(job),
+          {
+            match: base.match,
+            priority:
+              base.opportunityScore +
+              (preferenceModel.trained
+                ? preferenceModel.boost(job, base.match.components)
+                : feedback.get(job.role_category) || 0),
+          },
+        ];
+      }),
+    );
+  }, [mergedJobs, basePriority, preferenceModel, feedbackEntries]);
   const {scores:searchScores,pending:searchPending,error:searchError} = useJobSearch(mergedJobs,deferredQuery);
   const filtered = useMemo(() => {
     if (!jobViews.has(active)) return [];
@@ -1260,7 +1330,7 @@ function DashboardContent() {
           ) : active === "Outreach" ? (
             <OutreachView data={data} jobs={currentJobs} preferences={preferences} />
           ) : active === "Companies" ? (
-            <CompaniesView data={data} query={companySearch} preferences={preferences} onRefresh={() => load(true)} />
+            <CompaniesView data={data} query={companySearch} preferences={preferences} onRefresh={() => load(true)} onCompaniesUpdated={patchCompanies} />
           ) : active === "Scraper Health" ? (
             <HealthView data={data} />
           ) : active === "Notifications" ? (
@@ -2231,11 +2301,13 @@ function CompaniesView({
   query,
   preferences,
   onRefresh,
+  onCompaniesUpdated,
 }: {
   data: Payload | null;
   query: string;
   preferences: SearchPreferences;
   onRefresh: () => Promise<void> | void;
+  onCompaniesUpdated: (updated: Company[], newJobsCount: number) => void;
 }) {
   return (
     <CompaniesPanel
@@ -2244,6 +2316,7 @@ function CompaniesView({
       fallbackLinks={(companyName) => companyFallbackLinks(companyName, preferences)}
       relativeTime={relative}
       onDataChanged={onRefresh}
+      onCompaniesUpdated={onCompaniesUpdated}
       /* Fallback discovery table with recruiter outreach:
          <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Contacts</a>
       */
