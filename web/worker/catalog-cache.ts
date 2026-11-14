@@ -1,12 +1,33 @@
-type PublicCache = {match(request:Request):Promise<Response|undefined>;put(request:Request,response:Response):Promise<unknown>};
-type Context = {waitUntil(promise:Promise<unknown>):void};
+export type PublicCache = {
+  match(request:Request):Promise<Response|undefined>;
+  put(request:Request,response:Response):Promise<unknown>;
+  delete?(request:Request):Promise<boolean>;
+};
+export type Context = {waitUntil(promise:Promise<unknown>):void};
+export const CATALOG_CACHE_PREFIX = '/__catalog_cache_v4';
 const TTL_MS=300000;
+
+export async function purgeCatalogCache(origin:string,cache:PublicCache,extraPaths:string[]=[]):Promise<void>{
+  if(typeof cache?.delete!=='function')return;
+  const paths=[
+    `${CATALOG_CACHE_PREFIX}/api/dashboard`,
+    `${CATALOG_CACHE_PREFIX}/api/jobs?after=0&limit=100`,
+    `${CATALOG_CACHE_PREFIX}/api/jobs?after=0&limit=500`,
+    ...extraPaths
+  ];
+  try{
+    await Promise.allSettled(paths.map(path=>cache.delete!(new Request(new URL(path,origin)))));
+  }catch{/* Cache purge failure must not fail the ingestion write */}
+}
 
 // Only public catalog reads. Health, tracking, ingestion and alerts stay live.
 export async function cachedCatalog(request:Request,read:()=>Promise<Response>,cache:PublicCache,ctx:Context):Promise<Response>{
   const url=new URL(request.url);
-  if(request.method!=='GET'||!['/api/dashboard','/api/jobs'].includes(url.pathname)||url.searchParams.get('source')==='backup'||request.headers.has('Authorization')||request.headers.has('Cookie'))return read();
-  const keyUrl=new URL(`/__catalog_cache_v4${url.pathname}`,url.origin);
+  const cacheControl=request.headers.get('Cache-Control')?.toLowerCase()||'';
+  const pragma=request.headers.get('Pragma')?.toLowerCase()||'';
+  const bypassCache=cacheControl.includes('no-cache')||cacheControl.includes('no-store')||cacheControl.includes('max-age=0')||pragma.includes('no-cache');
+  if(request.method!=='GET'||!['/api/dashboard','/api/jobs'].includes(url.pathname)||url.searchParams.get('source')==='backup'||request.headers.has('Authorization')||request.headers.has('Cookie')||bypassCache)return read();
+  const keyUrl=new URL(`${CATALOG_CACHE_PREFIX}${url.pathname}`,url.origin);
   if(url.pathname==='/api/jobs'){
     const through=url.searchParams.get('through');
     if(through!==null&&(!Number.isSafeInteger(Number(through))||Number(through)<=Number(url.searchParams.get('after')||'0')))return read();
