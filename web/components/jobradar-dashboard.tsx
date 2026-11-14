@@ -1629,7 +1629,7 @@ function JobList({now,jobs,resetKey,preferences,getTracking,saveTracking,compani
 }) {
   const sourceByName=useMemo(()=>new Map(companies?.map(source=>[source.name,source])),[companies]);
   const renderJob=(job:ApiJob)=><JobCard source={sourceByName.get(job.company)} backup={backup} now={now} key={trackingKey(job)} job={job} preferences={preferences} tracking={getTracking(job)} saveTracking={saveTracking} />;
-  return jobs.length ? <JobPagination jobs={jobs} resetKey={resetKey} renderPage={page=>groupSimilarOpenings(page).map(group=><div key={trackingKey(group[0])}>
+  return jobs.length ? <JobPagination jobs={jobs} resetKey={resetKey} renderPage={page=>groupSimilarOpenings(page).map((group, index)=><div key={trackingKey(group[0])} className={index > 2 ? "content-visibility-auto" : undefined}>
     {renderJob(group[0])}
     {group.length>1&&<details className="mt-2 rounded-xl border bg-card p-3"><summary className="cursor-pointer text-sm font-semibold">{group.length-1} more {group.length===2?'opening':'openings'} at {group[0].company} · {group[0].title}</summary><p className="mt-2 text-xs text-muted-foreground">Separate employer listings. Each keeps its own apply link and tracking.</p><div className="mt-3 space-y-3">{group.slice(1).map(renderJob)}</div></details>}
   </div>)} /> : <Empty />;

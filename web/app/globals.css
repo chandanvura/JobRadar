@@ -23,8 +23,20 @@
   scrollbar-gutter: stable;
 }
 
+@utility content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 180px;
+}
+
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
+
+  &:has(> head > meta[name="color-scheme"][content="dark"]) {
+    color-scheme: dark;
+  }
+  &:has(> head > meta[name="color-scheme"][content="light"]) {
+    color-scheme: light;
+  }
   --hero: #132c35;
   --success: #176440;
   --success-soft: #e3f3e9;
