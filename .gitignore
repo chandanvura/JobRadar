@@ -13,6 +13,7 @@ web/wrangler.migrations.json
 web/public/backup/
 
 # Local credentials and private exports must never enter a public clone.
+data/
 .env*
 !.env.example
 .dev.vars

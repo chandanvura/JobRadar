@@ -4,5 +4,6 @@ dist/
 .sites-runtime/
 .wrangler/
 wrangler.migrations.json
+data/
 .env*
 !.env.example

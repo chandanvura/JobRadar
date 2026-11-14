@@ -16,6 +16,7 @@ import { ROLE_FAMILIES, DEFAULT_SEARCH_TITLES, ROLE_TITLE_GROUPS } from "@/lib/r
 import { defaultFreshness, matchesCareerView, verifiedView } from "@/lib/job-view";
 import { PrivateNotes } from "./private-notes";
 import { JobPagination } from "./job-pagination";
+import { CompaniesPanel } from "./companies-panel";
 import { prepareCatalog } from "@/lib/prepare-catalog";
 import { loadPublicCatalog } from "@/lib/public-catalog";
 import { JobSearchStrategy } from "./job-search-strategy";
@@ -113,6 +114,8 @@ type Company = {
   name: string;
   careers_url: string;
   ats_provider: string;
+  ats_identifier?: string;
+  priority?: number;
   last_checked_at: string | null;
   last_success_at: string | null;
   error_count: number;
@@ -1257,7 +1260,7 @@ function DashboardContent() {
           ) : active === "Outreach" ? (
             <OutreachView data={data} jobs={currentJobs} preferences={preferences} />
           ) : active === "Companies" ? (
-            <CompaniesView data={data} query={companySearch} preferences={preferences} />
+            <CompaniesView data={data} query={companySearch} preferences={preferences} onRefresh={() => load(true)} />
           ) : active === "Scraper Health" ? (
             <HealthView data={data} />
           ) : active === "Notifications" ? (
@@ -2227,113 +2230,24 @@ function CompaniesView({
   data,
   query,
   preferences,
+  onRefresh,
 }: {
   data: Payload | null;
   query: string;
   preferences: SearchPreferences;
+  onRefresh: () => Promise<void> | void;
 }) {
-  const companies = (data?.companies || []).filter((c) =>
-    `${c.name} ${c.ats_provider}`.toLowerCase().includes(query.toLowerCase()),
-  );
   return (
-    <div className="space-y-4">
-      <SectionTitle
-        icon={Building2}
-        title="Official career sources"
-        text={`${companies.length} of ${data?.companies.length || 0} sources shown`}
-      />
-      <div className="grid gap-3 sm:grid-cols-3">
-        <Info label="Structured ATS" value={String(companies.filter((c) => c.ats_provider !== "custom").length)} />
-        <Info label="Productive now" value={String(companies.filter((c) => c.candidate_jobs > 0).length)} />
-        <Info label="Healthy sources" value={String(companies.filter((c) => c.last_checked_at && !c.error_count).length)} />
-      </div>
-      <JobPagination jobs={companies} resetKey={query} noun="companies" renderPage={page => <>
-      <div className="grid gap-3 md:hidden">
-        {page.map((c) => {
-          const limited = c.warning?.startsWith("Limited coverage"),
-            state = !c.last_checked_at ? "Awaiting scan" : c.error_count ? "Failed" : limited ? "Limited coverage" : c.jobs_found === 0 ? "No current openings" : c.candidate_jobs === 0 ? "No target roles" : "Productive";
-          const fallback = companyFallbackLinks(c.name, preferences);
-          return <article key={`mobile-${c.ats_provider}-${c.name}`} className="rounded-2xl border bg-card p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{c.name}</h3><p className="mt-1 text-xs capitalize text-muted-foreground">{c.ats_provider} · checked {relative(c.last_checked_at)}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${c.error_count ? "bg-danger-soft text-danger" : limited || c.jobs_found === 0 ? "bg-warning-soft text-warning" : "bg-success-soft text-success"}`}>{state}</span></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.jobs_found}</b>Raw</div><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.candidate_jobs}</b>Target</div><div className="rounded-xl bg-muted p-2"><b className="block text-base">{c.eligible_jobs}</b>Eligible</div></div>{c.warning && <p className="mt-3 text-xs text-muted-foreground">{c.warning}</p>}<div className="mt-4 flex flex-wrap gap-3 text-sm font-bold text-success"><a href={c.careers_url} target="_blank" rel="noreferrer">Official careers</a>{(limited || c.error_count > 0 || c.jobs_found === 0) && fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer">{link.name}</a>)}<a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Outreach</a></div></article>;
-        })}
-      </div>
-      <div className="hidden overflow-x-auto rounded-2xl border bg-card md:block">
-        <table className="w-full min-w-[900px] text-left text-sm">
-          <thead className="bg-muted text-xs uppercase">
-            <tr>
-              <th className="p-4">Company</th>
-              <th>ATS</th>
-              <th>Raw jobs</th>
-              <th>Target roles</th>
-              <th>Eligible</th>
-              <th>Last checked</th>
-              <th>Truthful health</th>
-              <th>Career page</th>
-              <th>Fallback discovery</th>
-            </tr>
-          </thead>
-          <tbody>
-            {page.map((c) => {
-              const limited = c.warning?.startsWith("Limited coverage"),
-                fallback = companyFallbackLinks(c.name, preferences),
-                state = !c.last_checked_at
-                  ? "Awaiting scan"
-                  : c.error_count
-                  ? "Failed"
-                  : limited
-                    ? "Limited coverage"
-                    : c.jobs_found === 0
-                      ? "No current openings"
-                      : c.candidate_jobs === 0
-                        ? "No target roles"
-                        : "Productive";
-              return (
-                <tr key={`${c.ats_provider}-${c.name}`} className="border-t">
-                  <td className="p-4 font-bold">{c.name}</td>
-                  <td className="capitalize">{c.ats_provider}</td>
-                  <td>{c.jobs_found}</td>
-                  <td>{c.candidate_jobs}</td>
-                  <td>{c.eligible_jobs}</td>
-                  <td>{relative(c.last_checked_at)}</td>
-                  <td
-                    className={
-                      c.error_count
-                        ? "text-danger"
-                        : limited || c.jobs_found === 0
-                          ? "text-warning"
-                          : "text-success"
-                    }
-                  >
-                    {state}
-                    {c.warning && (
-                      <span className="block max-w-52 text-[10px] text-muted-foreground">
-                        {c.warning}
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    <a
-                      href={c.careers_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-bold text-success"
-                    >
-                      Open <ExternalLink size={14} />
-                    </a>
-                  </td>
-                  <td>
-                    <div className="flex max-w-72 flex-wrap gap-2">
-                      {fallback.map(link=><a key={link.name} href={link.url} target="_blank" rel="noreferrer" className="font-bold text-success">{link.name}</a>)}
-                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer" className="font-bold text-success">Contacts</a>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      </>} />
-    </div>
+    <CompaniesPanel
+      companies={data?.companies || []}
+      query={query}
+      fallbackLinks={(companyName) => companyFallbackLinks(companyName, preferences)}
+      relativeTime={relative}
+      onDataChanged={onRefresh}
+      /* Fallback discovery table with recruiter outreach:
+         <a href={`https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in ${c.name} (recruiter OR talent acquisition OR engineering manager) (Bengaluru OR Hyderabad)`)}`} target="_blank" rel="noreferrer">Contacts</a>
+      */
+    />
   );
 }
 function HealthView({ data }: { data: Payload | null }) {
