@@ -89,7 +89,7 @@ test('expanded PR #129 taxonomy & cross-domain guards classify hardware/software
   assert.equal(silicon.is_eligible, true);
 
   const mechanical = normalizeRawJob(
-    { ...base, title: 'Mechanical Design Engineer', description: 'Responsible for manufacturing quality and mechanical parts assembly.' },
+    { ...base, title: 'Design Engineer', description: 'Responsible for manufacturing quality and mechanical parts assembly.' },
     4,
     fixed,
   );
@@ -97,7 +97,7 @@ test('expanded PR #129 taxonomy & cross-domain guards classify hardware/software
   assert.equal(mechanical.is_eligible, false);
 
   const retailProduct = normalizeRawJob(
-    { ...base, title: 'Sales Associate', description: 'Retail store merchandising and physical product inspection in factory.' },
+    { ...base, title: 'Product Engineer', description: 'Retail store merchandising and physical product inspection in factory.' },
     4,
     fixed,
   );

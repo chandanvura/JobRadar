@@ -230,13 +230,37 @@ test('store preserves ats_identifier, applies live scrapes, upserts sources, and
     const badUpsert = store.upsertCompany({ name: 'Bad', careers_url: 'javascript:alert(1)' });
     assert.equal(badUpsert.status, 400);
 
+    // Cross-provider migration with identical normalized_title + city updates in place (no duplicate)
+    const migratedOutcome = {
+      ...outcome,
+      ats_provider: 'phenom',
+      ats_identifier: 'customco-ph',
+      jobs: outcome.jobs.slice(0, 1).map((j) => ({
+        ...j,
+        external_job_id: 'ph-new-99',
+        ats_provider: 'phenom',
+        source: 'phenom',
+      })),
+    };
+    const migratedApplied = store.applyCompanyScrape(migratedOutcome, false, false);
+    assert.equal(migratedApplied.new_jobs, 0);
+    const fullDash = store.getFullDashboard();
+    assert.equal(fullDash.jobs.length, 1);
+    assert.equal(fullDash.catalog_ranges, undefined);
+    assert.equal((fullDash.jobs[0] as { experience_normalized?: boolean }).experience_normalized, true);
+    assert.ok((fullDash.jobs[0] as { precomputed_requirements?: unknown }).precomputed_requirements);
+    assert.equal(store.getCompanies().companies.length, 2);
+    assert.ok(store.getJobById(fullDash.jobs[0].id));
+
+    store.flushPersist();
+
     const reloaded = createJobRadarStore({
       companies: csvCompanies,
       persistPath,
     });
     const reloadedTarget = reloaded.getCompanyTarget('CustomCo');
-    assert.equal(reloadedTarget?.ats_provider, 'greenhouse');
-    assert.equal(reloadedTarget?.ats_identifier, 'customco');
+    assert.equal(reloadedTarget?.ats_provider, 'phenom');
+    assert.equal(reloadedTarget?.ats_identifier, 'customco-ph');
     assert.equal(reloaded.getDashboard().jobs.length, 1);
     const remainingAll = store.countScrapeTargets('all');
     assert.equal(remainingAll, 2);
@@ -249,4 +273,28 @@ test('store preserves ats_identifier, applies live scrapes, upserts sources, and
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
 });
+
+test('CI dataset invariants: companies/companies.csv and config/roles.json remain valid', async () => {
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+  const csvPath = fs.existsSync(path.resolve(process.cwd(), 'companies/companies.csv'))
+    ? path.resolve(process.cwd(), 'companies/companies.csv')
+    : path.resolve(process.cwd(), '../companies/companies.csv');
+  const parsed = parseCompaniesCsv(fs.readFileSync(csvPath, 'utf8'), '2026-11-14T12:00:00Z');
+  assert.ok(parsed.length >= 500, `Expected >= 500 enabled companies, got ${parsed.length}`);
+  const uniqueNames = new Set(parsed.map((c) => c.name.trim().toLowerCase()));
+  assert.equal(uniqueNames.size, parsed.length, 'Company names in companies.csv must be unique');
+
+  const rolesPath = fs.existsSync(path.resolve(process.cwd(), 'config/roles.json'))
+    ? path.resolve(process.cwd(), 'config/roles.json')
+    : path.resolve(process.cwd(), '../config/roles.json');
+  const roles = JSON.parse(fs.readFileSync(rolesPath, 'utf8')) as {
+    roles?: Array<{ family: string; patterns: string[]; titles: string[] }>;
+    review_titles?: string[];
+  };
+  assert.ok(Array.isArray(roles.roles) && roles.roles.length >= 10);
+  assert.ok(roles.roles.every((r) => typeof r.family === 'string' && Array.isArray(r.patterns) && Array.isArray(r.titles)));
+  assert.ok(Array.isArray(roles.review_titles) && roles.review_titles.length > 0);
+});
+
 

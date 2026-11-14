@@ -1,5 +1,6 @@
 import { normalizePostedInput, normalizeRawJob, stripHtml, type NormalizedIngestJob, type RawAtsJob } from './job-normalizer.ts';
 import { canonicalShortlistCity } from './location-policy.ts';
+import { assertPublicHttpsUrl } from './net-guard.ts';
 
 export interface CompanyTarget {
   name: string;
@@ -272,16 +273,16 @@ export async function mapWithLimit<T>(
 
 export function decodeHtmlEntities(input: string): string {
   let out = input;
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 3; i++) {
     const next = out
+      .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&quot;/g, '"')
       .replace(/&#39;|&apos;|&#x27;/gi, "'")
       .replace(/&nbsp;/g, ' ')
       .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
-      .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
-      .replace(/&amp;/g, '&');
+      .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
     if (next === out) break;
     out = next;
   }
@@ -672,24 +673,20 @@ export function parseXmlJobs(
   return jobs;
 }
 
-function assertSafeHttpUrl(rawUrl: string): URL {
-  const parsed = new URL(rawUrl);
-  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-    throw new Error(`Disallowed protocol: ${parsed.protocol}`);
+const conditionalCache = new Map<string, { etag?: string; lastModified?: string; data: unknown }>();
+const hostFailureState = new Map<string, { failures: number; retryAfterUntil: number }>();
+
+function cacheConditionalSet(url: string, etag: string | null, lastModified: string | null, data: unknown) {
+  if (!etag && !lastModified) return;
+  if (conditionalCache.size >= 800) {
+    const oldest = conditionalCache.keys().next().value;
+    if (oldest) conditionalCache.delete(oldest);
   }
-  const host = parsed.hostname.toLowerCase();
-  if (
-    host === 'localhost' ||
-    host === '127.0.0.1' ||
-    host === '0.0.0.0' ||
-    host.endsWith('.local') ||
-    host.startsWith('10.') ||
-    host.startsWith('192.168.') ||
-    /^172\.(1[6-9]|2\d|3[01])\./.test(host)
-  ) {
-    throw new Error(`Disallowed host: ${host}`);
-  }
-  return parsed;
+  conditionalCache.set(url, {
+    etag: etag || undefined,
+    lastModified: lastModified || undefined,
+    data,
+  });
 }
 
 async function fetchWithRetry(
@@ -697,12 +694,18 @@ async function fetchWithRetry(
   init: RequestInit & { timeoutMs?: number } = {},
   attempts = 2,
 ): Promise<Response> {
-  const safeTarget = assertSafeHttpUrl(url);
+  const safe = await assertPublicHttpsUrl(url);
+  const host = safe.hostname.toLowerCase();
+  const cooldown = hostFailureState.get(host);
+  if (cooldown && cooldown.retryAfterUntil > Date.now() && cooldown.failures >= 4) {
+    throw new Error(`Host ${host} temporarily cooled down after repeated rate-limits/errors`);
+  }
+
   const timeoutMs = init.timeoutMs ?? 10000;
   let lastError: unknown;
   for (let i = 0; i < attempts; i++) {
     try {
-      const res = await fetch(safeTarget.href, {
+      const res = await fetch(safe.toString(), {
         ...init,
         headers: {
           'User-Agent': USER_AGENT,
@@ -711,12 +714,22 @@ async function fetchWithRetry(
         },
         signal: AbortSignal.timeout(timeoutMs),
       });
-      if ([429, 500, 502, 503, 504, 520, 521, 522, 523, 524, 525].includes(res.status) && i + 1 < attempts) {
+      if ([429, 500, 502, 503, 504, 520, 521, 522, 523, 524, 525].includes(res.status)) {
         const retryAfter = Number(res.headers.get('retry-after'));
-        const waitMs = Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter * 1000, 4000) : 700 * (i + 1);
-        await res.body?.cancel();
-        await new Promise((r) => setTimeout(r, waitMs));
-        continue;
+        if (i + 1 < attempts) {
+          const waitMs = Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter * 1000, 4000) : 700 * (i + 1);
+          await res.body?.cancel();
+          await new Promise((r) => setTimeout(r, waitMs));
+          continue;
+        }
+        if (res.status === 429) {
+          const prev = hostFailureState.get(host);
+          const failures = (prev?.failures || 0) + 1;
+          const coolSec = Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter, 120) : 30 * failures;
+          hostFailureState.set(host, { failures, retryAfterUntil: Date.now() + coolSec * 1000 });
+        }
+      } else if (res.ok || res.status === 304) {
+        hostFailureState.delete(host);
       }
       return res;
     } catch (err) {
@@ -724,40 +737,233 @@ async function fetchWithRetry(
       if (i + 1 < attempts) await new Promise((r) => setTimeout(r, 500 * (i + 1)));
     }
   }
+  const prev = hostFailureState.get(host);
+  const failures = (prev?.failures || 0) + 1;
+  hostFailureState.set(host, { failures, retryAfterUntil: Date.now() + Math.min(failures * 20_000, 120_000) });
   throw lastError instanceof Error ? lastError : new Error('Request failed');
 }
 
 async function fetchJson<T = unknown>(url: string, init?: RequestInit & { timeoutMs?: number }): Promise<T> {
-  const res = await fetchWithRetry(url, init);
+  const isGet = !init?.method || init.method.toUpperCase() === 'GET';
+  const cached = isGet ? conditionalCache.get(url) : undefined;
+  const headers: Record<string, string> = {};
+  if (cached?.etag) headers['If-None-Match'] = cached.etag;
+  if (cached?.lastModified) headers['If-Modified-Since'] = cached.lastModified;
+
+  const res = await fetchWithRetry(url, {
+    ...init,
+    headers: { ...headers, ...(init?.headers as Record<string, string> | undefined) },
+  });
+  if (res.status === 304 && cached) {
+    await res.body?.cancel();
+    return cached.data as T;
+  }
   if (!res.ok) {
     await res.body?.cancel();
     throw new Error(`HTTP ${res.status} from ${new URL(url).hostname}`);
   }
-  return (await res.json()) as T;
+  const data = (await res.json()) as T;
+  if (isGet) {
+    cacheConditionalSet(url, res.headers.get('etag'), res.headers.get('last-modified'), data);
+  }
+  return data;
 }
 
-async function fetchGreenhouse(c: CompanyTarget, token: string): Promise<RawAtsJob[]> {
-  const data = await fetchJson<{ jobs?: Array<Record<string, unknown>> }>(
-    `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs?content=true`,
-  );
-  const rows = Array.isArray(data?.jobs) ? data.jobs : [];
-  return rows.map((j) => {
-    const locObj = j.location as { name?: string } | undefined;
-    const url = safeResolveUrl(j.absolute_url, c.careers_url) || c.careers_url;
-    const posted = normalizePostedInput((j.updated_at || j.first_published) as string | null);
-    return {
-      external_job_id: String(j.id),
-      title: String(j.title || ''),
-      company: c.name,
-      location: String(locObj?.name || 'Not specified'),
-      description: stripHtml(String(j.content || '')),
-      ats_provider: 'greenhouse',
-      job_url: url,
-      application_url: url,
-      career_page_url: c.careers_url,
-      ...posted,
-    };
-  });
+interface BoardSpec {
+  request: (slug: string) => { url: string; init?: RequestInit & { timeoutMs?: number } };
+  rows: (data: unknown) => Array<Record<string, unknown>>;
+  mapRow: (row: Record<string, unknown>, c: CompanyTarget, slug: string) => RawAtsJob;
+}
+
+const SIMPLE_BOARD_SPECS: Record<string, BoardSpec> = {
+  greenhouse: {
+    request: (token) => ({ url: `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs?content=true` }),
+    rows: (d) => (Array.isArray((d as { jobs?: unknown[] })?.jobs) ? (d as { jobs: Array<Record<string, unknown>> }).jobs : []),
+    mapRow: (j, c) => {
+      const url = safeResolveUrl(j.absolute_url, c.careers_url) || c.careers_url;
+      return {
+        external_job_id: String(j.id),
+        title: String(j.title || ''),
+        company: c.name,
+        location: String((j.location as { name?: string } | undefined)?.name || 'Not specified'),
+        description: stripHtml(String(j.content || '')),
+        ats_provider: 'greenhouse',
+        job_url: url,
+        application_url: url,
+        career_page_url: c.careers_url,
+        ...normalizePostedInput((j.updated_at || j.first_published) as string | null),
+      };
+    },
+  },
+  ashby: {
+    request: (slug) => ({ url: `https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(slug)}` }),
+    rows: (d) =>
+      Array.isArray((d as { jobs?: unknown[] })?.jobs)
+        ? (d as { jobs: Array<Record<string, unknown>> }).jobs.filter((j) => j.isListed !== false)
+        : [],
+    mapRow: (j, c) => {
+      const secondary = Array.isArray(j.secondaryLocations)
+        ? (j.secondaryLocations as Array<Record<string, unknown> | string>).map((s) =>
+            typeof s === 'string' ? s : String(s.location || ''),
+          )
+        : [];
+      const locParts = [j.location, ...secondary].filter((v): v is string => typeof v === 'string' && Boolean(v.trim()));
+      const jobUrl = safeResolveUrl(j.jobUrl, c.careers_url) || c.careers_url;
+      return {
+        external_job_id: String(j.id || jobUrl),
+        title: String(j.title || ''),
+        company: c.name,
+        location: [...new Set(locParts)].join(' · ') || 'Not specified',
+        description: stripHtml(String(j.descriptionPlain || j.descriptionHtml || '')),
+        ats_provider: 'ashby',
+        job_url: jobUrl,
+        application_url: safeResolveUrl(j.applyUrl, c.careers_url) || jobUrl,
+        career_page_url: c.careers_url,
+        ...normalizePostedInput(j.publishedAt as string | null),
+      };
+    },
+  },
+  recruitee: {
+    request: (slug) => ({ url: `https://${encodeURIComponent(slug)}.recruitee.com/api/offers` }),
+    rows: (d) => (Array.isArray((d as { offers?: unknown[] })?.offers) ? (d as { offers: Array<Record<string, unknown>> }).offers : []),
+    mapRow: (o, c, slug) => {
+      const url = safeResolveUrl(o.careers_url, c.careers_url) || `https://${slug}.recruitee.com/o/${o.slug}`;
+      return {
+        external_job_id: String(o.id || o.slug),
+        title: String(o.title || ''),
+        company: c.name,
+        location: String(o.location || [o.city, o.country].filter(Boolean).join(', ') || 'Not specified'),
+        description: stripHtml([o.description, o.requirements].filter(Boolean).join('\n')),
+        ats_provider: 'recruitee',
+        job_url: url,
+        application_url: safeResolveUrl(o.careers_apply_url, url) || url,
+        career_page_url: c.careers_url,
+        ...normalizePostedInput(o.published_at as string | null),
+      };
+    },
+  },
+  pinpoint: {
+    request: (slug) => ({ url: `https://${encodeURIComponent(slug)}.pinpointhq.com/postings.json` }),
+    rows: (d) => (Array.isArray((d as { data?: unknown[] })?.data) ? (d as { data: Array<Record<string, unknown>> }).data : []),
+    mapRow: (p, c, slug) => {
+      const loc = p.location as Record<string, unknown> | undefined;
+      const url = safeResolveUrl(p.url, c.careers_url) || `https://${slug}.pinpointhq.com/postings/${p.id}`;
+      return {
+        external_job_id: String(p.id),
+        title: String(p.title || ''),
+        company: c.name,
+        location: String(loc?.name || loc?.city || 'Not specified'),
+        description: stripHtml([p.description, p.key_responsibilities, p.skills_knowledge_expertise].filter(Boolean).join('\n')),
+        ats_provider: 'pinpoint',
+        job_url: url,
+        application_url: url,
+        career_page_url: c.careers_url,
+        ...normalizePostedInput(p.deadline_at as string | null),
+      };
+    },
+  },
+  rippling: {
+    request: (slug) => ({ url: `https://api.rippling.com/platform/api/ats/v1/board/${encodeURIComponent(slug)}/jobs` }),
+    rows: (d) => (Array.isArray(d) ? (d as Array<Record<string, unknown>>) : []),
+    mapRow: (j, c, slug) => {
+      const loc = j.workLocation as Record<string, unknown> | undefined;
+      const url = safeResolveUrl(j.url, c.careers_url) || `https://ats.rippling.com/${slug}/jobs/${j.uuid}`;
+      return {
+        external_job_id: String(j.uuid || j.id),
+        title: String(j.name || j.title || ''),
+        company: c.name,
+        location: String(loc?.label || j.location || 'Not specified'),
+        description: stripHtml(String(j.description || '')),
+        ats_provider: 'rippling',
+        job_url: url,
+        application_url: url,
+        career_page_url: c.careers_url,
+        ...normalizePostedInput(j.createdOn as string | null),
+      };
+    },
+  },
+  bamboohr: {
+    request: (slug) => ({ url: `https://${encodeURIComponent(slug)}.bamboohr.com/careers/list` }),
+    rows: (d) => (Array.isArray((d as { result?: unknown[] })?.result) ? (d as { result: Array<Record<string, unknown>> }).result : []),
+    mapRow: (j, c, slug) => {
+      const loc = (j.location || {}) as Record<string, unknown>;
+      const url = `https://${slug}.bamboohr.com/careers/${j.id}`;
+      return {
+        external_job_id: String(j.id),
+        title: String(j.jobOpeningName || ''),
+        company: c.name,
+        location: [loc.city, loc.state, loc.country].filter(Boolean).join(', ') || 'Not specified',
+        description: stripHtml(String(j.departmentLabel || '')),
+        ats_provider: 'bamboohr',
+        job_url: url,
+        application_url: url,
+        career_page_url: c.careers_url,
+        ...normalizePostedInput(null),
+      };
+    },
+  },
+  darwinbox: {
+    request: (slug) => ({
+      url: `https://${encodeURIComponent(slug)}.darwinbox.in/ms/candidateapi/job`,
+      init: {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page: 1, limit: 100 }),
+        timeoutMs: 8000,
+      },
+    }),
+    rows: (d) => {
+      const obj = d as { message?: { jobs?: Array<Record<string, unknown>> }; jobs?: Array<Record<string, unknown>> };
+      return obj?.message?.jobs || obj?.jobs || [];
+    },
+    mapRow: (j, c, slug) => {
+      const id = String(j.id || j.job_id || j.requisition_id || '');
+      const url = `https://${slug}.darwinbox.in/ms/candidate/careers/${encodeURIComponent(id)}`;
+      return {
+        external_job_id: id,
+        title: String(j.title || j.job_title || ''),
+        company: c.name,
+        location: String(j.location || j.city || 'India'),
+        description: stripHtml(String(j.description || j.job_description || '')),
+        ats_provider: 'darwinbox',
+        job_url: url,
+        application_url: url,
+        career_page_url: c.careers_url,
+        ...normalizePostedInput((j.created_on || j.posted_on) as string | null),
+      };
+    },
+  },
+  avalara: {
+    request: () => ({ url: 'https://api.careerpuck.com/v1/public/job-boards/avalara', init: { timeoutMs: 12000 } }),
+    rows: (d) => (Array.isArray((d as { jobs?: unknown[] })?.jobs) ? (d as { jobs: Array<Record<string, unknown>> }).jobs : []),
+    mapRow: (row, c) => {
+      const url = safeResolveUrl(row.publicUrl, c.careers_url) || c.careers_url;
+      const offices = Array.isArray(row.offices)
+        ? (row.offices as Array<Record<string, unknown>>).map((o) => String(o.name || '')).filter(Boolean)
+        : [];
+      const loc = [row.location, ...offices].filter((v): v is string => typeof v === 'string' && Boolean(v.trim())).join(' · ');
+      return {
+        external_job_id: String(row.permalink || ''),
+        title: String(row.title || ''),
+        company: c.name,
+        location: loc || 'Not specified',
+        description: stripHtml(decodeHtmlEntities(String(row.content || ''))),
+        ats_provider: 'avalara',
+        job_url: url,
+        application_url: safeResolveUrl(row.applyUrl, url) || url,
+        career_page_url: c.careers_url,
+        ...normalizePostedInput(null),
+      };
+    },
+  },
+};
+
+async function fetchSimpleBoard(provider: string, c: CompanyTarget, slug: string): Promise<RawAtsJob[]> {
+  const spec = SIMPLE_BOARD_SPECS[provider];
+  if (!spec) throw new Error(`Unknown board spec: ${provider}`);
+  const { url, init } = spec.request(slug);
+  const data = await fetchJson<unknown>(url, init);
+  return spec.rows(data).map((row) => spec.mapRow(row, c, slug));
 }
 
 async function fetchLever(c: CompanyTarget, identifier: string): Promise<RawAtsJob[]> {
@@ -803,36 +1009,6 @@ async function fetchLever(c: CompanyTarget, identifier: string): Promise<RawAtsJ
       location: [...new Set(locParts)].join(' · ') || 'Not specified',
       description: stripHtml(sections.join('\n')),
       ats_provider: 'lever',
-      job_url: jobUrl,
-      application_url: applyUrl,
-      career_page_url: c.careers_url,
-      ...posted,
-    };
-  });
-}
-
-async function fetchAshby(c: CompanyTarget, slug: string): Promise<RawAtsJob[]> {
-  const data = await fetchJson<{ jobs?: Array<Record<string, unknown>> }>(
-    `https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(slug)}`,
-  );
-  const rows = Array.isArray(data?.jobs) ? data.jobs.filter((j) => j.isListed !== false) : [];
-  return rows.map((j) => {
-    const secondary = Array.isArray(j.secondaryLocations)
-      ? (j.secondaryLocations as Array<Record<string, unknown> | string>).map((s) =>
-          typeof s === 'string' ? s : String(s.location || ''),
-        )
-      : [];
-    const locParts = [j.location, ...secondary].filter((v): v is string => typeof v === 'string' && Boolean(v.trim()));
-    const jobUrl = safeResolveUrl(j.jobUrl, c.careers_url) || c.careers_url;
-    const applyUrl = safeResolveUrl(j.applyUrl, c.careers_url) || jobUrl;
-    const posted = normalizePostedInput(j.publishedAt as string | null);
-    return {
-      external_job_id: String(j.id || jobUrl),
-      title: String(j.title || ''),
-      company: c.name,
-      location: [...new Set(locParts)].join(' · ') || 'Not specified',
-      description: stripHtml(String(j.descriptionPlain || j.descriptionHtml || '')),
-      ats_provider: 'ashby',
       job_url: jobUrl,
       application_url: applyUrl,
       career_page_url: c.careers_url,
@@ -1243,129 +1419,7 @@ async function fetchEightfold(c: CompanyTarget, identifier: string): Promise<Raw
   });
 }
 
-async function fetchRecruitee(c: CompanyTarget, slug: string): Promise<RawAtsJob[]> {
-  const data = await fetchJson<{ offers?: Array<Record<string, unknown>> }>(
-    `https://${encodeURIComponent(slug)}.recruitee.com/api/offers`,
-  );
-  const rows = Array.isArray(data?.offers) ? data.offers : [];
-  return rows.map((o) => {
-    const url = safeResolveUrl(o.careers_url, c.careers_url) || `https://${slug}.recruitee.com/o/${o.slug}`;
-    const posted = normalizePostedInput(o.published_at as string | null);
-    return {
-      external_job_id: String(o.id || o.slug),
-      title: String(o.title || ''),
-      company: c.name,
-      location: String(o.location || [o.city, o.country].filter(Boolean).join(', ') || 'Not specified'),
-      description: stripHtml([o.description, o.requirements].filter(Boolean).join('\n')),
-      ats_provider: 'recruitee',
-      job_url: url,
-      application_url: safeResolveUrl(o.careers_apply_url, url) || url,
-      career_page_url: c.careers_url,
-      ...posted,
-    };
-  });
-}
 
-async function fetchPinpoint(c: CompanyTarget, slug: string): Promise<RawAtsJob[]> {
-  const data = await fetchJson<{ data?: Array<Record<string, unknown>> }>(
-    `https://${encodeURIComponent(slug)}.pinpointhq.com/postings.json`,
-  );
-  const rows = Array.isArray(data?.data) ? data.data : [];
-  return rows.map((p) => {
-    const loc = p.location as Record<string, unknown> | undefined;
-    const url = safeResolveUrl(p.url, c.careers_url) || `https://${slug}.pinpointhq.com/postings/${p.id}`;
-    return {
-      external_job_id: String(p.id),
-      title: String(p.title || ''),
-      company: c.name,
-      location: String(loc?.name || loc?.city || 'Not specified'),
-      description: stripHtml([p.description, p.key_responsibilities, p.skills_knowledge_expertise].filter(Boolean).join('\n')),
-      ats_provider: 'pinpoint',
-      job_url: url,
-      application_url: url,
-      career_page_url: c.careers_url,
-      ...normalizePostedInput(p.deadline_at as string | null),
-    };
-  });
-}
-
-async function fetchRippling(c: CompanyTarget, slug: string): Promise<RawAtsJob[]> {
-  const rows = await fetchJson<Array<Record<string, unknown>>>(
-    `https://api.rippling.com/platform/api/ats/v1/board/${encodeURIComponent(slug)}/jobs`,
-  );
-  if (!Array.isArray(rows)) return [];
-  return rows.map((j) => {
-    const loc = j.workLocation as Record<string, unknown> | undefined;
-    const url = safeResolveUrl(j.url, c.careers_url) || `https://ats.rippling.com/${slug}/jobs/${j.uuid}`;
-    return {
-      external_job_id: String(j.uuid || j.id),
-      title: String(j.name || j.title || ''),
-      company: c.name,
-      location: String(loc?.label || j.location || 'Not specified'),
-      description: stripHtml(String(j.description || '')),
-      ats_provider: 'rippling',
-      job_url: url,
-      application_url: url,
-      career_page_url: c.careers_url,
-      ...normalizePostedInput(j.createdOn as string | null),
-    };
-  });
-}
-
-async function fetchBambooHr(c: CompanyTarget, subdomain: string): Promise<RawAtsJob[]> {
-  const data = await fetchJson<{ result?: Array<Record<string, unknown>> }>(
-    `https://${encodeURIComponent(subdomain)}.bamboohr.com/careers/list`,
-  );
-  const rows = Array.isArray(data?.result) ? data.result : [];
-  return rows.map((j) => {
-    const loc = (j.location || {}) as Record<string, unknown>;
-    const location = [loc.city, loc.state, loc.country].filter(Boolean).join(', ');
-    const url = `https://${subdomain}.bamboohr.com/careers/${j.id}`;
-    return {
-      external_job_id: String(j.id),
-      title: String(j.jobOpeningName || ''),
-      company: c.name,
-      location: location || 'Not specified',
-      description: stripHtml(String(j.departmentLabel || '')),
-      ats_provider: 'bamboohr',
-      job_url: url,
-      application_url: url,
-      career_page_url: c.careers_url,
-      ...normalizePostedInput(null),
-    };
-  });
-}
-
-async function fetchDarwinbox(c: CompanyTarget, subdomain: string): Promise<RawAtsJob[]> {
-  const res = await fetchWithRetry(`https://${encodeURIComponent(subdomain)}.darwinbox.in/ms/candidateapi/job`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ page: 1, limit: 100 }),
-    timeoutMs: 8000,
-  });
-  if (!res.ok) {
-    await res.body?.cancel();
-    throw new Error(`Darwinbox HTTP ${res.status}`);
-  }
-  const data = (await res.json()) as { message?: { jobs?: Array<Record<string, unknown>> }; jobs?: Array<Record<string, unknown>> };
-  const rows = data?.message?.jobs || data?.jobs || [];
-  return rows.map((j) => {
-    const id = String(j.id || j.job_id || j.requisition_id || '');
-    const url = `https://${subdomain}.darwinbox.in/ms/candidate/careers/${encodeURIComponent(id)}`;
-    return {
-      external_job_id: id,
-      title: String(j.title || j.job_title || ''),
-      company: c.name,
-      location: String(j.location || j.city || 'India'),
-      description: stripHtml(String(j.description || j.job_description || '')),
-      ats_provider: 'darwinbox',
-      job_url: url,
-      application_url: url,
-      career_page_url: c.careers_url,
-      ...normalizePostedInput((j.created_on || j.posted_on) as string | null),
-    };
-  });
-}
 
 async function fetchJobvite(c: CompanyTarget, identifier: string): Promise<RawAtsJob[]> {
   const parts = identifier.split('|').filter(Boolean);
@@ -1492,14 +1546,7 @@ async function fetchKula(c: CompanyTarget, slug: string): Promise<RawAtsJob[]> {
 
 async function fetchPyjamaHr(c: CompanyTarget, identifier: string): Promise<RawAtsJob[]> {
   let companyUuid = /^\d{5,}$|^[0-9a-f-]{16,}$/i.test(identifier) ? identifier : '';
-  let isPyjamaHost = false;
-  try {
-    const host = new URL(c.careers_url).hostname.toLowerCase();
-    isPyjamaHost = host === 'pyjamahr.com' || host.endsWith('.pyjamahr.com');
-  } catch {
-    // ignore invalid URL
-  }
-  const boardUrl = isPyjamaHost
+  const boardUrl = c.careers_url.includes('pyjamahr.com')
     ? c.careers_url
     : `https://jobs.pyjamahr.com/${encodeURIComponent(identifier)}`;
 
@@ -2123,35 +2170,6 @@ async function fetchAtlassian(c: CompanyTarget): Promise<RawAtsJob[]> {
   return parseAtlassianListings(rows, c.name, c.careers_url);
 }
 
-async function fetchAvalara(c: CompanyTarget): Promise<RawAtsJob[]> {
-  const data = await fetchJson<{ jobs?: Array<Record<string, unknown>> }>(
-    'https://api.careerpuck.com/v1/public/job-boards/avalara',
-    { timeoutMs: 12000 },
-  );
-  const rows = Array.isArray(data?.jobs) ? data.jobs : [];
-  return rows.map((row) => {
-    const id = String(row.permalink || '');
-    const url = safeResolveUrl(row.publicUrl, c.careers_url) || c.careers_url;
-    const apply = safeResolveUrl(row.applyUrl, url) || url;
-    const offices = Array.isArray(row.offices)
-      ? (row.offices as Array<Record<string, unknown>>).map((o) => String(o.name || '')).filter(Boolean)
-      : [];
-    const loc = [row.location, ...offices].filter((v): v is string => typeof v === 'string' && Boolean(v.trim())).join(' · ');
-    return {
-      external_job_id: id,
-      title: String(row.title || ''),
-      company: c.name,
-      location: loc || 'Not specified',
-      description: stripHtml(decodeHtmlEntities(String(row.content || ''))),
-      ats_provider: 'avalara',
-      job_url: url,
-      application_url: apply,
-      career_page_url: c.careers_url,
-      ...normalizePostedInput(null),
-    };
-  });
-}
-
 async function fetchIbm(c: CompanyTarget, identifier: string): Promise<RawAtsJob[]> {
   const endpoint = identifier.startsWith('http') ? identifier : 'https://www-api.ibm.com/search/api/v2';
   const must: Array<Record<string, unknown>> = [{ term: { country: 'in' } }];
@@ -2617,134 +2635,45 @@ function isPlausibleProbeHit(slug: string, jobs: RawAtsJob[]): boolean {
   });
 }
 
+const API_PROBE_SPECS: Array<{
+  provider: string;
+  boardUrl: (slug: string) => string;
+  fetchJobs: (company: CompanyTarget, slug: string) => Promise<RawAtsJob[]>;
+}> = [
+  { provider: 'greenhouse', boardUrl: (s) => `https://boards.greenhouse.io/${s}`, fetchJobs: (c, s) => fetchSimpleBoard('greenhouse', c, s) },
+  { provider: 'lever', boardUrl: (s) => `https://jobs.lever.co/${s}`, fetchJobs: fetchLever },
+  { provider: 'ashby', boardUrl: (s) => `https://jobs.ashbyhq.com/${s}`, fetchJobs: (c, s) => fetchSimpleBoard('ashby', c, s) },
+  { provider: 'smartrecruiters', boardUrl: (s) => `https://jobs.smartrecruiters.com/${s}`, fetchJobs: fetchSmartRecruiters },
+  { provider: 'workable', boardUrl: (s) => `https://apply.workable.com/${s}/`, fetchJobs: fetchWorkable },
+  { provider: 'recruitee', boardUrl: (s) => `https://${s}.recruitee.com`, fetchJobs: (c, s) => fetchSimpleBoard('recruitee', c, s) },
+  { provider: 'pinpoint', boardUrl: (s) => `https://${s}.pinpointhq.com`, fetchJobs: (c, s) => fetchSimpleBoard('pinpoint', c, s) },
+  { provider: 'rippling', boardUrl: (s) => `https://ats.rippling.com/${s}`, fetchJobs: (c, s) => fetchSimpleBoard('rippling', c, s) },
+];
+
 async function probePublicAtsApis(
   company: CompanyTarget,
   diagnostics: string[],
 ): Promise<{ jobs: RawAtsJob[]; discovered: DiscoveredSource } | null> {
   const slugs = candidateSlugsForCompany(company.name, company.careers_url);
   for (const slug of slugs) {
-    const probes: Array<Promise<{ jobs: RawAtsJob[]; discovered: DiscoveredSource } | null>> = [
-      fetchGreenhouse(company, slug)
+    const probes = API_PROBE_SPECS.map((spec) =>
+      spec
+        .fetchJobs(company, slug)
         .then((jobs) =>
           jobs.length > 0
             ? {
                 jobs,
                 discovered: {
-                  ats_provider: 'greenhouse',
+                  ats_provider: spec.provider,
                   ats_identifier: slug,
-                  careers_url: `https://boards.greenhouse.io/${slug}`,
+                  careers_url: spec.boardUrl(slug),
                   method: 'api-probe',
                 },
               }
             : null,
         )
         .catch(() => null),
-      fetchLever(company, slug)
-        .then((jobs) =>
-          jobs.length > 0
-            ? {
-                jobs,
-                discovered: {
-                  ats_provider: 'lever',
-                  ats_identifier: slug,
-                  careers_url: `https://jobs.lever.co/${slug}`,
-                  method: 'api-probe',
-                },
-              }
-            : null,
-        )
-        .catch(() => null),
-      fetchAshby(company, slug)
-        .then((jobs) =>
-          jobs.length > 0
-            ? {
-                jobs,
-                discovered: {
-                  ats_provider: 'ashby',
-                  ats_identifier: slug,
-                  careers_url: `https://jobs.ashbyhq.com/${slug}`,
-                  method: 'api-probe',
-                },
-              }
-            : null,
-        )
-        .catch(() => null),
-      fetchSmartRecruiters(company, slug)
-        .then((jobs) =>
-          jobs.length > 0
-            ? {
-                jobs,
-                discovered: {
-                  ats_provider: 'smartrecruiters',
-                  ats_identifier: slug,
-                  careers_url: `https://jobs.smartrecruiters.com/${slug}`,
-                  method: 'api-probe',
-                },
-              }
-            : null,
-        )
-        .catch(() => null),
-      fetchWorkable(company, slug)
-        .then((jobs) =>
-          jobs.length > 0
-            ? {
-                jobs,
-                discovered: {
-                  ats_provider: 'workable',
-                  ats_identifier: slug,
-                  careers_url: `https://apply.workable.com/${slug}/`,
-                  method: 'api-probe',
-                },
-              }
-            : null,
-        )
-        .catch(() => null),
-      fetchRecruitee(company, slug)
-        .then((jobs) =>
-          jobs.length > 0
-            ? {
-                jobs,
-                discovered: {
-                  ats_provider: 'recruitee',
-                  ats_identifier: slug,
-                  careers_url: `https://${slug}.recruitee.com`,
-                  method: 'api-probe',
-                },
-              }
-            : null,
-        )
-        .catch(() => null),
-      fetchPinpoint(company, slug)
-        .then((jobs) =>
-          jobs.length > 0
-            ? {
-                jobs,
-                discovered: {
-                  ats_provider: 'pinpoint',
-                  ats_identifier: slug,
-                  careers_url: `https://${slug}.pinpointhq.com`,
-                  method: 'api-probe',
-                },
-              }
-            : null,
-        )
-        .catch(() => null),
-      fetchRippling(company, slug)
-        .then((jobs) =>
-          jobs.length > 0
-            ? {
-                jobs,
-                discovered: {
-                  ats_provider: 'rippling',
-                  ats_identifier: slug,
-                  careers_url: `https://ats.rippling.com/${slug}`,
-                  method: 'api-probe',
-                },
-              }
-            : null,
-        )
-        .catch(() => null),
-    ];
+    );
 
     const settled = await Promise.all(probes);
     const hit = settled.find((item) => item !== null && isPlausibleProbeHit(slug, item.jobs));
@@ -2758,133 +2687,54 @@ async function probePublicAtsApis(
   return null;
 }
 
-async function fetchByProvider(company: CompanyTarget, provider: string, identifier: string): Promise<RawAtsJob[]> {
-  switch (provider) {
-    case 'greenhouse':
-      return fetchGreenhouse(company, identifier);
-    case 'lever':
-      return fetchLever(company, identifier);
-    case 'ashby':
-      return fetchAshby(company, identifier);
-    case 'smartrecruiters':
-      return fetchSmartRecruiters(company, identifier);
-    case 'workable':
-      return fetchWorkable(company, identifier);
-    case 'workday':
-    case 'workday_complete':
-    case 'workday_all':
-      return fetchWorkday(company, identifier);
-    case 'oracle':
-      return fetchOracle(company, identifier);
-    case 'eightfold':
-    case 'eightfold_complete':
-      return fetchEightfold(company, identifier);
-    case 'eightfold_legacy':
-      return fetchEightfoldLegacy(company, identifier);
-    case 'infineon':
-      return fetchEightfold(company, `jobs.infineon.com|${identifier || 'infineon.com'}`);
-    case 'phenom':
-      return fetchPhenom(company, identifier);
-    case 'jibe':
-      return fetchJibe(company, identifier);
-    case 'talentbrew':
-    case 'netapp':
-      return fetchTalentBrew(company, provider);
-    case 'avature':
-      return fetchAvature(company);
-    case 'mynexthire':
-      return fetchMyNextHire(company, identifier);
-    case 'atlassian':
-      return fetchAtlassian(company);
-    case 'avalara':
-      return fetchAvalara(company);
-    case 'ibm':
-      return fetchIbm(company, identifier);
-    case 'google_careers':
-      return fetchGoogleCareers(company, identifier);
-    case 'paylocity':
-      return fetchPaylocity(company);
-    case 'successfactors':
-    case 'adidas':
-      return fetchSuccessFactors(company);
-    case 'keka':
-      return fetchKeka(company, identifier);
-    case 'juspay':
-      return fetchJuspay(company);
-    case 'thoughtspot':
-      return fetchThoughtSpot(company);
-    case 'deel':
-      return fetchDeel(company);
-    case 'icims':
-      return fetchIcims(company);
-    case 'recruitee':
-      return fetchRecruitee(company, identifier);
-    case 'pinpoint':
-      return fetchPinpoint(company, identifier);
-    case 'rippling':
-      return fetchRippling(company, identifier);
-    case 'bamboohr':
-      return fetchBambooHr(company, identifier);
-    case 'darwinbox':
-      return fetchDarwinbox(company, identifier);
-    case 'jobvite':
-      return fetchJobvite(company, identifier);
-    case 'kula':
-      return fetchKula(company, identifier);
-    case 'pyjamahr':
-      return fetchPyjamaHr(company, identifier);
-    case 'amazon':
-      return fetchAmazon(company);
-    case 'xml':
-      return fetchXmlFeed(company, identifier);
-    default:
-      throw new Error(`Unsupported direct ATS provider: ${provider}`);
-  }
-}
+type ProviderFetcher = (company: CompanyTarget, identifier: string) => Promise<RawAtsJob[]>;
 
-const DIRECT_PROVIDERS = new Set([
-  'greenhouse',
-  'lever',
-  'ashby',
-  'smartrecruiters',
-  'workable',
-  'workday',
-  'workday_complete',
-  'workday_all',
-  'oracle',
-  'eightfold',
-  'eightfold_complete',
-  'eightfold_legacy',
-  'infineon',
-  'phenom',
-  'jibe',
-  'talentbrew',
-  'netapp',
-  'avature',
-  'mynexthire',
-  'atlassian',
-  'avalara',
-  'ibm',
-  'google_careers',
-  'paylocity',
-  'successfactors',
-  'adidas',
-  'keka',
-  'juspay',
-  'thoughtspot',
-  'deel',
-  'icims',
-  'recruitee',
-  'pinpoint',
-  'rippling',
-  'bamboohr',
-  'darwinbox',
-  'jobvite',
-  'kula',
-  'pyjamahr',
-  'amazon',
-  'xml',
-]);
+const PROVIDER_FETCHERS: Record<string, ProviderFetcher> = {
+  lever: fetchLever,
+  smartrecruiters: fetchSmartRecruiters,
+  workable: fetchWorkable,
+  workday: fetchWorkday,
+  workday_complete: fetchWorkday,
+  workday_all: fetchWorkday,
+  oracle: fetchOracle,
+  eightfold: fetchEightfold,
+  eightfold_complete: fetchEightfold,
+  eightfold_legacy: fetchEightfoldLegacy,
+  infineon: (c, id) => fetchEightfold(c, `jobs.infineon.com|${id || 'infineon.com'}`),
+  phenom: fetchPhenom,
+  jibe: fetchJibe,
+  talentbrew: (c) => fetchTalentBrew(c, 'talentbrew'),
+  netapp: (c) => fetchTalentBrew(c, 'netapp'),
+  avature: (c) => fetchAvature(c),
+  mynexthire: fetchMyNextHire,
+  atlassian: (c) => fetchAtlassian(c),
+  ibm: fetchIbm,
+  google_careers: fetchGoogleCareers,
+  paylocity: (c) => fetchPaylocity(c),
+  successfactors: (c) => fetchSuccessFactors(c),
+  adidas: (c) => fetchSuccessFactors(c),
+  keka: fetchKeka,
+  juspay: (c) => fetchJuspay(c),
+  thoughtspot: (c) => fetchThoughtSpot(c),
+  deel: (c) => fetchDeel(c),
+  icims: (c) => fetchIcims(c),
+  jobvite: fetchJobvite,
+  kula: fetchKula,
+  pyjamahr: fetchPyjamaHr,
+  amazon: (c) => fetchAmazon(c),
+  xml: fetchXmlFeed,
+};
+
+const DIRECT_PROVIDERS = new Set([...Object.keys(SIMPLE_BOARD_SPECS), ...Object.keys(PROVIDER_FETCHERS)]);
+
+async function fetchByProvider(company: CompanyTarget, provider: string, identifier: string): Promise<RawAtsJob[]> {
+  if (SIMPLE_BOARD_SPECS[provider]) {
+    return fetchSimpleBoard(provider, company, identifier);
+  }
+  const fetcher = PROVIDER_FETCHERS[provider];
+  if (!fetcher) throw new Error(`Unsupported direct ATS provider: ${provider}`);
+  return fetcher(company, identifier);
+}
 
 async function collectFromCareerSite(
   company: CompanyTarget,

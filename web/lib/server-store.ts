@@ -3,6 +3,7 @@ import path from 'node:path';
 import type { CompanyScrapeOutcome, CompanyTarget } from './ats-engine.ts';
 import type { NormalizedIngestJob } from './job-normalizer.ts';
 import { enforceShortlistLocation } from './location-policy.ts';
+import { extractRequirements, normalizeExperience } from './job-requirements.ts';
 
 export type RecordValue = Record<string, unknown>;
 
@@ -608,33 +609,109 @@ export function createJobRadarStore(config: StoreConfig = {}) {
     companies.set(company.name.toLowerCase(), { ...company });
   }
 
+  let stateVersion = 1;
   let nextJobId = 1;
   const jobs: StoredJob[] = [];
   const jobBySourceKey = new Map<string, StoredJob>();
+  const jobByFingerprintKey = new Map<string, StoredJob>();
+  const jobById = new Map<number, StoredJob>();
   const runs: StoredRun[] = [];
   const notifications: StoredNotification[] = [];
   const fetchedCache = new Map<string, { jobs: NormalizedIngestJob[]; diagnostics: string[]; checked_at: string }>();
+  type PublicStoredJob = Omit<StoredJob, 'source' | 'freshness_score' | 'priority_score'> & {
+    precomputed_requirements: ReturnType<typeof extractRequirements>;
+    experience_normalized: true;
+  };
+  const publicJobCache = new WeakMap<StoredJob, { sig: string; pub: PublicStoredJob }>();
   let nextRunId = 1;
   let nextNotificationId = 1;
 
-  const persist = () => {
+  const jobFingerprint = (company: string, normalizedTitle: string, city: string | null) =>
+    normalizedTitle && city
+      ? `${company.trim().toLowerCase()}\u001f${normalizedTitle.trim().toLowerCase()}\u001f${city.trim().toLowerCase()}`
+      : null;
+
+  const indexJob = (job: StoredJob) => {
+    jobById.set(job.id, job);
+    jobBySourceKey.set(`${job.company.toLowerCase()}\u001f${job.ats_provider}\u001f${job.external_job_id}`, job);
+    const fp = jobFingerprint(job.company, job.normalized_title, job.city);
+    if (fp) jobByFingerprintKey.set(fp, job);
+  };
+
+  let persistDirty = false;
+  let persistInFlight: Promise<void> | null = null;
+  let persistTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const buildPersistedPayload = (): PersistedState => ({
+    version: 1,
+    companies: [...companies.values()],
+    jobs,
+    runs: runs.slice(-50),
+    notifications: notifications.slice(-100),
+  });
+
+  const flushPersistSync = () => {
+    if (persistTimer) {
+      clearTimeout(persistTimer);
+      persistTimer = null;
+    }
     if (!config.persistPath) return;
     try {
       fs.mkdirSync(path.dirname(config.persistPath), { recursive: true });
-      const payload: PersistedState = {
-        version: 1,
-        companies: [...companies.values()],
-        jobs,
-        runs: runs.slice(-50),
-        notifications: notifications.slice(-100),
-      };
       const tmp = `${config.persistPath}.tmp`;
-      fs.writeFileSync(tmp, JSON.stringify(payload), 'utf8');
+      fs.writeFileSync(tmp, JSON.stringify(buildPersistedPayload()), 'utf8');
       fs.renameSync(tmp, config.persistPath);
+      persistDirty = false;
     } catch {
       // ignore persistence errors in read-only or constrained environments
     }
   };
+
+  const runAsyncPersist = async () => {
+    if (!config.persistPath) return;
+    while (persistDirty) {
+      persistDirty = false;
+      try {
+        await fs.promises.mkdir(path.dirname(config.persistPath), { recursive: true });
+        const tmp = `${config.persistPath}.tmp`;
+        await fs.promises.writeFile(tmp, JSON.stringify(buildPersistedPayload()), 'utf8');
+        await fs.promises.rename(tmp, config.persistPath);
+      } catch {
+        // ignore persistence errors in read-only or constrained environments
+      }
+    }
+  };
+
+  const schedulePersist = (immediate = false) => {
+    stateVersion += 1;
+    if (!config.persistPath) return;
+    persistDirty = true;
+    if (immediate) {
+      if (persistTimer) {
+        clearTimeout(persistTimer);
+        persistTimer = null;
+      }
+      if (!persistInFlight) {
+        persistInFlight = runAsyncPersist().finally(() => {
+          persistInFlight = null;
+        });
+      }
+      return;
+    }
+    if (!persistTimer) {
+      persistTimer = setTimeout(() => {
+        persistTimer = null;
+        if (!persistInFlight) {
+          persistInFlight = runAsyncPersist().finally(() => {
+            persistInFlight = null;
+          });
+        }
+      }, 250);
+      persistTimer.unref?.();
+    }
+  };
+
+  const persist = () => schedulePersist(false);
 
   let restoredFromDisk = false;
   if (config.persistPath && fs.existsSync(config.persistPath)) {
@@ -654,10 +731,7 @@ export function createJobRadarStore(config: StoreConfig = {}) {
         for (const j of raw.jobs) {
           if (j && typeof j.id === 'number' && typeof j.external_job_id === 'string') {
             jobs.push(j);
-            jobBySourceKey.set(
-              `${j.company.toLowerCase()}\u001f${j.ats_provider}\u001f${j.external_job_id}`,
-              j,
-            );
+            indexJob(j);
             nextJobId = Math.max(nextJobId, j.id + 1);
           }
         }
@@ -714,10 +788,7 @@ export function createJobRadarStore(config: StoreConfig = {}) {
     for (const seed of buildSeedJobs(nowMs)) {
       const stored: StoredJob = { ...seed, id: nextJobId++ };
       jobs.push(stored);
-      jobBySourceKey.set(
-        `${stored.company.toLowerCase()}\u001f${stored.ats_provider}\u001f${stored.external_job_id}`,
-        stored,
-      );
+      indexJob(stored);
     }
     upsertCompanyStats(jobs);
 
@@ -815,15 +886,32 @@ export function createJobRadarStore(config: StoreConfig = {}) {
     return 2;
   };
 
-  const toPublicJob = (job: StoredJob) => {
-    const pub = { ...job } as Record<string, unknown>;
-    delete pub.source;
-    delete pub.freshness_score;
-    delete pub.priority_score;
-    return enforceShortlistLocation(pub);
+  const toPublicJob = (job: StoredJob): PublicStoredJob => {
+    const sig = `${job.last_seen_at}|${job.experience_label}|${job.is_eligible}|${job.location}|${job.description.length}`;
+    const cached = publicJobCache.get(job);
+    if (cached && cached.sig === sig) return cached.pub;
+
+    const pub = { ...job };
+    delete (pub as { source?: unknown }).source;
+    delete (pub as { freshness_score?: unknown }).freshness_score;
+    delete (pub as { priority_score?: unknown }).priority_score;
+
+    const req = extractRequirements(pub.description || '', pub.location || pub.normalized_location || '');
+    const localized = enforceShortlistLocation(pub);
+    const normalized = normalizeExperience({
+      ...localized,
+      precomputed_requirements: req,
+    });
+    const enriched: PublicStoredJob = {
+      ...normalized,
+      precomputed_requirements: req,
+      experience_normalized: true,
+    } as PublicStoredJob;
+    publicJobCache.set(job, { sig, pub: enriched });
+    return enriched;
   };
 
-  const getDashboard = () => {
+  const buildDashboardPayload = (fullCatalog: boolean) => {
     const active = activeShortlistJobs();
     const sortedForDashboard = [...active].sort((a, b) => {
       const tierDiff = dashboardTier(a) - dashboardTier(b);
@@ -834,9 +922,9 @@ export function createJobRadarStore(config: StoreConfig = {}) {
       return b.relevance_score - a.relevance_score;
     });
 
-    const ids = active.map((j) => j.id).sort((a, b) => a - b);
+    const ids = fullCatalog ? [] : active.map((j) => j.id).sort((a, b) => a - b);
     const catalog_ranges =
-      ids.length <= 100000
+      !fullCatalog && ids.length <= 100000
         ? Array.from({ length: Math.ceil(ids.length / 500) }, (_, i) => ({
             after: i ? ids[i * 500 - 1] : 0,
             through: ids[Math.min((i + 1) * 500, ids.length) - 1],
@@ -847,8 +935,9 @@ export function createJobRadarStore(config: StoreConfig = {}) {
     const latestNotifications = [...notifications].sort((a, b) => b.id - a.id).slice(0, 50);
 
     return {
+      version: stateVersion,
       catalog_ranges,
-      jobs: sortedForDashboard.slice(0, 100).map(toPublicJob),
+      jobs: (fullCatalog ? sortedForDashboard : sortedForDashboard.slice(0, 100)).map(toPublicJob),
       companies: dedupedCompanies(),
       latest_run: latestRuns[0] || null,
       runs: latestRuns,
@@ -863,6 +952,15 @@ export function createJobRadarStore(config: StoreConfig = {}) {
         skills_required: false,
       },
     };
+  };
+
+  const getDashboard = () => buildDashboardPayload(false);
+  const getFullDashboard = () => buildDashboardPayload(true);
+  const getCompanies = () => ({ version: stateVersion, companies: dedupedCompanies(), server_time: new Date(now()).toISOString() });
+  const getVersion = () => stateVersion;
+  const getJobById = (id: number) => {
+    const job = jobById.get(id);
+    return job ? toPublicJob(job) : null;
   };
 
   const getJobsPage = (params: { afterRaw?: string | null; limitRaw?: string | null; throughRaw?: string | null }) => {
@@ -1055,7 +1153,7 @@ export function createJobRadarStore(config: StoreConfig = {}) {
       if (!existing) {
         const created: StoredJob = { ...normalized, id: nextJobId++ };
         jobs.push(created);
-        jobBySourceKey.set(key, created);
+        indexJob(created);
         newExternalIds.push(ext);
         newJobKeys.push(`${company}\u001f${ats}\u001f${ext}`);
         rowsWritten += 1;
@@ -1063,6 +1161,7 @@ export function createJobRadarStore(config: StoreConfig = {}) {
         Object.assign(existing, normalized, {
           posted_at: existing.posted_at ?? normalized.posted_at,
         });
+        indexJob(existing);
         rowsWritten += 1;
       }
     }
@@ -1262,7 +1361,7 @@ export function createJobRadarStore(config: StoreConfig = {}) {
       .map(toCompanyTarget);
   };
 
-  const applyCompanyScrape = (outcome: CompanyScrapeOutcome, recordRun = false) => {
+  const applyCompanyScrape = (outcome: CompanyScrapeOutcome, recordRun = false, persistNow = true) => {
     const checkedIso = new Date(now()).toISOString();
     const key = outcome.company.trim().toLowerCase();
     const existing = companies.get(key);
@@ -1299,7 +1398,8 @@ export function createJobRadarStore(config: StoreConfig = {}) {
     for (const j of targetJobs) {
       const sourceKey = `${updatedCompany.name.toLowerCase()}\u001f${j.ats_provider}\u001f${j.external_job_id}`;
       seenKeys.add(sourceKey);
-      const existingJob = jobBySourceKey.get(sourceKey);
+      const fp = jobFingerprint(updatedCompany.name, j.normalized_title, j.city);
+      const existingJob = jobBySourceKey.get(sourceKey) || (fp ? jobByFingerprintKey.get(fp) : undefined);
       const normalized: Omit<StoredJob, 'id'> = {
         external_job_id: j.external_job_id,
         company: updatedCompany.name,
@@ -1339,12 +1439,13 @@ export function createJobRadarStore(config: StoreConfig = {}) {
       if (!existingJob) {
         const created: StoredJob = { ...normalized, id: nextJobId++ };
         jobs.push(created);
-        jobBySourceKey.set(sourceKey, created);
+        indexJob(created);
         newJobs += 1;
       } else {
         Object.assign(existingJob, normalized, {
           posted_at: existingJob.posted_at ?? normalized.posted_at,
         });
+        indexJob(existingJob);
       }
     }
 
@@ -1377,7 +1478,7 @@ export function createJobRadarStore(config: StoreConfig = {}) {
       });
     }
 
-    persist();
+    schedulePersist(persistNow);
 
     return {
       company: updatedCompany,
@@ -1406,7 +1507,7 @@ export function createJobRadarStore(config: StoreConfig = {}) {
       status: outcomes.some((o) => Boolean(o.error)) ? 'partial' : 'success',
     };
     runs.push(run);
-    persist();
+    schedulePersist(true);
     return run;
   };
 
@@ -1464,7 +1565,11 @@ export function createJobRadarStore(config: StoreConfig = {}) {
   };
 
   return {
+    getVersion,
     getDashboard,
+    getFullDashboard,
+    getCompanies,
+    getJobById,
     getJobsPage,
     getHealth,
     ingest,
@@ -1477,5 +1582,6 @@ export function createJobRadarStore(config: StoreConfig = {}) {
     recordBatchRun,
     upsertCompany,
     getCompanyJobs,
+    flushPersist: flushPersistSync,
   };
 }

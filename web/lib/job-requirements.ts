@@ -31,9 +31,11 @@ export function extractRequirements(description:string,location='',clauses=candi
  return {experience:analyzeExperience(description,clauses),requiredSkills:requiredSkills.filter(x=>!conflicts.includes(x.value)),preferredSkills:preferredSkills.filter(x=>!conflicts.includes(x.value)),mentionedSkills,skillConflicts:conflicts,education,batches,workMode:modes.size===1?[...modes][0]:modes.size>1?'Conflicting':'Unknown',workModeEvidence:modeEvidence.slice(0,3),remoteEligibility:remoteEligibility(location,clauses),reviewNeeded:true};
 }
 export function experienceUnverified(job:{experience_label?:string}) {return /^(?:Entry-level title — experience unverified|Conditional experience|Conflicting experience|JD extract)/i.test(job.experience_label||'');}
-export function normalizeExperience<T extends {description?:string|null;experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string;description_truncated?:boolean}>(job:T):T {
+export function normalizeExperience<T extends {description?:string|null;experience_label:string;experience_min:number|null;experience_max:number|null;is_eligible:number;eligibility_reason:string;description_truncated?:boolean;precomputed_requirements?:ReturnType<typeof extractRequirements>;experience_normalized?:boolean}>(job:T):T {
+ if(job.precomputed_requirements)requirementCache.set(job,job.precomputed_requirements);
+ if(job.experience_normalized)return job;
  if(job.description_truncated)return {...job,experience_min:null,experience_max:null,is_eligible:0,experience_label:"JD extract — verify full requirements",eligibility_reason:"JD extract — verify full requirements"};
- const requirements=typeof job.description==='string'&&job.description.trim()?requirementsFor(job):null;
+ const requirements=job.precomputed_requirements ?? (typeof job.description==='string'&&job.description.trim()?requirementsFor(job):null);
  const analysis=requirements?.experience;
  let normalized=job;
  if(analysis&&analysis.status!=='unknown') {
@@ -66,8 +68,9 @@ export function clausesFor(job:{description?:string|null}) {
  const value=candidateClauses(job.description||'');clauseCache.set(job,value);return value;
 }
 const requirementCache=new WeakMap<object,ReturnType<typeof extractRequirements>>();
-export function requirementsFor(job:{description?:string|null;location?:string;normalized_location?:string}) {
+export function requirementsFor(job:{description?:string|null;location?:string;normalized_location?:string;precomputed_requirements?:ReturnType<typeof extractRequirements>}) {
  const cached=requirementCache.get(job);if(cached)return cached;
+ if(job.precomputed_requirements){requirementCache.set(job,job.precomputed_requirements);return job.precomputed_requirements;}
  const value=extractRequirements(job.description||'',job.location||job.normalized_location||'',clausesFor(job));
  requirementCache.set(job,value);return value;
 }
@@ -76,4 +79,10 @@ export function primeRequirements(job:object, value:ReturnType<typeof extractReq
  requirementCache.set(job,value);
 }
 
-export function hasRequirements(job:object) {return requirementCache.has(job);}
+export function hasRequirements(job: object) {
+  if ('precomputed_requirements' in job && (job as { precomputed_requirements?: unknown }).precomputed_requirements) {
+    requirementCache.set(job, (job as { precomputed_requirements: ReturnType<typeof extractRequirements> }).precomputed_requirements);
+    return true;
+  }
+  return requirementCache.has(job);
+}
