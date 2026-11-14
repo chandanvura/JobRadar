@@ -93,7 +93,7 @@ def test_workday_skips_only_definitely_old_details_and_keeps_unknown_dates(monke
     assert set(requested)=={'R0','R1','R2','R5'}
 
 
-@pytest.mark.parametrize('title', ['Spring Boot Developer', 'CI/CD Engineer', 'AWS Engineer', 'SRE Engineer', 'Infra Engineer', 'Developer Productivity Engineer'])
+@pytest.mark.parametrize('title', ['Spring Boot Developer', 'CI/CD Engineer', 'AWS Engineer', 'SRE Engineer', 'Infra Engineer', 'Developer Productivity Engineer', 'Design Engineer', 'Product Engineer', 'Solutions Engineer', 'AppSec Engineer', 'Prompt Engineer'])
 def test_expanded_titles_never_substitute_for_experience_date_or_location_proof(title):
     assert enrich(make_job(title, 'Required experience: 0-2 years. Java and Linux.')).is_eligible
     assert not enrich(make_job(title, 'Required experience: 5-7 years. Java and Linux.')).is_eligible
@@ -106,8 +106,50 @@ def test_expanded_titles_never_substitute_for_experience_date_or_location_proof(
     assert not enrich(foreign).is_eligible
 
 
+def test_solutions_architect_classified_in_cloud_but_leadership_excluded():
+    job = enrich(make_job('Solutions Architect', 'Required experience: 0-2 years. AWS and distributed systems.'))
+    assert job.role_category == 'Cloud'
+    assert not job.is_eligible
+    assert job.eligibility_reason == 'Leadership-level title'
+
+
 def test_level_one_sre_defaults_to_entry_level_when_experience_unstated():
     job = enrich(make_job('SRE I', 'Build reliable systems with Java and Linux.'))
     assert job.is_eligible
     assert job.experience_min == 0.0 and job.experience_max == 2.0
     assert job.experience_label == "Entry-level title"
+
+
+def test_cross_domain_design_and_product_engineering_guards():
+    assert classify_title("Design Engineer", "Responsible for manufacturing quality and mechanical parts assembly.")[1] == "Other"
+    assert classify_title("Design Engineer", "Responsible for ASIC synthesis, verilog RTL design and silicon timing analysis.")[1] == "Embedded / Hardware"
+    assert classify_title("Product Engineer", "Retail store merchandising and physical product inspection in factory.")[1] == "Other"
+    assert classify_title("Product Engineer", "Full-stack software engineering using Python, React, and REST APIs.")[1] == "Software Engineering"
+    assert classify_title("Civil Design Engineer")[1] == "Other"
+    assert classify_title("Mechanical Design Engineer")[1] == "Other"
+
+
+def test_workday_minified_facet_parameters_parse_country_and_cities(monkeypatch):
+    requests = []
+    async def request(client, method, url, **kwargs):
+        body = kwargs['json']; requests.append(body)
+        if not body['appliedFacets']:
+            result = {
+                'total': 500,
+                'jobPostings': [],
+                'facets': [
+                    {'facetParameter': 'a', 'values': [{'id': 'ind_id', 'descriptor': 'India'}, {'id': 'us_id', 'descriptor': 'United States'}]},
+                    {'facetParameter': 'b', 'values': [{'id': 'blr_id', 'descriptor': 'Bangalore'}, {'id': 'lon_id', 'descriptor': 'London'}]}
+                ]
+            }
+        else:
+            result = {'total': 1, 'jobPostings': [{'title': 'Design Engineer', 'externalPath': '/job/India/R1', 'locationsText': 'Bangalore'}]}
+        return httpx.Response(200, request=httpx.Request(method, url), json=result)
+    async def detail(client, url):
+        return httpx.Response(200, request=httpx.Request('GET', url), json={'jobPostingInfo': {'title': 'Design Engineer', 'jobReqId': 'R1', 'jobDescription': '0-2 years with Verilog', 'location': 'Bangalore'}})
+    monkeypatch.setattr(adapters, 'request', request)
+    monkeypatch.setattr(adapters, 'fetch_detail', detail)
+    company = Company('RedHatTest', 'https://example.wd5.myworkdayjobs.com/Jobs', 'workday', 'redhat|Jobs')
+    jobs, total = asyncio.run(adapters.WorkdayAdapter().fetch_jobs(company))
+    assert total == len(jobs) == 1 and jobs[0].title == 'Design Engineer'
+    assert requests[1]['appliedFacets'] == {'a': ['ind_id']}
