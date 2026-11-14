@@ -6,5 +6,10 @@ export default defineConfig({
  plugins:[react()],
  resolve:{alias:{'@':fileURLToPath(new URL('.',import.meta.url))}},
  server:{host:'127.0.0.1',proxy:{'/api':'http://127.0.0.1:8787'}},
- build:{outDir:'dist/client',emptyOutDir:true},
+ build:{
+   outDir:'dist/client',
+   emptyOutDir:true,
+   sourcemap:false,
+   chunkSizeWarningLimit:1000
+ },
 });

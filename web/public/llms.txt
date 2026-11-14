@@ -1,0 +1,16 @@
+# JobRadar (AI Assistant & Agent Context)
+
+> JobRadar is an open-source, automated career intelligence platform focused strictly on entry-level and early-career software engineering and technology positions in Bengaluru and Hyderabad, India.
+
+## Core Mission & Architecture
+- **Target Cities**: Exclusively Bengaluru (Bangalore) and Hyderabad, Karnataka & Telangana, India.
+- **Experience Requirement**: Strictly <= 2 Years of Experience (0–2 YOE). Any roles demanding 3+ years or management seniority are automatically disqualified.
+- **Proof of Freshness**: 24-hour employer posting proof parsed directly from ATS schemas (Greenhouse, Lever, Ashby, Workday, SmartRecruiters, Phenom, Eightfold, Oracle HCM, and direct corporate careers endpoints).
+- **Privacy By Design**: Zero cloud telemetry or user data collection. Application status, notes, resumes, and bookmarks reside solely in the user's browser `localStorage`.
+- **Infrastructure**: Cloudflare Workers, Cloudflare D1 SQL database, and Vite/React client.
+
+## Public APIs
+- `GET /api/dashboard`: Summary statistics, recent runs, catalog ranges, and live tracked company status.
+- `GET /api/jobs?limit=100&after=0`: Public catalog job listings matching active verification criteria.
+- `GET /api/health`: Platform operational health, D1 connectivity, and scan age.
+- `GET /backup/catalog.json`: Verified static catalog snapshot for zero-downtime offline failover.
