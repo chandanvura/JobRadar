@@ -139,10 +139,12 @@ async def scrape(company,sem,custom_sem):
                 # clients or expose only a JavaScript UI. Preserve those sources
                 # and their career links as limited coverage; do not misreport a
                 # blocked non-structured page as a scraper-system failure.
+                is_maintenance=(isinstance(exc,httpx.HTTPStatusError) and exc.response.status_code==521) or "Site Maintenance" in str(exc) or "Web server is down" in str(exc)
                 limited=(company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError,ValueError))) or isinstance(exc,json.JSONDecodeError)
-                warning=("Limited coverage: official career page blocks or does not expose machine-readable access"
+                warning=("Upstream maintenance: provider offline for scheduled maintenance" if is_maintenance
+                         else "Limited coverage: official career page blocks or does not expose machine-readable access"
                          if limited else f"{type(exc).__name__}: {str(exc)[:160]}")
-                outcome="limited" if limited else "failed"
+                outcome="maintenance" if is_maintenance else ("limited" if limited else "failed")
                 status={"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":None,"error_count":0 if limited else 1,"jobs_found":0,"candidate_jobs":0,"eligible_jobs":0,"warning":warning}
                 return [],status,None if limited else f"{type(exc).__name__}: {exc}",0
             finally:
