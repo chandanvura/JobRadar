@@ -104,7 +104,7 @@ async def fetch_company_jobs(company,attempts=3):
         except httpx.HTTPStatusError as exc:
             last=exc
             status=exc.response.status_code
-            if status not in {429,500,502,503,504} or attempt+1>=attempts:
+            if (status not in {429,500,502,503,504,520,521,522,523,524,525}) or attempt+1>=attempts:
                 raise
             delay = source_retry_delay(exc.response, attempt)
             if delay is None:
