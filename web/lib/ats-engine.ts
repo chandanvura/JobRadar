@@ -46,7 +46,9 @@ export function unescapeJsText(text: string): string {
 export function candidateSlugsForCompany(name: string, careersUrl: string): string[] {
   const slugs = new Set<string>();
   const add = (val: string) => {
-    const clean = val.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/^-+|-+$/g, '');
+    let clean = val.toLowerCase().replace(/[^a-z0-9-]/g, '');
+    while (clean.startsWith('-')) clean = clean.slice(1);
+    while (clean.endsWith('-')) clean = clean.slice(0, -1);
     if (clean.length >= 2) slugs.add(clean);
   };
   const baseName = name
@@ -270,16 +272,16 @@ export async function mapWithLimit<T>(
 
 export function decodeHtmlEntities(input: string): string {
   let out = input;
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 2; i++) {
     const next = out
-      .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&quot;/g, '"')
       .replace(/&#39;|&apos;|&#x27;/gi, "'")
       .replace(/&nbsp;/g, ' ')
       .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
-      .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+      .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+      .replace(/&amp;/g, '&');
     if (next === out) break;
     out = next;
   }
@@ -670,16 +672,37 @@ export function parseXmlJobs(
   return jobs;
 }
 
+function assertSafeHttpUrl(rawUrl: string): URL {
+  const parsed = new URL(rawUrl);
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw new Error(`Disallowed protocol: ${parsed.protocol}`);
+  }
+  const host = parsed.hostname.toLowerCase();
+  if (
+    host === 'localhost' ||
+    host === '127.0.0.1' ||
+    host === '0.0.0.0' ||
+    host.endsWith('.local') ||
+    host.startsWith('10.') ||
+    host.startsWith('192.168.') ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(host)
+  ) {
+    throw new Error(`Disallowed host: ${host}`);
+  }
+  return parsed;
+}
+
 async function fetchWithRetry(
   url: string,
   init: RequestInit & { timeoutMs?: number } = {},
   attempts = 2,
 ): Promise<Response> {
+  const safeTarget = assertSafeHttpUrl(url);
   const timeoutMs = init.timeoutMs ?? 10000;
   let lastError: unknown;
   for (let i = 0; i < attempts; i++) {
     try {
-      const res = await fetch(url, {
+      const res = await fetch(safeTarget.href, {
         ...init,
         headers: {
           'User-Agent': USER_AGENT,
@@ -1469,7 +1492,14 @@ async function fetchKula(c: CompanyTarget, slug: string): Promise<RawAtsJob[]> {
 
 async function fetchPyjamaHr(c: CompanyTarget, identifier: string): Promise<RawAtsJob[]> {
   let companyUuid = /^\d{5,}$|^[0-9a-f-]{16,}$/i.test(identifier) ? identifier : '';
-  const boardUrl = c.careers_url.includes('pyjamahr.com')
+  let isPyjamaHost = false;
+  try {
+    const host = new URL(c.careers_url).hostname.toLowerCase();
+    isPyjamaHost = host === 'pyjamahr.com' || host.endsWith('.pyjamahr.com');
+  } catch {
+    // ignore invalid URL
+  }
+  const boardUrl = isPyjamaHost
     ? c.careers_url
     : `https://jobs.pyjamahr.com/${encodeURIComponent(identifier)}`;
 
