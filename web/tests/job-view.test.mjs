@@ -61,3 +61,23 @@ test('review keeps out-of-range and unknown senior evidence, while All Jobs keep
   const row=job(changes);assert.equal(matchesCareerView(row,'Needs Review',0,3,false),true);assert.equal(matchesCareerView(row,'All Jobs',0,3,false),true);assert.equal(matchesCareerView(row,'Dashboard',0,3,false),false);
  }
 });
+
+test('allowAnyDate admits older verified 0-2 YOE opportunities while preserving all other gates', () => {
+ const olderVerified = job({
+  title: 'Microservices Engineer',
+  city: 'Bengaluru',
+  is_active: 1,
+  is_eligible: 0,
+  experience_min: 1,
+  experience_max: 3,
+  eligibility_reason: 'Posting date not verified within 24 hours',
+ });
+ assert.equal(matchesCareerView(olderVerified, 'Dashboard', 0, 3, false), false);
+ assert.equal(matchesCareerView(olderVerified, 'Dashboard', 0, 3, false, false), false);
+ assert.equal(matchesCareerView(olderVerified, 'Dashboard', 0, 3, false, true), true);
+ assert.equal(matchesCareerView(olderVerified, 'Recommended', 0, 3, false, true), true);
+ assert.equal(matchesCareerView({ ...olderVerified, title: 'Senior Microservices Engineer' }, 'Dashboard', 0, 3, false, true), false);
+ assert.equal(matchesCareerView({ ...olderVerified, experience_min: 4 }, 'Dashboard', 0, 3, false, true), false);
+ assert.equal(matchesCareerView({ ...olderVerified, city: 'Pune' }, 'Dashboard', 0, 3, false, true), false);
+ assert.equal(matchesCareerView({ ...olderVerified, eligibility_reason: 'Role outside target list' }, 'Dashboard', 0, 3, false, true), false);
+});

@@ -23,7 +23,7 @@ TECHNICAL_EVIDENCE = re.compile(
 # Refuse a confirmed non-software context unless the actual requirements also
 # contain an engineering signal. Do not infer technical eligibility from YOE.
 CROSS_DOMAIN_ENGINEERING_TITLES = frozenset({
-    "performance engineer", "database engineer", "qa engineer", "design engineer", "product engineer",
+    "performance engineer", "database engineer", "qa engineer", "design engineer", "product engineer", "reliability engineer",
 })
 NON_SOFTWARE_DOMAIN = re.compile(
     r'\b(?:retail store|sales performance|merchandising|customer contacts|'

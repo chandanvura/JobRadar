@@ -706,12 +706,13 @@ function DashboardContent() {
   const filtered = useMemo(() => {
     if (!jobViews.has(active)) return [];
     const reviewView = active === "Needs Review";
+    const allowAnyDate = freshness === "Any date";
     const result = mergedJobs.filter((j) => {
       const track = jobTracking(j), match = ranking.get(trackingKey(j))!.match;
       if (["Dashboard","Recommended","Ultra Fresh"].includes(active) && hideRecommendation(track)) return false;
       if (["Dashboard","Recommended","Ultra Fresh"].includes(active) && !match.roleFamilyMatch) return false;
       const reportedExperience = active === "Needs Review" && track.feedback === "experience" && j.is_active && !isInternship(j);
-      if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, currentPosting(j,rankingNow)) && !reportedExperience) return false;
+      if (!matchesCareerView(j, active, preferences.experienceMin, preferences.experienceMax, currentPosting(j,rankingNow), allowAnyDate) && !reportedExperience) return false;
       if (deferredQuery && !searchPending && !searchScores.has(j)) return false;
       if (!["Saved", "Applications"].includes(active) && workMode !== "All arrangements" && requirementsFor(j).workMode !== workMode) return false;
       if (active === "Internships" && !isInternship(j)) return false;
@@ -764,6 +765,7 @@ function DashboardContent() {
         active !== "Saved" &&
         active !== "Applications" &&
         verifiedView(active) &&
+        !allowAnyDate &&
         !currentPosting(j,rankingNow)
       )
         return false;

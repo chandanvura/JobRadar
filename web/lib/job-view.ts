@@ -6,20 +6,21 @@ export type ViewJob={title:string;is_active:number;is_eligible:number;experience
 const senior=(title:string)=>/\b(?:senior|sr\.?|staff|principal|lead|manager|director|head|architect|experienced)\b|\b(?:engineer|scientist)\s+(?:III|IV|V)\b/i.test(title.replace(/member of technical staff/gi,'technical contributor'));
 export const verifiedView=(view:string)=>['Dashboard','Recommended','Ultra Fresh'].includes(view);
 export const defaultFreshness=(view:string)=>verifiedView(view)?'24 hours':'Any date';
-export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,currentPosting:boolean) {
+export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,currentPosting:boolean,allowAnyDate:boolean=false) {
   if(['Saved','Applications'].includes(view))return true;
   if(!job.is_active)return false;
   if((job.city || job.normalized_location) && !shortlistLocation(job))return false;
   if(view==='All Jobs')return !internshipRole(job);
   if(view==='Internships')return internshipRole(job);
   if(internshipRole(job))return false;
-  if(view==='Needs Review')return senior(job.title)||experienceUnverified(job)||!job.is_eligible||!currentPosting||(job.experience_min??0)>max||(job.experience_max!==null&&job.experience_max<min);
+  const eligible = Boolean(job.is_eligible || (allowAnyDate && job.eligibility_reason === 'Posting date not verified within 24 hours'));
+  if(view==='Needs Review')return senior(job.title)||experienceUnverified(job)||!eligible||(!allowAnyDate&&!currentPosting)||(job.experience_min??0)>max||(job.experience_max!==null&&job.experience_max<min);
   if(max<=3&&view!=='Needs Review'&&senior(job.title))return false;
   if(verifiedView(view)&&typeof job.normalized_location==='string'&&!shortlistLocation(job))return false;
-  if(verifiedView(view)&&(experienceUnverified(job)||!job.is_eligible||!currentPosting||!experienceWithinPolicy(job.experience_min,job.experience_max)))return false;
+  if(verifiedView(view)&&(experienceUnverified(job)||!eligible||(!allowAnyDate&&!currentPosting)||!experienceWithinPolicy(job.experience_min,job.experience_max)))return false;
   const known=!experienceUnverified(job)&&(job.experience_min!==null||job.experience_max!==null);
   if(known&&((job.experience_min??0)>max||(job.experience_max??Infinity)<min))return false;
   if(!known&&senior(job.title))return false;
-  if(view==='Needs Review')return senior(job.title)||!job.is_eligible||!currentPosting;
+  if(view==='Needs Review')return senior(job.title)||!eligible||(!allowAnyDate&&!currentPosting);
   return true;
 }
