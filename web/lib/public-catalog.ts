@@ -1,6 +1,6 @@
 type Catalog = {jobs:{id:number}[];companies:unknown[];catalog_ranges?:{after:number;through:number}[];data_mode?:'backup'};
 type Fetcher = typeof fetch;
-export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)=>void|Promise<void>, fetcher:Fetcher=fetch, signal?:AbortSignal, limits={requestMs:10000,liveMs:45000}):Promise<T> {
+export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)=>void|Promise<void>, fetcher:Fetcher=fetch, signal?:AbortSignal, limits={requestMs:25000,liveMs:60000}):Promise<T> {
   const liveSignal=AbortSignal.timeout(limits.liveMs);
   const failedPages=new AbortController();
   const read = async (path:string) => {
@@ -9,7 +9,7 @@ export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)
     bounded.throwIfAborted();
     return new Promise<unknown>((resolve,reject)=>{
       const abort=()=>reject(bounded.reason);bounded.addEventListener('abort',abort,{once:true});
-      void (async()=>{const response=await fetcher(path,{signal:bounded});if(!response.ok)throw Error(`Catalog request returned ${response.status}`);return response.json();})().then(resolve,reject).finally(()=>bounded.removeEventListener('abort',abort));
+      void (async()=>{const response=await fetcher(path,{credentials:'omit',signal:bounded});if(!response.ok)throw Error(`Catalog request returned ${response.status}`);return response.json();})().then(resolve,reject).finally(()=>bounded.removeEventListener('abort',abort));
     });
   };
   const validate = (value:unknown):T => {
