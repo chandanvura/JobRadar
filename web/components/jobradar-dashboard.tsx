@@ -475,12 +475,15 @@ function DashboardContent() {
       // dashboard page is a transport preview, not a final count or shortlist.
       const payload = await loadPublicCatalog<Payload>(() => {}, fetch, controller.signal);
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
-      await prepareCatalog(payload.jobs, controller.signal);
-      if (generation !== loadGeneration.current || controller.signal.aborted) return;
       setRankingNow(Date.now());
       setData(payload);
       setRefreshedAt(new Date().toISOString());
-      if (!silent) setNotice(null);
+      setCatalogLoading(false);
+      if (!silent) {
+        setLoading(false);
+        setNotice(null);
+      }
+      await prepareCatalog(payload.jobs, controller.signal);
     } catch {
       if (generation !== loadGeneration.current || controller.signal.aborted) return;
       setNotice({tone:"error",title:portalMessages.refreshFailedTitle,text:portalMessages.refreshFailed});

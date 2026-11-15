@@ -9,7 +9,7 @@ export async function loadPublicCatalog<T extends Catalog>(onInitial:(catalog:T)
     bounded.throwIfAborted();
     return new Promise<unknown>((resolve,reject)=>{
       const abort=()=>reject(bounded.reason);bounded.addEventListener('abort',abort,{once:true});
-      void (async()=>{const response=await fetcher(path,{cache:'no-store',signal:bounded});if(!response.ok)throw Error(`Catalog request returned ${response.status}`);return response.json();})().then(resolve,reject).finally(()=>bounded.removeEventListener('abort',abort));
+      void (async()=>{const response=await fetcher(path,{signal:bounded});if(!response.ok)throw Error(`Catalog request returned ${response.status}`);return response.json();})().then(resolve,reject).finally(()=>bounded.removeEventListener('abort',abort));
     });
   };
   const validate = (value:unknown):T => {
