@@ -34,7 +34,8 @@ def normalize_location(value: str):
     if re.search(r"\bbangalore\b|\bbengaluru\b",low): return "Bengaluru"+hybrid,"Bengaluru"
     if re.search(r"\bhyderabad\b",low): return "Hyderabad"+hybrid,"Hyderabad"
     if explicit_remote_india(value): return REMOTE_INDIA,REMOTE_INDIA
-    if india_discovery_location(value): return value.strip(),OTHER_INDIA
+    norm = "India" if value.strip().upper() in ("IN", "IND") else value.strip()
+    if india_discovery_location(value): return norm,OTHER_INDIA
     return value.strip() or "Not specified",None
 
 def classify_title(title: str, description: str=""):
@@ -75,6 +76,14 @@ def posted_age_hours(posted_at):
 def enrich(job: Job, company_priority: int=3):
     correct_board_owner(job)
     job.normalized_title,job.role_category=classify_title(job.title,job.description); job.normalized_location,job.city=normalize_location(job.location)
+    if job.city == OTHER_INDIA:
+        title_low = job.title.lower()
+        if re.search(r"\bbangalore\b|\bbengaluru\b", title_low):
+            job.city = "Bengaluru"
+            job.normalized_location = "Bengaluru"
+        elif re.search(r"\bhyderabad\b", title_low):
+            job.city = "Hyderabad"
+            job.normalized_location = "Hyderabad"
     job.employment_type=classify_employment_type(job.title,job.description)
     job.experience_min,job.experience_max,job.experience_label=extract_experience(job.description)
     corpus=f"{job.title} {candidate_text(job.description)}".lower(); job.skills=[s for s in SKILLS if skill_present(s,corpus)]

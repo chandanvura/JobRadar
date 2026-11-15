@@ -48,7 +48,7 @@ const dedupeCompanies=(companies:RecordValue[])=>{
 async function dashboard(env:Env){
   const [jobResult,companyResult,runResult,notificationResult,idResult]=await Promise.all([
     env.DB.prepare(`SELECT ${PUBLIC_JOB_COLUMNS} FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') ORDER BY CASE WHEN is_eligible=1 THEN 0 WHEN eligibility_reason IN ('Experience not stated — verify','Posting date not verified within 24 hours') THEN 1 ELSE 2 END,COALESCE(posted_at,first_seen_at) DESC,relevance_score DESC LIMIT 100`).all(),
-    env.DB.prepare("SELECT name,careers_url,ats_provider,last_checked_at,last_success_at,error_count,jobs_found,candidate_jobs,eligible_jobs,warning FROM companies WHERE enabled=1 ORDER BY priority DESC,name").all(),
+    env.DB.prepare("SELECT name,careers_url,ats_provider,ats_identifier,last_checked_at,last_success_at,error_count,jobs_found,candidate_jobs,eligible_jobs,warning FROM companies WHERE enabled=1 ORDER BY priority DESC,name").all(),
     env.DB.prepare("SELECT * FROM scraper_runs ORDER BY id DESC LIMIT 24").all(),
     env.DB.prepare("SELECT n.id,n.channel,n.status,n.sent_at,NULL AS error,j.title,j.company FROM notifications n JOIN jobs j ON j.id=n.job_id ORDER BY n.id DESC LIMIT 50").all(),
     env.DB.prepare("SELECT id FROM jobs WHERE is_active=1 AND city IN ('Bengaluru','Hyderabad') ORDER BY id LIMIT 100001").all(),

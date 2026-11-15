@@ -88,7 +88,7 @@ def location_text(*values):
             for key in ("name","Name","location","city","region","country","addressLocality"):
                 if key in value:
                     raw=value.get(key)
-                    add('India' if key=='country' and raw in ('IN','IND') else raw)
+                    add('India' if key=='country' and str(raw).upper() in ('IN','IND') else raw)
     for value in values: add(value)
     return " · ".join(dict.fromkeys(found))
 

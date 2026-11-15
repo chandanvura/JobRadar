@@ -130,7 +130,20 @@ async def scrape(company,sem,custom_sem):
                 enriched=perf_counter(); outcome="success"
                 candidates=[j for j in jobs if j.city in TARGET_CITIES and j.role_category!="Other"]
                 eligible=[j for j in candidates if j.is_eligible]
-                warning="Limited coverage: no structured public job feed" if discovered==0 and company.ats_provider=="custom" else "No current openings returned" if discovered==0 else "No roles with a published target-city location returned" if not candidates else None
+                target_city_jobs=[j for j in jobs if j.city in TARGET_CITIES]
+                if discovered==0 and company.ats_provider=="custom":
+                    warning="Limited coverage: no structured public job feed"
+                elif discovered==0:
+                    warning="No current openings returned"
+                elif not candidates:
+                    if target_city_jobs:
+                        warning=f"No technical roles returned ({len(target_city_jobs)} non-technical in target locations)"
+                    elif len(jobs)==0 and discovered>0:
+                        warning=f"No recent openings in target locations ({discovered} older listings)"
+                    else:
+                        warning="No roles with a published target-city location returned"
+                else:
+                    warning=None
                 warning=getattr(raw,"coverage_warning",None) or warning
                 return jobs,{"name":company.name,"careers_url":company.careers_url,"ats_provider":company.ats_provider,"ats_identifier":company.ats_identifier,"priority":company.priority,"last_checked_at":checked,"last_success_at":now(),"error_count":0,"jobs_found":discovered,"candidate_jobs":len(candidates),"eligible_jobs":len(eligible),"warning":warning},None,discovered
             except Exception as exc:
