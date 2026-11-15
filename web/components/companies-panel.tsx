@@ -139,6 +139,12 @@ function companyHealthState(c: CompanyRecord): {
     return { label: "Limited coverage", tone: "warning" };
   }
   if (c.jobs_found === 0) return { label: "No current openings", tone: "warning" };
+  if (c.warning?.includes("non-technical")) {
+    return { label: "Non-technical openings", tone: "warning" };
+  }
+  if (c.warning?.includes("older listings") || c.warning?.includes("No recent openings")) {
+    return { label: "No recent openings", tone: "warning" };
+  }
   if (c.candidate_jobs === 0) return { label: "Global only (0 target)", tone: "warning" };
   return { label: "Productive", tone: "success" };
 }
@@ -205,9 +211,15 @@ export function CompaniesPanel({
     for (const c of companies) {
       if (c.ats_provider !== "custom") structured += 1;
       if (c.candidate_jobs > 0) productive += 1;
-      if (c.jobs_found > 0 && c.candidate_jobs === 0) global += 1;
+      if (
+        c.jobs_found > 0 &&
+        c.candidate_jobs === 0 &&
+        (!c.warning || c.warning.includes("target-location") || c.warning.includes("target-city"))
+      ) {
+        global += 1;
+      }
       if (isCompanyUnproductive(c)) unproductive += 1;
-      if (c.ats_provider === "custom" || !c.ats_identifier) custom += 1;
+      if (c.ats_provider === "custom") custom += 1;
       if (c.error_count > 0) failed += 1;
     }
     return { structured, productive, global, unproductive, custom, failed };
@@ -221,9 +233,15 @@ export function CompaniesPanel({
         if (!hay.includes(q)) return false;
       }
       if (segment === "productive") return c.candidate_jobs > 0;
-      if (segment === "global") return c.jobs_found > 0 && c.candidate_jobs === 0;
+      if (segment === "global") {
+        return (
+          c.jobs_found > 0 &&
+          c.candidate_jobs === 0 &&
+          (!c.warning || c.warning.includes("target-location") || c.warning.includes("target-city"))
+        );
+      }
       if (segment === "unproductive") return isCompanyUnproductive(c);
-      if (segment === "custom") return c.ats_provider === "custom" || !c.ats_identifier;
+      if (segment === "custom") return c.ats_provider === "custom";
       if (segment === "failed") return c.error_count > 0;
       return true;
     });

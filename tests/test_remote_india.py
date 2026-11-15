@@ -32,10 +32,22 @@ def test_existing_city_preference_and_role_filter_are_preserved():
     assert not likely_target('Account Executive', 'Remote - India')
 
 
-@pytest.mark.parametrize('location',['India','Remote - USA; India (Onsite)','Pune, India','Mumbai','Kochi, India','Noida, India'])
+@pytest.mark.parametrize('location',['India','Remote - USA; India (Onsite)','Pune, India','Mumbai','Kochi, India','Noida, India','IN','IND'])
 def test_nationwide_discovery_never_becomes_city_shortlist(location):
     assert likely_target('Java Engineer',location)
     assert normalize_location(location)[1]=='Other India'
     job=Job('national-1','Java Engineer','Example',location,'Required experience: 0-2 years.','ashby','company_career','https://example.test/job','https://example.test/job','https://example.test/careers',posted_at=datetime.now(timezone.utc).isoformat())
     assert not enrich(job).is_eligible
     assert 'Outside shortlist cities' in job.eligibility_reason
+
+
+def test_iso_country_code_and_title_city_inference():
+    assert likely_target('Technical Specialist (IN)', 'IN')
+    norm, city = normalize_location('IN')
+    assert norm == 'India'
+    assert city == 'Other India'
+
+    job = Job('iso-1', 'Backend Engineer - Bangalore', 'Example', 'IN', 'Required experience: 0-2 years.', 'xml', 'company_career', 'https://example.test/job', 'https://example.test/job', 'https://example.test/careers', posted_at=datetime.now(timezone.utc).isoformat())
+    enriched = enrich(job)
+    assert enriched.city == 'Bengaluru'
+    assert enriched.is_eligible
