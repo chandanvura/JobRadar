@@ -49,7 +49,7 @@
       "family": "SRE",
       "patterns": [
         "\\b(?:site reliability|sre|production engineer|reliability software)\\b",
-        "\\b(?:production reliability|software reliability) engineer\\b",
+        "\\b(?:site |service |software |production |system |cloud )?reliability engineer\\b",
         "\\b(?:database reliability|performance)\\b.{0,25}\\b(?:engineer|specialist)\\b",
         "\\b(?:monitoring|observability|telemetry)\\b.{0,30}\\b(?:engineer|specialist|developer)\\b",
         "\\b(?:grafana|prometheus|elk|loki)\\b.{0,25}\\b(?:engineer|specialist)\\b",
@@ -57,6 +57,7 @@
       ],
       "titles": [
         "Site Reliability Engineer",
+        "Reliability Engineer",
         "Production Engineer",
         "SRE",
         "Junior Site Reliability Engineer",
@@ -248,11 +249,13 @@
         "\\bsoftware engineer\\s*(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|back[ -]?end)\\b",
         "(?<!\\w)\\.net (?:software |full stack )?(?:developer|engineer|intern)\\b",
         "\\bapi (?:developer|engineer)\\b",
-        "\\b(?:spring(?: boot| framework)?|java (?:microservices|api)) (?:developer|engineer)\\b"
+        "\\b(?:spring(?: boot| framework)?|(?:java )?microservices?|java api) (?:developer|engineer)\\b"
       ],
       "titles": [
         "Java Developer",
         "Backend Engineer",
+        "Microservices Engineer",
+        "Microservices Developer",
         "Python Developer",
         "Golang Developer",
         "Node.js Developer",

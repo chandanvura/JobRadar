@@ -10,6 +10,7 @@ const CROSS_DOMAIN_ENGINEERING_TITLES = new Set([
   'qa engineer',
   'design engineer',
   'product engineer',
+  'reliability engineer',
 ]);
 const NON_SOFTWARE_DOMAIN =
   /\b(?:retail store|sales performance|merchandising|customer contacts|non[- ]technical operations|manufacturing quality|mechanical parts|factory inspection|physical product inspection)\b/i;
