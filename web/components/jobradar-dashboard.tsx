@@ -942,7 +942,7 @@ function DashboardContent() {
     setLocation(
       preferences.locations.length === 1 ? preferences.locations[0] : "All cities",
     );
-    setFreshness(defaultFreshness(active));
+    setFreshness("Any date");
     setRole("All roles");
     setWorkMode("All arrangements");
     setAts("All ATS");
@@ -1314,7 +1314,32 @@ function DashboardContent() {
                   </p>
                 </section>
               )}
-              {!visibleJobs.length && currentJobs.length > 0 && <section className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 text-sm"><p>There are {currentJobs.filter(j => j.is_active).length} active listings in the catalogue. Your current search or filters returned no matches.</p><Button variant="outline" onClick={() => { clearQuickFilters(); navigate("All Jobs"); }}>Reset filters and browse all</Button></section>}
+              {!visibleJobs.length && currentJobs.length > 0 && (
+                <section className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 text-sm">
+                  <div>
+                    <p className="font-medium text-foreground">
+                      {freshness === "24 hours"
+                        ? "No new roles posted within the last 24 hours."
+                        : `There are ${currentJobs.filter(j => j.is_active).length} active listings in the catalogue.`}
+                    </p>
+                    <p className="text-muted-foreground mt-0.5">
+                      {freshness === "24 hours"
+                        ? `Switch freshness to "Any date" to see all verified 0–3 YOE opportunities in Bengaluru & Hyderabad (${currentJobs.filter(j => j.is_active).length} active listings available).`
+                        : "Your current search or filters returned no matches."}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {freshness === "24 hours" && (
+                      <Button variant="default" onClick={() => setFreshness("Any date")}>
+                        Show all dates
+                      </Button>
+                    )}
+                    <Button variant="outline" onClick={() => { clearQuickFilters(); navigate("All Jobs"); }}>
+                      Reset filters and browse all
+                    </Button>
+                  </div>
+                </section>
+              )}
               {searchPending && <p role="status" className="mb-3 text-sm text-muted-foreground">Searching the catalog… You can keep scrolling while search prepares.</p>}
               {searchError && <p role="alert" className="mb-3 text-sm text-warning">{searchError}</p>}
               <JobList
