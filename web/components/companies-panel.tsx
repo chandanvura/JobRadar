@@ -78,7 +78,7 @@ interface InspectPayload {
   checked_at: string | null;
 }
 
-type SegmentFilter = "all" | "unproductive" | "custom" | "productive" | "failed";
+type SegmentFilter = "all" | "productive" | "global" | "unproductive" | "custom" | "failed";
 
 const ATS_PROVIDERS = [
   { value: "custom", label: "Auto-detect / custom site" },
@@ -124,6 +124,7 @@ function isCompanyUnproductive(c: CompanyRecord): boolean {
     c.jobs_found === 0 ||
     c.error_count > 0 ||
     c.ats_provider === "custom" ||
+    c.candidate_jobs === 0 ||
     Boolean(c.warning?.startsWith("Limited coverage"))
   );
 }
@@ -197,17 +198,19 @@ export function CompaniesPanel({
   const counts = useMemo(() => {
     let structured = 0;
     let productive = 0;
+    let global = 0;
     let unproductive = 0;
     let custom = 0;
     let failed = 0;
     for (const c of companies) {
       if (c.ats_provider !== "custom") structured += 1;
       if (c.candidate_jobs > 0) productive += 1;
+      if (c.jobs_found > 0 && c.candidate_jobs === 0) global += 1;
       if (isCompanyUnproductive(c)) unproductive += 1;
       if (c.ats_provider === "custom" || !c.ats_identifier) custom += 1;
       if (c.error_count > 0) failed += 1;
     }
-    return { structured, productive, unproductive, custom, failed };
+    return { structured, productive, global, unproductive, custom, failed };
   }, [companies]);
 
   const filtered = useMemo(() => {
@@ -217,9 +220,10 @@ export function CompaniesPanel({
         const hay = `${c.name} ${c.ats_provider} ${c.ats_identifier || ""} ${c.careers_url}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
+      if (segment === "productive") return c.candidate_jobs > 0;
+      if (segment === "global") return c.jobs_found > 0 && c.candidate_jobs === 0;
       if (segment === "unproductive") return isCompanyUnproductive(c);
       if (segment === "custom") return c.ats_provider === "custom" || !c.ats_identifier;
-      if (segment === "productive") return c.candidate_jobs > 0;
       if (segment === "failed") return c.error_count > 0;
       return true;
     });
@@ -789,9 +793,10 @@ export function CompaniesPanel({
           {(
             [
               ["all", `All (${companies.length})`],
+              ["productive", `Target cities (${counts.productive})`],
+              ["global", `Global only (${counts.global})`],
               ["unproductive", `Unproductive (${counts.unproductive})`],
               ["custom", `Custom / missing ATS (${counts.custom})`],
-              ["productive", `Productive (${counts.productive})`],
               ["failed", `Failed (${counts.failed})`],
             ] as Array<[SegmentFilter, string]>
           ).map(([key, label]) => (

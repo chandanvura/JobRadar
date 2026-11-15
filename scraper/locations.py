@@ -6,7 +6,7 @@ from pathlib import Path
 REMOTE_INDIA = 'Remote (India)'
 POLICY=json.loads((Path(__file__).parents[1]/'config/location-policy.json').read_text())
 TARGET_LOCATIONS=set(POLICY['discovery_locations'])
-SHORTLIST_LOCATIONS=set(POLICY['shortlist_cities'])
+SHORTLIST_LOCATIONS={"Bengaluru","Hyderabad"}
 OTHER_INDIA='Other India'
 INDIA_CITIES=re.compile(r'\b(?:bengaluru|bangalore|hyderabad|chennai|madras|pune|poona|mumbai|bombay|delhi|noida|gurugram|gurgaon|kolkata|calcutta|ahmedabad|jaipur|kochi|cochin|thiruvananthapuram|trivandrum|coimbatore|indore|bhubaneswar|chandigarh|mohali|nagpur|mysuru|mysore|mangalore|mangaluru|vadodara|surat|lucknow|visakhapatnam|vijayawada)\b',re.I)
 

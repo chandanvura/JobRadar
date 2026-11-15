@@ -659,14 +659,14 @@ class PublicXMLAdapter(JobSource):
         async with client(timeout=45) as x:
             response=await request(x,"GET",c.ats_identifier); response.raise_for_status()
             jobs,count=parse_public_xml(response.content,c.name,c.careers_url)
-            targets=[job for job in jobs if likely_target(job.title,job.location)]
+            targets=[job for job in jobs if likely_target(job.title,job.location) or "intern" in job.title.lower()]
             semaphore=asyncio.Semaphore(6)
             async def dated(job):
                 if job.posted_at: return job
                 # Feed descriptions already contain the JD. A date cannot make
                 # an otherwise ineligible role qualify. Keep these records with
                 # an unknown date instead of requesting thousands of pages.
-                if enrich(job).eligibility_reason!='Posting date not verified within 24 hours':return job
+                if enrich(job).eligibility_reason!='Posting date not verified within 24 hours' and job.employment_type!='Internship': return job
                 async with semaphore:
                     try:
                         detail=await fetch_detail(x,job.job_url)

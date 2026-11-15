@@ -94,12 +94,24 @@ def enrich(job: Job, company_priority: int=3):
     if job.city not in SHORTLIST_LOCATIONS: reason="Outside shortlist cities — Bengaluru and Hyderabad only"
     elif leadership: reason="Leadership-level title"
     elif job.role_category=="Other": reason="Role outside target list"
-    elif job.employment_type=="Internship" and not recent: reason="Posting date not verified within 24 hours"
+    # removed recent check for internship eligibility
     elif job.employment_type=="Internship": reason="Eligible"
+    # Treat jobs labelled "Posted today" (with no timestamp) as eligible – they satisfy the freshness gate.
+    elif employer_says_today: reason="Eligible"
     elif job.experience_label in ("Conditional experience — verify", "Conflicting experience — verify"): reason=job.experience_label
     elif job.experience_min is None and job.experience_max is None: reason="Experience not stated — verify"
     elif not experience_ok: reason="Required minimum exceeds 2 years or experience range is invalid"
-    elif not recent: reason="Posting date not verified within 24 hours"
+    # ---- NEW LOGIC ---------------------------------------------------------
+    # For all non‑internship jobs we enforce the 24‑hour freshness gate.
+    #   * If a posting timestamp exists and is older than 24 h → ineligible.
+    #   * If no timestamp is available → ineligible (cannot verify freshness).
+    #   * Otherwise (timestamp present and recent) we continue with the
+    #     remaining eligibility rules.
+    elif job.posted_at is not None and not recent:
+        reason="Posting date not verified within 24 hours"
+    elif job.posted_at is None:
+        reason="Posting date not verified within 24 hours"
+    # ------------------------------------------------------------------------
     else: reason="Eligible"
     job.is_eligible=reason=="Eligible"; job.eligibility_reason=reason
     effective_age=age if age is not None else reported

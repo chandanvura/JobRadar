@@ -48,5 +48,10 @@
   "C++": "(?<![a-z0-9])c\\+\\+(?![a-z0-9])",
   "HTML": "(?<![a-z0-9])html(?![a-z0-9])",
   "CSS": "(?<![a-z0-9])css(?![a-z0-9])",
-  "MongoDB": "(?<![a-z0-9])mongodb(?![a-z0-9])"
+  "MongoDB": "(?<![a-z0-9])mongodb(?![a-z0-9])",
+  "Machine Learning": "(?<![a-z0-9])machine learning(?![a-z0-9])",
+  "Data Science": "(?<![a-z0-9])data science(?![a-z0-9])",
+  "TensorFlow": "(?<![a-z0-9])tensorflow(?![a-z0-9])",
+  "PyTorch": "(?<![a-z0-9])pytorch(?![a-z0-9])",
+  "AWS Lambda": "(?<![a-z0-9])aws lambda(?![a-z0-9])"
 }
