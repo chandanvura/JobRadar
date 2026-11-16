@@ -185,11 +185,6 @@ export function normalizeRawJob(
   const experience_max = exp.max;
   let experience_label = exp.label;
 
-  if (experience_min === null && EXPLICIT_ENTRY_TITLE.test(title) && experience_label === 'Unknown') {
-    experience_min = 0;
-    experience_label = '0–2 (title)';
-  }
-
   const req = extractRequirements(description, location);
   const skills = Array.from(
     new Set([
@@ -198,6 +193,21 @@ export function normalizeRawJob(
       ...req.mentionedSkills.map((s) => s.value),
     ]),
   );
+
+  if (experience_min === null && experience_label === 'Unknown') {
+    if (EXPLICIT_ENTRY_TITLE.test(title)) {
+      experience_min = 0;
+      experience_label = '0–2 (title)';
+    } else if (
+      req.batches.length > 0 ||
+      /\b(?:freshers?|fresh graduates?|new graduates?|entry[- ]level|early career|campus hire|university graduate|recent graduates?|intern(?:ship)? experience welcome)\b/i.test(
+        description
+      )
+    ) {
+      experience_min = 0;
+      experience_label = '0–2 (JD)';
+    }
+  }
 
   const posting = raw.posted_at || raw.posted_label
     ? {

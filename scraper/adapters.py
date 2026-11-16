@@ -27,7 +27,7 @@ def request_bucket(url):
     parsed=urlparse(url); host=(parsed.hostname or "").lower()
     if host=="myworkdayjobs.com" or host.endswith(".myworkdayjobs.com"):
         return "workday-listings" if parsed.path.rstrip("/").endswith("/jobs") else "workday-details"
-    for family in ("myworkdayjobs.com","greenhouse.io","lever.co","ashbyhq.com","smartrecruiters.com","jobvite.com"):
+    for family in ("myworkdayjobs.com","greenhouse.io","lever.co","ashbyhq.com","smartrecruiters.com","jobvite.com","turbohire.co"):
         if host==family or host.endswith("."+family): return family
     return host
 
@@ -750,7 +750,7 @@ def jsonld_objects(soup):
         except (json.JSONDecodeError,TypeError): continue
         yield from postings(value)
 
-ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com","jobvite.com","icims.com","oraclecloud.com")
+ATS_HOSTS=("greenhouse.io","lever.co","ashbyhq.com","myworkdayjobs.com","smartrecruiters.com","jobvite.com","icims.com","oraclecloud.com","turbohire.co")
 ATS_BOARD_HOSTS={"greenhouse":{"boards.greenhouse.io","job-boards.greenhouse.io"},
                  "lever":{"jobs.lever.co","jobs.eu.lever.co"},"ashby":{"jobs.ashbyhq.com"},
                  "smartrecruiters":{"jobs.smartrecruiters.com","careers.smartrecruiters.com"},
@@ -807,6 +807,11 @@ def discover_ats(soup,base_url):
                 if parts:
                     tenant=parsed.hostname.split(".")[0]
                     return "workday",f"{tenant}|{parts[0]}",absolute
+            if hostname.endswith(".turbohire.co"):
+                match=re.search(r"/careerpage/([a-f0-9-]+)",parsed.path) or re.search(r"orgId=([a-f0-9-]+)",parsed.query)
+                if match:
+                    subdomain=hostname.split(".")[0]
+                    return "turbohire",f"{subdomain}|{match.group(1)}",absolute
             for provider,pattern in ATS_PATTERNS:
                 if hostname not in ATS_BOARD_HOSTS[provider]: continue
                 match=pattern.search(hostname+parsed.path)
@@ -944,3 +949,10 @@ ADAPTERS['deel'] = DeelAdapter()
 from .ibm import IBMCareersAdapter
 ADAPTERS['ibm'] = IBMCareersAdapter()
 ADAPTERS['ibm_careers'] = IBMCareersAdapter()
+
+from .zerodha import ZerodhaCareerAdapter
+ADAPTERS['zerodha'] = ZerodhaCareerAdapter()
+ADAPTERS['public_career_json'] = ZerodhaCareerAdapter()
+
+from .turbohire import TurboHireCareerAdapter
+ADAPTERS['turbohire'] = TurboHireCareerAdapter()

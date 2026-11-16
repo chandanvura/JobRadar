@@ -119,7 +119,7 @@ JPMorgan Chase,https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/site
 Goldman Sachs,https://hdpc.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/LateralHiring/jobs,oracle,hdpc.fa.us2.oraclecloud.com|LateralHiring,4,true
 Target,https://target.wd5.myworkdayjobs.com/targetcareers,workday,target|targetcareers|India,4,true
 Walmart Global Tech,https://careers.walmart.com/technology,custom,walmart,5,true
-Flipkart,https://www.flipkartcareers.com/#!/joblist,custom,flipkart,5,true
+Flipkart,https://flipkart.turbohire.co/careerpage/4d757ba0-3d57-448a-b82c-238ed87ac90f,turbohire,4d757ba0-3d57-448a-b82c-238ed87ac90f,5,true
 PhonePe,https://careers.smartrecruiters.com/PHONEPELIMITED,smartrecruiters,PHONEPELIMITED,5,true
 Swiggy,https://careers.swiggy.in/explore-jobs,smartrecruiters,SWIGGY,5,true
 Zomato,https://www.zomato.com/careers,custom,zomato,4,true
@@ -178,9 +178,9 @@ InMobi,https://job-boards.greenhouse.io/inmobi,greenhouse,inmobi,4,true
 Ola Electric,https://www.olaelectric.com/careers,custom,olaelectric,4,true
 CRED,https://jobs.lever.co/cred,lever,cred,5,true
 Slice,https://careers.kula.ai/slice,kula,slice,5,true
-Navi,https://navi.com/careers,custom,navi,5,true
+Navi,https://navi.turbohire.co/dashboardv2?orgId=3e818601-0baa-429c-b6f8-4b21903ae0e6&type=0,turbohire,3e818601-0baa-429c-b6f8-4b21903ae0e6,5,true
 Groww,https://job-boards.greenhouse.io/groww,greenhouse,groww,5,true
-Zerodha,https://careers.zerodha.com/api/jobs,public_career_json,zerodha,5,true
+Zerodha,https://careers.zerodha.com/api/jobs,zerodha,zerodha,5,true
 Juspay,https://juspay.io/careers,juspay,juspay,5,true
 Cashfree Payments,https://careers.kula.ai/cashfree,kula,cashfree,5,true
 Pine Labs,https://www.pinelabs.com/careers,custom,pinelabs,4,true

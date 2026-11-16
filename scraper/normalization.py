@@ -95,10 +95,11 @@ def enrich(job: Job, company_priority: int=3):
     leadership_title=re.sub(r"\bmember of technical staff\b", "technical contributor", job.title, flags=re.I)
     leadership=bool(LEADERSHIP_TITLE.search(leadership_title))
     explicit_entry_title=bool(re.search(r"\b(?:associate|junior|graduate|trainee|fresher|new grad(?:uate)?|entry[- ]level|campus hire|university grad(?:uate)?)\b|\b(?:sde|swe|mts|software engineer|software developer|developer|engineer|analyst|qa engineer|qa analyst|sdet|test engineer|support engineer|technical support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer|data engineer|ml engineer|machine learning engineer|security engineer|network engineer|observability engineer|monitoring engineer|ansible engineer|consultant)(?:[\s-]+(?:i|1|l1|l-1|level 1|level i|grade 1)\b|1\b|\s+l1\b)",job.title,re.I))
-    if job.experience_min is None and explicit_entry_title and job.experience_label=="Unknown":
+    jd_early_career=bool(re.search(r"\b(?:batch\s*(?:of\s*)?202[4-9]|class\s*of\s*202[4-9]|graduat(?:ing|ion)\s*(?:in\s*)?202[4-9]|freshers?\s*welcome|no\s*(?:prior\s*)?experience\s*required)\b",job.description,re.I))
+    if job.experience_min is None and (explicit_entry_title or jd_early_career) and job.experience_label=="Unknown":
         job.experience_min=0.0
         job.experience_max=2.0
-        job.experience_label="Entry-level title"
+        job.experience_label="Entry-level title" if explicit_entry_title else "Fresher"
         experience_ok=True
     if job.city not in SHORTLIST_LOCATIONS: reason="Outside shortlist cities — Bengaluru and Hyderabad only"
     elif leadership: reason="Leadership-level title"
