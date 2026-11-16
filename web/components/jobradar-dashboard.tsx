@@ -1111,7 +1111,6 @@ function DashboardContent() {
               close={() => setNotice(null)}
             />
           )}
-          {showJobs && !preferences.skills.length && <section className="mb-4 rounded-xl border bg-card p-4"><p>Add the skills you actually have so fit scores can compare them with each JD. A Java/DevOps title preference does not set profile skills.</p><Button onClick={()=>setEditingSearch(true)}>Set up my skills</Button></section>}
           {showJobs && (
             <>
               <section className="radar-hero mb-6 rounded-3xl bg-hero p-6 text-white md:p-8">
@@ -1256,15 +1255,14 @@ function DashboardContent() {
                   Sorted by when JobRadar first discovered each active listing. Employer posting dates may be older or unavailable; check the date shown on each card.
                 </section>
               )}
-              {active === "Dashboard" && (
+              {active === "Dashboard" && filtered.length > 0 && (
                 <section className="radar-coverage mb-5 rounded-2xl border border-border bg-card p-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <h3 className="text-sm font-semibold">Your verified {preferences.experienceMin}–{preferences.experienceMax} YOE shortlist</h3>
-                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{filtered.length} verified matches with current employer posting evidence and in-range experience. All Jobs and Needs Review retain older or uncertain listings.</p>
-                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{preferenceModel.trained ? `Personal ranking adapts to ${preferenceModel.samples} explicit choices in this browser. Recent choices count more. Skill feedback adjusts skill ranking; role feedback adjusts role ranking. Experience and location reports never weaken eligibility.` : "Save or apply to good matches, or use recommendation feedback on a card. Ranking learns from good fits and role/skill feedback; experience reports flag a job for review."} Your choices stay private in this browser.</p>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{filtered.length} verified opportunities in Bengaluru &amp; Hyderabad matching your preferences.</p>
                     </div>
-                    <Button variant="outline" onClick={() => navigate("All Jobs")} className="rounded-xl">See {Math.max(0,currentJobs.filter(job=>job.is_active&&!isInternship(job)).length-filtered.length)} more in All Jobs <ExternalLink size={14} /></Button>
+                    <Button variant="outline" onClick={() => navigate("All Jobs")} className="rounded-xl">See All Jobs <ExternalLink size={14} /></Button>
                   </div>
                 </section>
               )}
@@ -1306,25 +1304,25 @@ function DashboardContent() {
               {!visibleJobs.length && currentJobs.length > 0 && (
                 <section className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 text-sm">
                   <div>
-                    <p className="font-medium text-foreground">
+                    <p className="font-semibold text-foreground">
                       {freshness === "24 hours"
-                        ? "No new roles posted within the last 24 hours."
-                        : `There are ${currentJobs.filter(j => j.is_active).length} active listings in the catalogue.`}
-                    </p>
-                    <p className="text-muted-foreground mt-0.5">
-                      {freshness === "24 hours"
-                        ? `Switch freshness to "Any date" to see all verified 0–3 YOE opportunities in Bengaluru & Hyderabad (${currentJobs.filter(j => j.is_active).length} active listings available).`
+                        ? "No new openings detected in the last 24 hours."
                         : "Your current search or filters returned no matches."}
+                    </p>
+                    <p className="text-muted-foreground text-xs mt-0.5">
+                      {freshness === "24 hours"
+                        ? "Switch to \"Show all dates\" to browse all verified early-career opportunities in Bengaluru & Hyderabad."
+                        : "Try adjusting your filters or search keywords."}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
                     {freshness === "24 hours" && (
-                      <Button variant="default" onClick={() => setFreshness("Any date")}>
+                      <Button variant="default" onClick={() => setFreshness("Any date")} className="rounded-xl">
                         Show all dates
                       </Button>
                     )}
-                    <Button variant="outline" onClick={() => { clearQuickFilters(); navigate("All Jobs"); }}>
-                      Reset filters and browse all
+                    <Button variant="outline" onClick={() => { clearQuickFilters(); navigate("All Jobs"); }} className="rounded-xl">
+                      Browse All Jobs
                     </Button>
                   </div>
                 </section>
