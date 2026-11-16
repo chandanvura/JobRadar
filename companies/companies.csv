@@ -10,7 +10,7 @@ EarnIn,https://www.earnin.com/careers,greenhouse,earnin,4,true
 Crunchyroll,https://www.crunchyroll.com/about/jobs,greenhouse,crunchyroll,3,true
 Celonis,https://www.celonis.com/careers/jobs,greenhouse,celonis,3,true
 Pure Storage,https://www.purestorage.com/company/careers.html,greenhouse,purestorage,4,true
-Plivo,https://jobs.lever.co/plivo,lever,plivo,3,true
+Plivo,https://www.plivo.com/jobs/,lever,plivo,3,true
 Hevo Data,https://hevodata.com/careers/,lever,hevodata,5,true
 Warner Music Group,https://www.wmg.com/careers,lever,wmg,4,true
 Zimperium,https://www.zimperium.com/careers,lever,zimperium,5,true
@@ -43,7 +43,7 @@ LPL Financial,https://lplfinancial.wd1.myworkdayjobs.com/India_Ext,workday,lplfi
 Epicor,https://epicorsoftware.wd5.myworkdayjobs.com/epicorjobs,workday,epicorsoftware|epicorjobs|India,4,true
 Diageo,https://diageo.wd3.myworkdayjobs.com/Diageo_Careers,workday,diageo|Diageo_Careers|India,3,true
 Franklin Templeton,https://careers.franklintempleton.com/us/en,phenom,FTGFTMUS,4,true
-Salesforce,https://salesforce.wd12.myworkdayjobs.com/External_Career_Site,workday,salesforce|External_Career_Site,5,true
+Salesforce,https://salesforce.wd12.myworkdayjobs.com/External_Career_Site,workday,salesforce|External_Career_Site|India,5,true
 Sprinklr,https://sprinklr.wd1.myworkdayjobs.com/careers,workday,sprinklr|careers|India,4,true
 ModMed,https://modmed.wd501.myworkdayjobs.com/ModMed12,workday,modmed|ModMed12|India,3,true
 NVIDIA,https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite,workday,nvidia|NVIDIAExternalCareerSite,5,true
@@ -175,7 +175,7 @@ BrowserStack,https://browserstack.wd3.myworkdayjobs.com/External,workday_all,bro
 Tekion,https://jobs.ashbyhq.com/Tekion,ashby,Tekion,5,true
 ShareChat,https://sharechat.mynexthire.com/employer/jobs/careers,mynexthire,sharechat,4,true
 InMobi,https://job-boards.greenhouse.io/inmobi,greenhouse,inmobi,4,true
-Ola Electric,https://www.olaelectric.com/careers,custom,olaelectric,4,true
+Ola Electric,https://olacareers.turbohire.co/dashboardv2?orgId=e0c1eb37-eb7a-4ca4-bcc5-d59ce4ce9212&type=0,turbohire,olacareers|e0c1eb37-eb7a-4ca4-bcc5-d59ce4ce9212,4,true
 CRED,https://jobs.lever.co/cred,lever,cred,5,true
 Slice,https://careers.kula.ai/slice,kula,slice,5,true
 Navi,https://navi.turbohire.co/dashboardv2?orgId=3e818601-0baa-429c-b6f8-4b21903ae0e6&type=0,turbohire,3e818601-0baa-429c-b6f8-4b21903ae0e6,5,true
@@ -189,11 +189,11 @@ Paytm,https://jobs.lever.co/paytm,lever,paytm,4,true
 Open Financial Technologies,https://open.money/careers,keka,https://openfinancial.keka.com/careers|161570d3-d2be-4e8c-b233-d006f70cd371,5,true
 KreditBee,https://www.kreditbee.in/careers,custom,kreditbee,4,true
 Rupeek,https://rupeek.com/careers,custom,rupeek,4,true
-Moneyview,https://moneyview.in/careers,custom,moneyview,4,true
+Moneyview,https://moneyview.darwinbox.in/ms/candidate/careers,darwinbox,moneyview,4,true
 Jupiter,https://jupiter.money/careers/,keka,https://jupiter.keka.com/careers|b5279857-cf81-4dde-a215-fc48957ee2b5,5,true
 Fi Money,https://jobs.lever.co/epifi,lever,epifi,5,true
 Scaler,https://www.scaler.com/careers/,custom,scaler,4,true
-Unacademy,https://unacademy.com/careers,custom,unacademy,4,true
+Unacademy,https://unacademy.darwinbox.in/ms/candidate/careers,darwinbox,unacademy,4,true
 Simplilearn,https://www.simplilearn.com/careers,custom,simplilearn,3,true
 upGrad,https://www.upgrad.com/about/careers/,custom,upgrad,3,true
 Vedantu,https://www.vedantu.com/careers,custom,vedantu,3,true
@@ -203,7 +203,7 @@ Mobile Premier League,https://www.mpl.live/careers,custom,mpl,4,true
 Electronic Arts India,https://jobs.ea.com/en_US/careers/Home/,avature,jobs.ea.com,4,true
 Nutanix,https://jobs.jobvite.com/nutanix,jobvite,nutanix|qKr9VfwZ,5,true
 Arista Networks,https://careers.smartrecruiters.com/AristaNetworks,smartrecruiters,AristaNetworks,5,true
-Juniper Networks,https://careers.juniper.net/,custom,juniper,5,true
+Juniper Networks,https://hpe.wd5.myworkdayjobs.com/Jobsathpe,workday,hpe|Jobsathpe|India|juniper,5,true
 F5,https://ffive.wd5.myworkdayjobs.com/f5jobs,workday,ffive|f5jobs|India,5,true
 Fortinet,https://edel.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2001,oracle,edel.fa.us2.oraclecloud.com|CX_2001,4,true
 Zscaler,https://job-boards.greenhouse.io/zscaler,greenhouse,zscaler,5,true
@@ -226,7 +226,7 @@ Persistent Systems,https://careers.persistent.com/,custom,persistent,5,true
 LTIMindtree,https://careers.ltimindtree.com/,custom,ltimindtree,4,true
 Mphasis,https://careers.mphasis.com/,custom,mphasis,4,true
 Coforge,https://careers.coforge.com/,custom,coforge,4,true
-Sonata Software,https://www.sonata-software.com/careers,custom,sonata,4,true
+Sonata Software,https://sonataone.darwinbox.in/ms/candidate/careers,darwinbox,sonataone,4,true
 Happiest Minds,https://www.happiestminds.com/careers/,custom,happiestminds,4,true
 UST,https://www.ust.com/en/careers,custom,ust,4,true
 CGI,https://cgi.njoyn.com/CORP/xweb/xweb.asp?page=joblisting&CLID=21001&CountryID=IN,cgi_njoyn,21001|IN,4,true
@@ -241,7 +241,7 @@ NTT DATA,https://careers.nttdata.com/global/en,phenom,NTT1GLOBAL,4,true
 DXC Technology,https://dxctechnology.wd1.myworkdayjobs.com/DXCJobs,workday,dxctechnology|DXCJobs|India,4,true
 ADP,https://jobs.adp.com/,custom,adp,4,true
 UKG,https://apply.ukg.com/careers,eightfold,apply.ukg.com|ukg.com,4,true
-Darwinbox,https://darwinbox.com/careers,custom,darwinbox,5,true
+Darwinbox,https://dbx.darwinbox.in/ms/candidate/careers,darwinbox,dbx,5,true
 HighRadius,https://job-boards.greenhouse.io/highradius,greenhouse,highradius,5,true
 Zenoti,https://job-boards.greenhouse.io/zenoti,greenhouse,zenoti,5,true
 Gainsight,https://jobs.ashbyhq.com/gainsight,ashby,gainsight,5,true
@@ -397,7 +397,7 @@ Keka,https://www.keka.com/careers,custom,keka-india,4,true
 Skyroot Aerospace,https://skyroot.in/careers.html,custom,skyroot-aerospace-india,4,true
 Dhruva Space,https://www.dhruvaspace.com/careers,custom,dhruva-space-india,4,true
 Ather Energy,https://www.atherenergy.com/careers,custom,ather-energy-india,4,true
-Porter,https://porter.in/careers,custom,porter-india,4,true
+Porter,https://porter.darwinbox.in/ms/candidate/careers,darwinbox,porter,4,true
 Lenovo,https://jobs.lenovo.com/en_US/careers/SearchJobs/?13036=12016672,avature,jobs.lenovo.com,4,true
 ASUS,https://www.asus.com/about-asus/careers/,custom,asus-india,3,true
 Acer,https://www.acer.com/corporate/en/careers,custom,acer-india,3,true
@@ -483,12 +483,12 @@ Licious,https://www.licious.in/careers,custom,licious-india,4,true
 Urban Company,https://careers.urbancompany.com/,custom,urban-company-india,4,true
 NoBroker,https://www.nobroker.in/careers,custom,nobroker-india,4,true
 Practo,https://www.practo.com/company/careers,custom,practo-india,4,true
-PharmEasy,https://pharmeasy.in/careers,custom,pharmeasy-india,4,true
-Tata 1mg,https://www.1mg.com/jobs,custom,tata-1mg-india,4,true
+PharmEasy,https://myhr.darwinbox.in/ms/candidate/careers,darwinbox,myhr,4,true
+Tata 1mg,https://1mg.darwinbox.in/ms/candidate/careers,darwinbox,1mg,4,true
 MediBuddy,https://www.medibuddy.in/careers,custom,medibuddy-india,4,true
 Portea,https://www.portea.com/careers/,custom,portea-india,3,true
 Ola,https://www.olacabs.com/careers,custom,ola-india,4,true
-Rapido,https://rapido.bike/Careers,custom,rapido-india,4,true
+Rapido,https://rapido.darwinbox.in/ms/candidate/careers,darwinbox,rapido,4,true
 Namma Yatri,https://nammayatri.in/careers,custom,namma-yatri-india,4,true
 Bounce,https://bounceinfinity.com/pages/careers,custom,bounce-india,3,true
 Yulu,https://www.yulu.bike/careers,custom,yulu-india,4,true
@@ -500,7 +500,7 @@ Angel One,https://www.angelone.in/careers,custom,angel-one-india,4,true
 Upstox,https://upstox.com/careers/,custom,upstox-india,5,true
 Growfin,https://careers.kula.ai/growfin,kula,growfin,4,true
 Mindtickle,https://jobs.lever.co/mindtickle,lever,mindtickle,4,true
-Clear,https://www.clear.in/s/careers,custom,clear,3,true
+Clear,https://clear.darwinbox.in/ms/candidate/careers,darwinbox,clear,3,true
 Mudrex,https://mudrex.careers-page.com/,custom,mudrex,3,true
 Lokal,https://apply.workable.com/lokal-app/,workable,lokal-app,3,true
 FamPay,https://jobs.lever.co/fampay,lever,fampay,3,true

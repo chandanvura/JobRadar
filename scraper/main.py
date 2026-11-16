@@ -1,4 +1,4 @@
-import asyncio,csv,json,os,sys,math
+import asyncio,csv,json,os,sys,math,urllib.error
 from contextlib import asynccontextmanager
 from time import perf_counter
 from datetime import datetime,timezone
@@ -101,6 +101,15 @@ async def fetch_company_jobs(company,attempts=3):
             last=exc
             if attempt+1<attempts:
                 await asyncio.sleep(2**attempt)
+        except (urllib.error.HTTPError, urllib.error.URLError) as exc:
+            last=exc
+            if isinstance(exc, urllib.error.HTTPError):
+                status = exc.code
+                if (status not in {403, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524, 525}) or attempt + 1 >= attempts:
+                    raise
+            elif attempt + 1 >= attempts:
+                raise
+            await asyncio.sleep(2 ** attempt)
         except httpx.HTTPStatusError as exc:
             last=exc
             status=exc.response.status_code
@@ -153,8 +162,10 @@ async def scrape(company,sem,custom_sem):
                 # and their career links as limited coverage; do not misreport a
                 # blocked non-structured page as a scraper-system failure.
                 is_maintenance=(isinstance(exc,httpx.HTTPStatusError) and exc.response.status_code==521) or "Site Maintenance" in str(exc) or "Web server is down" in str(exc)
-                limited=(company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError,ValueError))) or isinstance(exc,json.JSONDecodeError)
+                is_rate_limited=(isinstance(exc,httpx.HTTPStatusError) and exc.response.status_code==429) or "429" in str(exc)
+                limited=(company.ats_provider=="custom" and isinstance(exc,(httpx.HTTPError,OSError,ValueError))) or isinstance(exc,json.JSONDecodeError) or is_rate_limited
                 warning=("Upstream maintenance: provider offline for scheduled maintenance" if is_maintenance
+                         else "Upstream rate limit: official career page rate limited machine-readable access" if is_rate_limited
                          else "Limited coverage: official career page blocks or does not expose machine-readable access"
                          if limited else f"{type(exc).__name__}: {str(exc)[:160]}")
                 outcome="maintenance" if is_maintenance else ("limited" if limited else "failed")
