@@ -373,6 +373,7 @@ const initialFreshness = (view: string) => {
   if (typeof window === "undefined") return defaultFreshness(view);
   const stored = readPrivate("jobradar-freshness-v1");
   if (stored && ["Any date", "24 hours", "3 days", "7 days"].includes(stored)) return stored;
+  if (view === "Dashboard") return "Any date";
   return defaultFreshness(view);
 };
 const splitTerms = (value: string) =>
@@ -864,6 +865,11 @@ function DashboardContent() {
     ranking,
     rankingNow,
   ]);
+  useEffect(() => {
+    if (!loading && !catalogLoading && active === "Dashboard" && freshness === "24 hours" && currentJobs.length > 0 && filtered.length === 0) {
+      setFreshness("Any date");
+    }
+  }, [loading, catalogLoading, active, freshness, currentJobs.length, filtered.length, setFreshness]);
   const applyPreferences = (next: SearchPreferences) => {
     setEditingSearch(false);
     startTransition(() => {

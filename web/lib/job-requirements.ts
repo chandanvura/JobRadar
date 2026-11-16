@@ -51,8 +51,8 @@ export function normalizeExperience<T extends {description?:string|null;experien
    is_eligible:policy?job.is_eligible:0,
    eligibility_reason:!stated?analysis.label:!policy?'Required minimum exceeds 2 years or experience range is invalid':!job.is_eligible&&/Experience not stated|Entry-level title/.test(job.eligibility_reason)?'JD experience found — awaiting scan verification':job.eligibility_reason};
  } else {
-  if (job.experience_label === 'Entry-level title') {
-   normalized = {...job, experience_min: job.experience_min ?? 0, experience_max: job.experience_max ?? 2, experience_label: 'Entry-level title', is_eligible: job.is_eligible, eligibility_reason: job.eligibility_reason};
+  if (job.experience_label === 'Entry-level title' || job.experience_label === '0–2 (title)' || job.experience_label === '0–2 (JD)' || (requirements?.batches?.length && job.is_eligible)) {
+   normalized = {...job, experience_min: job.experience_min ?? 0, experience_max: job.experience_max ?? 2, experience_label: job.experience_label || 'Entry-level title', is_eligible: job.is_eligible, eligibility_reason: job.eligibility_reason};
   } else {
    const reason=analysis?.preferred.length?'Only preferred experience stated — verify':experienceUnverified(job)?'Entry-level title — experience unverified':'Experience not stated — verify';
    normalized={...job,experience_min:null,experience_max:null,experience_label:reason,is_eligible:0,eligibility_reason:reason};

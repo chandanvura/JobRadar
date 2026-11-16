@@ -25,10 +25,13 @@ export function roleFamily(title: string) { return classifyRoleTitle(title); }
 export const experienceCompatible = (job: MatchJob, p: MatchPreferences) => {
  if(job.experience_min!==null&&job.experience_max!==null&&job.experience_min>job.experience_max)return null;
  if((job.experience_min!==null&&job.experience_min>p.experienceMax)||(job.experience_max!==null&&job.experience_max<p.experienceMin))return false;
- if(experienceUnverified(job)||(job.experience_min===null&&job.experience_max===null))return null;
  const analysis=job.description?.trim()?requirementsFor(job).experience:null;
+ if(analysis&&analysis.status==='stated'){
+  if((analysis.min!==null&&analysis.min>p.experienceMax)||(analysis.max!==null&&analysis.max<p.experienceMin))return false;
+  return (analysis.min??0)<=p.experienceMax&&(analysis.max??Infinity)>=p.experienceMin;
+ }
  if(analysis&&analysis.status!=='stated')return null;
- if(analysis&&((analysis.min!==null&&analysis.min>p.experienceMax)||(analysis.max!==null&&analysis.max<p.experienceMin)))return false;
+ if(experienceUnverified(job)||(job.experience_min===null&&job.experience_max===null))return null;
  return (job.experience_min??0)<=p.experienceMax&&(job.experience_max??Infinity)>=p.experienceMin;
 };
 // Relevance is independent of source, age and alert eligibility. Preferences are
