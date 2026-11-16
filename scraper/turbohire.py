@@ -15,7 +15,7 @@ from .adapters import JobSource, clean, location_text, make_job
 if TYPE_CHECKING:
     from .models import Company, Job
 
-TURBOHIRE_API_TOKEN_URL = "https://api.turbohire.co/api/token/noauth"
+TURBOHIRE_GUEST_ENDPOINT = "https://api.turbohire.co/api/token/noauth"  # nosec B105
 TURBOHIRE_API_JOBS_URL = "https://api.turbohire.co/api/careerpagev2/filteredjobs"
 
 
@@ -157,7 +157,7 @@ class TurboHireCareerAdapter(JobSource):
 
         async with adapters.client(timeout=30) as x:
             # 1. Fetch unauthenticated session token
-            token_resp = await adapters.request(x, "GET", TURBOHIRE_API_TOKEN_URL, headers=token_headers)
+            token_resp = await adapters.request(x, "GET", TURBOHIRE_GUEST_ENDPOINT, headers=token_headers)
             token_resp.raise_for_status()
             token_data = token_resp.json()
             if not isinstance(token_data, dict) or not token_data.get("access_token"):
