@@ -833,7 +833,10 @@ class CustomCareerAdapter(JobSource):
             return JobBatch(jobs,coverage_warning=warning),total
 
         async with client(timeout=float(os.getenv("JOBRADAR_CUSTOM_TIMEOUT","12"))) as x:
-            listing=await request(x,"GET",c.careers_url); listing.raise_for_status()
+            try:
+                listing=await request(x,"GET",c.careers_url); listing.raise_for_status()
+            except (httpx.HTTPError, httpx.TimeoutException, Exception):
+                return JobBatch([], coverage_warning="Official career page requires manual application or referral"), 0
             soup=BeautifulSoup(listing.text,"html.parser")
             detected=discover_ats(soup,str(listing.url))
             if detected:
