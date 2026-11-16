@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useMemo,useRef,useState} from 'react';
-import {requirementsFor} from './job-requirements.ts';
+import {requirementsFor, hasRequirements} from './job-requirements.ts';
 import type {SearchableJob} from './job-search';
 export function useJobSearch<T extends SearchableJob & {application_url:string}>(jobs:T[],query:string){
   const empty=useMemo(()=>new Map<T,number>(),[]);
@@ -16,7 +16,7 @@ export function useJobSearch<T extends SearchableJob & {application_url:string}>
         title:job.title,company:job.company,skills:job.skills,role_category:job.role_category,
         normalized_location:job.normalized_location,ats_provider:job.ats_provider,application_url:job.application_url,
         description:job.description?.slice(0,12000),
-        requirement_skills:job.description?(()=>{const r=requirementsFor(job);return [...r.requiredSkills,...r.preferredSkills,...r.mentionedSkills].map(item=>item.value).join(' ');})():undefined,
+        requirement_skills:hasRequirements(job)?(()=>{const r=requirementsFor(job);return [...r.requiredSkills,...r.preferredSkills,...r.mentionedSkills].map(item=>item.value).join(' ');})():(Array.isArray(job.skills)?job.skills.join(' '):typeof job.skills==='string'?job.skills:undefined),
       }))});
     }catch{worker.current=null;}
     return ()=>{next?.terminate();if(worker.current===next)worker.current=null;};

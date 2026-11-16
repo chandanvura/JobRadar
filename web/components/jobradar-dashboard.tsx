@@ -638,12 +638,12 @@ function DashboardContent() {
     return extra.length ? [...currentJobs, ...extra] : currentJobs;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentJobs, missingTrackedSignature]);
-  const defaultTracking = useMemo(() => new Map(mergedJobs.map(job => [trackingKey(job), {
+  const defaultTrackingFor = useCallback((job: ApiJob): Tracking => ({
     saved: false, status: "New", updated_at: "", job,
-  }])), [mergedJobs]);
+  }), []);
   const jobTracking = useCallback(
-    (job: ApiJob) => tracking[trackingKey(job)] || defaultTracking.get(trackingKey(job))!,
-    [tracking, defaultTracking],
+    (job: ApiJob) => tracking[trackingKey(job)] || defaultTrackingFor(job),
+    [tracking, defaultTrackingFor],
   );
   useEffect(()=>{
     const hide=(event:Event)=>{const job=(event as CustomEvent<ApiJob>).detail;if(!job)return;setUndoHidden({job,feedback:jobTracking(job)?.feedback||''});saveTracking(job,{feedback:'other'});};
@@ -673,35 +673,22 @@ function DashboardContent() {
     [feedbackSignature],
   );
   const preferenceModel = useMemo(() => fitPreferenceModel(feedbackEntries, preferences), [feedbackEntries, preferences]);
-  const basePriority = useMemo(() => {
-    const now = rankingNow;
-    return new Map(
-      mergedJobs.map((job) => {
-        const match = matches.get(trackingKey(job))!;
-        const opportunity = opportunityPriority(job, preferences, now, match);
-        return [trackingKey(job), { match, opportunityScore: opportunity.score }];
-      }),
-    );
-  }, [mergedJobs, preferences, rankingNow, matches]);
   const ranking = useMemo(() => {
+    const now = rankingNow;
     const feedback = feedbackByFamily(feedbackEntries);
-    return new Map(
-      mergedJobs.map((job) => {
-        const base = basePriority.get(trackingKey(job))!;
-        return [
-          trackingKey(job),
-          {
-            match: base.match,
-            priority:
-              base.opportunityScore +
-              (preferenceModel.trained
-                ? preferenceModel.boost(job, base.match.components)
-                : feedback.get(job.role_category) || 0),
-          },
-        ];
-      }),
-    );
-  }, [mergedJobs, basePriority, preferenceModel, feedbackEntries]);
+    const trained = preferenceModel.trained;
+    const result = new Map<string, { match: ReturnType<ReturnType<typeof createPersonalMatcher>>; priority: number }>();
+    for (const job of mergedJobs) {
+      const key = trackingKey(job);
+      const match = matches.get(key)!;
+      const opportunity = opportunityPriority(job, preferences, now, match);
+      const boost = trained
+        ? preferenceModel.boost(job, match.components)
+        : feedback.get(job.role_category) || 0;
+      result.set(key, { match, priority: opportunity.score + boost });
+    }
+    return result;
+  }, [mergedJobs, matches, preferences, rankingNow, preferenceModel, feedbackEntries]);
   const {scores:searchScores,pending:searchPending,error:searchError} = useJobSearch(mergedJobs,deferredQuery);
   const filtered = useMemo(() => {
     if (!jobViews.has(active)) return [];
@@ -1353,6 +1340,7 @@ function DashboardContent() {
                 preferences={preferences}
                 getTracking={jobTracking}
                 saveTracking={saveTracking}
+                ranking={ranking}
               />
             </>
           ) : active === "Job Boards" ? (
@@ -1725,13 +1713,14 @@ function Pills({
     </div>
   );
 }
-function JobList({now,jobs,resetKey,preferences,getTracking,saveTracking,companies,backup}: {
+function JobList({now,jobs,resetKey,preferences,getTracking,saveTracking,companies,backup,ranking}: {
   companies?:Company[]; backup?:boolean;
   now:number; jobs:ApiJob[]; resetKey:string; preferences:SearchPreferences;
   getTracking:(j:ApiJob)=>Tracking; saveTracking:(j:ApiJob,p:Partial<Tracking>)=>void;
+  ranking?: Map<string, { match: ReturnType<typeof personalMatch>; priority: number }>;
 }) {
   const sourceByName=useMemo(()=>new Map(companies?.map(source=>[source.name,source])),[companies]);
-  const renderJob=(job:ApiJob)=><JobCard source={sourceByName.get(job.company)} backup={backup} now={now} key={trackingKey(job)} job={job} preferences={preferences} tracking={getTracking(job)} saveTracking={saveTracking} />;
+  const renderJob=useCallback((job:ApiJob)=><JobCard source={sourceByName.get(job.company)} backup={backup} now={now} key={trackingKey(job)} job={job} preferences={preferences} tracking={getTracking(job)} saveTracking={saveTracking} match={ranking?.get(trackingKey(job))?.match} />,[sourceByName,backup,now,preferences,getTracking,saveTracking,ranking]);
   return jobs.length ? <JobPagination jobs={jobs} resetKey={resetKey} renderPage={page=>groupSimilarOpenings(page).map((group, index)=><div key={trackingKey(group[0])} className={index > 2 ? "content-visibility-auto" : undefined}>
     {renderJob(group[0])}
     {group.length>1&&<details className="mt-2 rounded-xl border bg-card p-3"><summary className="cursor-pointer text-sm font-semibold">{group.length-1} more {group.length===2?'opening':'openings'} at {group[0].company} · {group[0].title}</summary><p className="mt-2 text-xs text-muted-foreground">Separate employer listings. Each keeps its own apply link and tracking.</p><div className="mt-3 space-y-3">{group.slice(1).map(renderJob)}</div></details>}
@@ -1809,6 +1798,7 @@ const JobCard = memo(function JobCard({
   preferences,
   tracking,
   saveTracking,
+  match: matchProp,
 }: {
   source?:Company; backup?:boolean;
   now: number;
@@ -1816,11 +1806,12 @@ const JobCard = memo(function JobCard({
   preferences: SearchPreferences;
   tracking: Tracking;
   saveTracking: (j: ApiJob, p: Partial<Tracking>) => void;
+  match?: ReturnType<typeof personalMatch>;
 }) {
   const [details, setDetails] = useState(false),
     manualExperienceReview = tracking.feedback === 'experience',
     dateNeedsReview = !currentPosting(job,now),
-    match = personalMatch(job, preferences),
+    match = matchProp || personalMatch(job, preferences),
     requirements = requirementsFor(job),
     attribution = boardAttribution(job),
     freshness = sourceFreshness(source,Boolean(backup),job.last_seen_at,now),

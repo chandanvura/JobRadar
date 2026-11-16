@@ -13,9 +13,23 @@ export function canonicalApplyUrl(value: string) {
 }
 const normalized = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const tokens = (text: string) => new Set(normalized(text).split(' ').filter(Boolean));
-function similarity(a: string, b: string) {
-  const left = tokens(a), right = tokens(b);
-  const intersection = [...left].filter(x => right.has(x)).length;
+const jobTokenCache = new WeakMap<object, Set<string>>();
+function jobTokens(text: string, obj?: object) {
+  if (obj) {
+    const cached = jobTokenCache.get(obj);
+    if (cached) return cached;
+  }
+  const t = tokens(text);
+  if (obj) jobTokenCache.set(obj, t);
+  return t;
+}
+function similarity(a: string, b: string, leftTokens?: Set<string>, rightTokens?: Set<string>) {
+  const left = leftTokens || tokens(a), right = rightTokens || tokens(b);
+  let intersection = 0;
+  const [smaller, larger] = left.size <= right.size ? [left, right] : [right, left];
+  for (const x of smaller) {
+    if (larger.has(x)) intersection++;
+  }
   return intersection / Math.max(1, left.size + right.size - intersection);
 }
 export function groupDuplicateJobs<T extends FeedJob>(jobs: T[]) {
@@ -33,9 +47,12 @@ export function groupDuplicateJobs<T extends FeedJob>(jobs: T[]) {
     if (index === undefined && job.description && job.description.length >= 200) {
       // Distinct IDs on one ATS may represent distinct requisitions or reposts.
       // Only cross-source, same-employer/title/location, near-identical JDs merge.
+      const jobToks = jobTokens(job.description, job);
       index = (fingerprints.get(fingerprint) || []).slice(-25).find(i => {
         const candidate = groups[i].job;
-        return candidate.ats_provider !== job.ats_provider && (candidate.description?.length || 0) >= 200 && similarity(candidate.description!, job.description!) >= .95;
+        if (candidate.ats_provider === job.ats_provider || (candidate.description?.length || 0) < 200) return false;
+        const candidateToks = jobTokens(candidate.description!, candidate);
+        return similarity(candidate.description!, job.description!, candidateToks, jobToks) >= .95;
       });
     }
     if (index === undefined) {
