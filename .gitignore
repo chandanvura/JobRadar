@@ -11,6 +11,7 @@ web/next-env.d.ts
 web/.wrangler/
 web/wrangler.migrations.json
 web/public/backup/
+scratch/
 
 # Local credentials and private exports must never enter a public clone.
 data/

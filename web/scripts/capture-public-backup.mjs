@@ -56,7 +56,7 @@ export async function captureCatalog(origin, fetcher = fetch) {
   }
 }
 
-export function serializeCatalog(catalog, budget=24_000_000){
+export function serializeCatalog(catalog, budget=8_000_000){
   // Also narrow a pre-migration/prior snapshot without changing its age.
   const cities=['Bengaluru','Hyderabad'];
   catalog={...catalog,jobs:catalog.jobs.filter(job=>cities.includes(job.city)),policy:{...catalog.policy,cities,discovery_locations:cities}};
