@@ -13,7 +13,7 @@ export function matchesCareerView(job:ViewJob,view:string,min:number,max:number,
   if(view==='All Jobs')return !internshipRole(job);
   if(view==='Internships')return internshipRole(job);
   if(internshipRole(job))return false;
-  const eligible = Boolean(job.is_eligible || (allowAnyDate && job.eligibility_reason === 'Posting date not verified within 24 hours'));
+  const eligible = Boolean(job.is_eligible || (allowAnyDate && (job.eligibility_reason === 'Posting date not verified within 24 hours' || job.eligibility_reason === '')));
   if(view==='Needs Review')return senior(job.title)||experienceUnverified(job)||!eligible||(!allowAnyDate&&!currentPosting)||(job.experience_min??0)>max||(job.experience_max!==null&&job.experience_max<min);
   if(max<=3&&view!=='Needs Review'&&senior(job.title))return false;
   if(verifiedView(view)&&typeof job.normalized_location==='string'&&!shortlistLocation(job))return false;
