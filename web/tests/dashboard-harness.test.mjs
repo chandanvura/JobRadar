@@ -155,13 +155,13 @@ test('full dashboard: 7,000 jobs, 700 companies, navigation, page retention and 
   await act(()=>{Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set.call(followUp,'2026-10-23');followUp.dispatchEvent(new window.Event('change',{bubbles:true}));});
   assert.ok(document.body.textContent.includes('Follow-up due: 2026-10-23'));
   assert.ok([...document.querySelectorAll('button')].some(button=>button.textContent==='Download calendar reminder'));
-  assert.equal(Object.values(JSON.parse(localStorage.getItem('jobradar-tracking-v2')))[0].followUpOn,'2026-10-23');
+  assert.equal(Object.values(JSON.parse(localStorage.getItem('jobradar-tracking-v2'))).find(entry=>entry.job?.title==='Java Engineer 0')?.followUpOn,'2026-10-23');
   // Simulate a fresh page after the employer removes the opening.
   omitTrackedJob=true;await act(()=>root.unmount());root=createRoot(document.getElementById('root'));
   await act(()=>root.render(React.createElement(JobRadarDashboard)));
   await settle(()=>Boolean(document.querySelector('[aria-label="Application stage for Java Engineer 0"]')));
   assert.equal(document.querySelector('[aria-label="Application stage for Java Engineer 0"]').value,'Interview');
-  assert.equal(Object.values(JSON.parse(localStorage.getItem('jobradar-tracking-v2')))[0].followUpOn,'2026-10-23');
+  assert.equal(Object.values(JSON.parse(localStorage.getItem('jobradar-tracking-v2'))).find(entry=>entry.job?.title==='Java Engineer 0')?.followUpOn,'2026-10-23');
   assert.ok(document.body.textContent.includes('No longer in live feed'));
   await click('Dashboard');assert.equal(document.querySelector('h1').textContent,'Dashboard');
   const remountMoreFilters=[...document.querySelectorAll('button')].find(node=>node.textContent.includes('More filters'));
