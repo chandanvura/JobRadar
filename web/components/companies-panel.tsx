@@ -19,7 +19,7 @@ export interface CompanyRecord {
   warning: string | null;
 }
 
-type SegmentFilter = "all" | "productive" | "global";
+type SegmentFilter = "all" | "productive";
 
 export function CompaniesPanel({
   companies,
@@ -38,12 +38,12 @@ export function CompaniesPanel({
 
   const counts = useMemo(() => {
     let productive = 0;
-    let global = 0;
+    let targetOpenings = 0;
     for (const c of companies) {
       if (c.candidate_jobs > 0) productive += 1;
-      else if (c.jobs_found > 0) global += 1;
+      targetOpenings += c.candidate_jobs || 0;
     }
-    return { productive, global };
+    return { productive, targetOpenings };
   }, [companies]);
 
   const filtered = useMemo(() => {
@@ -54,7 +54,6 @@ export function CompaniesPanel({
         if (!hay.includes(q)) return false;
       }
       if (segment === "productive") return c.candidate_jobs > 0;
-      if (segment === "global") return c.jobs_found > 0 && c.candidate_jobs === 0;
       return true;
     });
   }, [companies, query, segment]);
@@ -81,12 +80,12 @@ export function CompaniesPanel({
           <p className="mt-1.5 text-2xl font-black">{companies.length}</p>
         </div>
         <div className="rounded-2xl border bg-card p-4">
-          <p className="text-xs font-bold uppercase text-muted-foreground">Target city openings</p>
+          <p className="text-xs font-bold uppercase text-muted-foreground">Employers in target cities</p>
           <p className="mt-1.5 text-2xl font-black text-success">{counts.productive}</p>
         </div>
         <div className="rounded-2xl border bg-card p-4">
-          <p className="text-xs font-bold uppercase text-muted-foreground">Global employers</p>
-          <p className="mt-1.5 text-2xl font-black">{counts.global}</p>
+          <p className="text-xs font-bold uppercase text-muted-foreground">Target openings</p>
+          <p className="mt-1.5 text-2xl font-black text-success">{counts.targetOpenings}</p>
         </div>
       </div>
 
@@ -95,7 +94,6 @@ export function CompaniesPanel({
           [
             ["all", `All (${companies.length})`],
             ["productive", `Target cities (${counts.productive})`],
-            ["global", `Global only (${counts.global})`],
           ] as Array<[SegmentFilter, string]>
         ).map(([key, label]) => (
           <button
@@ -133,13 +131,9 @@ export function CompaniesPanel({
                           {c.ats_identifier ? ` (${c.ats_identifier})` : ""} · checked {relativeTime(c.last_checked_at)}
                         </p>
                       </div>
-                      {c.candidate_jobs > 0 ? (
+                      {c.candidate_jobs > 0 && (
                         <span className="rounded-lg bg-success-soft px-2.5 py-1 text-[10px] font-black text-success">
                           {c.candidate_jobs} target openings
-                        </span>
-                      ) : (
-                        <span className="rounded-lg bg-muted px-2.5 py-1 text-[10px] font-semibold text-muted-foreground">
-                          {c.jobs_found} global
                         </span>
                       )}
                     </div>
@@ -199,7 +193,7 @@ export function CompaniesPanel({
                           {c.candidate_jobs > 0 ? (
                             <span className="text-success font-bold">{c.candidate_jobs} target</span>
                           ) : (
-                            <span className="text-muted-foreground">{c.jobs_found} global</span>
+                            <span className="text-muted-foreground">—</span>
                           )}
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap text-xs text-muted-foreground">
