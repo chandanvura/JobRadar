@@ -59,7 +59,7 @@ export interface NormalizedIngestJob {
 
 const LEADERSHIP_TITLE = /\b(?:architect|director|head|lead|manager|principal|staff|vice president|vp)\b/i;
 const EXPLICIT_ENTRY_TITLE =
-  /\b(?:associate|junior|graduate|trainee|fresher|new grad(?:uate)?|entry[- ]level|campus hire|university grad(?:uate)?)\b|\b(?:sde|swe|software engineer|software developer|qa engineer|qa analyst|sdet|test engineer|support engineer|technical support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer|data engineer|ml engineer|machine learning engineer|security engineer|network engineer|observability engineer|monitoring engineer|ansible engineer)(?:[\s-]+(?:i|1)\b|1\b)/i;
+  /\b(?:associate|junior|graduate|trainee|fresher|new grad(?:uate)?|entry[- ]level|campus hire|university grad(?:uate)?)\b|\b(?:sde|swe|mts|software engineer|software developer|developer|engineer|analyst|qa engineer|qa analyst|sdet|test engineer|support engineer|technical support engineer|devops engineer|cloud engineer|platform engineer|sre|site reliability engineer|infrastructure engineer|systems engineer|backend engineer|frontend engineer|full[ -]?stack engineer|data engineer|ml engineer|machine learning engineer|security engineer|network engineer|observability engineer|monitoring engineer|ansible engineer|consultant)(?:[\s-]+(?:i|1|l1|l-1|level 1|level i|grade 1)\b|1\b|\s+l1\b)/i;
 const INTERN_TITLE = /\b(?:intern|internship|co[ -]?op|apprentice|apprenticeship)\b/i;
 const INTERN_CORPUS =
   /\b(?:this is an?|join us as an?|seeking an?|hiring an?)\s+(?:[a-z]+\s+){0,3}(?:intern|internship|apprentice|apprenticeship)\b/i;

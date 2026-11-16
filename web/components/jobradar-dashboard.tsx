@@ -369,6 +369,12 @@ const initialPreferences = () => {
     return defaultPreferences;
   }
 };
+const initialFreshness = (view: string) => {
+  if (typeof window === "undefined") return defaultFreshness(view);
+  const stored = readPrivate("jobradar-freshness-v1");
+  if (stored && ["Any date", "24 hours", "3 days", "7 days"].includes(stored)) return stored;
+  return defaultFreshness(view);
+};
 const splitTerms = (value: string) =>
   Array.from(
     new Set(
@@ -392,8 +398,8 @@ export function JobRadarDashboard() {
 function DashboardContent() {
   const [active, setActive] = useState<string>(initialView),
     [location, setLocation] = useState("All cities"),
-    [freshness, setFreshness] = useState(() =>
-      defaultFreshness(initialView())
+    [freshness, setFreshnessState] = useState(() =>
+      initialFreshness(initialView())
     ),
     [workMode, setWorkMode] = useState("All arrangements"),
     [role, setRole] = useState("All roles"),
@@ -416,6 +422,13 @@ function DashboardContent() {
     [showMoreFilters, setShowMoreFilters] = useState(false),
     [showOperations, setShowOperations] = useState(false),
     [showTools, setShowTools] = useState(false);
+
+  const setFreshness = useCallback((next: string) => {
+    setFreshnessState(next);
+    if (typeof window !== "undefined") {
+      writePrivate("jobradar-freshness-v1", next);
+    }
+  }, []);
   const setSort = (next: string) => {
     setSortState(next);
     if (sortOptions.includes(next)) {
@@ -500,7 +513,7 @@ function DashboardContent() {
       const found = labelBySlug.get(window.location.hash.slice(1));
       if (found) {
         setActive(found);
-        setFreshness(defaultFreshness(found));
+        setFreshnessState(initialFreshness(found));
       }
     };
     window.addEventListener("hashchange", syncHash);
@@ -581,7 +594,7 @@ function DashboardContent() {
   }, []);
   const navigate = (label: string) => {
     setActive(label);
-    setFreshness(defaultFreshness(label));
+    setFreshnessState(initialFreshness(label));
     setMobile(false);
     history.pushState(null, "", `#${slug(label)}`);
     window.dispatchEvent(new HashChangeEvent("hashchange"));

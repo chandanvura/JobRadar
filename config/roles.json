@@ -5,6 +5,7 @@
       "family": "DevOps",
       "patterns": [
         "\\bdev\\s*(?:sec\\s*)?ops\\b",
+        "\\bml\\s*ops\\b",
         "\\b(?:build (?:and )?release|release|deployment|configuration management) (?:engineer|developer|specialist)\\b",
         "\\b(?:ci cd|build|release automation) (?:engineer|developer)\\b",
         "\\b(?:ci\\s*[/ -]?\\s*cd|build|release automation)\\b.{0,25}\\b(?:engineer|developer)\\b",
@@ -14,6 +15,7 @@
       ],
       "titles": [
         "DevOps Engineer",
+        "MLOps Engineer",
         "DevSecOps Engineer",
         "Build and Release Engineer",
         "Release Engineer",
@@ -244,7 +246,7 @@
     {
       "family": "Java / Backend",
       "patterns": [
-        "\\b(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|dotnet|c#|ruby|php) (?:full[ -]?stack |back[ -]?end |software |application )?(?:developer|engineer|intern)\\b",
+        "\\b(?:java|python|go|golang|scala|kotlin|node(?:\\.js|js)?|\\.net|dotnet|c#|ruby|php) (?:full[ -]?stack |back[ -]?end |software |application )?(?:developer|engineer|intern)\\b",
         "\\bback[ -]?end (?:software |application )?(?:developer|engineer|intern)\\b",
         "\\bsoftware engineer\\s*(?:java|python|go|golang|node(?:\\.js|js)?|\\.net|back[ -]?end)\\b",
         "(?<!\\w)\\.net (?:software |full stack )?(?:developer|engineer|intern)\\b",
@@ -288,11 +290,12 @@
       "patterns": [
         "\\b(?:ai|ml|ai ml|aiml|machine learning|deep learning|generative ai|genai|nlp|computer vision) (?:software |research )?(?:engineer|developer|scientist|researcher|intern)\\b",
         "\\b(?:data|applied|research) scientist\\b",
-        "\\b(?:prompt|applied ai|genai|generative ai|llm) (?:engineer|developer|specialist)\\b",
+        "\\b(?:prompt|applied ai|genai|generative ai|llm) (?:model\\s+)?(?:engineer|developer|specialist)\\b",
         "\\bdecision scientist\\b"
       ],
       "titles": [
         "Machine Learning Engineer",
+        "LLM Model Developer",
         "Data Scientist",
         "AI Engineer",
         "Applied Scientist",
@@ -365,6 +368,7 @@
       "family": "Quality Engineering",
       "patterns": [
         "\\b(?:qa|quality assurance|quality|software test|test automation|automation test|software quality|validation|verification) (?:automation |software )?(?:engineer|developer|associate|analyst|intern)\\b",
+        "\\bautomation\\s+engineer\\s+l[1-4]\\b",
         "\\b(?:sdet|software development engineer in test|software test(?:er|ing)|test engineer|automation tester)\\b"
       ],
       "titles": [
@@ -405,6 +409,7 @@
       "family": "Technical Consulting",
       "patterns": [
         "\\b(?:technical|technology|it|implementation|integration|erp|sap|salesforce|servicenow|oracle|application|package|packaged application) (?:associate |software )?(?:consultant|developer|engineer|specialist|analyst)\\b",
+        "\\b(?:techno\\s*functional\\s+)?consultant\\s+l[1-4]\\b",
         "\\b(?:solutions?|customer|partner solutions?|pre[ -]?sales|field application|corporate application) (?:consultant|developer|engineer|specialist|architect|associate)\\b",
         "\\btechnical account manager\\b"
       ],
@@ -437,6 +442,9 @@
       "patterns": [
         "\\b(?:software|applications?|front[ -]?end|full[ -]?stack|mobile|android|ios|web|ui|ux|react|angular|javascript|typescript|c\\+\\+|c) (?:development |application |systems? )?(?:engineer(?:ing)?|developer|programmer|intern)\\b",
         "\\b(?:sde|swe|sw engineer|programmer analyst|member of technical staff|technical staff member)\\b",
+        "\\bdeveloper\\s+l[1-4]\\b|\\bl[1-4]\\s+developer\\b",
+        "\\bsoftware\\s+dev(?:elopment)?\\s+engineer\\b",
+        "\\bsoftware\\s+dev(?:elopment)?\\s+analyst\\b",
         "\\b(?:graduate )?engineer trainee\\b",
         "^get(?:\\s|$)",
         "\\btrainee (?:software |application )?developer\\b",
