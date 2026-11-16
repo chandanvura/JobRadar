@@ -65,8 +65,9 @@ def extract_application_url(desc_html: str, fallback_url: str) -> str:
     for link in links:
         link = html.unescape(link.strip())
         parsed = urlparse(link)
+        host = (parsed.hostname or "").lower()
         # Unwrap Google redirect if present (e.g. google.com/url?q=https://forms.gle/...)
-        if "google.com" in parsed.netloc and parsed.path.startswith("/url"):
+        if (host == "google.com" or host.endswith(".google.com")) and parsed.path.startswith("/url"):
             qs = parse_qs(parsed.query)
             if "q" in qs and qs["q"]:
                 target = qs["q"][0]
@@ -74,10 +75,10 @@ def extract_application_url(desc_html: str, fallback_url: str) -> str:
                 if target_parsed.scheme in ("http", "https"):
                     return target
 
-        if any(h in parsed.netloc for h in ("forms.gle", "docs.google.com", "typeform.com", "airtable.com")):
+        if host in ("forms.gle", "typeform.com", "airtable.com") or host.endswith((".google.com", ".typeform.com", ".airtable.com")):
             return link
 
-        if "careers.zerodha.com" in parsed.netloc and ("/apply" in parsed.path or "/application" in parsed.path):
+        if (host == "careers.zerodha.com" or host.endswith(".zerodha.com")) and ("/apply" in parsed.path or "/application" in parsed.path):
             return link
 
     return fallback_url
