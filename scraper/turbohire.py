@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from .models import Company, Job
 
 TURBOHIRE_GUEST_ENDPOINT = "https://api.turbohire.co/api/token/noauth"  # nosec B105
+TURBOHIRE_API_TOKEN_URL = TURBOHIRE_GUEST_ENDPOINT  # nosec B105
 TURBOHIRE_API_JOBS_URL = "https://api.turbohire.co/api/careerpagev2/filteredjobs"
 
 

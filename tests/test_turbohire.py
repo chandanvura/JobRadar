@@ -7,6 +7,7 @@ from scraper.models import Company
 from scraper.normalization import enrich
 from scraper.turbohire import (
     TURBOHIRE_API_JOBS_URL,
+    TURBOHIRE_GUEST_ENDPOINT,
     TURBOHIRE_API_TOKEN_URL,
     TurboHireCareerAdapter,
     parse_turbohire_jobs,
