@@ -904,7 +904,7 @@ const SIMPLE_BOARD_SPECS: Record<string, BoardSpec> = {
   },
   darwinbox: {
     request: (slug) => ({
-      url: `https://${encodeURIComponent(slug)}.darwinbox.in/ms/candidateapi/job`,
+      url: `https://${encodeURIComponent(slug)}.darwinbox.in/ms/candidateapi/job/alljobs`,
       init: {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -913,23 +913,28 @@ const SIMPLE_BOARD_SPECS: Record<string, BoardSpec> = {
       },
     }),
     rows: (d) => {
-      const obj = d as { message?: { jobs?: Array<Record<string, unknown>> }; jobs?: Array<Record<string, unknown>> };
-      return obj?.message?.jobs || obj?.jobs || [];
+      const obj = d as {
+        status?: string;
+        message?: { jobs?: Array<Record<string, unknown>> };
+        jobs?: Array<Record<string, unknown>>;
+        data?: Array<Record<string, unknown>>;
+      };
+      return obj?.data || obj?.message?.jobs || obj?.jobs || [];
     },
     mapRow: (j, c, slug) => {
-      const id = String(j.id || j.job_id || j.requisition_id || '');
-      const url = `https://${slug}.darwinbox.in/ms/candidate/careers/${encodeURIComponent(id)}`;
+      const id = String(j.id || j._id || j.job_id || j.requisition_id || j.internal_job_code || '');
+      const url = `https://${slug}.darwinbox.in/ms/candidatev2/main/careers/jobDetails/${encodeURIComponent(id)}`;
       return {
         external_job_id: id,
-        title: String(j.title || j.job_title || ''),
+        title: String(j.title || j.designation_display_name || j.designation_title_name || j.job_title || ''),
         company: c.name,
-        location: String(j.location || j.city || 'India'),
-        description: stripHtml(String(j.description || j.job_description || '')),
+        location: String(j.officelocation_show_arr || j.locations || j.location || j.city || 'India'),
+        description: stripHtml(String(j.jd || j.jd_summary || j.description || j.job_description || '')),
         ats_provider: 'darwinbox',
         job_url: url,
         application_url: url,
         career_page_url: c.careers_url,
-        ...normalizePostedInput((j.created_on || j.posted_on) as string | null),
+        ...normalizePostedInput((j.posted_on || j.created_on) as string | number | null),
       };
     },
   },

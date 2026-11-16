@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from urllib.parse import parse_qs, urlencode, urljoin, urlparse
-import asyncio, html, json, os, re
+import asyncio, html, json, os, random, re
 import httpx
 from bs4 import BeautifulSoup
 from defusedxml import ElementTree as ET
@@ -12,6 +13,9 @@ from .locations import explicit_remote_india, india_discovery_location
 
 HEADERS={"User-Agent":"JobRadar/1.2 (+personal job monitor; responsible hourly polling)","Accept":"application/json,text/html;q=0.9"}
 _DOMAIN_LIMITERS={}
+_DOMAIN_PACING_LOCKS={}
+_DOMAIN_LAST_REQUEST={}
+_DOMAIN_DELAYS={}
 _BLOCK_HTML_TAGS=re.compile(r"<(?:br\b[^>]*|/?(?:p|div|li|ul|ol|tr|h[1-6]|section|article)\b[^>]*)>",re.I)
 def clean(value):
     """Strip HTML to normalized plain text while keeping block and list boundaries separate."""
@@ -31,6 +35,44 @@ def request_bucket(url):
         if host==family or host.endswith("."+family): return family
     return host
 
+def _is_workday_url(url):
+    host=(urlparse(url).hostname or "").lower()
+    return host=="myworkdayjobs.com" or host.endswith(".myworkdayjobs.com")
+
+async def wait_domain_pacing(url):
+    """Pace consecutive requests per Workday domain to prevent Cloudflare 429 rate limiting."""
+    if not _is_workday_url(url): return
+    parsed=urlparse(url); host=(parsed.hostname or "").lower()
+    loop=asyncio.get_running_loop(); key=(id(loop),host)
+    if key not in _DOMAIN_PACING_LOCKS:
+        _DOMAIN_PACING_LOCKS[key]=asyncio.Lock()
+        _DOMAIN_LAST_REQUEST[key]=0.0
+        is_listing=url.rstrip("/").endswith("/jobs")
+        default_delay=float(os.getenv("JOBRADAR_WORKDAY_LISTING_DELAY","0.35") if is_listing else os.getenv("JOBRADAR_WORKDAY_DETAIL_DELAY","0.2"))
+        _DOMAIN_DELAYS[key]=default_delay
+    async with _DOMAIN_PACING_LOCKS[key]:
+        now=loop.time(); delay=_DOMAIN_DELAYS.get(key,0.3)
+        last=_DOMAIN_LAST_REQUEST.get(key,0.0); elapsed=now-last
+        if elapsed<delay and last>0.0:
+            await asyncio.sleep(delay-elapsed)
+        _DOMAIN_LAST_REQUEST[key]=loop.time()
+
+def record_domain_rate_limit(url, delay=None):
+    if not _is_workday_url(url): return
+    parsed=urlparse(url); host=(parsed.hostname or "").lower()
+    loop=asyncio.get_running_loop(); key=(id(loop),host)
+    current=_DOMAIN_DELAYS.get(key,0.35)
+    _DOMAIN_DELAYS[key]=min(5.0,max(current*1.5,float(delay or 2.0)))
+
+def record_domain_success(url):
+    if not _is_workday_url(url): return
+    parsed=urlparse(url); host=(parsed.hostname or "").lower()
+    loop=asyncio.get_running_loop(); key=(id(loop),host)
+    if key in _DOMAIN_DELAYS:
+        is_listing=url.rstrip("/").endswith("/jobs")
+        base=float(os.getenv("JOBRADAR_WORKDAY_LISTING_DELAY","0.35") if is_listing else os.getenv("JOBRADAR_WORKDAY_DETAIL_DELAY","0.2"))
+        _DOMAIN_DELAYS[key]=max(base,_DOMAIN_DELAYS[key]*0.95)
+
 def domain_limiter(url):
     """Bound requests per ATS family while allowing unrelated employers to overlap."""
     loop=asyncio.get_running_loop(); bucket=request_bucket(url)
@@ -38,8 +80,8 @@ def domain_limiter(url):
     host=(urlparse(url).hostname or "").lower()
     key=(id(loop),bucket,host if bucket.startswith("workday-") else "")
     if key not in _DOMAIN_LIMITERS:
-        if bucket=="workday-listings": setting,default="JOBRADAR_WORKDAY_LISTING_CONCURRENCY","5"
-        elif bucket=="workday-details": setting,default="JOBRADAR_WORKDAY_DETAIL_CONCURRENCY","10"
+        if bucket=="workday-listings": setting,default="JOBRADAR_WORKDAY_LISTING_CONCURRENCY","2"
+        elif bucket=="workday-details": setting,default="JOBRADAR_WORKDAY_DETAIL_CONCURRENCY","3"
         elif bucket=="jobvite.com": setting,default="JOBRADAR_JOBVITE_CONCURRENCY","1"
         else: setting,default="JOBRADAR_DOMAIN_CONCURRENCY","6"
         _DOMAIN_LIMITERS[key]=asyncio.Semaphore(int(os.getenv(setting,default)))
@@ -48,20 +90,51 @@ def domain_limiter(url):
 async def request(x,method,url,**kwargs):
     # Only read operations may be replayed: Workday's search is a POST.
     parsed=urlparse(url)
+    is_workday=_is_workday_url(url)
     replayable=method.upper() in {"GET","HEAD"} or (
-        method.upper()=="POST" and (parsed.hostname or "").endswith(".myworkdayjobs.com")
+        method.upper()=="POST" and is_workday
         and parsed.path.startswith("/wday/cxs/") and parsed.path.endswith("/jobs"))
-    for attempt in range(3 if replayable else 1):
+    max_attempts=4 if is_workday else (3 if replayable else 1)
+    for attempt in range(max_attempts):
         try:
+            if is_workday and attempt==0:
+                await wait_domain_pacing(url)
             async with domain_limiter(url):
                 response=await x.request(method,url,**kwargs)
         except (httpx.TimeoutException,httpx.NetworkError):
-            if not replayable or attempt==2: raise
-        else:
-            if response.status_code not in {500,502,503,504,520,521,522,523,524} or not replayable or attempt==2:
+            if not replayable or attempt+1>=max_attempts: raise
+            await asyncio.sleep(0.5 * 2**attempt)
+            continue
+        status=response.status_code
+        if status==200:
+            if is_workday: record_domain_success(url)
+            return response
+        if not is_workday and status in {403,404,429}:
+            return response
+        if is_workday and status==429:
+            raw_retry=response.headers.get("Retry-After","").strip()
+            delay=None
+            if raw_retry:
+                try: delay=float(raw_retry)
+                except ValueError:
+                    try:
+                        delay=(parsedate_to_datetime(raw_retry)-datetime.now(timezone.utc)).total_seconds()
+                    except (ValueError, TypeError, OverflowError):
+                        delay=None
+            if delay is None or delay<=0 or delay>60:
+                delay=min(20.0,(2.0*(2**attempt))+random.uniform(0.2,0.8))  # nosec B311 - non-cryptographic jitter
+            else:
+                delay=delay+random.uniform(0.1,0.5)  # nosec B311 - non-cryptographic jitter
+            record_domain_rate_limit(url,delay)
+            if attempt+1>=max_attempts:
                 return response
             await response.aclose()
-        # Release the provider semaphore while backing off; never retry 403/429.
+            await asyncio.sleep(delay)
+            continue
+        if status not in {500,502,503,504,520,521,522,523,524,525} or not replayable or attempt+1>=max_attempts:
+            return response
+        await response.aclose()
+        # Release the provider semaphore while backing off
         await asyncio.sleep(0.5 * 2**attempt)
 
 async def fetch_detail(x,url):
@@ -167,7 +240,10 @@ class LeverAdapter(JobSource):
         if not re.fullmatch(r"[\w.-]+",slug) or (len(parts)>1 and not region):
             raise ValueError("Invalid public Lever board identifier")
         async with client() as x:
-            response=await request(x,"GET",f"https://api.{region}lever.co/v0/postings/{slug}",params={"mode":"json"}); response.raise_for_status(); data=response.json()
+            response=await request(x,"GET",f"https://api.{region}lever.co/v0/postings/{slug}",params={"mode":"json"})
+            if response.status_code == 404:
+                return [], 0
+            response.raise_for_status(); data=response.json()
         if not isinstance(data,list): raise ValueError("Lever public board returned an unexpected schema")
         identifiers=[j.get('id') for j in data]
         if any(not isinstance(i,str) or not i for i in identifiers) or len(set(identifiers))!=len(data):
@@ -413,8 +489,13 @@ class WorkdayAdapter(JobSource):
             country=c.ats_identifier.split("|")[2] if len(c.ats_identifier.split("|"))>2 else None
             if country:
                 response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":{},"limit":20,"offset":0,"searchText":""})
+                if response.status_code == 429:
+                    warning = f"Upstream rate limit: Workday rate limited requests for {tenant}"
+                    return JobBatch([], coverage_warning=warning), 0
                 response.raise_for_status()
                 facets=workday_country_facets(response.json().get("facets",[]),country)
+                if not facets and country.casefold() == "india":
+                    facets=workday_city_facets(response.json().get("facets",[]))
                 if not facets: raise ValueError("Workday does not expose the configured country locations")
             if self.complete and tenant=='maersk' and site=='Maersk_Careers' and not country:
                 from .workday_partitions import category_postings
@@ -424,7 +505,12 @@ class WorkdayAdapter(JobSource):
                 partition_first=[item.get('externalPath') for item in initial_page.get('jobPostings',[])]
                 offset=bound
             while offset < bound:
-                response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""}); response.raise_for_status(); page=response.json()
+                response=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":offset,"searchText":""})
+                if response.status_code == 429:
+                    if not self.complete and postings: break
+                    warning = f"Upstream rate limit: Workday rate limited requests for {tenant}"
+                    return JobBatch([], coverage_warning=warning), 0
+                response.raise_for_status(); page=response.json()
                 batch=page.get("jobPostings",[])
                 if offset==0 and not facets and not self.complete:
                     published=workday_city_facets(page.get("facets",[]))
@@ -471,11 +557,13 @@ class WorkdayAdapter(JobSource):
                 # Workday returns total=0 on later pages to omit recounting.
                 # Verify the first page again after collecting the entire list.
                 check=await request(x,"POST",f"{api}/jobs",json={"appliedFacets":facets,"limit":20,"offset":0,"searchText":""})
-                check.raise_for_status(); snapshot=check.json()
-                if (snapshot.get("total")!=expected or [item.get("externalPath") for item in snapshot.get("jobPostings",[])]
-                        !=(partition_first if partition_first is not None else [item.get("externalPath") for item in postings[:20]])):
-                    raise SnapshotChanged("Workday complete listing changed during final verification")
-            semaphore=asyncio.Semaphore(8); missing=[]; detail_requests=0; skipped_details=0; timed_out_details=0
+                if check.status_code != 429:
+                    check.raise_for_status(); snapshot=check.json()
+                    if (snapshot.get("total")!=expected or [item.get("externalPath") for item in snapshot.get("jobPostings",[])]
+                            !=(partition_first if partition_first is not None else [item.get("externalPath") for item in postings[:20]])):
+                        raise SnapshotChanged("Workday complete listing changed during final verification")
+            detail_concurrency=int(os.getenv("JOBRADAR_WORKDAY_DETAIL_CONCURRENCY","3"))
+            semaphore=asyncio.Semaphore(detail_concurrency); missing=[]; detail_requests=0; skipped_details=0; timed_out_details=0
             async def convert(item):
                 nonlocal detail_requests,skipped_details
                 # Complete mode reads relevant titles even if listing locations hide
@@ -498,6 +586,10 @@ class WorkdayAdapter(JobSource):
                                      else await fetch_detail(x,f"{api}{path}"))
                 if detail_response.status_code in (404,410):
                     if self.complete: missing.append(path)
+                    return None
+                if detail_response.status_code == 429:
+                    if self.complete: missing.append(path)
+                    skipped_details += 1
                     return None
                 if self.complete: detail_response.raise_for_status()
                 elif detail_response.status_code != 200: return None
@@ -956,3 +1048,6 @@ ADAPTERS['public_career_json'] = ZerodhaCareerAdapter()
 
 from .turbohire import TurboHireCareerAdapter
 ADAPTERS['turbohire'] = TurboHireCareerAdapter()
+
+from .darwinbox import DarwinboxCareerAdapter
+ADAPTERS['darwinbox'] = DarwinboxCareerAdapter()
