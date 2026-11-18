@@ -42,7 +42,7 @@ def detail(text,item):
     job=records[0];url=job.get('url') or '';parts=urlsplit(url)
     org=job.get('hiringOrganization') or {}
     if (parts.hostname!='careers.netapp.com' or unquote(parts.path)!=unquote(urlsplit(item['url']).path)
-            or org.get('name')!='NetApp' or clean(job.get('title')).casefold()!=item['title'].casefold()):
+            or org.get('name')!='NetApp' or clean(job.get('title')).casefold()!=clean(item['title']).casefold()):
         raise ValueError('NetApp detail does not match its listed employer and job identity')
     description=clean(job.get('description'))
     if not description or description.upper()=='UNAVAILABLE':raise ValueError('NetApp omitted full job requirements')
