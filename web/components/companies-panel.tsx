@@ -192,6 +192,14 @@ export function CompaniesPanel({
                         <td className="px-3 py-4 whitespace-nowrap font-semibold">
                           {c.candidate_jobs > 0 ? (
                             <span className="text-success font-bold">{c.candidate_jobs} target</span>
+                          ) : c.jobs_found > 0 ? (
+                            <span className="text-xs text-muted-foreground" title={`${c.jobs_found} total openings; none match 0-2 YOE Bengaluru/Hyderabad`}>
+                              0 target ({c.jobs_found} global)
+                            </span>
+                          ) : c.warning ? (
+                            <span className="text-xs text-muted-foreground" title={c.warning}>
+                              —
+                            </span>
                           ) : (
                             <span className="text-muted-foreground">—</span>
                           )}
