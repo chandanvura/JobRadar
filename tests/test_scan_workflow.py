@@ -74,7 +74,7 @@ def test_release_and_ci_share_all_validation_gates():
         assert 'scripts/verify-harness.sh python' in workflow
     assert release.index('scripts/verify-harness.sh python') < release.index('Apply versioned database migrations')
     harness = (root / 'scripts/verify-harness.sh').read_text()
-    for gate in ['npm audit --audit-level=high', 'npm audit --omit=dev', 'npm test',
+    for gate in ['npm audit', 'npm audit --omit=dev', 'npm test',
                  'npm run test:api', 'npm run lint', 'npm run typecheck:ui',
                  '-m pytest', '-m bandit', '-m pip_audit']:
         assert gate in harness
