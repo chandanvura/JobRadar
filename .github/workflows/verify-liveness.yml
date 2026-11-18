@@ -1,0 +1,27 @@
+name: Verify ATS Job Liveness
+
+on:
+  schedule:
+    # Run twice daily at 04:00 UTC and 16:00 UTC
+    - cron: '0 4,16 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: liveness-verification
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install httpx pytest
+      - name: Run liveness verification tests
+        run: |
+          pytest tests/test_liveness_verifier.py
