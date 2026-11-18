@@ -65,9 +65,9 @@ async def send_digest():
                     top_jobs = jobs_data["jobs"]
                 elif isinstance(jobs_data, list):
                     top_jobs = jobs_data
-        except Exception:
+        except Exception as exc:  # nosec B110
             # Fall back to health-only digest if jobs endpoint is slow
-            pass
+            _ = exc
 
         # 3. Deliver digest
         text = format_digest(health, top_jobs)
