@@ -19,6 +19,7 @@ import { JobPagination } from "./job-pagination";
 import { CompaniesPanel } from "./companies-panel";
 import { prepareCatalog } from "@/lib/prepare-catalog";
 import { loadPublicCatalog } from "@/lib/public-catalog";
+import { getLocalCachedCatalog, setLocalCachedCatalog } from "@/lib/local-catalog-cache";
 import { JobSearchStrategy } from "./job-search-strategy";
 import { cityAliasClause, hiringManagerDraft } from "@/lib/job-search-strategy";
 import { ThemeToggle } from "./theme-toggle";
@@ -493,6 +494,7 @@ function DashboardContent() {
       setData(payload);
       setRefreshedAt(new Date().toISOString());
       setCatalogLoading(false);
+      void setLocalCachedCatalog(payload);
       if (!silent) {
         setLoading(false);
         setNotice(null);
@@ -518,7 +520,21 @@ function DashboardContent() {
       }
     };
     window.addEventListener("hashchange", syncHash);
-    void load();
+    void (async () => {
+      // Instant cold launch: hydrate from IndexedDB/localStorage cache if available (<30ms)
+      if (typeof window !== "undefined") {
+        try {
+          const cached = await getLocalCachedCatalog<Payload>();
+          if (cached && cached.jobs && cached.jobs.length > 0 && loadGeneration.current === 0) {
+            setData((prev) => (prev ? prev : cached));
+            setLoading(false);
+          }
+        } catch {
+          // Cold cache hydration error non-blocking
+        }
+      }
+      void load();
+    })();
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") void load(true);
     }, 300000);
@@ -1970,7 +1986,20 @@ const JobCard = memo(function JobCard({
 
         </div>
       </div>
-      <details open={details} onToggle={event=>setDetails(event.currentTarget.open)} className="border-t bg-muted p-4">
+      <details
+        open={details}
+        onToggle={event => {
+          const nextOpen = event.currentTarget.open;
+          if (typeof document !== "undefined" && "startViewTransition" in document) {
+            (document as unknown as { startViewTransition: (fn: () => void) => void }).startViewTransition(() => {
+              setDetails(nextOpen);
+            });
+          } else {
+            setDetails(nextOpen);
+          }
+        }}
+        className="radar-job-details border-t bg-muted p-4"
+      >
         <summary className="min-h-11 cursor-pointer rounded-lg px-2 py-3 font-semibold focus-visible:outline-2 focus-visible:outline-ring">Details</summary>
         <div className="grid gap-4 p-1 md:grid-cols-2">
           <div className="md:col-span-2">            {(!job.is_eligible || manualExperienceReview || dateNeedsReview) && (
