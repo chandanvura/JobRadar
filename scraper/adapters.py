@@ -6,6 +6,10 @@ import asyncio, html, json, os, random, re
 import httpx
 from bs4 import BeautifulSoup
 from defusedxml import ElementTree as ET
+try:
+    from curl_cffi.requests import AsyncSession as CurlAsyncSession
+except ImportError:
+    CurlAsyncSession = None
 from .models import Company, Job, JobBatch
 from .snapshot import SnapshotChanged
 from .roles import likely_technical_title
@@ -25,6 +29,39 @@ def clean(value):
     return "\n".join(line for line in lines if line)
 def client(timeout=20):
     return httpx.AsyncClient(timeout=httpx.Timeout(timeout,connect=min(timeout,8)),follow_redirects=True,headers=HEADERS,limits=httpx.Limits(max_connections=24,max_keepalive_connections=12),transport=httpx.AsyncHTTPTransport(retries=1))
+
+class WorkdayBrowserClient:
+    """Browser TLS/JA3 impersonation client for Workday portals protected by Cloudflare."""
+    def __init__(self, timeout=20):
+        self.timeout = timeout
+        self.session = None
+
+    async def __aenter__(self):
+        if CurlAsyncSession is not None:
+            proxy = os.getenv("JOBRADAR_HTTP_PROXY") or os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY")
+            proxies = {"http": proxy, "https": proxy} if proxy else None
+            self.session = CurlAsyncSession(impersonate="chrome124", proxies=proxies, timeout=self.timeout)
+        else:
+            self.session = client(self.timeout)
+            await self.session.__aenter__()
+        return self
+
+    async def __aexit__(self, *args):
+        if self.session is not None:
+            if hasattr(self.session, "close"):
+                res = self.session.close()
+                if asyncio.iscoroutine(res):
+                    await res
+            elif hasattr(self.session, "__aexit__"):
+                await self.session.__aexit__(*args)
+
+    async def request(self, method, url, **kwargs):
+        if hasattr(self.session, "request"):
+            return await self.session.request(method, url, **kwargs)
+        raise RuntimeError("No active Workday session")
+
+def workday_client(timeout=20):
+    return WorkdayBrowserClient(timeout=timeout)
 
 def request_bucket(url):
     """Group tenant hosts by ATS family so one provider cannot be flooded."""
@@ -482,7 +519,7 @@ class WorkdayAdapter(JobSource):
 
     async def fetch_jobs(self,c):
         origin,tenant,site=workday_config(c); api=f"{origin}/wday/cxs/{tenant}/{site}"
-        async with client() as x:
+        async with workday_client() as x:
             postings=[]; offset=0; facets={}; expected=None; identifiers=set(); advertised=None; duplicate_paths=False
             bound=2000
             partition_first=None
