@@ -272,21 +272,31 @@ export async function mapWithLimit<T>(
 }
 
 export function decodeHtmlEntities(input: string): string {
-  let out = input;
-  for (let i = 0; i < 3; i++) {
-    const next = out
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;|&apos;|&#x27;/gi, "'")
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
-      .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
-    if (next === out) break;
-    out = next;
-  }
-  return out;
+  if (!input || !input.includes('&')) return input;
+  const named: Record<string, string> = {
+    amp: '&',
+    lt: '<',
+    gt: '>',
+    quot: '"',
+    apos: "'",
+    nbsp: ' ',
+  };
+  return input.replace(/&(?:([a-z]+)|#([0-9]+)|#x([0-9a-f]+));/gi, (match, name, dec, hex) => {
+    if (name) {
+      const lower = name.toLowerCase();
+      if (lower === 'x27') return "'";
+      return named[lower] ?? match;
+    }
+    if (dec) {
+      const code = Number(dec);
+      return Number.isSafeInteger(code) && code > 0 ? String.fromCharCode(code) : match;
+    }
+    if (hex) {
+      const code = parseInt(hex, 16);
+      return Number.isSafeInteger(code) && code > 0 ? String.fromCharCode(code) : match;
+    }
+    return match;
+  });
 }
 
 export function extractBalancedJson<T = unknown>(text: string, markerRegex: RegExp): T | null {
