@@ -10,6 +10,9 @@ concurrency:
   group: liveness-verification
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
