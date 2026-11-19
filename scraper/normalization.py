@@ -106,11 +106,11 @@ def enrich(job: Job, company_priority: int=3):
     elif job.role_category=="Other": reason="Role outside target list"
     # removed recent check for internship eligibility
     elif job.employment_type=="Internship": reason="Eligible"
-    # Treat jobs labelled "Posted today" (with no timestamp) as eligible – they satisfy the freshness gate.
-    elif employer_says_today: reason="Eligible"
     elif job.experience_label in ("Conditional experience — verify", "Conflicting experience — verify"): reason=job.experience_label
     elif job.experience_min is None and job.experience_max is None: reason="Experience not stated — verify"
     elif not experience_ok: reason="Required minimum exceeds 2 years or experience range is invalid"
+    # Treat junior jobs labelled "Posted today" (with no timestamp) as eligible – they satisfy the freshness gate.
+    elif employer_says_today: reason="Eligible"
     # ---- NEW LOGIC ---------------------------------------------------------
     # For all non‑internship jobs we enforce the 24‑hour freshness gate.
     #   * If a posting timestamp exists and is older than 24 h → ineligible.
