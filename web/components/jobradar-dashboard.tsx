@@ -1656,7 +1656,7 @@ function SystemCard({
   const run = data?.latest_run,
     age = exactAge(run?.finished_at),
     stale = !loading && (age === null || age >= 5),
-    failed = data?.companies ? data.companies.filter(company=>company.error_count>0).length : Number(run?.companies_failed || 0),
+    failed = Number(run?.companies_failed || 0),
     backup = data?.data_mode === "backup",
     attention = backup || stale || failed > 0,
     label =
