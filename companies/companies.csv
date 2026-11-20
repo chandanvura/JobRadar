@@ -64,7 +64,7 @@ Cadence,https://cadence.wd1.myworkdayjobs.com/External_Careers,workday,cadence|E
 Wells Fargo,https://wf.wd1.myworkdayjobs.com/WellsFargoJobs,workday,wf|WellsFargoJobs|India,4,true
 S&P Global,https://spgi.wd5.myworkdayjobs.com/SPGI_Careers,workday,spgi|SPGI_Careers,4,true
 Equifax,https://equifax.wd5.myworkdayjobs.com/External,workday,equifax|External|India,4,true
-Sandisk,https://jobs.smartrecruiters.com/Sandisk,smartrecruiters,Sandisk,4,true
+Sandisk,https://www.sandisk.com/about/careers,custom,sandisk-india,4,true
 Bosch,https://jobs.smartrecruiters.com/BoschGroup,smartrecruiters,BoschGroup,5,true
 ServiceNow,https://jobs.smartrecruiters.com/ServiceNow,smartrecruiters,ServiceNow,5,true
 LinkedIn,https://jobs.smartrecruiters.com/LinkedIn3,smartrecruiters,LinkedIn3,5,true
@@ -118,7 +118,7 @@ PwC,https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers,workday,pwc|Glo
 JPMorgan Chase,https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001,oracle,jpmc.fa.oraclecloud.com|CX_1001,4,true
 Goldman Sachs,https://hdpc.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/LateralHiring/jobs,oracle,hdpc.fa.us2.oraclecloud.com|LateralHiring,4,true
 Target,https://target.wd5.myworkdayjobs.com/targetcareers,workday,target|targetcareers|India,4,true
-Walmart Global Tech,https://careers.walmart.com/technology,custom,walmart,5,true
+Walmart Global Tech,https://walmart.wd504.myworkdayjobs.com/WalmartExternal,workday,walmart|WalmartExternal|India,5,true
 Flipkart,https://flipkart.turbohire.co/careerpage/4d757ba0-3d57-448a-b82c-238ed87ac90f,turbohire,4d757ba0-3d57-448a-b82c-238ed87ac90f,5,true
 PhonePe,https://careers.smartrecruiters.com/PHONEPELIMITED,smartrecruiters,PHONEPELIMITED,5,true
 Swiggy,https://careers.swiggy.in/explore-jobs,smartrecruiters,SWIGGY,5,true
@@ -447,7 +447,7 @@ BT Group,https://jobs.bt.com/,xml,https://jobs.bt.com/googlefeed.xml,4,true
 Vodafone,https://careers.vodafone.com/,custom,vodafone-india,4,true
 Verizon,https://verizon.wd12.myworkdayjobs.com/verizon-careers,workday,verizon|verizon-careers|India,4,true
 AT&T,https://www.att.jobs/location/india-jobs/117/1269750/2,talentbrew,117,4,true
-T-Mobile,https://tmobile.wd1.myworkdayjobs.com/External,workday,tmobile|External|India,3,false
+T-Mobile,https://tmobile.wd1.myworkdayjobs.com/External,workday,tmobile|External,3,true
 Orange Business,https://orange.jobs/gb/en/,phenom,OYVOCZGB,4,true
 Colt Technology Services,https://www.colt.net/careers/,custom,colt-india,4,true
 Arcesium,https://www.arcesium.com/careers,greenhouse,arcesiumllc,5,true
