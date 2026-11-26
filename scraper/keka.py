@@ -55,12 +55,15 @@ def listing_records(payload):
 
 
 def verify_detail(text, row):
+    import html
     from .adapters import clean
     soup = BeautifulSoup(text, 'html.parser')
     title = soup.select_one('h1')
     identity = soup.select_one('[selectedjobid]')
     description = soup.select_one('.job-description-container')
-    if (not title or clean(str(title)) != clean(row['title']) or not identity or
+    title_text = clean(html.unescape(title.get_text())) if title else ""
+    row_title = clean(html.unescape(row['title']))
+    if (not title or title_text != row_title or not identity or
             identity.get('selectedjobid') != str(row['id']) or not description or
             clean(str(description)) != clean(row['description'])):
         raise ValueError('Keka detail ID, title or full description does not reconcile')
